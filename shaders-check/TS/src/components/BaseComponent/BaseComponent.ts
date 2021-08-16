@@ -1,3 +1,6 @@
+interface HTMLAttributes{
+  [key:string]: string;
+}
 export default class BaseComponent {
   readonly element: HTMLElement;
 
@@ -11,5 +14,12 @@ export default class BaseComponent {
       (component) => component.element
     );
     this.element.append(...nodes);
+  };
+
+  setAttributes = (obj:HTMLAttributes):void => {
+    const attr = Object.entries(obj);
+    attr.forEach((attribute) => {
+      this.element.setAttribute(attribute[0], attribute[1]);
+    });
   };
 }

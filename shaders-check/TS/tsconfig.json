@@ -18,7 +18,7 @@
     "allowJs": false,
     "rootDir": "./src",
     "downlevelIteration": false,
-    //"strict": true,
+    "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,

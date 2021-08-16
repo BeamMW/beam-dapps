@@ -1,23 +1,22 @@
-import { BeamAPI } from './beamAPI/BeamAPI';
-import loader from './assets/loader.svg';
-import BaseComponent from './components/BaseComponent/BaseComponent';
+import { BeamAPI } from './BeamAPI/BeamAPI';
+import './scss/main.scss';
+import Container from './components/Container/Container';
+import Loader from './components/Loader/Loader';
 
 export class App {
   private readonly rootElement: HTMLElement;
-
-  private readonly loader: BaseComponent;
 
   private readonly API: BeamAPI;
 
   constructor(rootElement: HTMLElement) {
     this.rootElement = rootElement;
     this.API = new BeamAPI();
-    this.loader = new BaseComponent('img', ['loader']);
-    this.loader.element.setAttribute('src', loader);
-    this.rootElement.append(this.loader.element);
+    this.rootElement.append(new Loader().element);
     this.API.loadAPI()
       .then(() => {
-        // this.rootElement.innerHTML = 'hello!';
+        console.log(this.API);
+        this.rootElement.innerHTML = '';
+        this.rootElement.append(new Container().element);
       });
   }
 }
