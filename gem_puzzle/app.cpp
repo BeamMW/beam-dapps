@@ -4,9 +4,9 @@
 #include <algorithm>
 #include <random>
 
-#define SOLUTION_BUF_SIZE	8192
-#define BOARD_SIZE			4
-#define PERMUTATION_LEN		15
+constexpr size_t SOLUTION_BUF_SIZE = 8192;
+constexpr size_t BOARD_SIZE = 4;
+constexpr size_t PERMUTATION_LEN = BOARD_SIZE * BOARD_SIZE - 1;
 
 constexpr uint64_t factorial(uint8_t n)
 {
@@ -26,7 +26,7 @@ void On_action_new_game(const ContractID& cid)
 	// TODO: seed * game_number
 	
 	std::mt19937_64 gen(seed);
-	std::uniform_int_distribution<uint64_t> distrib(2, factorial(15));
+	std::uniform_int_distribution<uint64_t> distrib(2, factorial(PERMUTATION_LEN));
 
 	uint64_t permutation_num = distrib(gen);
 
@@ -50,7 +50,7 @@ bool check_solution(uint64_t permutation_num, const char* solution, uint32_t& mo
 			std::fill(used, used + PERMUTATION_LEN + 1, false);
 			for (size_t i = 0; i < BOARD_SIZE; ++i) {
 				for (size_t j = 0; j < BOARD_SIZE; ++j) {
-					if (i * BOARD_SIZE + j == 15) { // empty block
+					if (i * BOARD_SIZE + j == PERMUTATION_LEN) { // empty block
 						board[i][j] = 0;
 					} else {
 						uint64_t cur_factorial = factorial(PERMUTATION_LEN - (i * BOARD_SIZE + j) - 1);
