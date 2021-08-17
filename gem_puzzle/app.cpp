@@ -2,6 +2,7 @@
 #include "contract.h"
 
 #include <algorithm>
+#include <bitset>
 #include <random>
 
 constexpr size_t SOLUTION_BUF_SIZE = 8192;
@@ -46,8 +47,7 @@ bool check_solution(uint64_t permutation_num, const char* solution, uint32_t& mo
 
 		Board(uint64_t permutation_num)
 		{
-			bool used[PERMUTATION_LEN + 1];
-			std::fill(used, used + PERMUTATION_LEN + 1, false);
+			std::bitset<PERMUTATION_LEN + 1> used;
 			for (size_t i = 0; i < BOARD_SIZE; ++i) {
 				for (size_t j = 0; j < BOARD_SIZE; ++j) {
 					if (i * BOARD_SIZE + j == PERMUTATION_LEN) { // empty block
@@ -58,11 +58,11 @@ bool check_solution(uint64_t permutation_num, const char* solution, uint32_t& mo
 						permutation_num %= cur_factorial;
 						size_t free_numbers = 0;
 						for (size_t k = 1; k <= PERMUTATION_LEN; ++k) {
-							if (!used[k]) {
+							if (!used.test(k)) {
 								++free_numbers;
 								if (free_numbers == numbers_before + 1) {
 									board[i][j] = k;
-									used[k] = true;
+									used.set(k);
 								}
 							}
 						}
