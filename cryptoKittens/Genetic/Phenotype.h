@@ -9,23 +9,25 @@ struct Phenotype
 	Phenotype() noexcept = default;
 	~Phenotype() noexcept = default;
 
-	using phenotype = std::map<std::string, std::string>;
+	using signName = std::string;
+	using externalExpression = std::string;
+	using phenotype = std::map<signName, externalExpression>;
 	phenotype setOfSigns;
 
 	void getGenMeaning(const Chromosome& Chromosome) noexcept
 	{
 		if (Chromosome.typeOfDominance == TypeOfDominance::Complete)
 		{
-			if (Chromosome.firstGen == Gene::Recessive && Chromosome.secondGen == Gene::Recessive)
+			if (Chromosome.firstGene == GeneState::Recessive && Chromosome.secondGene == GeneState::Recessive)
 				setOfSigns.insert(std::make_pair(Chromosome.signName, Chromosome.recessiveGeneticExpression));
 			else
 				setOfSigns.insert(std::make_pair(Chromosome.signName, Chromosome.dominantGeneticExpression));
 		}
 		else
 		{
-			if (Chromosome.firstGen == Gene::Dominant && Chromosome.secondGen == Gene::Dominant)
+			if (Chromosome.firstGene == GeneState::Dominant && Chromosome.secondGene == GeneState::Dominant)
 				setOfSigns.insert(std::make_pair(Chromosome.signName, Chromosome.dominantGeneticExpression));
-			else if (Chromosome.firstGen == Gene::Recessive && Chromosome.secondGen == Gene::Recessive)
+			else if (Chromosome.firstGene == GeneState::Recessive && Chromosome.secondGene == GeneState::Recessive)
 				setOfSigns.insert(std::make_pair(Chromosome.signName, Chromosome.recessiveGeneticExpression));
 			else
 				setOfSigns.insert(std::make_pair(Chromosome.signName, Chromosome.interveningGeneticExpression));
@@ -33,8 +35,7 @@ struct Phenotype
 
 
 		if (!Chromosome.dependentSigns.signs.empty() &&
-			((Chromosome.dependentSigns.firstGen == Chromosome.firstGen && Chromosome.dependentSigns.secondGen == Chromosome.secondGen)
-				|| (Chromosome.dependentSigns.firstGen == Chromosome.secondGen && Chromosome.dependentSigns.secondGen == Chromosome.firstGen)))
+			(Chromosome.dependentSigns.baseGene == Chromosome.firstGene || Chromosome.dependentSigns.baseGene == Chromosome.secondGene))
 		{
 			for (auto it = Chromosome.dependentSigns.signs.cbegin(); it != Chromosome.dependentSigns.signs.cend(); ++it)
 			{

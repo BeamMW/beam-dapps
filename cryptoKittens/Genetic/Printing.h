@@ -9,8 +9,8 @@ void printChromosome(const Chromosome& lok) noexcept
 {
 	static unsigned int countOfSpaces = 0;
 
-	std::cout << static_cast<uint16_t>(lok.firstGen)
-		<< static_cast<uint16_t>(lok.secondGen) << " "
+	std::cout << static_cast<uint16_t>(lok.firstGene)
+		<< static_cast<uint16_t>(lok.secondGene) << " "
 		<< static_cast<uint16_t>(lok.typeOfDominance) << '\n';
 
 	if (!lok.dependentSigns.signs.empty())

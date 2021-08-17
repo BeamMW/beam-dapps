@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 
-enum class Gene : uint16_t
+enum class GeneState : uint16_t
 {
 	Recessive,
 	Dominant
@@ -16,14 +16,16 @@ enum class TypeOfDominance : uint16_t
 
 struct Chromosome;
 struct DependentSignsAndConditionOfExpression {
-	// TODO: variadic set of genes on which the availability of the sign depends (not only one set)
-	Gene firstGen;
-	Gene secondGen;
+	GeneState baseGene;
 	std::vector<Chromosome> signs;
 
-	DependentSignsAndConditionOfExpression() noexcept : firstGen(Gene::Dominant), secondGen(Gene::Dominant), signs({}) {}
-	DependentSignsAndConditionOfExpression(Gene firstGen, Gene secondGen, std::vector<Chromosome> signs) noexcept
-		: firstGen(firstGen), secondGen(secondGen), signs(signs) {}
+	DependentSignsAndConditionOfExpression() noexcept 
+		: baseGene(GeneState::Dominant), signs({}) {}
+
+	DependentSignsAndConditionOfExpression(GeneState baseGene, std::vector<Chromosome> signs) noexcept
+		: baseGene(baseGene), signs(signs)
+	{}
+
 	~DependentSignsAndConditionOfExpression() noexcept = default;
 };
 
@@ -31,8 +33,8 @@ struct Chromosome
 {
 	std::string signName;
 
-	Gene firstGen;
-	Gene secondGen;
+	GeneState firstGene;
+	GeneState secondGene;
 	TypeOfDominance typeOfDominance;
 
 	std::string dominantGeneticExpression;
@@ -41,17 +43,16 @@ struct Chromosome
 
 	DependentSignsAndConditionOfExpression dependentSigns;
 
-	// TODO: make this more accurately
 	Chromosome(std::string signName,
 		std::string dominantGeneticExpression,
 		std::string recessiveGeneticExpression,
 		DependentSignsAndConditionOfExpression dependentSigns = {}) noexcept
-		: signName(signName),
-		firstGen(Gene::Dominant),
-		secondGen(Gene::Dominant),
+		: signName(signName), 
+		firstGene(GeneState::Dominant),
+		secondGene(GeneState::Dominant),
 		dominantGeneticExpression(dominantGeneticExpression),
-		recessiveGeneticExpression(recessiveGeneticExpression),
 		interveningGeneticExpression(""),
+		recessiveGeneticExpression(recessiveGeneticExpression),
 		typeOfDominance(TypeOfDominance::Complete),
 		dependentSigns(dependentSigns)
 	{}
@@ -62,8 +63,8 @@ struct Chromosome
 		std::string recessiveGeneticExpression,
 		DependentSignsAndConditionOfExpression dependentSigns = {}) noexcept
 		: signName(signName),
-		firstGen(Gene::Dominant),
-		secondGen(Gene::Dominant),
+		firstGene(GeneState::Dominant),
+		secondGene(GeneState::Dominant),
 		dominantGeneticExpression(dominantGeneticExpression),
 		interveningGeneticExpression(interveningGeneticExpression),
 		recessiveGeneticExpression(recessiveGeneticExpression),
@@ -73,9 +74,9 @@ struct Chromosome
 	
 	~Chromosome() noexcept = default;
 
-	void setGenes(Gene firstGenValue, Gene secondGenValue) noexcept
+	void setGenes(GeneState firstGeneValue, GeneState secondGeneValue) noexcept
 	{
-		firstGen = firstGenValue;
-		secondGen = secondGenValue;
+		firstGene = firstGeneValue;
+		secondGene = secondGeneValue;
 	}
 };

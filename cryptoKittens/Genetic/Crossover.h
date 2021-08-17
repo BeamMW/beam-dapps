@@ -12,8 +12,8 @@ Kitten crossover(const Kitten& firstParent, const Kitten& secondParent) noexcept
 		childIt != child.genotype.setOfGenes.end();
 		++firstParentIt, ++secondParentIt, ++childIt)
 	{
-		(mersenne() % 2) ? (*childIt).firstGen = (*firstParentIt).firstGen : (*secondParentIt).firstGen;
-		(mersenne() % 2) ? (*childIt).secondGen = (*secondParentIt).secondGen : (*firstParentIt).secondGen;
+		(mersenne() % 2) ? (*childIt).firstGene = (*firstParentIt).firstGene : (*secondParentIt).firstGene;
+		(mersenne() % 2) ? (*childIt).secondGene = (*secondParentIt).secondGene : (*firstParentIt).secondGene;
 	}
 
 	return child;

@@ -14,9 +14,9 @@ struct Genotype
 	using genotype = std::vector<Chromosome>;
 	genotype setOfGenes;
 
-	Gene generateGenValue() noexcept
+	GeneState generateGenValue() noexcept
 	{
-		return (mersenne() % 2) ? Gene::Recessive : Gene::Dominant;
+		return (mersenne() % 2) ? GeneState::Recessive : GeneState::Dominant;
 	}
 
 	void generateChromosome(Chromosome& Chromosome) noexcept
