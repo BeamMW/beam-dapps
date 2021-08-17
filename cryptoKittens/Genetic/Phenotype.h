@@ -4,6 +4,9 @@
 #include "Chromosome.h"
 #include "Genotype.h"
 
+/*
+* Phenotype - set of all signs
+*/
 struct Phenotype
 {
 	Phenotype() noexcept = default;
@@ -12,9 +15,10 @@ struct Phenotype
 	using signName = std::string;
 	using externalExpression = std::string;
 	using phenotype = std::map<signName, externalExpression>;
-	phenotype setOfSigns;
+	phenotype setOfSigns; // set of all signs
 
-	void getGenMeaning(const Chromosome& Chromosome) noexcept
+	// method for setting all gene meanings in setOfSigns
+	void setGenMeaning(const Chromosome& Chromosome) noexcept
 	{
 		if (Chromosome.typeOfDominance == TypeOfDominance::Complete)
 		{
@@ -39,16 +43,17 @@ struct Phenotype
 		{
 			for (auto it = Chromosome.dependentSigns.signs.cbegin(); it != Chromosome.dependentSigns.signs.cend(); ++it)
 			{
-				getGenMeaning(*it);
+				setGenMeaning(*it);
 			}
 		}
 	}
 
+	// method for getting phenotype from genotype
 	void getPhenotype(const Genotype::genotype& genotype) noexcept
 	{
 		for (auto ChromosomeIt = genotype.cbegin(); ChromosomeIt != genotype.cend(); ++ChromosomeIt)
 		{
-			getGenMeaning(*ChromosomeIt);
+			setGenMeaning(*ChromosomeIt);
 		}
 	}
 };

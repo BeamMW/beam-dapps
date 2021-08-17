@@ -4,13 +4,17 @@
 #include "Genotype.h"
 #include "Phenotype.h"
 
+/*
+* Kitten - entity with genotype and phenotype
+*/
 struct Kitten
 {
-	Genotype genotype;
-	Phenotype phenotype;
+	Genotype genotype; // genotype of the kitten is the same for all kittens (different are only gene values)
+	Phenotype phenotype; // phenotype of the kitten
 
 	Kitten() noexcept
 	{
+		// creating general scheme for kittens genotype
 		genotype.setOfGenes = {
 			Chromosome("body size: ", "big", "medium", "small"),
 			Chromosome("type of eyes: ", "big", "medium", "small"),
@@ -37,7 +41,9 @@ struct Kitten
 			),
 			Chromosome("tratatata: ", "A", "B")
 		};
+		// setting individual genes values in genotype
 		genotype.generateGenotype();
+		// creating phenotype of the kitten from its genotype
 		phenotype.getPhenotype(genotype.setOfGenes);
 	}
 

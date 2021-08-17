@@ -2,22 +2,36 @@
 #include <vector>
 #include <string>
 
+/*
+* Gene may have 2 states: Recessive or Dominant.
+*/
 enum class GeneState : uint16_t
 {
 	Recessive,
 	Dominant
 };
 
+/*
+* Chromosome may have 2 types of dominance: Complete and Incomplete.
+* If the condition is Complete, the sets of genes {Dominant, Dominant}, {Dominant, Recessive} in the chromosome
+* will exhibit the dominant trait in phenotype. And the set of genes {Recessive, Recessive} - recessive trait.
+* If the condition is Incomplete, the set of genes {Dominant, Dominant in the chromosome
+* will exhibit the dominant trait in phenotype. And the set of genes  {Dominant, Recessive} - intervening trait, 
+* the set of genes {Recessive, Recessive} - recessive trait.
+*/
 enum class TypeOfDominance : uint16_t
 {
 	Complete,
 	Incomplete
 };
 
+/*
+* Set of signs, that may have expression if parent chromosome has the base gene. 
+*/
 struct Chromosome;
 struct DependentSignsAndConditionOfExpression {
-	GeneState baseGene;
-	std::vector<Chromosome> signs;
+	GeneState baseGene; // the gene, the presence of which determines the expression of signs
+	std::vector<Chromosome> signs; // set of signs, which expression depends on presence of base gene
 
 	DependentSignsAndConditionOfExpression() noexcept 
 		: baseGene(GeneState::Dominant), signs({}) {}
@@ -29,20 +43,26 @@ struct DependentSignsAndConditionOfExpression {
 	~DependentSignsAndConditionOfExpression() noexcept = default;
 };
 
+/*
+* Chromosome, that consists of 2 alleles of gene, name of sign an types of its expression, 
+* dependent signs and type of dominance
+*/
 struct Chromosome
 {
-	std::string signName;
+	std::string signName; // name of sign, that the chromosome is responsible for
 
-	GeneState firstGene;
-	GeneState secondGene;
-	TypeOfDominance typeOfDominance;
+	GeneState firstGene; // state of first gene
+	GeneState secondGene;  // state of second gene
+	TypeOfDominance typeOfDominance; // type of dominance 
 
-	std::string dominantGeneticExpression;
-	std::string interveningGeneticExpression;
-	std::string recessiveGeneticExpression;
+	std::string dominantGeneticExpression; // type of sign expression in dominant trait
+	std::string interveningGeneticExpression; // type of sign expression in intervening trait
+	std::string recessiveGeneticExpression; // type of sign expression in recessive trait
 
-	DependentSignsAndConditionOfExpression dependentSigns;
+	// set of signs and gene, on the presence of which in this chromosome the expression of signs depends 
+	DependentSignsAndConditionOfExpression dependentSigns; 
 
+	//Ctror of chromosome with complete type of dominance
 	Chromosome(std::string signName,
 		std::string dominantGeneticExpression,
 		std::string recessiveGeneticExpression,
@@ -57,6 +77,7 @@ struct Chromosome
 		dependentSigns(dependentSigns)
 	{}
 
+	//Ctror of chromosome with incomplete type of dominance
 	Chromosome(std::string signName,
 		std::string dominantGeneticExpression,
 		std::string interveningGeneticExpression,
@@ -74,6 +95,7 @@ struct Chromosome
 	
 	~Chromosome() noexcept = default;
 
+	// method for setting gene states in chromosome
 	void setGenes(GeneState firstGeneValue, GeneState secondGeneValue) noexcept
 	{
 		firstGene = firstGeneValue;

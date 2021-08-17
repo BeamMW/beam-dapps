@@ -2,6 +2,7 @@
 
 #include "Kitten.h"
 
+// method for crossover kittens
 Kitten crossover(const Kitten& firstParent, const Kitten& secondParent) noexcept
 {
 	Kitten child;
