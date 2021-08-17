@@ -8,6 +8,11 @@
 #define BOARD_SIZE			4
 #define PERMUTATION_LEN		15
 
+constexpr uint64_t factorial(uint8_t n)
+{
+	return (n == 0 ? 1 : n * factorial(n - 1));
+}
+
 void On_action_new_game(const ContractID& cid)
 {
 	//Height cur_height = Env::get_Height();
@@ -21,7 +26,7 @@ void On_action_new_game(const ContractID& cid)
 	// TODO: seed * game_number
 	
 	std::mt19937_64 gen(seed);
-	std::uniform_int_distribution<uint64_t> distrib(2, (uint64_t)tgamma(15 + 1));
+	std::uniform_int_distribution<uint64_t> distrib(2, factorial(15));
 
 	uint64_t permutation_num = distrib(gen);
 
@@ -48,9 +53,9 @@ bool check_solution(uint64_t permutation_num, const char* solution, uint32_t& mo
 					if (i * BOARD_SIZE + j == 15) { // empty block
 						board[i][j] = 0;
 					} else {
-						uint64_t factorial = static_cast<uint64_t>(tgamma(PERMUTATION_LEN - (i * BOARD_SIZE + j)));
-						auto numbers_before = permutation_num / factorial;
-						permutation_num %= factorial;
+						uint64_t cur_factorial = factorial(PERMUTATION_LEN - (i * BOARD_SIZE + j) - 1);
+						auto numbers_before = permutation_num / cur_factorial;
+						permutation_num %= cur_factorial;
 						size_t free_numbers = 0;
 						for (size_t k = 1; k <= PERMUTATION_LEN; ++k) {
 							if (!used[k]) {
