@@ -1,17 +1,13 @@
 #pragma once
 
 #include "Chromosome.h"
-#include "Genotype.h"
-#include "Phenotype.h"
+#include "ICharacter.h"
 
 /*
 * Kitten - entity with genotype and phenotype
 */
-struct Kitten
+struct Kitten : public ICharacter
 {
-	Genotype genotype; // genotype of the kitten is the same for all kittens (different are only gene values)
-	Phenotype phenotype; // phenotype of the kitten
-
 	Kitten() noexcept
 	{
 		// creating general scheme for kittens genotype

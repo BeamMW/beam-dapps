@@ -4,19 +4,20 @@
 #include "Chromosome.h"
 #include "Genotype.h"
 #include "Phenotype.h"
+#include "Statistics.h"
 
-void printChromosome(const Chromosome& lok) noexcept
+void printChromosome(const Chromosome& chromosome) noexcept
 {
 	static unsigned int countOfSpaces = 0;
 
-	std::cout << static_cast<uint16_t>(lok.firstGene)
-		<< static_cast<uint16_t>(lok.secondGene) << " "
-		<< static_cast<uint16_t>(lok.typeOfDominance) << '\n';
+	std::cout << static_cast<uint16_t>(chromosome.firstGene)
+		<< static_cast<uint16_t>(chromosome.secondGene) << " "
+		<< static_cast<uint16_t>(chromosome.typeOfDominance) << '\n';
 
-	if (!lok.dependentSigns.signs.empty())
+	if (!chromosome.dependentSigns.signs.empty())
 	{
 		++countOfSpaces;
-		for (auto it = lok.dependentSigns.signs.cbegin(); it != lok.dependentSigns.signs.cend(); ++it)
+		for (auto it = chromosome.dependentSigns.signs.cbegin(); it != chromosome.dependentSigns.signs.cend(); ++it)
 		{
 			for (unsigned int i = 0; i < countOfSpaces; ++i)
 			{
@@ -44,10 +45,11 @@ void printPhenotype(const Phenotype& phenotype) noexcept
 	}
 }
 
-
-void printProbability(const Phenotype& phenotype) noexcept
+void printProbability(const genotype& genotype) noexcept
 {
-	for (auto it = phenotype.signsExpressionProbability.cbegin(); it != phenotype.signsExpressionProbability.cend(); ++it)
+	Statistics st;
+	auto signsExpressionProbability = st.getGeneralSignsExpressionProbability(genotype);
+	for (auto it = signsExpressionProbability.cbegin(); it != signsExpressionProbability.cend(); ++it)
 	{
 		std::cout << (*it).first << "\n";
 		for (auto it2 = (*it).second.cbegin(); it2 != (*it).second.cend(); ++it2)

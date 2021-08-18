@@ -14,10 +14,9 @@ struct Genotype
 	Genotype() noexcept = default;
 	~Genotype() noexcept = default;
 
-	using genotype = std::vector<Chromosome>;
 	genotype setOfGenes; // set of all genes
 
-	// ,ethod for generation of gen value - Recessive or Dominant
+	// method for generation of gen value - Recessive or Dominant
 	GeneState generateGenValue() noexcept
 	{
 		return (mersenne() % 2) ? GeneState::Recessive : GeneState::Dominant;

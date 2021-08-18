@@ -1,6 +1,14 @@
 #pragma once
 #include <vector>
+#include <map>
 #include <string>
+
+struct Chromosome;
+using signName = std::string;
+using externalExpression = std::string;
+using phenotype = std::map<signName, externalExpression>;
+using genotype = std::vector<Chromosome>;
+using signExpressionProbability = std::map<signName, std::map<externalExpression, float>>;
 
 /*
 * Gene may have 2 states: Recessive or Dominant.
@@ -34,7 +42,6 @@ enum class BaseGenePresence : uint16_t
 /*
 * Set of signs, that may have expression if parent chromosome has the base gene. 
 */
-struct Chromosome;
 struct DependentSignsAndConditionOfExpression {
 	GeneState baseGene; // the gene, the presence of which determines the expression of signs
 	BaseGenePresence baseGenePresence;

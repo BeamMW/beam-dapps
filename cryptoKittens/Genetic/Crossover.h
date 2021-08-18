@@ -1,21 +1,22 @@
 #pragma once
 
-#include "Kitten.h"
+#include "ICharacter.h"
+#include "Mutation.h"
 
 // method for crossover kittens
-Kitten crossover(const Kitten& firstParent, const Kitten& secondParent) noexcept
+genotype crossover(const genotype& firstParentGenotype, const genotype& secondParentGenotype) noexcept
 {
-	Kitten child;
-
-	auto childIt = child.genotype.setOfGenes.begin();
-	for (auto firstParentIt = firstParent.genotype.setOfGenes.cbegin(),
-		secondParentIt = secondParent.genotype.setOfGenes.cbegin();
-		childIt != child.genotype.setOfGenes.end();
-		++firstParentIt, ++secondParentIt, ++childIt)
+	genotype childGenotype;
+	auto childGenotypeIt = childGenotype.begin();
+	for (auto firstParentGenotypeIt = firstParentGenotype.cbegin(), 
+		secondParentGenotypeIt = secondParentGenotype.cbegin();
+		childGenotypeIt != childGenotype.end();
+		++firstParentGenotypeIt, ++secondParentGenotypeIt, ++childGenotypeIt)
 	{
-		(mersenne() % 2) ? (*childIt).firstGene = (*firstParentIt).firstGene : (*secondParentIt).firstGene;
-		(mersenne() % 2) ? (*childIt).secondGene = (*secondParentIt).secondGene : (*firstParentIt).secondGene;
-	}
+		(mersenne() % 2) ? (*childGenotypeIt).firstGene = (*firstParentGenotypeIt).firstGene : (*secondParentGenotypeIt).firstGene;
+		(mersenne() % 2) ? (*childGenotypeIt).secondGene = (*secondParentGenotypeIt).secondGene : (*firstParentGenotypeIt).secondGene;
 
-	return child;
+		mutate();
+	}
+	return childGenotype;
 }
