@@ -27,7 +27,7 @@ void On_action_new_game(const ContractID& cid)
 	// TODO: seed * game_number
 	
 	std::mt19937_64 gen(seed);
-	std::uniform_int_distribution<uint64_t> distrib(2, factorial(PERMUTATION_LEN));
+	std::uniform_int_distribution<uint64_t> distrib(1, factorial(PERMUTATION_LEN) - 1);
 
 	uint64_t permutation_num = distrib(gen);
 
