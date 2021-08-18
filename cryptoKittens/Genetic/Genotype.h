@@ -24,9 +24,9 @@ struct Genotype
 	}
 
 	// method for generation of chromosome - setting values for all genes in chromosome
-	void generateChromosome(Chromosome& Chromosome) noexcept
+	void generateChromosome(Chromosome& chromosome) noexcept
 	{
-		Chromosome.setGenes(generateGenValue(), generateGenValue());
+		chromosome.setGenes(generateGenValue(), generateGenValue());
 	}
 	
 	// method for generation of genotype - setting values for chromosomes

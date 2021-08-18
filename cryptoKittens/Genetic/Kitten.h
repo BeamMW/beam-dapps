@@ -20,15 +20,13 @@ struct Kitten
 			Chromosome("type of eyes: ", "big", "medium", "small"),
 			Chromosome("availability of fur: ", "yes", "no",
 				DependentSignsAndConditionOfExpression
-				(GeneState::Recessive,
-					std::vector<Chromosome>
+				(GeneState::Recessive, BaseGenePresence::Absence,
 					{
 						Chromosome("spots: ", "yes", "no"),
 						Chromosome("type of fur: ", "straight", "wavy", "curly"),
 						Chromosome("availability of color point: ", "yes", "no",
 							DependentSignsAndConditionOfExpression
-							(GeneState::Dominant,
-								std::vector<Chromosome>
+							(GeneState::Dominant, BaseGenePresence::Presence,
 								{
 									Chromosome("on paws: ", "yes", "no"),
 									Chromosome("on ears: ", "yes", "no"),
@@ -44,7 +42,7 @@ struct Kitten
 		// setting individual genes values in genotype
 		genotype.generateGenotype();
 		// creating phenotype of the kitten from its genotype
-		phenotype.getPhenotype(genotype.setOfGenes);
+		phenotype.setPhenotype(genotype.setOfGenes);
 	}
 
 	~Kitten() noexcept = default;

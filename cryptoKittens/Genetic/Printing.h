@@ -43,3 +43,17 @@ void printPhenotype(const Phenotype& phenotype) noexcept
 		std::cout << (*it).first << (*it).second << '\n';
 	}
 }
+
+
+void printProbability(const Phenotype& phenotype) noexcept
+{
+	for (auto it = phenotype.signsExpressionProbability.cbegin(); it != phenotype.signsExpressionProbability.cend(); ++it)
+	{
+		std::cout << (*it).first << "\n";
+		for (auto it2 = (*it).second.cbegin(); it2 != (*it).second.cend(); ++it2)
+		{
+			std::cout << (*it2).first << " - " << (*it2).second << '\n';
+		}
+		std::cout << "\n";
+	}
+}

@@ -25,19 +25,26 @@ enum class TypeOfDominance : uint16_t
 	Incomplete
 };
 
+enum class BaseGenePresence : uint16_t
+{
+	Presence,
+	Absence
+};
+
 /*
 * Set of signs, that may have expression if parent chromosome has the base gene. 
 */
 struct Chromosome;
 struct DependentSignsAndConditionOfExpression {
 	GeneState baseGene; // the gene, the presence of which determines the expression of signs
+	BaseGenePresence baseGenePresence;
 	std::vector<Chromosome> signs; // set of signs, which expression depends on presence of base gene
 
 	DependentSignsAndConditionOfExpression() noexcept 
-		: baseGene(GeneState::Dominant), signs({}) {}
+		: baseGene(GeneState::Dominant), baseGenePresence(BaseGenePresence::Presence), signs({}) {}
 
-	DependentSignsAndConditionOfExpression(GeneState baseGene, std::vector<Chromosome> signs) noexcept
-		: baseGene(baseGene), signs(signs)
+	DependentSignsAndConditionOfExpression(const GeneState baseGene, const BaseGenePresence baseGenePresence, const std::vector<Chromosome>&& signs) noexcept
+		: baseGene(baseGene), baseGenePresence(baseGenePresence), signs(signs)
 	{}
 
 	~DependentSignsAndConditionOfExpression() noexcept = default;
@@ -63,10 +70,10 @@ struct Chromosome
 	DependentSignsAndConditionOfExpression dependentSigns; 
 
 	//Ctror of chromosome with complete type of dominance
-	Chromosome(std::string signName,
-		std::string dominantGeneticExpression,
-		std::string recessiveGeneticExpression,
-		DependentSignsAndConditionOfExpression dependentSigns = {}) noexcept
+	Chromosome(const std::string signName,
+		const std::string dominantGeneticExpression,
+		const std::string recessiveGeneticExpression,
+		const DependentSignsAndConditionOfExpression& dependentSigns = {}) noexcept
 		: signName(signName), 
 		firstGene(GeneState::Dominant),
 		secondGene(GeneState::Dominant),
@@ -78,11 +85,11 @@ struct Chromosome
 	{}
 
 	//Ctror of chromosome with incomplete type of dominance
-	Chromosome(std::string signName,
-		std::string dominantGeneticExpression,
-		std::string interveningGeneticExpression,
-		std::string recessiveGeneticExpression,
-		DependentSignsAndConditionOfExpression dependentSigns = {}) noexcept
+	Chromosome(const std::string signName,
+		const std::string dominantGeneticExpression,
+		const std::string interveningGeneticExpression,
+		const std::string recessiveGeneticExpression,
+		const DependentSignsAndConditionOfExpression& dependentSigns = {}) noexcept
 		: signName(signName),
 		firstGene(GeneState::Dominant),
 		secondGene(GeneState::Dominant),
@@ -96,7 +103,7 @@ struct Chromosome
 	~Chromosome() noexcept = default;
 
 	// method for setting gene states in chromosome
-	void setGenes(GeneState firstGeneValue, GeneState secondGeneValue) noexcept
+	void setGenes(const GeneState firstGeneValue, const GeneState secondGeneValue) noexcept
 	{
 		firstGene = firstGeneValue;
 		secondGene = secondGeneValue;
