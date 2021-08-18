@@ -6,8 +6,8 @@
 #include <random>
 
 constexpr size_t SOLUTION_BUF_SIZE = 8192;
-constexpr size_t BOARD_SIZE = 4;
-constexpr size_t PERMUTATION_LEN = BOARD_SIZE * BOARD_SIZE - 1;
+constexpr uint8_t BOARD_SIZE = 4;
+constexpr uint8_t PERMUTATION_LEN = BOARD_SIZE * BOARD_SIZE - 1;
 
 constexpr uint64_t factorial(uint8_t n)
 {
@@ -48,11 +48,11 @@ bool check_solution(uint64_t permutation_num, const char* solution, uint32_t& mo
 		Board(uint64_t permutation_num)
 		{
 			std::bitset<PERMUTATION_LEN + 1> used;
-			for (size_t i = 0; i < BOARD_SIZE; ++i) {
-				for (size_t j = 0; j < BOARD_SIZE; ++j) {
+			for (uint8_t i = 0; i < BOARD_SIZE; ++i) {
+				for (uint8_t j = 0; j < BOARD_SIZE; ++j) {
 					if (i * BOARD_SIZE + j == PERMUTATION_LEN) { // empty block
 						board[i][j] = 0;
-						empty_cell = { static_cast<uint8_t>(j), static_cast<uint8_t>(i) };
+						empty_cell = { j, i };
 					} else {
 						uint64_t cur_factorial = factorial(PERMUTATION_LEN - (i * BOARD_SIZE + j) - 1);
 						auto numbers_before = permutation_num / cur_factorial;
