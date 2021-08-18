@@ -25,9 +25,16 @@ declare module 'qwebchannel' {
     disconnect: (callback:(arg:string) => void) => void
   };
 
+  export type ApiResult$ = {
+    handlers: (arg: string)=>void[];
+    subscribe:(callback:(json: string)=>void)=> void
+  };
+
   export type QObject = {
     callWalletApi: (json:string) => void
-    callWalletApiResult: ApiResult
+    callWalletApiResult: ApiResult;
+    apiResult$: ApiResult$;
+    initializeShader: (contract:ArrayBuffer, name: string) => void;
   };
 
   export type QBEAM = {

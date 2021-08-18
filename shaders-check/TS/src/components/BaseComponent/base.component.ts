@@ -1,10 +1,13 @@
-interface HTMLAttributes{
+import { Tags } from '../../constants/html_elements';
+
+type HTMLAttributes = {
   [key:string]: string;
-}
+};
+
 export default class BaseComponent {
   readonly element: HTMLElement;
 
-  constructor(tag = 'div', styles: string[] = []) {
+  constructor(tag:Tags, styles: string[] = []) {
     this.element = document.createElement(tag);
     this.element.classList.add(...styles);
   }

@@ -1,15 +1,17 @@
-import { QWebChannel, QWebChannelTransport, QBEAM } from 'qwebchannel';
+import { QWebChannel, QWebChannelTransport, QObject } from 'qwebchannel';
+import BaseComponent from '../components/BaseComponent/base.component';
 import shader from '../shader.wasm';
 
 declare global {
   interface Window {
     qt: QWebChannelTransport;
+    beam: QObject;
   }
 }
 
-type ObserverComponent = {
+export interface ObserverComponent extends BaseComponent {
   inform: (state: BeamAPI) => void;
-};
+}
 
 type Params = {
   contract: number[];
@@ -18,7 +20,7 @@ type Params = {
 };
 
 export class BeamAPI {
-  private API: null | QBEAM;
+  private API: null | QObject;
 
   private contract: ArrayBuffer | null;
 
@@ -30,8 +32,10 @@ export class BeamAPI {
     this.observers = [];
   }
 
-  addObserver = (component: ObserverComponent): void => {
-    this.observers.push(component);
+  addObservers = (...components: ObserverComponent[]): void => {
+    components.forEach((component) => {
+      this.observers.push(component);
+    });
   };
 
   onApiResult = (json: string): void => {
@@ -41,15 +45,30 @@ export class BeamAPI {
   };
 
   loadAPI = async (): Promise<void> => {
-    const { qt } = window;
-    this.API = (await new Promise(
-      (resolve) => new QWebChannel(qt.webChannelTransport, (channel) => {
-        resolve(channel.objects.BEAM);
-      })
-    )) as QBEAM;
-    this.contract = (await fetch(shader)
-      .then((response) => response.arrayBuffer())) as ArrayBuffer;
-    this.API.api.callWalletApiResult.connect(this.onApiResult);
+    const { qt, beam } = window;
+    if (beam) {
+      window.beam.apiResult$.subscribe(this.onApiResult);
+      this.API = beam;
+    } else {
+      this.API = (await new Promise<QObject >(
+        (resolve) => new QWebChannel(
+          qt.webChannelTransport, (channel) => {
+            resolve(channel.objects.BEAM.api);
+          }
+        )
+      ));
+      this.API?.callWalletApiResult.connect(this.onApiResult);
+    }
+    await this.initShader();
+  };
+
+  initShader = async ():Promise<void> => {
+    if (window.beam && this.contract) {
+      await this.API?.initializeShader(this.contract, 'some shader');
+    } else {
+      this.contract = await fetch(shader)
+        .then((response) => response.arrayBuffer()) as ArrayBuffer;
+    }
   };
 
   callApi = (callid: string, method: string, params: Params): void => {
@@ -61,7 +80,7 @@ export class BeamAPI {
         method,
         params: { ...params, contract }
       };
-      this.API.api.callWalletApi(JSON.stringify(request));
+      this.API.callWalletApi(JSON.stringify(request));
     }
   };
 }
