@@ -1,8 +1,13 @@
-#include "Shaders/common.h"
-#include "contract.h"
+#ifndef ENABLE_UNIT_TESTS_
+#	include "Shaders/common.h"
+#	include "contract.h"
+#else
+#	include <gtest/gtest.h>
+#endif	// ENABLE_UNIT_TESTS_
 
 #include <algorithm>
 #include <bitset>
+#include <iostream>
 #include <random>
 
 constexpr size_t SOLUTION_BUF_SIZE = 8192;
@@ -14,6 +19,7 @@ constexpr uint64_t factorial(uint8_t n)
 	return (n == 0 ? 1 : n * factorial(n - 1));
 }
 
+#ifndef ENABLE_UNIT_TESTS_
 void On_action_new_game(const ContractID& cid)
 {
 	//Height cur_height = Env::get_Height();
@@ -38,6 +44,7 @@ void On_action_new_game(const ContractID& cid)
 	Env::DocAddNum64("permutation", permutation_num);
 	// TODO: add game_number
 }
+#endif // ENABLE_UNIT_TESTS_
 
 bool check_solution(uint64_t permutation_num, const char* solution, uint32_t& moves_num)
 {
@@ -64,12 +71,21 @@ bool check_solution(uint64_t permutation_num, const char* solution, uint32_t& mo
 								if (free_numbers == numbers_before + 1) {
 									board[i][j] = k;
 									used.set(k);
+									break;
 								}
 							}
 						}
 					}
 				}
 			}
+#ifdef DEBUG
+			for (size_t i = 0; i < BOARD_SIZE; ++i) {
+				for (size_t j = 0; j < BOARD_SIZE; ++j) {
+					std::cout << (int)this->board[i][j] << " ";
+				}
+				std::cout << std::endl;
+			}
+#endif // DEBUG
 		}
 
 		bool is_solved()
@@ -124,6 +140,14 @@ bool check_solution(uint64_t permutation_num, const char* solution, uint32_t& mo
 			default:
 				break;
 			}
+#ifdef DEBUG
+			for (size_t k = 0; k < BOARD_SIZE; ++k) {
+				for (size_t j = 0; j < BOARD_SIZE; ++j) {
+					std::cout << (int)this->board[k][j] << " ";
+				}
+				std::cout << std::endl;
+			}
+#endif // DEBUG
 		}
 
 	private:
@@ -166,6 +190,7 @@ bool check_solution(uint64_t permutation_num, const char* solution, uint32_t& mo
 	return board.is_solved();
 }
 
+#ifndef ENABLE_UNIT_TESTS_
 void On_action_check_solution(const ContractID& cid)
 {
 	uint32_t gameID = 0;
@@ -196,3 +221,76 @@ export void Method_1()
 {
 	
 }
+#endif // ENABLE_UNIT_TESTS_
+
+#ifdef ENABLE_UNIT_TESTS_
+uint64_t _permutation_to_num(const std::vector<int>& permutation) {
+	std::bitset<PERMUTATION_LEN + 1> used;
+	uint64_t res = 0;
+	for (size_t i = 0; i < permutation.size(); ++i) {
+		uint64_t cur_factorial = factorial(permutation.size() - i - 1);
+		res += cur_factorial * (permutation[i] - 1 - (used << (permutation.size() - permutation[i] + 1)).count());
+		used.set(permutation[i]);
+	}
+	return res;
+}
+
+TEST(FactorialTest, ZeroInput) {
+	ASSERT_EQ(factorial(0), 1);
+}
+
+TEST(FactorialTest, PositiveInput) {
+	ASSERT_EQ(factorial(1), 1);
+	ASSERT_EQ(factorial(2), 2);
+	ASSERT_EQ(factorial(3), 6);
+	ASSERT_EQ(factorial(4), 24);
+	ASSERT_EQ(factorial(15), 1307674368000);
+}
+
+TEST(CheckSolutionTest, BoardRotations) {
+	uint32_t moves_num;
+
+	ASSERT_TRUE(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "FFFF", moves_num));
+	ASSERT_EQ(moves_num, 4);
+	ASSERT_TRUE(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "BBBB", moves_num));
+	ASSERT_EQ(moves_num, 4);
+
+	// 4 8 12 15
+	// 3 7 11 14
+	// 2 6 10 13
+	// 1 5 9 *
+	ASSERT_TRUE(check_solution(_permutation_to_num({4, 8, 12, 15, 3, 7, 11, 14, 2, 6, 10, 13, 1, 5, 9}), "FRRR", moves_num));
+	ASSERT_EQ(moves_num, 4);
+
+	// 13 9 5 1
+	// 14 10 6 2
+	// 15 11 7 3
+	// 12 8 4 *
+	ASSERT_TRUE(check_solution(_permutation_to_num({13, 9, 5, 1, 14, 10, 6, 2, 15, 11, 7, 3, 12, 8, 4}), "BDDD", moves_num));
+	ASSERT_EQ(moves_num, 4);
+}
+
+TEST(CheckSolutionTest, ValidMoves) {
+	uint32_t moves_num;
+
+	ASSERT_TRUE(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "UDUD", moves_num));
+	ASSERT_EQ(moves_num, 4);
+	ASSERT_TRUE(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "LR", moves_num));
+	ASSERT_EQ(moves_num, 2);
+	ASSERT_TRUE(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "ULDRULDRULDR", moves_num));
+	ASSERT_EQ(moves_num, 12);
+}
+
+TEST(CheckSolutionTest, AlreadySolved) {
+	uint32_t moves_num;
+
+	ASSERT_TRUE(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "", moves_num));
+	ASSERT_EQ(moves_num, 0);
+}
+
+int main()
+{
+	testing::InitGoogleTest();
+	return RUN_ALL_TESTS();
+}
+#endif // ENABLE_UNIT_TESTS_
