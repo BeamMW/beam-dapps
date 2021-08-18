@@ -134,6 +134,7 @@ bool check_solution(uint64_t permutation_num, const char* solution, uint32_t& mo
 		} empty_cell;
 	} board(permutation_num);
 
+	moves_num = 0;
 	for (auto i = 0; solution[i] != '\0'; ++i) {
 		Board::Moves cur_move;
 		switch (toupper(solution[i])) {
@@ -160,6 +161,7 @@ bool check_solution(uint64_t permutation_num, const char* solution, uint32_t& mo
 			return false;
 		}
 		board.move(cur_move);
+		++moves_num;
 	}
 	return board.is_solved();
 }
