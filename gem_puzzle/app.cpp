@@ -52,6 +52,7 @@ bool check_solution(uint64_t permutation_num, const char* solution, uint32_t& mo
 				for (size_t j = 0; j < BOARD_SIZE; ++j) {
 					if (i * BOARD_SIZE + j == PERMUTATION_LEN) { // empty block
 						board[i][j] = 0;
+						empty_cell = { static_cast<uint8_t>(j), static_cast<uint8_t>(i) };
 					} else {
 						uint64_t cur_factorial = factorial(PERMUTATION_LEN - (i * BOARD_SIZE + j) - 1);
 						auto numbers_before = permutation_num / cur_factorial;
