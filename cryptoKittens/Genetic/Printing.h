@@ -45,10 +45,25 @@ void printPhenotype(const Phenotype& phenotype) noexcept
 	}
 }
 
-void printProbability(const genotype& genotype) noexcept
+void printGeneralSignProbability(const genotype& genotype) noexcept
 {
 	Statistics st;
 	auto signsExpressionProbability = st.getGeneralSignsExpressionProbability(genotype);
+	for (auto it = signsExpressionProbability.cbegin(); it != signsExpressionProbability.cend(); ++it)
+	{
+		std::cout << (*it).first << "\n";
+		for (auto it2 = (*it).second.cbegin(); it2 != (*it).second.cend(); ++it2)
+		{
+			std::cout << (*it2).first << " - " << (*it2).second << '\n';
+		}
+		std::cout << "\n";
+	}
+}
+
+void printChildSignProbability(const genotype& firstParentGenotype, const genotype& secondParentGenotype) noexcept
+{
+	Statistics st;
+	auto signsExpressionProbability = st.getChildSignsExpressionProbability(firstParentGenotype, secondParentGenotype);
 	for (auto it = signsExpressionProbability.cbegin(); it != signsExpressionProbability.cend(); ++it)
 	{
 		std::cout << (*it).first << "\n";
