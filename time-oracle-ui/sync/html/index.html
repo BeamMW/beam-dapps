@@ -1,0 +1,67 @@
+<body></body>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>BEAM Applications</title>
+        <link href="./css/styles.css" rel="stylesheet">
+        <link href="./css/fonts.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="error-container hidden" id="error-full-container">
+            <div id="error-full"></div>
+        </div>
+        <div id="error-common"></div>
+        <div class="container hidden" id="time-oracle">
+            <div class="container__cards">
+                <div class="container__cards__top__oracle card">
+                    <img class="card-icon" src="./icons/icon-deposited.svg"/>
+                    <span class="card-title">IN TIME ORACLE</span>
+                    <span class="card-beam-value">
+                        <span id="in-time-oracle"></span> BEAM
+                    </span>
+                </div>
+            </div>
+            <div class="container__main" id="oracle-main">
+                <div class="container__main__empty-deposit main-text">
+                    <div>Welcome to Time Oracle Demo!</div>
+                    <div id="time"></div>
+                </div>
+            </div>
+
+            <div class="container__update">
+                <div class="container__update__contract" id="cid"></div>
+            </div>
+        </div>
+
+        <div class="hidden" id="get-popup">
+            <div class="popup">
+                <div class="popup__content">
+                    <div class="popup__content__title">Get Time</div>
+                    <div class="popup__content__controls">
+                        <button class="container__main__controls__cancel ui-button" id="cancel-button-popup-dep">
+                            <span class="ui-button__inner-wrapper">
+                                <div class="ui-button__icon">
+                                    <img src="./icons/icon-cancel.svg"/>
+                                </div>
+                                <span class="ui-button__text cancel-text">cancel</span>
+                            </span>
+                        </button>
+                        <button class="popup__content__controls__deposit ui-button" id="deposit-button-popup">
+                            <span class="ui-button__inner-wrapper">
+                                <div class="ui-button__icon">
+                                    <img src="./icons/icon-send-blue.svg"/>
+                                </div>
+                                <span class="ui-button__text">Get</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src='./scripts/big.js'></script>
+    <script type="text/javascript" src="qrc:///qtwebchannel/qwebchannel.js" async></script>
+    <script type="module" async src="./scripts/index.js"></script>
+</html>
+</body>

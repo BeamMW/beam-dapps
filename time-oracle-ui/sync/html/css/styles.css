@@ -1,0 +1,314 @@
+/* common start */
+
+body {
+    font-family: 'SFProDisplay', sans-serif;
+    font-weight: normal;
+}
+
+/* common ends */
+
+/* plugin area start  */
+
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.container__cards {
+    display: flex;
+    flex-direction: row;
+}
+
+.container__main {
+    margin-top: 40px;
+    padding: 30px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.container__main__icon {
+    display: flex;
+    align-self: center;
+    width: 112px;
+    height: 112px;
+}
+
+.container__main__controls {
+    display: flex;
+    align-self: center;
+    margin-top: 30px;
+}
+
+.container__main__controls__deposit {
+    background-color: #da68f5;
+}
+
+.container__main__controls__catch {
+    background-color: #00f6d2;
+    margin-left: 20px;
+}
+
+.container__main__controls__withdraw {
+    background-color: #0bccf7;
+    margin-left: 20px;
+}
+
+.container__cards__top__vault {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.card {
+    display: flex;
+    flex: auto;
+    height: 68px;
+    border-radius: 10px;
+    align-items: center;
+}
+
+.card-icon {
+    margin-left: 30px;
+}
+
+.card-title {
+    margin-left: 17px;
+    color: #ffffff;
+    opacity: 0.5;
+    font-size: 14px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: 3.11px;
+}
+
+.card-beam-value {
+    margin-left: auto;
+    margin-right: 30px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+}
+
+.container__update {
+    margin-top: 20px;
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+}
+
+.container__update__contract {
+    margin-left: 10px;
+    opacity: 0.3;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: italic;
+    line-height: normal;
+    letter-spacing: normal;
+}
+
+.container__main__empty-deposit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cancel-text {
+    color: #ffffff;
+}
+
+.container__main__controls__cancel {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* plugin area ends */
+
+/* common elements start */
+
+.error-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    word-break: break-word;
+}
+
+#error-full,
+#error-common {
+    text-align: center;
+    font-size: 16px;
+    color: red;
+}
+
+.ui-button {
+    padding: 0 30px;
+    border: 0;
+    height: 38px;
+    border-radius: 50px;
+    box-shadow: none;
+    color: #042548;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    outline: none;
+    align-items: center;
+}
+
+.ui-button:not(.disabled):hover {
+    -moz-box-shadow:0 0 10px #ffffff; 
+    -webkit-box-shadow:0 0 10px #ffffff; 
+    box-shadow:0 0 10px #ffffff;
+}
+
+.ui-button__inner-wrapper {
+    display: flex;
+    flex-direction: row;
+}
+
+.ui-button__icon {
+    margin-right: 15px;
+}
+
+.main-text {
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: italic;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
+/* common elements ends */
+
+/* popup starts */
+
+.popup{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: fixed;
+    top: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup .popup__content{
+    margin: 40px auto 0px auto;
+    padding: 30px;
+    width: 460px;
+    height: 139px;
+    border-radius: 10px;
+    background-color: #00446c;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.popup__content__title {
+    font-size: 18px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: center;
+}
+
+.popup__content__middle-deposit,
+.popup__content__middle {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.29;
+    letter-spacing: normal;
+    text-align: center;
+}
+
+.popup__content__middle-deposit {
+    flex-direction: row;
+    align-items: unset;
+    text-align: unset;
+}
+
+.popup__content__controls {
+    margin-top: auto;
+}
+
+.popup__content__controls__withdraw {
+    background-color: #0bccf7;
+    margin-left: 20px;
+}
+
+.popup__content__controls__deposit {
+    background-color: #da68f5;
+    margin-left: 20px;
+}
+
+
+.deposit-popup-input {
+    background: rgba(255, 255, 255, 0);
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 36px;
+    font-weight: 300;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: 0.68px;
+    resize:none;
+    color: #da68f5;
+    max-height: 45px;
+    width: 360px;
+}
+
+.deposit-popup-input:focus {
+    outline-width: 0;
+    color: #da68f5;
+}
+
+.deposit-popup-beam {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    font-size: 24px;
+    font-weight: 300;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: 0.6px;
+    color: #ffffff;
+}
+
+/* popup ends */
