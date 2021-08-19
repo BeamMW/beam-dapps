@@ -19,42 +19,7 @@ constexpr uint64_t factorial(uint8_t n)
 	return (n == 0 ? 1 : n * factorial(n - 1));
 }
 
-#ifndef ENABLE_UNIT_TESTS_
-void On_action_new_game(const ContractID& cid)
-{
-	BlockHeader::Info hdr;
-	hdr.m_Height = Env::get_Height();
-	Env::get_HdrInfo(hdr);
-
-	uint64_t seed = 0;
-	Env::Memcpy(&seed, &hdr.m_Hash.m_p, 32);
-#ifdef DEBUG
-	Env::DocAddNum64("Debug_seed", seed);
-#endif // DEBUG
-	
-	std::mt19937_64 gen(seed);
-	std::uniform_int_distribution<uint64_t> distrib(1, factorial(PERMUTATION_LEN) - 1);
-
-	uint64_t permutation_num = distrib(gen);
-
-	GemPuzzle::NewGameParams params;
-
-	uint32_t tmp;
-	Env::DocGetNum32("cancel_previous_game", &tmp);
-	params.cancel_previous_game = !!tmp;
-
-	Env::DerivePk(params.player, &cid, sizeof(cid));
-	params.height = hdr.m_Height;
-	params.permutation_num = permutation_num;
-
-	Env::GenerateKernel(&cid, GemPuzzle::NewGameParams::METHOD, &params, sizeof(params), nullptr, 0, nullptr, 0, "Create new game", 0);
-
-	Env::DocAddNum64("permutation", permutation_num);
-}
-#endif // ENABLE_UNIT_TESTS_
-
-bool check_solution(uint64_t permutation_num, const char* solution, uint32_t& moves_num)
-{
+namespace {
 	class Board {
 	public:
 		enum Moves { RIGHT, LEFT, UP, DOWN, CLOCKWISE, COUNTERCLOCKWISE };
@@ -154,29 +119,68 @@ bool check_solution(uint64_t permutation_num, const char* solution, uint32_t& mo
 			uint8_t x;
 			uint8_t y;
 		} empty_cell;
-	} board(permutation_num);
+	};
+} // unnamed namespace
+
+#ifndef ENABLE_UNIT_TESTS_
+void On_action_new_game(const ContractID& cid)
+{
+	BlockHeader::Info hdr;
+	hdr.m_Height = Env::get_Height();
+	Env::get_HdrInfo(hdr);
+
+	uint64_t seed = 0;
+	Env::Memcpy(&seed, &hdr.m_Hash.m_p, 32);
+#ifdef DEBUG
+	Env::DocAddNum64("Debug_seed", seed);
+#endif // DEBUG
+	
+	std::mt19937_64 gen(seed);
+	std::uniform_int_distribution<uint64_t> distrib(1, factorial(PERMUTATION_LEN) - 1);
+
+	uint64_t permutation_num = distrib(gen);
+
+	GemPuzzle::NewGameParams params;
+
+	uint32_t tmp;
+	Env::DocGetNum32("cancel_previous_game", &tmp);
+	params.cancel_previous_game = !!tmp;
+
+	Env::DerivePk(params.player, &cid, sizeof(cid));
+	params.height = hdr.m_Height;
+	params.permutation_num = permutation_num;
+
+	Env::GenerateKernel(&cid, GemPuzzle::NewGameParams::METHOD, &params, sizeof(params), nullptr, 0, nullptr, 0, "Create new game", 0);
+
+	Env::DocAddNum64("permutation", permutation_num);
+}
+#endif // ENABLE_UNIT_TESTS_
+
+bool check_solution(uint64_t permutation_num, const char* solution, uint32_t& moves_num)
+{
+	::Board board(permutation_num);
 
 	moves_num = 0;
 	for (auto i = 0; solution[i] != '\0'; ++i) {
-		Board::Moves cur_move;
+		::Board::Moves cur_move;
 		switch (toupper(solution[i])) {
 		case 'R':
-			cur_move = Board::RIGHT;
+			cur_move = ::Board::RIGHT;
 			break;
 		case 'L':
-			cur_move = Board::LEFT;
+			cur_move = ::Board::LEFT;
 			break;
 		case 'U':
-			cur_move = Board::UP;
+			cur_move = ::Board::UP;
 			break;
 		case 'D':
-			cur_move = Board::DOWN;
+			cur_move = ::Board::DOWN;
 			break;
 		case 'F':
-			cur_move = Board::CLOCKWISE;
+			cur_move = ::Board::CLOCKWISE;
 			break;
 		case 'B':
-			cur_move = Board::COUNTERCLOCKWISE;
+			cur_move = ::Board::COUNTERCLOCKWISE;
 			break;
 		default:
 			// TODO: add error
