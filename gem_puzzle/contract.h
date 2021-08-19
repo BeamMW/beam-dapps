@@ -8,7 +8,15 @@ namespace GemPuzzle {
 
 	struct NewGameParams {
 		static const uint32_t METHOD = 2;
-		// TODO: add params
+		Height height;
+		PubKey player;
+		uint64_t permutation_num;
+		bool cancel_previous_game;
+	};
+
+	struct GameInfo {
+		NewGameParams ngparams;
+		// Will be completed later
 	};
 
 #pragma pack(pop)

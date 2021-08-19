@@ -22,15 +22,15 @@ constexpr uint64_t factorial(uint8_t n)
 #ifndef ENABLE_UNIT_TESTS_
 void On_action_new_game(const ContractID& cid)
 {
-	//Height cur_height = Env::get_Height();
 	BlockHeader::Info hdr;
 	hdr.m_Height = Env::get_Height();
 	Env::get_HdrInfo(hdr);
 
 	uint64_t seed = 0;
 	Env::Memcpy(&seed, &hdr.m_Hash.m_p, 32);
+#ifdef DEBUG
 	Env::DocAddNum64("Debug_seed", seed);
-	// TODO: seed * game_number
+#endif // DEBUG
 	
 	std::mt19937_64 gen(seed);
 	std::uniform_int_distribution<uint64_t> distrib(1, factorial(PERMUTATION_LEN) - 1);
@@ -39,10 +39,17 @@ void On_action_new_game(const ContractID& cid)
 
 	GemPuzzle::NewGameParams params;
 
+	uint32_t tmp;
+	Env::DocGetNum32("cancel_previous_game", &tmp);
+	params.cancel_previous_game = !!tmp;
+
+	Env::DerivePk(params.player, &cid, sizeof(cid));
+	params.height = hdr.m_Height;
+	params.permutation_num = permutation_num;
+
 	Env::GenerateKernel(&cid, GemPuzzle::NewGameParams::METHOD, &params, sizeof(params), nullptr, 0, nullptr, 0, "Create new game", 0);
 
 	Env::DocAddNum64("permutation", permutation_num);
-	// TODO: add game_number
 }
 #endif // ENABLE_UNIT_TESTS_
 
