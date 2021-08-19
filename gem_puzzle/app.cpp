@@ -20,6 +20,8 @@ constexpr uint64_t factorial(uint8_t n)
 }
 
 namespace {
+	enum Verdict { WIN, LOSE, ERROR };
+
 	class Board {
 	public:
 		enum Moves { RIGHT, LEFT, UP, DOWN, CLOCKWISE, COUNTERCLOCKWISE };
@@ -157,7 +159,7 @@ void On_action_new_game(const ContractID& cid)
 }
 #endif // ENABLE_UNIT_TESTS_
 
-bool check_solution(uint64_t permutation_num, const char* solution, uint32_t& moves_num)
+::Verdict check_solution(uint64_t permutation_num, const char* solution, uint32_t& moves_num)
 {
 	::Board board(permutation_num);
 
@@ -184,13 +186,14 @@ bool check_solution(uint64_t permutation_num, const char* solution, uint32_t& mo
 			cur_move = ::Board::COUNTERCLOCKWISE;
 			break;
 		default:
-			// TODO: add error
-			return false;
+			return ::Verdict::ERROR;
 		}
-		board.move(cur_move);
+		if (!board.move(cur_move)) {
+			return ::Verdict::ERROR;
+		}
 		++moves_num;
 	}
-	return board.is_solved();
+	return board.is_solved() ? ::Verdict::WIN : ::Verdict::LOSE;
 }
 
 #ifndef ENABLE_UNIT_TESTS_
@@ -253,41 +256,41 @@ TEST(FactorialTest, PositiveInput) {
 TEST(CheckSolutionTest, BoardRotations) {
 	uint32_t moves_num;
 
-	ASSERT_TRUE(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "FFFF", moves_num));
+	ASSERT_EQ(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "FFFF", moves_num), ::Verdict::WIN);
 	ASSERT_EQ(moves_num, 4);
-	ASSERT_TRUE(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "BBBB", moves_num));
+	ASSERT_EQ(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "BBBB", moves_num), ::Verdict::WIN);
 	ASSERT_EQ(moves_num, 4);
 
 	// 4 8 12 15
 	// 3 7 11 14
 	// 2 6 10 13
 	// 1 5 9 *
-	ASSERT_TRUE(check_solution(_permutation_to_num({4, 8, 12, 15, 3, 7, 11, 14, 2, 6, 10, 13, 1, 5, 9}), "FRRR", moves_num));
+	ASSERT_EQ(check_solution(_permutation_to_num({4, 8, 12, 15, 3, 7, 11, 14, 2, 6, 10, 13, 1, 5, 9}), "FRRR", moves_num), ::Verdict::WIN);
 	ASSERT_EQ(moves_num, 4);
 
 	// 13 9 5 1
 	// 14 10 6 2
 	// 15 11 7 3
 	// 12 8 4 *
-	ASSERT_TRUE(check_solution(_permutation_to_num({13, 9, 5, 1, 14, 10, 6, 2, 15, 11, 7, 3, 12, 8, 4}), "BDDD", moves_num));
+	ASSERT_EQ(check_solution(_permutation_to_num({13, 9, 5, 1, 14, 10, 6, 2, 15, 11, 7, 3, 12, 8, 4}), "BDDD", moves_num), ::Verdict::WIN);
 	ASSERT_EQ(moves_num, 4);
 }
 
 TEST(CheckSolutionTest, ValidMoves) {
 	uint32_t moves_num;
 
-	ASSERT_TRUE(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "UDUD", moves_num));
+	ASSERT_EQ(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "UDUD", moves_num), ::Verdict::WIN);
 	ASSERT_EQ(moves_num, 4);
-	ASSERT_TRUE(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "LR", moves_num));
+	ASSERT_EQ(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "LR", moves_num), ::Verdict::WIN);
 	ASSERT_EQ(moves_num, 2);
-	ASSERT_TRUE(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "ULDRULDRULDR", moves_num));
+	ASSERT_EQ(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "ULDRULDRULDR", moves_num), ::Verdict::WIN);
 	ASSERT_EQ(moves_num, 12);
 }
 
 TEST(CheckSolutionTest, AlreadySolved) {
 	uint32_t moves_num;
 
-	ASSERT_TRUE(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "", moves_num));
+	ASSERT_EQ(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "", moves_num), ::Verdict::WIN);
 	ASSERT_EQ(moves_num, 0);
 }
 
