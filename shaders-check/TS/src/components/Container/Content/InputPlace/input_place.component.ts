@@ -1,3 +1,4 @@
+import { APIResponse, BeamApiHandlers } from 'beamApiProps';
 import { Tags } from '../../../../constants/html_elements';
 import BaseComponent from '../../../BaseComponent/base.component';
 
@@ -6,7 +7,8 @@ export class InputPlace extends BaseComponent {
     super(Tags.DIV, ['input__place']);
   }
 
-  inform = (json:string):void => {
+  inform = (handlers:BeamApiHandlers, json:APIResponse):void => {
     console.log(json);
+    console.log(handlers);
   };
 }

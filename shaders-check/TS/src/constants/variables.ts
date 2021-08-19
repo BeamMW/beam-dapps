@@ -6,3 +6,11 @@ export enum InnerTexts {
 export enum ShaderProps {
   MAX_FILE_SIZE = 5000000
 }
+
+export enum ReqIds {
+  FORM_GENERATOR = 'form-generator'
+}
+
+export enum APIMethods {
+  INVOKE_CONTRACT = 'invoke_contract'
+}

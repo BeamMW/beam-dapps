@@ -1,3 +1,4 @@
+import { APIResponse, BeamApiHandlers, BeamApiParams } from 'beamApiProps';
 import { QWebChannel, QWebChannelTransport, QObject } from 'qwebchannel';
 import BaseComponent from '../components/BaseComponent/base.component';
 // import shader from '../shader.wasm';
@@ -10,14 +11,8 @@ declare global {
 }
 
 export interface ObserverComponent extends BaseComponent {
-  inform: (state: BeamAPI) => void;
+  inform: (state: BeamApiHandlers, object: APIResponse) => void;
 }
-
-export type Params = {
-  contract?: number[];
-  create_tx: boolean;
-  args?: string;
-};
 
 export class BeamAPI {
   private API: null | QObject;
@@ -39,16 +34,20 @@ export class BeamAPI {
   };
 
   onApiResult = (json: string): void => {
-    console.log(json);
     this.observers.forEach((element: ObserverComponent) => {
-      element.inform(JSON.parse(json));
+      element.inform(
+        {
+          initShader: this.initShader,
+          callApi: this.callApi
+        },
+        JSON.parse(json)
+      );
     });
   };
 
   loadAPI = async (): Promise<void> => {
     const { qt, beam } = window;
     if (beam) {
-      console.log(window.beam.apiResult$);
       window.beam.apiResult$.subscribe(this.onApiResult);
       this.API = beam;
     } else {
@@ -73,7 +72,7 @@ export class BeamAPI {
     }
   };
 
-  callApi = (callid: string, method: string, params: Params): void => {
+  callApi = (callid: string, method: string, params: BeamApiParams): void => {
     if (this.contract) {
       const contract = Array.from(new Uint8Array(this.contract));
       const request = {

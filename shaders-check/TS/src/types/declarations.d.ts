@@ -21,25 +21,25 @@ declare module 'qwebchannel' {
   };
 
   export type ApiResult = {
-    connect: (callback:(arg:string) => void) => void
-    disconnect: (callback:(arg:string) => void) => void
+    connect: (callback: (arg: string) => void) => void;
+    disconnect: (callback: (arg: string) => void) => void;
   };
 
   export type ApiResult$ = {
-    handlers: (arg: string)=>void[];
-    subscribe:(callback:(json: string)=>void)=> void
+    handlers: (arg: string) => void[];
+    subscribe: (callback: (json: string) => void) => void;
   };
 
   export type QObject = {
-    callWalletApi: (json:string) => void
+    callWalletApi: (json: string) => void;
     callWalletApiResult: ApiResult;
     apiResult$: ApiResult$;
-    callApi: (callid: string, method: string, params: Params) => void
-    initializeShader: (contract:string, name: string) => void;
+    callApi: (callid: string, method: string, params: Params) => void;
+    initializeShader: (contract: string, name: string) => void;
   };
 
   export type QBEAM = {
-    api: QObject
+    api: QObject;
   };
 
   export class QWebChannel {
@@ -48,7 +48,27 @@ declare module 'qwebchannel' {
       initCallback: (channel: QWebChannel) => void
     );
     objects: {
-      BEAM: QBEAM
+      BEAM: QBEAM;
     };
   }
+}
+
+declare module 'beamApiProps' {
+  export type APIResponse = {
+    id: ReqIds;
+    jsonrpc: string;
+    result: {
+      output: string;
+      txid: string;
+    };
+  };
+  export type BeamApiHandlers = {
+    callApi: (callid: string, method: string, params: Params) => void,
+    initShader: (shader: ArrayBuffer) => void
+  };
+  export type BeamApiParams = {
+    contract?: number[];
+    create_tx: boolean;
+    args?: string;
+  };
 }
