@@ -34,7 +34,8 @@ declare module 'qwebchannel' {
     callWalletApi: (json:string) => void
     callWalletApiResult: ApiResult;
     apiResult$: ApiResult$;
-    initializeShader: (contract:ArrayBuffer, name: string) => void;
+    callApi: (callid: string, method: string, params: Params) => void
+    initializeShader: (contract:string, name: string) => void;
   };
 
   export type QBEAM = {

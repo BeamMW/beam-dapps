@@ -1,5 +1,5 @@
 import { InputPlace } from './InputPlace/input_place.component';
-import { ObserverComponent } from '../../../beamAPI/beamAPI';
+import { ObserverComponent } from '../../../beamAPI/BeamAPI';
 import { Tags } from '../../../constants/html_elements';
 import BaseComponent from '../../BaseComponent/base.component';
 import { OutputPlace } from './OutputPlace/output_place.component';
