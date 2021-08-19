@@ -76,7 +76,7 @@ struct Chromosome
 	// set of signs and gene, on the presence of which in this chromosome the expression of signs depends 
 	DependentSignsAndConditionOfExpression dependentSigns; 
 
-	//Ctror of chromosome with complete type of dominance
+	//Ctor of chromosome with complete type of dominance
 	Chromosome(const std::string signName,
 		const std::string dominantGeneticExpression,
 		const std::string recessiveGeneticExpression,
@@ -91,7 +91,7 @@ struct Chromosome
 		dependentSigns(dependentSigns)
 	{}
 
-	//Ctror of chromosome with incomplete type of dominance
+	//Ctor of chromosome with incomplete type of dominance
 	Chromosome(const std::string signName,
 		const std::string dominantGeneticExpression,
 		const std::string interveningGeneticExpression,

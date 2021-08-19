@@ -16,7 +16,7 @@ struct Kitten : public ICharacter
 			Chromosome("type of eyes: ", "big", "medium", "small"),
 			Chromosome("availability of fur: ", "yes", "no",
 				DependentSignsAndConditionOfExpression
-				(GeneState::Recessive, BaseGenePresence::Absence,
+				(GeneState::Recessive, BaseGenePresence::Presence,
 					{
 						Chromosome("spots: ", "yes", "no"),
 						Chromosome("type of fur: ", "straight", "wavy", "curly"),

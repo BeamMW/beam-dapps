@@ -16,7 +16,7 @@ genotype crossover(const genotype& firstParentGenotype, const genotype& secondPa
 		(mersenne() % 2) ? (*childGenotypeIt).firstGene = (*firstParentGenotypeIt).firstGene : (*secondParentGenotypeIt).firstGene;
 		(mersenne() % 2) ? (*childGenotypeIt).secondGene = (*secondParentGenotypeIt).secondGene : (*firstParentGenotypeIt).secondGene;
 
-		mutate();
+		mutate(*childGenotypeIt);
 	}
 	return childGenotype;
 }

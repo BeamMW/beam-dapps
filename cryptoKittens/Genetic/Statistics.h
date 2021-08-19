@@ -36,15 +36,18 @@ private:
 			));
 		}
 
-		if (!chromosome.dependentSigns.signs.empty() 
-			&& (chromosome.dependentSigns.baseGenePresence == BaseGenePresence::Presence 
-				&& (chromosome.dependentSigns.baseGene == chromosome.firstGene 
-				|| chromosome.dependentSigns.baseGene == chromosome.secondGene))
-			|| (chromosome.dependentSigns.baseGenePresence == BaseGenePresence::Absence 
-				&& (chromosome.dependentSigns.baseGene != chromosome.firstGene
-					&& chromosome.dependentSigns.baseGene != chromosome.secondGene)))
+		if (!chromosome.dependentSigns.signs.empty())
 		{
-			probabilityOfSignPresence = probabilityOfSignPresence * 0.5f;
+			probabilityOfSignPresence = 0.0f;
+			if ((chromosome.dependentSigns.baseGenePresence == BaseGenePresence::Presence
+				&& (chromosome.dependentSigns.baseGene == chromosome.firstGene
+					|| chromosome.dependentSigns.baseGene == chromosome.secondGene))
+				|| (chromosome.dependentSigns.baseGenePresence == BaseGenePresence::Absence
+					&& (chromosome.dependentSigns.baseGene != chromosome.firstGene
+						&& chromosome.dependentSigns.baseGene != chromosome.secondGene)))
+			{
+				probabilityOfSignPresence = probabilityOfSignPresence * 0.5f;
+			}
 
 			for (auto it = chromosome.dependentSigns.signs.cbegin(); it != chromosome.dependentSigns.signs.cend(); ++it)
 			{
@@ -198,15 +201,18 @@ private:
 			}
 		}
 
-		if (!firstParentChromosome.dependentSigns.signs.empty()
-			&& (firstParentChromosome.dependentSigns.baseGenePresence == BaseGenePresence::Presence
+		if (!firstParentChromosome.dependentSigns.signs.empty())
+		{
+			probabilityOfSignPresence = 0.0f;
+			if ((firstParentChromosome.dependentSigns.baseGenePresence == BaseGenePresence::Presence
 				&& (firstParentChromosome.dependentSigns.baseGene == firstParentChromosome.firstGene
 					|| firstParentChromosome.dependentSigns.baseGene == firstParentChromosome.secondGene))
-			|| (firstParentChromosome.dependentSigns.baseGenePresence == BaseGenePresence::Absence
-				&& (firstParentChromosome.dependentSigns.baseGene != firstParentChromosome.firstGene
-					&& firstParentChromosome.dependentSigns.baseGene != firstParentChromosome.secondGene)))
-		{
-			probabilityOfSignPresence = probabilityOfSignPresence * 0.5f;
+				|| (firstParentChromosome.dependentSigns.baseGenePresence == BaseGenePresence::Absence
+					&& (firstParentChromosome.dependentSigns.baseGene != firstParentChromosome.firstGene
+						&& firstParentChromosome.dependentSigns.baseGene != firstParentChromosome.secondGene)))
+			{
+				probabilityOfSignPresence = probabilityOfSignPresence * 0.5f;
+			}
 
 			for (auto firstParentChromosomeIt = firstParentChromosome.dependentSigns.signs.cbegin(),
 				secondParentChromosomeIt = secondParentChromosome.dependentSigns.signs.cbegin();
