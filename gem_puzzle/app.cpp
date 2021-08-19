@@ -75,18 +75,18 @@ namespace {
 			return result;
 		}
 
-		void move(Moves m)
+		bool move(Moves m)
 		{
 			auto old_empty_cell = empty_cell;
 			const int8_t dx[] = { 1, -1, 0, 0 };
 			const int8_t dy[] = { 0, 0, -1, 1 };
 
-			// TODO: add error on invalid moves
-
 			switch (m) {
 			case RIGHT: case LEFT: case UP: case DOWN:
 				empty_cell.x += dx[static_cast<uint8_t>(m)];
 				empty_cell.y += dy[static_cast<uint8_t>(m)];
+				if (empty_cell.x >= BOARD_SIZE || empty_cell.y >= BOARD_SIZE)
+					return false;
 				std::swap(board[old_empty_cell.y][old_empty_cell.x], board[empty_cell.y][empty_cell.x]);
 				break;
 			case CLOCKWISE: case COUNTERCLOCKWISE: {
@@ -101,7 +101,7 @@ namespace {
 				break;
 			}
 			default:
-				break;
+				return false;
 			}
 #ifdef DEBUG
 			for (size_t k = 0; k < BOARD_SIZE; ++k) {
@@ -111,6 +111,7 @@ namespace {
 				std::cout << std::endl;
 			}
 #endif // DEBUG
+			return true;
 		}
 
 	private:
