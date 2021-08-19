@@ -22,3 +22,10 @@ export void Method_2(const GemPuzzle::NewGameParams& params)
 		Env::Halt();
 	}
 }
+
+export void Method_3(const GemPuzzle::CheckSolutionParams& params)
+{
+	if (params.verdict == GemPuzzle::Verdict::WIN) {
+		Env::DelVar_T(params.player);
+	}
+}

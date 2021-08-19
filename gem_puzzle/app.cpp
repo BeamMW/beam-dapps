@@ -11,6 +11,7 @@
 #include <random>
 
 constexpr size_t SOLUTION_BUF_SIZE = 8192;
+constexpr size_t VERDICT_BUF_SIZE = 8;
 constexpr uint8_t BOARD_SIZE = 4;
 constexpr uint8_t PERMUTATION_LEN = BOARD_SIZE * BOARD_SIZE - 1;
 
@@ -20,8 +21,6 @@ constexpr uint64_t factorial(uint8_t n)
 }
 
 namespace {
-	enum Verdict { WIN, LOSE, ERROR };
-
 	class Board {
 	public:
 		enum Moves { RIGHT, LEFT, UP, DOWN, CLOCKWISE, COUNTERCLOCKWISE };
@@ -159,7 +158,7 @@ void On_action_new_game(const ContractID& cid)
 }
 #endif // ENABLE_UNIT_TESTS_
 
-::Verdict check_solution(uint64_t permutation_num, const char* solution, uint32_t& moves_num)
+GemPuzzle::Verdict check_solution(uint64_t permutation_num, const char* solution, uint32_t& moves_num)
 {
 	::Board board(permutation_num);
 
@@ -186,37 +185,57 @@ void On_action_new_game(const ContractID& cid)
 			cur_move = ::Board::COUNTERCLOCKWISE;
 			break;
 		default:
-			return ::Verdict::ERROR;
+			return GemPuzzle::Verdict::ERROR;
 		}
 		if (!board.move(cur_move)) {
-			return ::Verdict::ERROR;
+			return GemPuzzle::Verdict::ERROR;
 		}
 		++moves_num;
 	}
-	return board.is_solved() ? ::Verdict::WIN : ::Verdict::LOSE;
+	return board.is_solved() ? GemPuzzle::Verdict::WIN : GemPuzzle::Verdict::LOSE;
 }
 
 #ifndef ENABLE_UNIT_TESTS_
 void On_action_check_solution(const ContractID& cid)
 {
-	uint32_t gameID = 0;
-	Env::DocGetNum32("gameID", &gameID);
-
 	char solution[SOLUTION_BUF_SIZE];
 	Env::DocGetText("solution", solution, sizeof(solution));
 
-	uint64_t permutation_num = 0;
-	// TODO: read permutation and height by gameID
+	PubKey player;
+	Env::DerivePk(player, &cid, sizeof(cid));
+
+	Env::Key_T<PubKey> k;
+	k.m_Prefix.m_Cid = cid;
+	k.m_KeyInContract = player;
+
+	GemPuzzle::GameInfo game_info;
+	Env::VarReader::Read_T(k, game_info);
+
 	uint32_t moves_num = 0;
+	GemPuzzle::CheckSolutionParams params;
+	params.player = player;
+	params.verdict = check_solution(game_info.ngparams.permutation_num, solution, moves_num);
+
+	char verdict[VERDICT_BUF_SIZE];
+	switch (params.verdict) {
+	case GemPuzzle::Verdict::WIN:
+		Env::Memcpy(verdict, "WIN", sizeof(verdict));
+		break;
+	case GemPuzzle::Verdict::LOSE:
+		Env::Memcpy(verdict, "LOSE", sizeof(verdict));
+		break;
+	case GemPuzzle::Verdict::ERROR:
+		Env::Memcpy(verdict, "ERROR", sizeof(verdict));
+		break;
+	}
+
 	Env::DocAddGroup("");
-	Env::DocAddText("verdict", check_solution(permutation_num, solution, moves_num) ? "win" : "lose");
+	Env::DocAddText("verdict", verdict);
 	Env::DocAddNum32("moves", moves_num);
-
-	// Env::get_Height()
-	// TODO: calculate time
-
-	//Env::DocAddNum64("time (min)", time);
+	Env::DocAddNum64("time (min)", Env::get_Height() - game_info.ngparams.height);
 	Env::DocCloseGroup();
+
+	Env::GenerateKernel(&cid, GemPuzzle::CheckSolutionParams::METHOD, &params, sizeof(params), nullptr, 0, nullptr, 0, "Check solution", 0);
 }
 
 export void Method_0()
@@ -256,41 +275,41 @@ TEST(FactorialTest, PositiveInput) {
 TEST(CheckSolutionTest, BoardRotations) {
 	uint32_t moves_num;
 
-	ASSERT_EQ(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "FFFF", moves_num), ::Verdict::WIN);
+	ASSERT_EQ(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "FFFF", moves_num), GemPuzzle::Verdict::WIN);
 	ASSERT_EQ(moves_num, 4);
-	ASSERT_EQ(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "BBBB", moves_num), ::Verdict::WIN);
+	ASSERT_EQ(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "BBBB", moves_num), GemPuzzle::Verdict::WIN);
 	ASSERT_EQ(moves_num, 4);
 
 	// 4 8 12 15
 	// 3 7 11 14
 	// 2 6 10 13
 	// 1 5 9 *
-	ASSERT_EQ(check_solution(_permutation_to_num({4, 8, 12, 15, 3, 7, 11, 14, 2, 6, 10, 13, 1, 5, 9}), "FRRR", moves_num), ::Verdict::WIN);
+	ASSERT_EQ(check_solution(_permutation_to_num({4, 8, 12, 15, 3, 7, 11, 14, 2, 6, 10, 13, 1, 5, 9}), "FRRR", moves_num), GemPuzzle::Verdict::WIN);
 	ASSERT_EQ(moves_num, 4);
 
 	// 13 9 5 1
 	// 14 10 6 2
 	// 15 11 7 3
 	// 12 8 4 *
-	ASSERT_EQ(check_solution(_permutation_to_num({13, 9, 5, 1, 14, 10, 6, 2, 15, 11, 7, 3, 12, 8, 4}), "BDDD", moves_num), ::Verdict::WIN);
+	ASSERT_EQ(check_solution(_permutation_to_num({13, 9, 5, 1, 14, 10, 6, 2, 15, 11, 7, 3, 12, 8, 4}), "BDDD", moves_num), GemPuzzle::Verdict::WIN);
 	ASSERT_EQ(moves_num, 4);
 }
 
 TEST(CheckSolutionTest, ValidMoves) {
 	uint32_t moves_num;
 
-	ASSERT_EQ(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "UDUD", moves_num), ::Verdict::WIN);
+	ASSERT_EQ(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "UDUD", moves_num), GemPuzzle::Verdict::WIN);
 	ASSERT_EQ(moves_num, 4);
-	ASSERT_EQ(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "LR", moves_num), ::Verdict::WIN);
+	ASSERT_EQ(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "LR", moves_num), GemPuzzle::Verdict::WIN);
 	ASSERT_EQ(moves_num, 2);
-	ASSERT_EQ(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "ULDRULDRULDR", moves_num), ::Verdict::WIN);
+	ASSERT_EQ(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "ULDRULDRULDR", moves_num), GemPuzzle::Verdict::WIN);
 	ASSERT_EQ(moves_num, 12);
 }
 
 TEST(CheckSolutionTest, AlreadySolved) {
 	uint32_t moves_num;
 
-	ASSERT_EQ(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "", moves_num), ::Verdict::WIN);
+	ASSERT_EQ(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "", moves_num), GemPuzzle::Verdict::WIN);
 	ASSERT_EQ(moves_num, 0);
 }
 
