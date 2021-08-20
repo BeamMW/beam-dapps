@@ -19,10 +19,10 @@ private:
 	PhenotypeMask phenotypeMask; // set of general characteristics of each chromosome 
 
 	// method for calculating generic probability of sign expression of a character
-	void setGeneralSignExpressionProbability(const ChromosomeMask& chromosomeMask, genotype::const_iterator& chromosomeIt) noexcept
+	void setGeneralSignExpressionProbability(const ChromosomeMask& chromosomeMask) noexcept
 	{
-		const Chromosome chromosome = *chromosomeIt;
 		static float probabilityOfSignPresence = 1.0f;
+		static int recurLevel = 0;
 
 		if (chromosomeMask.typeOfDominance == TypeOfDominance::Complete)
 		{
@@ -46,25 +46,16 @@ private:
 
 		if (!chromosomeMask.dependentSigns.signs.empty())
 		{
-			if (!chromosomeMask.dependentSigns.signs.empty() &&
-				((chromosomeMask.dependentSigns.baseGenePresence == BaseGenePresence::Presence
-					&& (chromosomeMask.dependentSigns.baseGene == chromosome.firstGene
-						|| chromosomeMask.dependentSigns.baseGene == chromosome.secondGene))
-					|| (chromosomeMask.dependentSigns.baseGenePresence == BaseGenePresence::Absence
-						&& (chromosomeMask.dependentSigns.baseGene != chromosome.firstGene
-							&& chromosomeMask.dependentSigns.baseGene != chromosome.secondGene))))
-			{
-				probabilityOfSignPresence = probabilityOfSignPresence * 0.5f;
-			}
+			probabilityOfSignPresence = pow(0.5, ++recurLevel);
 
 			for (auto it = chromosomeMask.dependentSigns.signs.cbegin(); it != chromosomeMask.dependentSigns.signs.cend(); ++it)
 			{
 				float probabilityOfSignAbsence = (1.0f - probabilityOfSignPresence) * 100;
-				setGeneralSignExpressionProbability(*it, ++chromosomeIt);
-				generalSignsExpressionProbability[(*it).signName].insert(std::make_pair("NO", probabilityOfSignAbsence));
+				setGeneralSignExpressionProbability(*it);
+				if (probabilityOfSignAbsence != 0.0f)
+					generalSignsExpressionProbability[(*it).signName].insert(std::make_pair("Not present", probabilityOfSignAbsence));
 			}
-
-			probabilityOfSignPresence = 1.0f;
+			probabilityOfSignPresence = pow(0.5, --recurLevel);
 		}
 	}
 
@@ -284,7 +275,8 @@ private:
 			{
 				float probabilityOfSignAbsence = (1.0f - probabilityOfSignPresence) * 100;
 				setChildSignExpressionProbability(++firstParentChromosomeIt, ++secondParentChromosomeIt, *it);
-				childSignsExpressionProbability[it->signName].insert(std::make_pair("NO", probabilityOfSignAbsence));
+				if (probabilityOfSignAbsence != 0.0f)
+					childSignsExpressionProbability[it->signName].insert(std::make_pair("Not present", probabilityOfSignAbsence));
 			}
 
 			probabilityOfSignPresence = 1.0f;
@@ -298,12 +290,11 @@ public:
 		phenotypeMask(phenotypeMask) {}
 
 	// method for getting probability of signs expression
-	signExpressionProbability getGeneralSignsExpressionProbability(const genotype& genotype) noexcept
+	signExpressionProbability getGeneralSignsExpressionProbability() noexcept
 	{
-		auto genotypeIt = genotype.cbegin();
-		for (auto maskIt = phenotypeMask.cbegin(); maskIt != phenotypeMask.cend(); ++maskIt, ++genotypeIt)
+		for (auto maskIt = phenotypeMask.cbegin(); maskIt != phenotypeMask.cend(); ++maskIt)
 		{
-			setGeneralSignExpressionProbability(*maskIt, genotypeIt);
+			setGeneralSignExpressionProbability(*maskIt);
 		}
 		return generalSignsExpressionProbability;
 	}

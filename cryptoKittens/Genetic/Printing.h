@@ -20,14 +20,14 @@ void printPhenotype(const Phenotype& phenotype) noexcept
 {
 	for (auto phenotypeIt = phenotype.setOfSigns.cbegin(); phenotypeIt != phenotype.setOfSigns.cend(); ++phenotypeIt)
 	{
-		std::cout << phenotypeIt->first << phenotypeIt->second << '\n';
+		std::cout << phenotypeIt->first << ": " << phenotypeIt->second << '\n';
 	}
 }
 
 void printGeneralSignProbability(const ICharacter& character) noexcept
 {
 	Statistics st(character.phenotype.mask.phenotypeMask);
-	auto signsExpressionProbability = st.getGeneralSignsExpressionProbability(character.genotype.setOfGenes);
+	auto signsExpressionProbability = st.getGeneralSignsExpressionProbability();
 	for (auto signIt = signsExpressionProbability.cbegin(); signIt != signsExpressionProbability.cend(); ++signIt)
 	{
 		std::cout << signIt->first << "\n";
