@@ -4,6 +4,12 @@
 #include "Genotype.h"
 #include "Mask.h"
 
+using signExpressionProbability = std::map<signName, std::map<externalExpression, float>>;
+
+/*
+* Class for calculating probabilities of sign expressions for character based on it's phenotype mask
+* or for child based on genotypes of parents and phenotype mask
+*/
 class Statistics
 {
 private:
@@ -12,7 +18,7 @@ private:
 	
 	PhenotypeMask phenotypeMask; // set of general characteristics of each chromosome 
 
-	// method for calculating generic probability of sign expression
+	// method for calculating generic probability of sign expression of a character
 	void setGeneralSignExpressionProbability(const ChromosomeMask& chromosomeMask, genotype::const_iterator& chromosomeIt) noexcept
 	{
 		const Chromosome chromosome = *chromosomeIt;
@@ -40,8 +46,6 @@ private:
 
 		if (!chromosomeMask.dependentSigns.signs.empty())
 		{
-			probabilityOfSignPresence = 0.0f;
-
 			if (!chromosomeMask.dependentSigns.signs.empty() &&
 				((chromosomeMask.dependentSigns.baseGenePresence == BaseGenePresence::Presence
 					&& (chromosomeMask.dependentSigns.baseGene == chromosome.firstGene
@@ -71,7 +75,8 @@ private:
 		const Chromosome firstParentChromosome = *firstParentChromosomeIt;
 		const Chromosome secondParentChromosome = *secondParentChromosomeIt;
 
-		bool isFirstGeneVariative = true;
+		// variative means, that in the same position firstParentChromosome and secondParentChromosome has different values
+		bool isFirstGeneVariative = true; 
 		bool isSecondGeneVariative = true;
 		
 		if (firstParentChromosome.firstGene == secondParentChromosome.firstGene)
@@ -210,7 +215,6 @@ private:
 
 		if (!chromosomeMask.dependentSigns.signs.empty())
 		{
-
 			if (isFirstGeneVariative && isSecondGeneVariative)
 			{
 				probabilityOfSignPresence = probabilityOfSignPresence * 0.5f;
@@ -288,7 +292,10 @@ private:
 	}
 
 public:
-	Statistics(const PhenotypeMask& phenotypeMask) noexcept : phenotypeMask(phenotypeMask) {}
+	Statistics(const PhenotypeMask& phenotypeMask) noexcept 
+		: generalSignsExpressionProbability({}),
+		childSignsExpressionProbability({}),
+		phenotypeMask(phenotypeMask) {}
 
 	// method for getting probability of signs expression
 	signExpressionProbability getGeneralSignsExpressionProbability(const genotype& genotype) noexcept
@@ -302,15 +309,18 @@ public:
 	}
 
 	// method for getting probability of signs expression for child
-	signExpressionProbability getChildSignsExpressionProbability(const genotype& firstParentGenotype, 
-		const genotype& secondParentGenotype) noexcept
+	signExpressionProbability getChildSignsExpressionProbability(const ICharacter& firstParent, 
+		const ICharacter& secondParent) noexcept
 	{
-		auto firstParentChromosomeIt = firstParentGenotype.cbegin();
-		auto secondParentChromosomeIt = secondParentGenotype.cbegin();
-
-		for (auto maskIt = phenotypeMask.cbegin(); maskIt != phenotypeMask.cend(); ++maskIt, ++firstParentChromosomeIt, ++secondParentChromosomeIt)
+		if (firstParent.phenotype.mask.phenotypeMask == secondParent.phenotype.mask.phenotypeMask) 
 		{
-			setChildSignExpressionProbability(firstParentChromosomeIt, secondParentChromosomeIt, *maskIt);
+			auto firstParentChromosomeIt = firstParent.genotype.setOfGenes.cbegin();
+			auto secondParentChromosomeIt = secondParent.genotype.setOfGenes.cbegin();
+
+			for (auto maskIt = phenotypeMask.cbegin(); maskIt != phenotypeMask.cend(); ++maskIt, ++firstParentChromosomeIt, ++secondParentChromosomeIt)
+			{
+				setChildSignExpressionProbability(firstParentChromosomeIt, secondParentChromosomeIt, *maskIt);
+			}
 		}
 		return childSignsExpressionProbability;
 	}

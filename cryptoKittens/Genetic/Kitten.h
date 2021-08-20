@@ -6,8 +6,9 @@
 /*
 * Kitten - entity with genotype and phenotype
 */
-struct Kitten : public ICharacter
+class Kitten : public ICharacter
 {
+public:
 	Kitten() noexcept
 	{
 		// creating general scheme for kittens genotype
@@ -15,13 +16,13 @@ struct Kitten : public ICharacter
 			ChromosomeMask("body size: ", "big", "medium", "small"),
 			ChromosomeMask("type of eyes: ", "big", "medium", "small"),
 			ChromosomeMask("availability of fur: ", "yes", "no",
-				DependentSignsAndConditionOfExpression
+				ChromosomeMask::DependentSignsAndConditionOfExpression
 				(GeneState::Recessive, BaseGenePresence::Presence,
 					{
 						ChromosomeMask("spots: ", "yes", "no"),
 						ChromosomeMask("type of fur: ", "straight", "wavy", "curly"),
 						ChromosomeMask("availability of color point: ", "yes", "no",
-							DependentSignsAndConditionOfExpression
+							ChromosomeMask::DependentSignsAndConditionOfExpression
 							(GeneState::Dominant, BaseGenePresence::Presence,
 								{
 									ChromosomeMask("on paws: ", "yes", "no"),

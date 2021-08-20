@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 
 #include "ICharacter.h"
 
@@ -8,20 +9,27 @@
 class Reproduction
 {
 public:
-	// method for crossover kittens
-	static genotype crossover(const genotype& firstParentGenotype, const genotype& secondParentGenotype) noexcept
+	// method for crossover characters
+	static genotype crossover(const ICharacter& firstParent, const ICharacter& secondParent) noexcept
 	{
-		genotype childGenotype;
-		auto childGenotypeIt = childGenotype.begin();
-		for (auto firstParentGenotypeIt = firstParentGenotype.cbegin(),
-			secondParentGenotypeIt = secondParentGenotype.cbegin();
-			childGenotypeIt != childGenotype.end();
-			++firstParentGenotypeIt, ++secondParentGenotypeIt, ++childGenotypeIt)
+		genotype childGenotype = {};
+		if (firstParent.phenotype.mask == secondParent.phenotype.mask)
 		{
-			(mersenne() % 2) ? childGenotypeIt->firstGene = firstParentGenotypeIt->firstGene : secondParentGenotypeIt->firstGene;
-			(mersenne() % 2) ? childGenotypeIt->secondGene = secondParentGenotypeIt->secondGene : firstParentGenotypeIt->secondGene;
+			auto childGenotypeIt = childGenotype.begin();
+			for (auto firstParentGenotypeIt = firstParent.genotype.setOfGenes.cbegin(),
+				secondParentGenotypeIt = secondParent.genotype.setOfGenes.cbegin();
+				childGenotypeIt != childGenotype.end();
+				++firstParentGenotypeIt, ++secondParentGenotypeIt, ++childGenotypeIt)
+			{
+				(mersenne() % 2) ? childGenotypeIt->firstGene = firstParentGenotypeIt->firstGene : secondParentGenotypeIt->firstGene;
+				(mersenne() % 2) ? childGenotypeIt->secondGene = secondParentGenotypeIt->secondGene : firstParentGenotypeIt->secondGene;
 
-			mutate(*childGenotypeIt);
+				mutate(*childGenotypeIt);
+			}
+		}
+		else
+		{
+			childGenotype.reserve(0);
 		}
 		return childGenotype;
 	}

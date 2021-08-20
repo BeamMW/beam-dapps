@@ -7,8 +7,9 @@
 /*
 * Chromosome, that consists of 2 alleles of gene, that describe sign expression
 */
-struct Chromosome
+class Chromosome
 {
+public:
 	GeneState firstGene; // state of first gene
 	GeneState secondGene;  // state of second gene
 

@@ -24,10 +24,10 @@ void printPhenotype(const Phenotype& phenotype) noexcept
 	}
 }
 
-void printGeneralSignProbability(const genotype& genotype, const PhenotypeMask& mask) noexcept
+void printGeneralSignProbability(const ICharacter& character) noexcept
 {
-	Statistics st(mask);
-	auto signsExpressionProbability = st.getGeneralSignsExpressionProbability(genotype);
+	Statistics st(character.phenotype.mask.phenotypeMask);
+	auto signsExpressionProbability = st.getGeneralSignsExpressionProbability(character.genotype.setOfGenes);
 	for (auto signIt = signsExpressionProbability.cbegin(); signIt != signsExpressionProbability.cend(); ++signIt)
 	{
 		std::cout << signIt->first << "\n";
@@ -39,10 +39,10 @@ void printGeneralSignProbability(const genotype& genotype, const PhenotypeMask& 
 	}
 }
 
-void printChildSignProbability(const genotype& firstParentGenotype, const genotype& secondParentGenotype, const PhenotypeMask& mask) noexcept
+void printChildSignProbability(const ICharacter& firstParent, const ICharacter& secondParent, const PhenotypeMask& mask) noexcept
 {
 	Statistics st(mask);
-	auto signsExpressionProbability = st.getChildSignsExpressionProbability(firstParentGenotype, secondParentGenotype);
+	auto signsExpressionProbability = st.getChildSignsExpressionProbability(firstParent, secondParent);
 	for (auto signIt = signsExpressionProbability.cbegin(); signIt != signsExpressionProbability.cend(); ++signIt)
 	{
 		std::cout << signIt->first << "\n";
