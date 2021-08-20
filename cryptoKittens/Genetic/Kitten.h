@@ -42,7 +42,7 @@ public:
 							ChromosomeMask::DependentSignsAndConditionOfExpression
 								(GeneState::Dominant, BaseGenePresence::Presence,
 									{
-										ChromosomeMask("stains or streaks:", "streaks", "discontinuous streaks", "spots")
+										ChromosomeMask("stains or streaks", "streaks", "discontinuous streaks", "spots")
 									}
 								)
 						),

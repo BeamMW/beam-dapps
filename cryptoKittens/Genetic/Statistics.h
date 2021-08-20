@@ -76,6 +76,7 @@ private:
 			isSecondGeneVariative = false;
 
 		static float probabilityOfSignPresence = 1.0f;
+		static int recurLevel = 0;
 
 		if (chromosomeMask.typeOfDominance == TypeOfDominance::Complete)
 		{
@@ -206,9 +207,10 @@ private:
 
 		if (!chromosomeMask.dependentSigns.signs.empty())
 		{
+			++recurLevel;
 			if (isFirstGeneVariative && isSecondGeneVariative)
 			{
-				probabilityOfSignPresence = probabilityOfSignPresence * 0.5f;
+				probabilityOfSignPresence = pow(0.5, recurLevel);
 			}
 			else if (!isFirstGeneVariative && !isSecondGeneVariative)
 			{
@@ -254,7 +256,7 @@ private:
 						&& chromosomeMask.dependentSigns.baseGenePresence == BaseGenePresence::Presence)
 						probabilityOfSignPresence = probabilityOfSignPresence * 1.0f;
 					if (chromosomeMask.dependentSigns.baseGene == GeneState::Recessive)
-						probabilityOfSignPresence = probabilityOfSignPresence * 0.5f;
+						probabilityOfSignPresence = pow(0.5, recurLevel);
 					else
 						probabilityOfSignPresence = probabilityOfSignPresence * 0.0f;
 				}
@@ -264,7 +266,7 @@ private:
 						&& chromosomeMask.dependentSigns.baseGenePresence == BaseGenePresence::Presence)
 						probabilityOfSignPresence = probabilityOfSignPresence * 1.0f;
 					if (chromosomeMask.dependentSigns.baseGene == GeneState::Dominant)
-						probabilityOfSignPresence = probabilityOfSignPresence * 0.5f;
+						probabilityOfSignPresence = pow(0.5, recurLevel);
 					else
 						probabilityOfSignPresence = probabilityOfSignPresence * 0.0f;
 				}
@@ -279,7 +281,7 @@ private:
 					childSignsExpressionProbability[it->signName].insert(std::make_pair("Not present", probabilityOfSignAbsence));
 			}
 
-			probabilityOfSignPresence = 1.0f;
+			probabilityOfSignPresence = pow(0.5, --recurLevel);
 		}
 	}
 
