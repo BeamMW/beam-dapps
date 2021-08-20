@@ -12,7 +12,7 @@ export default class Utils {
     static BEAM = null
 
     static onLoad(cback) {
-        window.addEventListener('load', () => new QWebChannel(qt.webChannelTransport, (channel) => {
+        new QWebChannel(qt.webChannelTransport, (channel) => {
             Utils.BEAM = channel.objects.BEAM
             // // Make everything beautiful
             let topColor =  [Utils.BEAM.style.appsGradientOffset, "px,"].join('')
@@ -34,7 +34,7 @@ export default class Utils {
             // // Notify application
             
             return cback(Utils.BEAM)
-        }))
+        })
     }
 
     static hex2rgba = (hex, alpha = 1) => {
@@ -65,7 +65,12 @@ export default class Utils {
             "method":  method,
             "params":  params
         }
-        Utils.BEAM.api.callWalletApi(JSON.stringify(request))
+        if (window.beam !== undefined) {
+            window.beam.callApi(callid, method, params);
+        } else {
+            Utils.BEAM.api.callWalletApi(JSON.stringify(request))
+        }
+        
     }
 
     // static download(url, cback) {

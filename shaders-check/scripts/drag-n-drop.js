@@ -15,6 +15,7 @@ export const init = (callback) => {
 		return false;
 	};
 	dropZone.addEventListener('drop', async function (e) {
+		window.beam.apiResult$.subscribe(shader.onApiResult);
 		// event - file droped 
 		e.preventDefault();
 		this.classList.remove('hover');
@@ -22,52 +23,36 @@ export const init = (callback) => {
 		const uploadDragFiles = e.dataTransfer.files;
 		const files = await uploadDragFiles[0].arrayBuffer();
 		callback(files);
-		Utils.callApi('form-generator', 'invoke_contract', {
-			contract: Array.from(new Uint8Array(files)),
-			create_tx: false
-		});
-		Utils.callApi('manager-view', 'invoke_contract', {
-							contract: Array.from(new Uint8Array(files)),
-							create_tx: false,
-							args: 'role=manager,action=view',
-						});
-
-		if (uploadDragFiles[0].size > maxFileSize) {
-			dropZoneText.textContent = 'Размер превышает допустимое значение!';
-			this.addClass('error');
-			return false;
-		} else 
-		{dropZoneText.textContent = uploadDragFiles[0].name;
-		Utils.setText('name__contract', `${uploadDragFiles[0].name.slice(0, -5)}`)
-		Utils.setText('lastModified__contract', `${uploadDragFiles[0].lastModified}`)
-		// Utils.setText('lastModifiedDate', `${uploadDragFiles[0].lastModifiedDate}`)
-		Utils.setText('size__contract', `${uploadDragFiles[0].size}`)
-		}
+		setInfo(files, uploadDragFiles)
 	});
 	inputFiles.addEventListener('change', async (e) => {
 		e.preventDefault()
 		const uploadDragFiles = e.path[0].files;
 		const files = await uploadDragFiles[0].arrayBuffer();
 		callback(files);
+		setInfo(files, uploadDragFiles)
+		// callback(files);
+	})
+
+	function setInfo(byte, shader){
 		Utils.callApi('form-generator', 'invoke_contract', {
-			contract: Array.from(new Uint8Array(files)),
+			contract: Array.from(new Uint8Array(byte)),
 			create_tx: false
 		});
 		Utils.callApi('manager-view', 'invoke_contract', {
-			contract: Array.from(new Uint8Array(files)),
+			contract: Array.from(new Uint8Array(byte)),
 			create_tx: false,
 			args: 'role=manager,action=view',
 		});
-		if (uploadDragFiles[0].size > maxFileSize) {
+		if (shader[0].size > maxFileSize) {
 			dropZoneText.textContent = 'Размер превышает допустимое значение!';
 			this.addClass('error');
 			return false;
 		} else 
-		{dropZoneText.textContent = uploadDragFiles[0].name;
-		Utils.setText('name__contract', `${uploadDragFiles[0].name.slice(0, -5)}`)
-		Utils.setText('lastModified__contract', `${uploadDragFiles[0].lastModified}`)
-		Utils.setText('size__contract', `${uploadDragFiles[0].size}`)
+		{dropZoneText.textContent = shader[0].name;
+		Utils.setText('name__contract', shader[0].name.slice(0, -5))
+		Utils.setText('lastModified__contract', shader[0].lastModified)
+		Utils.setText('size__contract', shader[0].size)
 		}
-		// callback(files);
-	})
+	}
 };
