@@ -6,7 +6,7 @@ export class OutputPlace extends BaseComponent {
     super(Tags.DIV, ['output__place']);
   }
 
-  inform = (json:string):void => {
-    console.log(json);
+  inform = (_json:string):void => {
+    console.log(':3');
   };
 }
