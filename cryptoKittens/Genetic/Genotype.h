@@ -29,20 +29,12 @@ struct Genotype
 	}
 	
 	// method for generation of genotype - setting values for chromosomes
-	void generateGenotype() noexcept
+	void generateGenotype(const uint16_t size) noexcept
 	{
+		setOfGenes.resize(size);
 		for (auto chromosomeIt = setOfGenes.begin(); chromosomeIt != setOfGenes.end(); ++chromosomeIt)
 		{
 			generateChromosome(*chromosomeIt);
-			if (!(*chromosomeIt).dependentSigns.signs.empty())
-			{
-				for (auto dependentChromosomeIt = (*chromosomeIt).dependentSigns.signs.begin();
-					dependentChromosomeIt != (*chromosomeIt).dependentSigns.signs.end();
-					++dependentChromosomeIt)
-				{
-					generateChromosome(*dependentChromosomeIt);
-				}
-			}
 		}
 	}
 };
