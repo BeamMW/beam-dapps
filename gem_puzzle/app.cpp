@@ -1,5 +1,6 @@
 #ifndef ENABLE_UNIT_TESTS_
 #	include "Shaders/common.h"
+#	include "Shaders/app_common_impl.h"
 #	include "contract.h"
 #else
 #	include <gtest/gtest.h>
@@ -10,14 +11,22 @@
 #include <iostream>
 #include <random>
 
+using Action_func_t = void (*)(const ContractID&);
+
 constexpr size_t SOLUTION_BUF_SIZE = 8192;
 constexpr size_t VERDICT_BUF_SIZE = 8;
+constexpr size_t ACTION_BUF_SIZE = 32;
 constexpr uint8_t BOARD_SIZE = 4;
 constexpr uint8_t PERMUTATION_LEN = BOARD_SIZE * BOARD_SIZE - 1;
 
 constexpr uint64_t factorial(uint8_t n)
 {
 	return (n == 0 ? 1 : n * factorial(n - 1));
+}
+
+void OnError(const char* msg)
+{
+	Env::DocAddText("error", msg);
 }
 
 namespace {
@@ -133,9 +142,6 @@ void On_action_new_game(const ContractID& cid)
 
 	uint64_t seed = 0;
 	Env::Memcpy(&seed, &hdr.m_Hash.m_p, 32);
-#ifdef DEBUG
-	Env::DocAddNum64("Debug_seed", seed);
-#endif // DEBUG
 	
 	std::mt19937_64 gen(seed);
 	std::uniform_int_distribution<uint64_t> distrib(1, factorial(PERMUTATION_LEN) - 1);
@@ -145,6 +151,7 @@ void On_action_new_game(const ContractID& cid)
 	GemPuzzle::NewGameParams params;
 
 	uint32_t tmp;
+	Env::DocAddGroup("");
 	Env::DocGetNum32("cancel_previous_game", &tmp);
 	params.cancel_previous_game = !!tmp;
 
@@ -152,9 +159,10 @@ void On_action_new_game(const ContractID& cid)
 	params.height = hdr.m_Height;
 	params.permutation_num = permutation_num;
 
-	Env::GenerateKernel(&cid, GemPuzzle::NewGameParams::METHOD, &params, sizeof(params), nullptr, 0, nullptr, 0, "Create new game", 0);
-
 	Env::DocAddNum64("permutation", permutation_num);
+	Env::DocCloseGroup();
+
+	Env::GenerateKernel(&cid, GemPuzzle::NewGameParams::METHOD, &params, sizeof(params), nullptr, 0, nullptr, 0, "Create new game", 0);
 }
 #endif // ENABLE_UNIT_TESTS_
 
@@ -238,13 +246,74 @@ void On_action_check_solution(const ContractID& cid)
 	Env::GenerateKernel(&cid, GemPuzzle::CheckSolutionParams::METHOD, &params, sizeof(params), nullptr, 0, nullptr, 0, "Check solution", 0);
 }
 
-export void Method_0()
+void On_action_create_contract(const ContractID& unused)
 {
+	Env::GenerateKernel(nullptr, 0, nullptr, 0, nullptr, 0, nullptr, 0, "Create GemPuzzle contract", 0);
 }
 
-export void Method_1()
+void On_action_destroy_contract(const ContractID& cid)
 {
+	Env::GenerateKernel(&cid, 1, nullptr, 0, nullptr, 0, nullptr, 0, "Destroy GemPuzzle contract", 0);
+}
+
+void On_action_view_contracts(const ContractID& unused)
+{
+	EnumAndDumpContracts(GemPuzzle::s_SID);
+}
+
+BEAM_EXPORT void Method_0()
+{
+	Env::DocAddGroup("");
+
+	Env::DocAddGroup("create_contract");
+	Env::DocCloseGroup();
+
+	Env::DocGroup method("destroy_contract");
+	Env::DocAddText("cid", "ContractID");
+	Env::DocCloseGroup();
 	
+	Env::DocAddGroup("view_contracts");
+	Env::DocCloseGroup();
+
+	Env::DocAddGroup("new_game");
+	Env::DocAddText("cid", "ContractID");
+	Env::DocAddText("cancel_previous_game", "uint");
+	Env::DocCloseGroup();
+
+	Env::DocAddGroup("check_solution");
+	Env::DocAddText("cid", "ContractID");
+	Env::DocAddText("solution", "string");
+	Env::DocCloseGroup();
+
+	Env::DocCloseGroup();
+}
+
+BEAM_EXPORT void Method_1()
+{
+	const std::vector<std::pair<const char *, Action_func_t>> VALID_ACTIONS = {
+		{"create_contract", On_action_create_contract},
+		{"destroy_contract", On_action_destroy_contract},
+		{"new_game", On_action_new_game},
+		{"check_solution", On_action_check_solution},
+		{"view_contracts", On_action_view_contracts},
+	};
+
+	char action[ACTION_BUF_SIZE];
+
+	if (!Env::DocGetText("action", action, sizeof(action)))
+		return OnError("Action not specified");
+
+	auto it = std::find_if(VALID_ACTIONS.begin(), VALID_ACTIONS.end(), [&action](const auto& p) {
+		return !strcmp(action, p.first);
+	});
+
+	if (it != VALID_ACTIONS.end()) {
+		ContractID cid;
+		Env::DocGet("cid", cid); 
+		it->second(cid);
+	} else {
+		OnError("Invalid action");
+	}
 }
 #endif // ENABLE_UNIT_TESTS_
 
