@@ -4,50 +4,59 @@
 #include "Chromosome.h"
 #include "Genotype.h"
 
+/*
+* Phenotype - set of all signs
+*/
 struct Phenotype
 {
-	Phenotype() noexcept = default;
+	Phenotype() noexcept {};
 	~Phenotype() noexcept = default;
 
-	using phenotype = std::map<std::string, std::string>;
-	phenotype setOfSigns;
+	phenotype setOfSigns; // set of all signs
 
-	void getGenMeaning(const Chromosome& Chromosome) noexcept
+	// method for setting all gene meanings in setOfSigns
+	void setGenMeaning(const Chromosome& chromosome) noexcept
 	{
-		if (Chromosome.typeOfDominance == TypeOfDominance::Complete)
+		if (chromosome.typeOfDominance == TypeOfDominance::Complete)
 		{
-			if (Chromosome.firstGen == Gene::Recessive && Chromosome.secondGen == Gene::Recessive)
-				setOfSigns.insert(std::make_pair(Chromosome.signName, Chromosome.recessiveGeneticExpression));
+			if (chromosome.firstGene == GeneState::Recessive && chromosome.secondGene == GeneState::Recessive)
+				setOfSigns.insert(std::make_pair(chromosome.signName, chromosome.recessiveGeneticExpression));
 			else
-				setOfSigns.insert(std::make_pair(Chromosome.signName, Chromosome.dominantGeneticExpression));
+				setOfSigns.insert(std::make_pair(chromosome.signName, chromosome.dominantGeneticExpression));
 		}
 		else
 		{
-			if (Chromosome.firstGen == Gene::Dominant && Chromosome.secondGen == Gene::Dominant)
-				setOfSigns.insert(std::make_pair(Chromosome.signName, Chromosome.dominantGeneticExpression));
-			else if (Chromosome.firstGen == Gene::Recessive && Chromosome.secondGen == Gene::Recessive)
-				setOfSigns.insert(std::make_pair(Chromosome.signName, Chromosome.recessiveGeneticExpression));
+			if (chromosome.firstGene == GeneState::Dominant && chromosome.secondGene == GeneState::Dominant)
+				setOfSigns.insert(std::make_pair(chromosome.signName, chromosome.dominantGeneticExpression));
+			else if (chromosome.firstGene == GeneState::Recessive && chromosome.secondGene == GeneState::Recessive)
+				setOfSigns.insert(std::make_pair(chromosome.signName, chromosome.recessiveGeneticExpression));
 			else
-				setOfSigns.insert(std::make_pair(Chromosome.signName, Chromosome.interveningGeneticExpression));
+				setOfSigns.insert(std::make_pair(chromosome.signName, chromosome.interveningGeneticExpression));
 		}
 
 
-		if (!Chromosome.dependentSigns.signs.empty() &&
-			((Chromosome.dependentSigns.firstGen == Chromosome.firstGen && Chromosome.dependentSigns.secondGen == Chromosome.secondGen)
-				|| (Chromosome.dependentSigns.firstGen == Chromosome.secondGen && Chromosome.dependentSigns.secondGen == Chromosome.firstGen)))
+		if (!chromosome.dependentSigns.signs.empty() &&
+			((chromosome.dependentSigns.baseGenePresence == BaseGenePresence::Presence 
+				&& (chromosome.dependentSigns.baseGene == chromosome.firstGene 
+					|| chromosome.dependentSigns.baseGene == chromosome.secondGene))
+			|| (chromosome.dependentSigns.baseGenePresence == BaseGenePresence::Absence
+				&& (chromosome.dependentSigns.baseGene != chromosome.firstGene 
+					&& chromosome.dependentSigns.baseGene != chromosome.secondGene))))
 		{
-			for (auto it = Chromosome.dependentSigns.signs.cbegin(); it != Chromosome.dependentSigns.signs.cend(); ++it)
+			for (auto it = chromosome.dependentSigns.signs.cbegin(); it != chromosome.dependentSigns.signs.cend(); ++it)
 			{
-				getGenMeaning(*it);
+				setGenMeaning(*it);
 			}
 		}
 	}
 
-	void getPhenotype(const Genotype::genotype& genotype) noexcept
+	
+	// method for setting phenotype from genotype
+	void setPhenotype(const genotype& genotype) noexcept
 	{
 		for (auto ChromosomeIt = genotype.cbegin(); ChromosomeIt != genotype.cend(); ++ChromosomeIt)
 		{
-			getGenMeaning(*ChromosomeIt);
+			setGenMeaning(*ChromosomeIt);
 		}
 	}
 };
