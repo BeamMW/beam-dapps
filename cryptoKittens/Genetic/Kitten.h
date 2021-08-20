@@ -97,7 +97,7 @@ public:
 			ChromosomeMask("size of body",  "big", "medium", "small"),
 			
 			ChromosomeMask("length of whiskers",  "long", "medium", "short"),
-			ChromosomeMask("availability of whiskers twist",  "streight", "streight", "wavy"),
+			ChromosomeMask("availability of whiskers twist",  "streight", "wavy"),
 			
 			ChromosomeMask("size of eyes",  "big", "medium", "small"),
 			ChromosomeMask("shape of eyes",  "wide", "medium", "narrow"),
