@@ -18,12 +18,21 @@ private:
 	
 	PhenotypeMask phenotypeMask; // set of general characteristics of each chromosome 
 
+	float getProbabilitiesOfSignPresence(std::vector<float> v) const noexcept
+	{
+		float probability = 1.0;
+		for (auto it = v.cbegin(); it != v.cend(); ++it)
+		{
+			probability *= *it;
+		}
+		return probability;
+	}
+
 	// method for calculating generic probability of sign expression of a character
 	void setGeneralSignExpressionProbability(const ChromosomeMask& chromosomeMask) noexcept
 	{
-		static float probabilityOfSignPresence = 1.0f;
-		static uint16_t recurLevel = 0;
-		static uint16_t signPresenceLevel = recurLevel + 1;
+		static std::vector probabilitiesOfSignPresence = { 1.0f };
+		static float probabilityOfSignPresence = getProbabilitiesOfSignPresence(probabilitiesOfSignPresence);
 
 		if (chromosomeMask.typeOfDominance == TypeOfDominance::Complete)
 		{
@@ -47,20 +56,17 @@ private:
 
 		if (!chromosomeMask.dependentSigns.signs.empty())
 		{
-			++recurLevel;
-			if (signPresenceLevel != recurLevel)
-				probabilityOfSignPresence = 0.0f;
+			if (chromosomeMask.dependentSigns.baseGenePresence == BaseGenePresence::Presence)
+				probabilitiesOfSignPresence.push_back(0.75);
 			else
-			{
-				probabilityOfSignPresence = powf(0.5, recurLevel);
-			}
+				probabilitiesOfSignPresence.push_back(0.25);
+
+			probabilityOfSignPresence = getProbabilitiesOfSignPresence(probabilitiesOfSignPresence);
+
 
 			for (auto it = chromosomeMask.dependentSigns.signs.cbegin(); it != chromosomeMask.dependentSigns.signs.cend(); ++it)
 			{
 				float probabilityOfSignAbsence = (1.0f - probabilityOfSignPresence) * 100;
-
-				if (probabilityOfSignAbsence != 100.0f)
-					signPresenceLevel = recurLevel;
 
 				setGeneralSignExpressionProbability(*it);
 
@@ -68,8 +74,8 @@ private:
 					generalSignsExpressionProbability[(*it).signName].insert(std::make_pair("Not present", probabilityOfSignAbsence));
 			}
 
-			if (signPresenceLevel != --recurLevel)
-				probabilityOfSignPresence = powf(0.5, recurLevel);
+			probabilitiesOfSignPresence.resize(probabilitiesOfSignPresence.size() - 1);
+			probabilityOfSignPresence = getProbabilitiesOfSignPresence(probabilitiesOfSignPresence);
 		}
 	}
 
