@@ -4,19 +4,20 @@ const TIMEOUT = 3000;
 const GROTHS_IN_BEAM = 100000000;
 const REJECTED_CALL_ID = -32021;
 const IN_PROGRESS_ID = 5;
-const CONTRACT_ID = "bb9a613ac40185b07bddddc3bb15d7c9c78d753989f1834b46e206c190e0de21";
+const CONTRACT_ID = "a6dfab625af14d497c449fba559001912c9c0e9a0c2485f24b6e4fcd918ce0e9";
 
-class TimOracle {
+class TimeOracle {
     constructor() {
         this.timeout = undefined;
         this.pluginData = {
-            contractId: undefined,
+            contractId: CONTRACT_ID,
             balance: 0,
             inProgress: false,
             isWithdraw: null
         };
-        this.parserTimeout = undefined;
+        this.parserInterval = undefined;
         this.time = undefined;
+        this.contractTime = undefined;
     }
 
     setError = (errmsg) => {
@@ -39,13 +40,26 @@ class TimOracle {
     }
     
     showOracle = () => {
-        Utils.setText('cid', "Contract ID: " + this.pluginData.contractId);
-        Utils.setText('in-time-oracle', parseFloat(new Big(this.pluginData.balance).div(GROTHS_IN_BEAM)));
+        Utils.setText('cid', "Contract ID: " + CONTRACT_ID);
         Utils.show('time-oracle');
         Utils.hide('error-full-container');
         Utils.hide('error-common');
-        Utils.show('time');
+        Utils.show('parsed-time');
+        Utils.show('contract-time');
         this.refresh(false);
+    }
+    
+    setTime = (err, result) => {
+    	if (err === null) {
+            this.time = JSON.parse(result).unixtime;
+            Utils.callApi("provider-set", "invoke_contract", {
+                create_tx: false,
+                args: ["role=sender,action=send,cid=", this.pluginData.contractId, ",aid=0,value=", this.time].join("")
+            });
+            Utils.setText('parsed-time', ["Parsed time: ", parseFloat(this.time)].join(""));
+        } else {
+            Utils.setText('parsed-time', ["Error: ", err].join(""));
+        }
     }
 
     start = () => {
@@ -61,7 +75,11 @@ class TimOracle {
                 create_tx: false,
                 args: "role=manager,action=view"
             })
-        })
+        });
+        this.parserInterval = setInterval(() => {
+            Utils.fetch("http://worldtimeapi.org/api/timezone/Etc/GMT", this.setTime);
+        }, 1000);
+        this.showOracle();
     }
     
     refresh = (now) => {
@@ -70,28 +88,11 @@ class TimOracle {
         }
 
         this.timeout = setTimeout(() => {
-            Utils.callApi("user-view", "invoke_contract", {
-                create_tx: false,
-                args: ["role=client,action=get,cid=", this.pluginData.contractId, ",aid=0"].join("")
-            })
+            // Utils.callApi("user-view", "invoke_contract", {
+            //     create_tx: false,
+            //     args: ["role=client,action=receive,cid=", this.pluginData.contractId, ",aid=0"].join("")
+            // })
         }, now ? 0 : TIMEOUT);
-        this.parserTimeout = setTimeout(() => {
-            Utils.fetch("https://time.is/GMT", function(err, result) {
-                if (err === null) {
-                    let start_index = result.search("<time"); 
-                    let end_index = result.search("</time>"); 
-                    this.time = buffer.substring(start_index + 17, end_index);
-                    Utils.callApi("provider-set", "invoke_contract", {
-                        create_tx: false,
-                        args: ["role=sender,action=send,cid=", this.pluginData.contractId, ",aid=0,value=", this.time].join("")
-                    });
-                }
-            });
-        }, 1000);
-        
-        if (this.time !== undefined) {
-            Utils.setText('time', parseFloat(this.time));
-        }
     }
     
     parseShaderResult = (apiResult) => {
@@ -125,7 +126,6 @@ class TimOracle {
     
             if (apiCallId == "manager-view") {
                 const shaderOut = this.parseShaderResult(apiResult);
-                window.alert(shaderOut.contracts)
                 if (shaderOut.contracts) {
                     for (var idx = 0; idx < shaderOut.contracts.length; ++idx) {
                         const cid = shaderOut.contracts[idx].cid
@@ -140,13 +140,14 @@ class TimOracle {
     
             if (apiCallId == "user-view") {
                 const shaderOut = this.parseShaderResult(apiResult)
-                if (!shaderOut.Value) {
-                    throw "No values";
+                if (shaderOut.Value) {
+                    this.contractTime = shaderOut.Value;
+                    Utils.setText('contract-time', ["Contract time: ", parseFloat(this.contractTime)].join(""));
+                    Utils.callApi("tx-list", "tx_list", {});
+                } else {
+                    Utils.setText('contract-time', "No value");
                 }
                 
-                this.time = shaderOut.Value;
-
-                Utils.callApi("tx-list", "tx_list", {});
                 return this.refresh(false);
             }
     
@@ -171,12 +172,6 @@ class TimOracle {
                                 }
                             }
                         };
-
-                        if (isProgressDetected) {
-                            this.pluginData.inProgress = true;
-                            this.pluginData.isWithdraw = element["comment"] === "withdraw from Vault"; 
-                            break;
-                        }
                     }
                 };
                 return this.showOracle();
@@ -192,7 +187,17 @@ class TimOracle {
 }
 
 Utils.onLoad(async (beamAPI) => {
-    let oracle = new TimOracle();
+    let oracle = new TimeOracle();
+
+    Utils.getById('get-button').addEventListener('click', (ev) => {
+        Utils.callApi("user-view", "invoke_contract", {
+            create_tx: false,
+            args: ["role=client,action=receive,cid=", oracle.pluginData.contractId, ",aid=0"].join("")
+        })
+        ev.preventDefault();
+        return false;
+    })
+
     beamAPI.api.callWalletApiResult.connect(oracle.onApiResult);
     oracle.start();
 });

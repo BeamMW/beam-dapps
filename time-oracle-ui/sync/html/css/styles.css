@@ -115,6 +115,18 @@ body {
     letter-spacing: normal;
 }
 
+.container__update__time {
+    margin-left: 10px;
+    opacity: 0.3;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: italic;
+    line-height: normal;
+    letter-spacing: normal;
+}
+
 .container__main__empty-deposit {
     display: flex;
     flex-direction: column;
@@ -277,7 +289,7 @@ body {
 }
 
 
-.deposit-popup-input {
+.get-popup-input {
     background: rgba(255, 255, 255, 0);
     border: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -298,7 +310,7 @@ body {
     color: #da68f5;
 }
 
-.deposit-popup-beam {
+.get-popup-beam {
     display: flex;
     align-items: center;
     margin-left: 10px;
