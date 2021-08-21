@@ -11,7 +11,13 @@
 #include <iostream>
 #include <random>
 
+#ifndef ENABLE_UNIT_TESTS_
 using Action_func_t = void (*)(const ContractID&);
+#else
+namespace GemPuzzle {
+	enum Verdict { WIN, LOSE, ERROR };
+}
+#endif // ENABLE_UNIT_TESTS_
 
 constexpr size_t SOLUTION_BUF_SIZE = 8192;
 constexpr size_t VERDICT_BUF_SIZE = 8;
@@ -26,7 +32,11 @@ constexpr uint64_t factorial(uint8_t n)
 
 void On_error(const char* msg)
 {
+#ifndef ENABLE_UNIT_TESTS_
 	Env::DocAddText("error", msg);
+#else
+	std::cerr << msg << std::endl;
+#endif // ENABLE_UNIT_TESTS_
 }
 
 namespace {
