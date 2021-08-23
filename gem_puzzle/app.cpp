@@ -317,29 +317,41 @@ auto find_if_contains(const char* str, const std::vector<std::pair<const char *,
 
 BEAM_EXPORT void Method_0()
 {
-	Env::DocAddGroup("");
+    Env::DocGroup root("");
 
-	Env::DocAddGroup("create_contract");
-	Env::DocCloseGroup();
-
-	Env::DocGroup method("destroy_contract");
-	Env::DocAddText("cid", "ContractID");
-	Env::DocCloseGroup();
-	
-	Env::DocAddGroup("view_contracts");
-	Env::DocCloseGroup();
-
-	Env::DocAddGroup("new_game");
-	Env::DocAddText("cid", "ContractID");
-	Env::DocAddText("cancel_previous_game", "uint");
-	Env::DocCloseGroup();
-
-	Env::DocAddGroup("check_solution");
-	Env::DocAddText("cid", "ContractID");
-	Env::DocAddText("solution", "string");
-	Env::DocCloseGroup();
-
-	Env::DocCloseGroup();
+    {
+        Env::DocGroup gr("roles");
+        {
+            Env::DocGroup grRole("manager");
+            {
+                Env::DocGroup grMethod("create_contract");
+            }
+            {
+                Env::DocGroup grMethod("destroy_contract");
+                Env::DocAddText("cid", "ContractID");
+            }
+            {
+                Env::DocGroup grMethod("view_contracts");
+            }
+        }
+        {
+            Env::DocGroup grRole("player");
+            {
+                Env::DocGroup grMethod("new_game");
+                Env::DocAddText("cid", "ContractID");
+				Env::DocAddText("cancel_previous_game", "uint32");
+            }
+            {
+                Env::DocGroup grMethod("check_solution");
+                Env::DocAddText("cid", "ContractID");
+                Env::DocAddText("solution", "string");
+            }
+            {
+                Env::DocGroup grMethod("view_current_game_board");
+                Env::DocAddText("cid", "ContractID");
+            }
+        }
+    }
 }
 
 BEAM_EXPORT void Method_1()
