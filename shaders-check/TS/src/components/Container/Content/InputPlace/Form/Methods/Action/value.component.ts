@@ -1,31 +1,47 @@
+import { IOutput, IActionOutput } from 'beamApiProps';
+import BaseComponent, {
+  AddObsever,
+  FormDispatch,
+  InformArgs
+} from '../../../../../../BaseComponent/base.component';
 import { Tags } from '../../../../../../../constants/html_elements';
-import BaseComponent from '../../../../../../BaseComponent/base.component';
 import { ValueLabel } from './label.component';
 
 export class Value extends BaseComponent {
-  action:any;
+  action: string;
 
-  role:any;
+  role: string;
 
-  constructor(obj:any, role:any, action:any, dispatch:any, observe:any) {
+  constructor(
+    output: IOutput,
+    role: string,
+    action: string,
+    dispatch: FormDispatch,
+    observe: AddObsever
+  ) {
     super(Tags.DIV, ['input__action-radio']);
     observe(this);
     this.role = role;
     this.action = action;
-    this.render(obj, dispatch);
+    this.render(output, dispatch);
   }
 
-  inform = (obj:any) => {
-    this.role = obj.currentRole;
-    this.action = obj.currentAction;
-    this.render(obj.obj, obj.dispatch);
+  inform = ({
+    currentRole,
+    currentAction,
+    output,
+    dispatch
+  }: InformArgs):void => {
+    this.role = currentRole;
+    this.action = currentAction;
+    this.render(output, dispatch);
   };
 
-  render = (obj:any, dispatch:(f:any) => any) => {
+  render = (output: IOutput, dispatch: FormDispatch):void => {
     this.element.innerHTML = '';
     const title = new BaseComponent(Tags.DIV, ['action-title']);
     title.element.innerText = 'Action: ';
-    const actions = Object.entries(obj.roles[this.role]);
+    const actions = Object.entries(output.roles[this.role] as IActionOutput);
     const valuesList = actions.map(
       (el) => new ValueLabel(el, this.action, dispatch)
     );

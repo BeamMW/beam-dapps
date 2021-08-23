@@ -1,11 +1,12 @@
+import BaseComponent,
+{ FormDispatch } from '../../../../../../BaseComponent/base.component';
 import { Tags } from '../../../../../../../constants/html_elements';
-import BaseComponent from '../../../../../../BaseComponent/base.component';
 import { RoleInput } from './input.component';
 
 export class RoleLabel extends BaseComponent {
   input: RoleInput;
 
-  constructor(role:[string, unknown], dispatch:any, index:number) {
+  constructor(role:[string, unknown], dispatch:FormDispatch, index:number) {
     super(Tags.LABEL, ['roles__label', 'custom-radio']);
     this.input = new RoleInput(role, dispatch, index);
     const span = new BaseComponent(Tags.SPAN);

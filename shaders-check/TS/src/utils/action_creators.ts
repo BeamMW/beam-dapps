@@ -6,3 +6,5 @@ export const setRoleAC = (payload:any) => (
 export const setActionAC = (payload:any) => (
   { action: FormActions.SET_ACTION, payload }
 );
+
+export type ActionTypes = ReturnType<typeof setRoleAC | typeof setActionAC>;

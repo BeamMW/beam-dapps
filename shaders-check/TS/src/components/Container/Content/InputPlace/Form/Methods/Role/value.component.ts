@@ -1,9 +1,11 @@
+import { IOutput } from 'beamApiProps';
+import BaseComponent,
+{ FormDispatch } from '../../../../../../BaseComponent/base.component';
 import { Tags } from '../../../../../../../constants/html_elements';
-import BaseComponent from '../../../../../../BaseComponent/base.component';
 import { RoleLabel } from './label.component';
 
 export class Role extends BaseComponent {
-  constructor(obj:any, dispatch:any) {
+  constructor(obj:IOutput, dispatch:FormDispatch) {
     super(Tags.DIV, ['input__role']);
     this.element.innerText = 'Role: ';
     const roles = Object.entries(obj.roles);

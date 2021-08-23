@@ -1,14 +1,20 @@
-import { APIResponse, BeamApiHandlers, IRoleOutput } from 'beamApiProps';
+import { APIResponse, BeamApiHandlers, IOutput } from 'beamApiProps';
 import { Tags } from '../../constants/html_elements';
+import { ActionTypes } from '../../utils/action_creators';
 
 type HTMLAttributes = {
   [key:string]: string;
 };
 
-type InformArgs = {
+export type FormDispatch = (obj:ActionTypes) => void;
+
+export type AddObsever = (element:IObserverFormComponent) => void;
+
+export type InformArgs = {
   currentRole: string,
   currentAction: string,
-  roleOutput: IRoleOutput
+  output: IOutput,
+  dispatch: FormDispatch
 };
 
 export interface IObserverComponent extends BaseComponent {

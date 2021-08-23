@@ -63,17 +63,22 @@ declare module 'beamApiProps' {
     };
   };
 
-  export interface IActionParamsOutput {
-    [key:string]: never | string
-  }
-
-  export interface IRoleOutput {
-    [key:string]: string | IActionOutput
-  }
-
   export interface IActionParams {
     [key:string]: string
   }
+
+  export interface IActionOutput {
+    [key:string]: never | IActionParams
+  }
+
+  export interface IRoleOutput {
+    [key:string]:IActionOutput
+  }
+
+  export interface IOutput {
+    roles: IRoleOutput
+  }
+
   export type BeamApiHandlers = {
     callApi: (callid: string, method: string, params: Params) => void,
     initShader: (shader: ArrayBuffer) => void

@@ -1,11 +1,13 @@
-import { IRoleOutput } from 'beamApiProps';
+import { IOutput, IActionOutput } from 'beamApiProps';
 import {
+  AddObsever, FormDispatch,
   IObserverFormComponent
 } from '../components/BaseComponent/base.component';
 import { FormActions } from '../constants/variables';
+import { ActionTypes } from '../utils/action_creators';
 
 export class FormApi {
-  roleOutput: IRoleOutput;
+  output: IOutput;
 
   observers: IObserverFormComponent[];
 
@@ -13,17 +15,17 @@ export class FormApi {
 
   currentAction: string;
 
-  constructor(roleOutput:IRoleOutput) {
-    this.roleOutput = roleOutput;
+  constructor(output:IOutput) {
+    this.output = output;
     this.observers = [];
-    const roles = Object.entries(this.roleOutput.roles as IRoleOutput);
-    const actions = Object.keys(roles[0]?.[1]);
+    const roles = Object.entries(this.output.roles);
+    const actions = Object.keys(roles[0]?.[1] as IActionOutput);
     this.currentRole = roles[0]?.[0] as string;
     this.currentAction = actions[0] as string;
     // this.element.addEventListener('submit', this.onSubmit);
   }
 
-  addObserver = (element:IObserverFormComponent):void => {
+  addObserver:AddObsever = (element):void => {
     this.observers.push(element);
   };
 
@@ -31,21 +33,22 @@ export class FormApi {
     {
       currentAction: this.currentAction,
       currentRole: this.currentRole,
-      roleOutput: this.roleOutput
+      output: this.output,
+      dispatch: this.dispatch
     }
   ));
 
-  dispatch = (obj: any):void => {
+  dispatch:FormDispatch = (obj):void => {
     this.reducer(obj);
   };
 
-  reducer = (obj: { action: FormActions; payload: any; }):void => {
+  reducer = (obj:ActionTypes):void => {
     const { action } = obj;
     switch (action) {
       case FormActions.SET_ROLE:
         this.currentRole = obj.payload;
         this.currentAction = Object.keys(
-          this.roleOutput.roles[this.currentRole]
+          this.output.roles[this.currentRole] as IActionOutput
         )[0] as string;
         break;
       case FormActions.SET_ACTION:

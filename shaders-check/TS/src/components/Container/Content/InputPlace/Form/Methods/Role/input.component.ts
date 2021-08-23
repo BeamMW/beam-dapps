@@ -1,9 +1,10 @@
+import BaseComponent,
+{ FormDispatch } from '../../../../../../BaseComponent/base.component';
 import { Tags } from '../../../../../../../constants/html_elements';
 import { setRoleAC } from '../../../../../../../utils/action_creators';
-import BaseComponent from '../../../../../../BaseComponent/base.component';
 
 export class RoleInput extends BaseComponent {
-  constructor(role:[string, unknown], dispatch:any, index:number) {
+  constructor(role:[string, unknown], dispatch:FormDispatch, index:number) {
     super(Tags.INPUT, ['roles__input']);
     this.element.id = <string>role[0];
     (this.element as HTMLInputElement).checked = !index;
