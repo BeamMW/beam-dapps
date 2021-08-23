@@ -105,7 +105,9 @@ class Shader {
 
 	onApiResult = json => {
 		try {
+			console.log(json);
 			const apiAnswer = JSON.parse(json);
+			console.log(apiAnswer);
 			if (apiAnswer.error) {
 				if (apiAnswer.error.code == REJECTED_CALL_ID) {
 					return;
@@ -122,16 +124,8 @@ class Shader {
 
 			if (apiCallId == 'manager-view') {
 				let shaderOut = this.parseShaderResult(apiResult);
-				if (shaderOut.contracts) {
-					for (let idx = 0; idx < shaderOut.contracts.length; ++idx) {
-						let cid = shaderOut.contracts[idx].cid;
-						if (cid == CONTRACT_ID) {
-							this.pluginData.contractId = cid;
+							this.pluginData.contractId = shaderOut.contracts[0].cid;
 							Utils.setText('contractId__contract', `${this.pluginData.contractId}`);
-							break;
-						}
-					}
-				}
 				if (!this.pluginData.contractId) {
 					throw 'Failed to verify contract cid';
 				}
