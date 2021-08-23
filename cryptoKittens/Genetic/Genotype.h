@@ -6,36 +6,40 @@
 constexpr static int sid = 4583;
 std::mt19937 mersenne(sid);
 
-struct Genotype
+using genotype = std::vector<Chromosome>;
+
+/*
+* Genotype - set of all genes 
+*/
+class Genotype
 {
+public:
 	Genotype() noexcept = default;
 	~Genotype() noexcept = default;
 
-	using genotype = std::vector<Chromosome>;
-	genotype setOfGenes;
+	genotype setOfGenes; // set of all genes
 
-	Gene generateGenValue() noexcept
+	// method for generation of genotype - setting values for chromosomes
+	void generateGenotype(const uint16_t size) noexcept
 	{
-		return (mersenne() % 2) ? Gene::Recessive : Gene::Dominant;
-	}
-
-	void generateChromosome(Chromosome& Chromosome) noexcept
-	{
-		Chromosome.setGenes(generateGenValue(), generateGenValue());
-		if (!Chromosome.dependentSigns.signs.empty())
+		setOfGenes.resize(size);
+		for (auto chromosomeIt = setOfGenes.begin(); chromosomeIt != setOfGenes.end(); ++chromosomeIt)
 		{
-			for (auto it = Chromosome.dependentSigns.signs.begin(); it != Chromosome.dependentSigns.signs.end(); ++it)
-			{
-				generateChromosome(*it);
-			}
+			generateChromosome(*chromosomeIt);
 		}
 	}
 
-	void generateGenotype() noexcept
+private:
+	// method for generation of gen value - Recessive or Dominant
+	GeneState generateGenValue() noexcept
 	{
-		for (auto it = setOfGenes.begin(); it != setOfGenes.end(); ++it)
-		{
-			generateChromosome(*it);
-		}
+		return (mersenne() % 2) ? GeneState::Recessive : GeneState::Dominant;
 	}
+
+	// method for generation of chromosome - setting values for all genes in chromosome
+	void generateChromosome(Chromosome& chromosome) noexcept
+	{
+		chromosome.setGenes(generateGenValue(), generateGenValue());
+	}
+
 };

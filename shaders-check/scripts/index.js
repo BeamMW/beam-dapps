@@ -105,7 +105,9 @@ class Shader {
 
 	onApiResult = json => {
 		try {
+			console.log(json);
 			const apiAnswer = JSON.parse(json);
+			console.log(apiAnswer);
 			if (apiAnswer.error) {
 				if (apiAnswer.error.code == REJECTED_CALL_ID) {
 					return;
@@ -122,16 +124,8 @@ class Shader {
 
 			if (apiCallId == 'manager-view') {
 				let shaderOut = this.parseShaderResult(apiResult);
-				if (shaderOut.contracts) {
-					for (let idx = 0; idx < shaderOut.contracts.length; ++idx) {
-						let cid = shaderOut.contracts[idx].cid;
-						if (cid == CONTRACT_ID) {
-							this.pluginData.contractId = cid;
+							this.pluginData.contractId = shaderOut.contracts[0].cid;
 							Utils.setText('contractId__contract', `${this.pluginData.contractId}`);
-							break;
-						}
-					}
-				}
 				if (!this.pluginData.contractId) {
 					throw 'Failed to verify contract cid';
 				}
@@ -179,11 +173,31 @@ class Shader {
 	};
 }
 
+window.addEventListener('load', () => {
+    if (window.beam !== undefined) {   
+	let shader = new Shader();
+		// window.beam.initializeShader(CONTRACT_ID, 'faucet');
+		window.beam.apiResult$.subscribe(shader.onApiResult);
+		console.log(window.beam.initializeShader)
+        document.body.style.color = 'rgb(255, 255, 255)';
+        document.body.style.backgroundImage = 'linear-gradient(rgba(57, 57, 57, 0.6) -174px, rgba(23, 23, 23, 0.6) 56px, rgba(23, 23, 23, 0.6))';  
+        document.body.style.backgroundColor = 'rgb(50, 50, 50)';  
+        // document.querySelector('.container').style.margin = '0 auto';
+        // document.querySelector('.container').style.paddingTop = '25px';
+        // document.querySelector('.container').style.width = '90%';
+        
+	init(shader.depthCallback);
+
+    } else {
 Utils.onLoad(async beamAPI2 => {
 	let shader = new Shader();
 	beamAPI2.api.callWalletApiResult.connect(shader.onApiResult);
 
 	init(shader.depthCallback);
+})
+	}
+	// window.beam.initializeShader(CONTRACT_ID, 'faucet');
+	// window.beam.apiResult$.subscribe(shader.onApiResult);
 
 	// Utils.getById('btn').addEventListener('click', e => {
 	// 	shader.start();

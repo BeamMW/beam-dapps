@@ -3,51 +3,70 @@
 
 #include "Chromosome.h"
 #include "Genotype.h"
+#include "Mask.h"
 
-struct Phenotype
+using signName = std::string;
+using externalExpression = std::string;
+using phenotype = std::map<signName, externalExpression>;
+
+/*
+* Phenotype - set of all signs
+*/
+class Phenotype
 {
-	Phenotype() noexcept = default;
+public:
+	Phenotype() noexcept {};
 	~Phenotype() noexcept = default;
 
-	using phenotype = std::map<std::string, std::string>;
-	phenotype setOfSigns;
+	phenotype setOfSigns; // set of all signs
+	Mask mask; // set of general characteristics of each chromosome 
 
-	void getGenMeaning(const Chromosome& Chromosome) noexcept
+	// method for setting phenotype from genotype
+	void setPhenotype(const genotype& genotype) noexcept
 	{
-		if (Chromosome.typeOfDominance == TypeOfDominance::Complete)
+		auto genotypeIt = genotype.cbegin();
+		for (auto maskIt = mask.phenotypeMask.cbegin(); maskIt != mask.phenotypeMask.cend(); ++maskIt, ++genotypeIt)
 		{
-			if (Chromosome.firstGen == Gene::Recessive && Chromosome.secondGen == Gene::Recessive)
-				setOfSigns.insert(std::make_pair(Chromosome.signName, Chromosome.recessiveGeneticExpression));
+			setGenMeaning(*maskIt, genotypeIt);
+		}
+	}
+
+private:
+	// method for setting all gene meanings in setOfSigns
+	void setGenMeaning(const ChromosomeMask& chromosomeMask, genotype::const_iterator& chromosomeIt) noexcept
+	{
+		const Chromosome chromosome = *chromosomeIt;
+		if (chromosomeMask.typeOfDominance == TypeOfDominance::Complete)
+		{
+			if (chromosome.firstGene == GeneState::Recessive && chromosome.secondGene == GeneState::Recessive)
+				setOfSigns.insert(std::make_pair(chromosomeMask.signName, chromosomeMask.recessiveGeneticExpression));
 			else
-				setOfSigns.insert(std::make_pair(Chromosome.signName, Chromosome.dominantGeneticExpression));
+				setOfSigns.insert(std::make_pair(chromosomeMask.signName, chromosomeMask.dominantGeneticExpression));
 		}
 		else
 		{
-			if (Chromosome.firstGen == Gene::Dominant && Chromosome.secondGen == Gene::Dominant)
-				setOfSigns.insert(std::make_pair(Chromosome.signName, Chromosome.dominantGeneticExpression));
-			else if (Chromosome.firstGen == Gene::Recessive && Chromosome.secondGen == Gene::Recessive)
-				setOfSigns.insert(std::make_pair(Chromosome.signName, Chromosome.recessiveGeneticExpression));
+			if (chromosome.firstGene == GeneState::Dominant && chromosome.secondGene == GeneState::Dominant)
+				setOfSigns.insert(std::make_pair(chromosomeMask.signName, chromosomeMask.dominantGeneticExpression));
+			else if (chromosome.firstGene == GeneState::Recessive && chromosome.secondGene == GeneState::Recessive)
+				setOfSigns.insert(std::make_pair(chromosomeMask.signName, chromosomeMask.recessiveGeneticExpression));
 			else
-				setOfSigns.insert(std::make_pair(Chromosome.signName, Chromosome.interveningGeneticExpression));
+				setOfSigns.insert(std::make_pair(chromosomeMask.signName, chromosomeMask.interveningGeneticExpression));
 		}
 
 
-		if (!Chromosome.dependentSigns.signs.empty() &&
-			((Chromosome.dependentSigns.firstGen == Chromosome.firstGen && Chromosome.dependentSigns.secondGen == Chromosome.secondGen)
-				|| (Chromosome.dependentSigns.firstGen == Chromosome.secondGen && Chromosome.dependentSigns.secondGen == Chromosome.firstGen)))
+		if (!chromosomeMask.dependentSigns.signs.empty() &&
+			((chromosomeMask.dependentSigns.baseGenePresence == BaseGenePresence::Presence 
+				&& (chromosomeMask.dependentSigns.baseGene == chromosome.firstGene
+					|| chromosomeMask.dependentSigns.baseGene == chromosome.secondGene))
+			|| (chromosomeMask.dependentSigns.baseGenePresence == BaseGenePresence::Absence
+				&& (chromosomeMask.dependentSigns.baseGene != chromosome.firstGene
+					&& chromosomeMask.dependentSigns.baseGene != chromosome.secondGene))))
 		{
-			for (auto it = Chromosome.dependentSigns.signs.cbegin(); it != Chromosome.dependentSigns.signs.cend(); ++it)
+			for (auto it = chromosomeMask.dependentSigns.signs.cbegin(); it != chromosomeMask.dependentSigns.signs.cend(); ++it)
 			{
-				getGenMeaning(*it);
+				setGenMeaning(*it, ++chromosomeIt);
 			}
 		}
 	}
 
-	void getPhenotype(const Genotype::genotype& genotype) noexcept
-	{
-		for (auto ChromosomeIt = genotype.cbegin(); ChromosomeIt != genotype.cend(); ++ChromosomeIt)
-		{
-			getGenMeaning(*ChromosomeIt);
-		}
-	}
 };
