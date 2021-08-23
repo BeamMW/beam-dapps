@@ -4,7 +4,7 @@
 #include "Genotype.h"
 #include "Mask.h"
 
-using signExpressionProbability = std::map<signName, std::map<externalExpression, float>>;
+using signExpressionProbability = std::map<signName, std::map<externalExpression, uint32_t>>;
 
 /*
 * Class for calculating probabilities of sign expressions for character based on it's phenotype mask
@@ -19,12 +19,12 @@ private:
 	PhenotypeMask phenotypeMask; // set of general characteristics of each chromosome 
 
 	// method for calculating the probability of ane sign presence
-	float getProbabilityOfSignPresence(const std::vector<float> v) const noexcept
+	uint32_t getProbabilityOfSignPresence(const std::vector<uint32_t> v) const noexcept
 	{
-		float probability = 1.0;
+		uint32_t probability = 100;
 		for (auto it = v.cbegin(); it != v.cend(); ++it)
 		{
-			probability *= *it;
+			probability = probability * (*it) / 100;
 		}
 		return probability;
 	}
@@ -32,15 +32,15 @@ private:
 	// method for calculating generic probability of sign expression of a character
 	void setGeneralSignExpressionProbability(const ChromosomeMask& chromosomeMask) noexcept
 	{
-		static std::vector vectorOfProbabilitiesOfSignPresence = { 1.0f };
-		static float probabilityOfSignPresence = getProbabilityOfSignPresence(vectorOfProbabilitiesOfSignPresence);
+		static std::vector<uint32_t> vectorOfProbabilitiesOfSignPresence = { 10000 };
+		static uint32_t probabilityOfSignPresence = getProbabilityOfSignPresence(vectorOfProbabilitiesOfSignPresence);
 
 		if (chromosomeMask.typeOfDominance == TypeOfDominance::Complete)
 		{
 			generalSignsExpressionProbability.insert(std::make_pair(chromosomeMask.signName,
 				std::map{
-					std::make_pair(chromosomeMask.recessiveGeneticExpression, probabilityOfSignPresence * 1 / 4 * 100),
-					std::make_pair(chromosomeMask.dominantGeneticExpression, probabilityOfSignPresence * 3 / 4 * 100)
+					std::make_pair(chromosomeMask.recessiveGeneticExpression, probabilityOfSignPresence * 25),
+					std::make_pair(chromosomeMask.dominantGeneticExpression, probabilityOfSignPresence * 75)
 				}
 			));
 		}
@@ -48,9 +48,9 @@ private:
 		{
 			generalSignsExpressionProbability.insert(std::make_pair(chromosomeMask.signName,
 				std::map{
-					std::make_pair(chromosomeMask.recessiveGeneticExpression, probabilityOfSignPresence * 1 / 4 * 100),
-					std::make_pair(chromosomeMask.interveningGeneticExpression, probabilityOfSignPresence * 2 / 4 * 100),
-					std::make_pair(chromosomeMask.dominantGeneticExpression, probabilityOfSignPresence * 1 / 4 * 100)
+					std::make_pair(chromosomeMask.recessiveGeneticExpression, probabilityOfSignPresence * 25),
+					std::make_pair(chromosomeMask.interveningGeneticExpression, probabilityOfSignPresence * 50),
+					std::make_pair(chromosomeMask.dominantGeneticExpression, probabilityOfSignPresence * 25)
 				}
 			));
 		}
@@ -58,20 +58,20 @@ private:
 		if (!chromosomeMask.dependentSigns.signs.empty())
 		{
 			if (chromosomeMask.dependentSigns.baseGenePresence == BaseGenePresence::Presence)
-				vectorOfProbabilitiesOfSignPresence.push_back(0.75);
+				vectorOfProbabilitiesOfSignPresence.push_back(75);
 			else
-				vectorOfProbabilitiesOfSignPresence.push_back(0.25);
+				vectorOfProbabilitiesOfSignPresence.push_back(25);
 
 			probabilityOfSignPresence = getProbabilityOfSignPresence(vectorOfProbabilitiesOfSignPresence);
 
 
 			for (auto it = chromosomeMask.dependentSigns.signs.cbegin(); it != chromosomeMask.dependentSigns.signs.cend(); ++it)
 			{
-				float probabilityOfSignAbsence = (1.0f - probabilityOfSignPresence) * 100;
+				uint32_t probabilityOfSignAbsence = (vectorOfProbabilitiesOfSignPresence.at(0) - probabilityOfSignPresence) * 100;
 
 				setGeneralSignExpressionProbability(*it);
 
-				if (probabilityOfSignAbsence != 0.0f)
+				if (probabilityOfSignAbsence != 0)
 					generalSignsExpressionProbability[(*it).signName].insert(std::make_pair("Not present", probabilityOfSignAbsence));
 			}
 
@@ -96,39 +96,31 @@ private:
 		if (firstParentChromosome.secondGene == secondParentChromosome.secondGene)
 			isSecondGeneVariative = false;
 
-		static std::vector vectorOfProbabilitiesOfSignPresence = { 1.0f };
-		static float probabilityOfSignPresence = getProbabilityOfSignPresence(vectorOfProbabilitiesOfSignPresence);
+		static std::vector<uint32_t> vectorOfProbabilitiesOfSignPresence = { 10000 };
+		static uint32_t probabilityOfSignPresence = getProbabilityOfSignPresence(vectorOfProbabilitiesOfSignPresence);
+
+		uint32_t probabilityOfDominantSignPresence = 0;
+		uint32_t probabilityOfInterveningSignPresence = 0;
+		uint32_t probabilityOfRecessiveSignPresence = 0;
 
 		if (chromosomeMask.typeOfDominance == TypeOfDominance::Complete)
 		{
 			if (isFirstGeneVariative && isSecondGeneVariative)
 			{
-				childSignsExpressionProbability.insert(std::make_pair(chromosomeMask.signName,
-					std::map{
-						std::make_pair(chromosomeMask.recessiveGeneticExpression, probabilityOfSignPresence * 1 / 4 * 100),
-						std::make_pair(chromosomeMask.dominantGeneticExpression, probabilityOfSignPresence * 3 / 4 * 100)
-					}
-				));
+				probabilityOfDominantSignPresence = probabilityOfSignPresence * 75;
+				probabilityOfRecessiveSignPresence = probabilityOfSignPresence * 25;
 			}
 			else if (!isFirstGeneVariative && !isSecondGeneVariative)
 			{
 				if (firstParentChromosome.firstGene == GeneState::Dominant || firstParentChromosome.secondGene == GeneState::Dominant)
 				{
-					childSignsExpressionProbability.insert(std::make_pair(chromosomeMask.signName,
-						std::map{
-							std::make_pair(chromosomeMask.recessiveGeneticExpression, 0.0f),
-							std::make_pair(chromosomeMask.dominantGeneticExpression, probabilityOfSignPresence * 100)
-						}
-					));
+					probabilityOfDominantSignPresence = probabilityOfSignPresence * 100;
+					probabilityOfRecessiveSignPresence = probabilityOfSignPresence * 0;
 				}
 				else
 				{
-					childSignsExpressionProbability.insert(std::make_pair(chromosomeMask.signName,
-						std::map{
-							std::make_pair(chromosomeMask.recessiveGeneticExpression, probabilityOfSignPresence * 100),
-							std::make_pair(chromosomeMask.dominantGeneticExpression, 0.0f)
-						}
-					));
+					probabilityOfDominantSignPresence = probabilityOfSignPresence * 0;
+					probabilityOfRecessiveSignPresence = probabilityOfSignPresence * 100;
 				}
 			}
 			else
@@ -136,67 +128,50 @@ private:
 				if ((!isFirstGeneVariative && isSecondGeneVariative && firstParentChromosome.firstGene == GeneState::Dominant)
 					|| (isFirstGeneVariative && !isSecondGeneVariative && firstParentChromosome.secondGene == GeneState::Dominant))
 				{
-					childSignsExpressionProbability.insert(std::make_pair(chromosomeMask.signName,
-						std::map{
-							std::make_pair(chromosomeMask.recessiveGeneticExpression, 0.0f),
-							std::make_pair(chromosomeMask.dominantGeneticExpression, probabilityOfSignPresence * 100)
-						}
-					));
+					probabilityOfDominantSignPresence = probabilityOfSignPresence * 100;
+					probabilityOfRecessiveSignPresence = probabilityOfSignPresence * 0;
 				}
 				else
 				{
-					childSignsExpressionProbability.insert(std::make_pair(chromosomeMask.signName,
-						std::map{
-							std::make_pair(chromosomeMask.recessiveGeneticExpression, probabilityOfSignPresence * 1 / 2 * 100),
-							std::make_pair(chromosomeMask.dominantGeneticExpression, probabilityOfSignPresence * 1 / 2 * 100)
-						}
-					));
+					probabilityOfDominantSignPresence = probabilityOfSignPresence * 50;
+					probabilityOfRecessiveSignPresence = probabilityOfSignPresence * 50;
 				}
 			}
+
+			childSignsExpressionProbability.insert(std::make_pair(chromosomeMask.signName,
+				std::map{
+					std::make_pair(chromosomeMask.recessiveGeneticExpression, probabilityOfRecessiveSignPresence),
+					std::make_pair(chromosomeMask.dominantGeneticExpression, probabilityOfDominantSignPresence)
+				}
+			));
 		}
 		else
 		{
 			if (isFirstGeneVariative && isSecondGeneVariative)
 			{
-				childSignsExpressionProbability.insert(std::make_pair(chromosomeMask.signName,
-					std::map{
-						std::make_pair(chromosomeMask.recessiveGeneticExpression, probabilityOfSignPresence * 1 / 4 * 100),
-						std::make_pair(chromosomeMask.interveningGeneticExpression, probabilityOfSignPresence * 2 / 4 * 100),
-						std::make_pair(chromosomeMask.dominantGeneticExpression, probabilityOfSignPresence * 1 / 4 * 100)
-					}
-				));
+				probabilityOfDominantSignPresence = probabilityOfSignPresence * 25;
+				probabilityOfInterveningSignPresence = probabilityOfSignPresence * 50;
+				probabilityOfRecessiveSignPresence = probabilityOfSignPresence * 25;
 			}
 			else if (!isFirstGeneVariative && !isSecondGeneVariative)
 			{
 				if (firstParentChromosome.firstGene == GeneState::Dominant && firstParentChromosome.secondGene == GeneState::Dominant)
 				{
-					childSignsExpressionProbability.insert(std::make_pair(chromosomeMask.signName,
-						std::map{
-							std::make_pair(chromosomeMask.recessiveGeneticExpression, probabilityOfSignPresence * 0.0f),
-							std::make_pair(chromosomeMask.interveningGeneticExpression, probabilityOfSignPresence * 0.0f),
-							std::make_pair(chromosomeMask.dominantGeneticExpression, probabilityOfSignPresence * 100)
-						}
-					));
+					probabilityOfDominantSignPresence = probabilityOfSignPresence * 100;
+					probabilityOfInterveningSignPresence = probabilityOfSignPresence * 0;
+					probabilityOfRecessiveSignPresence = probabilityOfSignPresence * 0;
 				}
 				else if (firstParentChromosome.firstGene == GeneState::Recessive && firstParentChromosome.secondGene == GeneState::Recessive)
 				{
-					childSignsExpressionProbability.insert(std::make_pair(chromosomeMask.signName,
-						std::map{
-							std::make_pair(chromosomeMask.recessiveGeneticExpression, probabilityOfSignPresence * 100),
-							std::make_pair(chromosomeMask.interveningGeneticExpression, probabilityOfSignPresence * 0.0f),
-							std::make_pair(chromosomeMask.dominantGeneticExpression, probabilityOfSignPresence * 0.0f)
-						}
-					));
+					probabilityOfDominantSignPresence = probabilityOfSignPresence * 0;
+					probabilityOfInterveningSignPresence = probabilityOfSignPresence * 0;
+					probabilityOfRecessiveSignPresence = probabilityOfSignPresence * 100;
 				}
 				else
 				{
-					childSignsExpressionProbability.insert(std::make_pair(chromosomeMask.signName,
-						std::map{
-							std::make_pair(chromosomeMask.recessiveGeneticExpression, probabilityOfSignPresence * 0.0f),
-							std::make_pair(chromosomeMask.interveningGeneticExpression, probabilityOfSignPresence * 100),
-							std::make_pair(chromosomeMask.dominantGeneticExpression, probabilityOfSignPresence * 0.0f)
-						}
-					));
+					probabilityOfDominantSignPresence = probabilityOfSignPresence * 0;
+					probabilityOfInterveningSignPresence = probabilityOfSignPresence * 100;
+					probabilityOfRecessiveSignPresence = probabilityOfSignPresence * 0;
 				}
 			}
 			else
@@ -204,37 +179,36 @@ private:
 				if ((!isFirstGeneVariative && isSecondGeneVariative && firstParentChromosome.firstGene == GeneState::Dominant)
 					|| (isFirstGeneVariative && !isSecondGeneVariative && firstParentChromosome.secondGene == GeneState::Dominant))
 				{
-					childSignsExpressionProbability.insert(std::make_pair(chromosomeMask.signName,
-						std::map{
-							std::make_pair(chromosomeMask.recessiveGeneticExpression, probabilityOfSignPresence * 0.0f),
-							std::make_pair(chromosomeMask.interveningGeneticExpression, probabilityOfSignPresence * 1 / 2 * 100),
-							std::make_pair(chromosomeMask.dominantGeneticExpression, probabilityOfSignPresence * 1 / 2 * 100)
-						}
-					));
+					probabilityOfDominantSignPresence = probabilityOfSignPresence * 50;
+					probabilityOfInterveningSignPresence = probabilityOfSignPresence * 50;
+					probabilityOfRecessiveSignPresence = probabilityOfSignPresence * 0;
 				}
 				else
 				{
-					childSignsExpressionProbability.insert(std::make_pair(chromosomeMask.signName,
-						std::map{
-							std::make_pair(chromosomeMask.recessiveGeneticExpression, probabilityOfSignPresence * 1 / 2 * 100),
-							std::make_pair(chromosomeMask.interveningGeneticExpression, probabilityOfSignPresence * 1 / 2 * 100),
-							std::make_pair(chromosomeMask.dominantGeneticExpression, probabilityOfSignPresence * 0.0f)
-						}
-					));
+					probabilityOfDominantSignPresence = probabilityOfSignPresence * 0;
+					probabilityOfInterveningSignPresence = probabilityOfSignPresence * 50;
+					probabilityOfRecessiveSignPresence = probabilityOfSignPresence * 50;
 				}
 
 			}
-		}
 
+			childSignsExpressionProbability.insert(std::make_pair(chromosomeMask.signName,
+				std::map{
+					std::make_pair(chromosomeMask.recessiveGeneticExpression, probabilityOfRecessiveSignPresence),
+					std::make_pair(chromosomeMask.interveningGeneticExpression,probabilityOfInterveningSignPresence),
+					std::make_pair(chromosomeMask.dominantGeneticExpression, probabilityOfDominantSignPresence)
+				}
+			));
+		}
 
 		if (!chromosomeMask.dependentSigns.signs.empty())
 		{
 			if (isFirstGeneVariative && isSecondGeneVariative)
 			{
 				if (chromosomeMask.dependentSigns.baseGenePresence == BaseGenePresence::Presence)
-					vectorOfProbabilitiesOfSignPresence.push_back(0.75);
+					vectorOfProbabilitiesOfSignPresence.push_back(75);
 				else
-					vectorOfProbabilitiesOfSignPresence.push_back(0.25);
+					vectorOfProbabilitiesOfSignPresence.push_back(25);
 			}
 			else if (!isFirstGeneVariative && !isSecondGeneVariative)
 			{
@@ -243,9 +217,9 @@ private:
 				{
 					if (chromosomeMask.dependentSigns.baseGene == GeneState::Dominant
 						&& chromosomeMask.dependentSigns.baseGenePresence == BaseGenePresence::Presence)
-						vectorOfProbabilitiesOfSignPresence.push_back(1.0);
+						vectorOfProbabilitiesOfSignPresence.push_back(100);
 					else
-						vectorOfProbabilitiesOfSignPresence.push_back(0.0);
+						vectorOfProbabilitiesOfSignPresence.push_back(0);
 				}
 				else
 				{
@@ -256,16 +230,16 @@ private:
 					{
 						if (chromosomeMask.dependentSigns.baseGene == GeneState::Recessive
 							&& chromosomeMask.dependentSigns.baseGenePresence == BaseGenePresence::Presence)
-							vectorOfProbabilitiesOfSignPresence.push_back(1.0);
+							vectorOfProbabilitiesOfSignPresence.push_back(100);
 						else
-							vectorOfProbabilitiesOfSignPresence.push_back(0.0);
+							vectorOfProbabilitiesOfSignPresence.push_back(0);
 					}
 					else
 					{
 						if (chromosomeMask.dependentSigns.baseGenePresence == BaseGenePresence::Presence)
-							vectorOfProbabilitiesOfSignPresence.push_back(1.0);
+							vectorOfProbabilitiesOfSignPresence.push_back(100);
 						else
-							vectorOfProbabilitiesOfSignPresence.push_back(0.0);
+							vectorOfProbabilitiesOfSignPresence.push_back(0);
 					}
 				}
 			}
@@ -279,18 +253,18 @@ private:
 					if (chromosomeMask.dependentSigns.baseGene == GeneState::Dominant
 						&& chromosomeMask.dependentSigns.baseGenePresence == BaseGenePresence::Presence)
 					{
-						vectorOfProbabilitiesOfSignPresence.push_back(1.0);
+						vectorOfProbabilitiesOfSignPresence.push_back(100);
 					}
 					else if (chromosomeMask.dependentSigns.baseGene == GeneState::Recessive)
 					{
 						if (chromosomeMask.dependentSigns.baseGenePresence == BaseGenePresence::Presence)
-							vectorOfProbabilitiesOfSignPresence.push_back(0.75);
+							vectorOfProbabilitiesOfSignPresence.push_back(75);
 						else
-							vectorOfProbabilitiesOfSignPresence.push_back(0.25);
+							vectorOfProbabilitiesOfSignPresence.push_back(25);
 					}
 					else
 					{
-						vectorOfProbabilitiesOfSignPresence.push_back(0.0);
+						vectorOfProbabilitiesOfSignPresence.push_back(0);
 					}
 				}
 				else
@@ -298,41 +272,39 @@ private:
 					if (chromosomeMask.dependentSigns.baseGene == GeneState::Recessive
 						&& chromosomeMask.dependentSigns.baseGenePresence == BaseGenePresence::Presence)
 					{
-						vectorOfProbabilitiesOfSignPresence.push_back(1.0);
+						vectorOfProbabilitiesOfSignPresence.push_back(100);
 					}
 					else if (chromosomeMask.dependentSigns.baseGene == GeneState::Dominant)
 					{
 						if (chromosomeMask.dependentSigns.baseGenePresence == BaseGenePresence::Presence)
-							vectorOfProbabilitiesOfSignPresence.push_back(0.75);
+							vectorOfProbabilitiesOfSignPresence.push_back(75);
 						else
-							vectorOfProbabilitiesOfSignPresence.push_back(0.25);
+							vectorOfProbabilitiesOfSignPresence.push_back(25);
 					}
 					else
 					{
-						vectorOfProbabilitiesOfSignPresence.push_back(0.0);
+						vectorOfProbabilitiesOfSignPresence.push_back(0);
 					}
 				}
 			}
 			probabilityOfSignPresence = getProbabilityOfSignPresence(vectorOfProbabilitiesOfSignPresence);
 
 
-			float probabilityOfSignAbsence = 0.0f;
+			uint32_t probabilityOfSignAbsence = 0;
 			for (auto it = chromosomeMask.dependentSigns.signs.cbegin(); it != chromosomeMask.dependentSigns.signs.cend(); ++it)
 			{
-				probabilityOfSignAbsence = (1.0f - probabilityOfSignPresence) * 100;
+				probabilityOfSignAbsence = (vectorOfProbabilitiesOfSignPresence.at(0) - probabilityOfSignPresence) * 100;
 
 				setChildSignExpressionProbability(++firstParentChromosomeIt, ++secondParentChromosomeIt, *it);
 
-				if (probabilityOfSignAbsence != 0.0f)
+				if (probabilityOfSignAbsence != 0)
 					childSignsExpressionProbability[it->signName].insert(std::make_pair("Not present", probabilityOfSignAbsence));
 			}
 
 			vectorOfProbabilitiesOfSignPresence.resize(vectorOfProbabilitiesOfSignPresence.size() - 1);
 			probabilityOfSignPresence = getProbabilityOfSignPresence(vectorOfProbabilitiesOfSignPresence);
-
 		}
 	}
-
 
 public:
 	Statistics(const PhenotypeMask& phenotypeMask) noexcept 
