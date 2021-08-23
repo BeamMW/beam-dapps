@@ -14,3 +14,8 @@ export enum ReqIds {
 export enum APIMethods {
   INVOKE_CONTRACT = 'invoke_contract'
 }
+
+export enum FormActions {
+  SET_ROLE = 'SET_ROLE',
+  SET_ACTION = 'SET_ACTION'
+}

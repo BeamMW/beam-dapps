@@ -19,6 +19,12 @@
     ],
     "ignorePatterns": ["*.config.js", "node_modules/", "dist/"],
     "rules": {
+      "prefer-destructuring": ["error", {
+        "array": false,
+        "object": true
+      }, {
+        "enforceForRenamedProperties": false
+      }],
       "comma-dangle": ["error", {
         "arrays": "never",
         "objects": "never",

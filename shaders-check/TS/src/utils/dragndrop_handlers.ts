@@ -12,15 +12,15 @@ type DropHandlerProps = {
 
 export const dragoverHandler = (e:DragEvent):boolean => {
   e.preventDefault();
-  const target = e.target as Element;
-  target.classList.add('hover');
+  const target = (<Element>e.target).closest('.chooseWasm__label');
+  target?.classList.add('hover');
   return false;
 };
 
 export const dragleaveHandler = (e:DragEvent):boolean => {
   e.preventDefault();
-  const target = e.target as Element;
-  target.classList.remove('hover');
+  const target = (<Element>e.target).closest('.chooseWasm__label');
+  target?.classList.remove('hover');
   return false;
 };
 
@@ -30,9 +30,9 @@ export const dropHandler = async (
   }:DropHandlerProps
 ):Promise<void | false> => {
   e.preventDefault();
-  const target = e.target as Element;
-  target.classList.remove('hover');
-  target.classList.add('drop');
+  const target = (<Element>e.target).closest('.chooseWasm__label');
+  target?.classList.remove('hover');
+  target?.classList.add('drop');
   const uploadDragFiles = e.dataTransfer?.files as FileList;
   const files = await uploadDragFiles[0]?.arrayBuffer() as ArrayBuffer;
   initShader(files);
@@ -42,7 +42,7 @@ export const dropHandler = async (
   if (uploadDragFiles[0]
     && uploadDragFiles[0].size > ShaderProps.MAX_FILE_SIZE) {
     span.textContent = InnerTexts.DROP_SIZE_ERROR_TXT;
-    target.classList.add('error');
+    target?.classList.add('error');
     return false;
   } span.textContent = uploadDragFiles[0]?.name as string;
   return undefined;

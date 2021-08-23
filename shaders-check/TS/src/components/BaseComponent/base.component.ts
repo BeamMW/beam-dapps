@@ -1,8 +1,23 @@
+import { APIResponse, BeamApiHandlers, IRoleOutput } from 'beamApiProps';
 import { Tags } from '../../constants/html_elements';
 
 type HTMLAttributes = {
   [key:string]: string;
 };
+
+type InformArgs = {
+  currentRole: string,
+  currentAction: string,
+  roleOutput: IRoleOutput
+};
+
+export interface IObserverComponent extends BaseComponent {
+  inform: (state: BeamApiHandlers, object: APIResponse) => void;
+}
+
+export interface IObserverFormComponent extends BaseComponent {
+  inform: (state: InformArgs) => void;
+}
 
 export default class BaseComponent {
   readonly element: HTMLElement;

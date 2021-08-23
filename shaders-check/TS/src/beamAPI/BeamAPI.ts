@@ -1,6 +1,8 @@
-import { APIResponse, BeamApiHandlers, BeamApiParams } from 'beamApiProps';
+import { BeamApiParams } from 'beamApiProps';
 import { QWebChannel, QWebChannelTransport, QObject } from 'qwebchannel';
-import BaseComponent from '../components/BaseComponent/base.component';
+import {
+  IObserverComponent
+} from '../components/BaseComponent/base.component';
 // import shader from '../shader.wasm';
 
 declare global {
@@ -10,16 +12,12 @@ declare global {
   }
 }
 
-export interface ObserverComponent extends BaseComponent {
-  inform: (state: BeamApiHandlers, object: APIResponse) => void;
-}
-
 export class BeamAPI {
   private API: null | QObject;
 
   private contract: ArrayBuffer | null;
 
-  private readonly observers: ObserverComponent[];
+  private readonly observers: IObserverComponent[];
 
   constructor() {
     this.API = null;
@@ -27,14 +25,14 @@ export class BeamAPI {
     this.observers = [];
   }
 
-  addObservers = (...components: ObserverComponent[]): void => {
+  addObservers = (...components: IObserverComponent[]): void => {
     components.forEach((component) => {
       this.observers.push(component);
     });
   };
 
   onApiResult = (json: string): void => {
-    this.observers.forEach((element: ObserverComponent) => {
+    this.observers.forEach((element: IObserverComponent) => {
       element.inform(
         {
           initShader: this.initShader,

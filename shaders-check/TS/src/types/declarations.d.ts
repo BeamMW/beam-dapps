@@ -62,6 +62,18 @@ declare module 'beamApiProps' {
       txid: string;
     };
   };
+
+  export interface IActionParamsOutput {
+    [key:string]: never | string
+  }
+
+  export interface IRoleOutput {
+    [key:string]: string | IActionOutput
+  }
+
+  export interface IActionParams {
+    [key:string]: string
+  }
   export type BeamApiHandlers = {
     callApi: (callid: string, method: string, params: Params) => void,
     initShader: (shader: ArrayBuffer) => void

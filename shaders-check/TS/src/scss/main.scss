@@ -224,6 +224,10 @@ padding-top: 20px;
   display: block !important;
 }
 
+.params__input::placeholder{
+  color: black;
+}
+
 .action-params{
   display: flex;
   justify-content:space-between;
