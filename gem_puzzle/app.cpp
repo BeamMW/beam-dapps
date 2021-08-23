@@ -11,11 +11,18 @@
 #include <iostream>
 #include <random>
 
+#ifndef ENABLE_UNIT_TESTS_
 using Action_func_t = void (*)(const ContractID&);
+#else
+namespace GemPuzzle {
+	enum Verdict { WIN, LOSE, ERROR };
+}
+#endif // ENABLE_UNIT_TESTS_
 
 constexpr size_t SOLUTION_BUF_SIZE = 8192;
 constexpr size_t VERDICT_BUF_SIZE = 8;
 constexpr size_t ACTION_BUF_SIZE = 32;
+constexpr size_t ROLE_BUF_SIZE = 16;
 constexpr uint8_t BOARD_SIZE = 4;
 constexpr uint8_t PERMUTATION_LEN = BOARD_SIZE * BOARD_SIZE - 1;
 
@@ -26,7 +33,11 @@ constexpr uint64_t factorial(uint8_t n)
 
 void On_error(const char* msg)
 {
+#ifndef ENABLE_UNIT_TESTS_
 	Env::DocAddText("error", msg);
+#else
+	std::cerr << msg << std::endl;
+#endif // ENABLE_UNIT_TESTS_
 }
 
 namespace {
@@ -297,57 +308,93 @@ void On_action_view_current_game_board(const ContractID& cid)
 	Env::DocCloseArray();
 }
 
+template <typename T>
+auto find_if_contains(const char* str, const std::vector<std::pair<const char *, T>>& v) {
+	return std::find_if(v.begin(), v.end(), [&str](const auto& p) {
+		return !strcmp(str, p.first);
+	});
+}
+
 BEAM_EXPORT void Method_0()
 {
-	Env::DocAddGroup("");
+    Env::DocGroup root("");
 
-	Env::DocAddGroup("create_contract");
-	Env::DocCloseGroup();
-
-	Env::DocGroup method("destroy_contract");
-	Env::DocAddText("cid", "ContractID");
-	Env::DocCloseGroup();
-	
-	Env::DocAddGroup("view_contracts");
-	Env::DocCloseGroup();
-
-	Env::DocAddGroup("new_game");
-	Env::DocAddText("cid", "ContractID");
-	Env::DocAddText("cancel_previous_game", "uint");
-	Env::DocCloseGroup();
-
-	Env::DocAddGroup("check_solution");
-	Env::DocAddText("cid", "ContractID");
-	Env::DocAddText("solution", "string");
-	Env::DocCloseGroup();
-
-	Env::DocCloseGroup();
+    {
+        Env::DocGroup gr("roles");
+        {
+            Env::DocGroup grRole("manager");
+            {
+                Env::DocGroup grMethod("create_contract");
+            }
+            {
+                Env::DocGroup grMethod("destroy_contract");
+                Env::DocAddText("cid", "ContractID");
+            }
+            {
+                Env::DocGroup grMethod("view_contracts");
+            }
+        }
+        {
+            Env::DocGroup grRole("player");
+            {
+                Env::DocGroup grMethod("new_game");
+                Env::DocAddText("cid", "ContractID");
+				Env::DocAddText("cancel_previous_game", "uint32");
+            }
+            {
+                Env::DocGroup grMethod("check_solution");
+                Env::DocAddText("cid", "ContractID");
+                Env::DocAddText("solution", "string");
+            }
+            {
+                Env::DocGroup grMethod("view_current_game_board");
+                Env::DocAddText("cid", "ContractID");
+            }
+        }
+    }
 }
 
 BEAM_EXPORT void Method_1()
 {
-	const std::vector<std::pair<const char *, Action_func_t>> VALID_ACTIONS = {
-		{"create_contract", On_action_create_contract},
-		{"destroy_contract", On_action_destroy_contract},
+	const std::vector<std::pair<const char *, Action_func_t>> VALID_PLAYER_ACTIONS = {
 		{"new_game", On_action_new_game},
 		{"check_solution", On_action_check_solution},
-		{"view_contracts", On_action_view_contracts},
 		{"view_current_game_board", On_action_view_current_game_board},
 	};
 
-	char action[ACTION_BUF_SIZE];
+	const std::vector<std::pair<const char *, Action_func_t>> VALID_MANAGER_ACTIONS = {
+		{"create_contract", On_action_create_contract},
+		{"destroy_contract", On_action_destroy_contract},
+		{"view_contracts", On_action_view_contracts},
+	};
 
-	if (!Env::DocGetText("action", action, sizeof(action)))
+	const std::vector<std::pair<const char *, const std::vector<std::pair<const char *, Action_func_t>>&>> VALID_ROLES = {
+		{"player", VALID_PLAYER_ACTIONS},
+		{"manager", VALID_MANAGER_ACTIONS},
+	};
+
+	char action[ACTION_BUF_SIZE], role[ROLE_BUF_SIZE];
+
+	if (!Env::DocGetText("role", role, sizeof(role))) {
+		return On_error("Role not specified");
+	}
+	
+	auto it_role = find_if_contains(role, VALID_ROLES);
+
+	if (it_role == VALID_ROLES.end()) {
+		return On_error("Invalid role");
+	}
+
+	if (!Env::DocGetText("action", action, sizeof(action))) {
 		return On_error("Action not specified");
+	}
 
-	auto it = std::find_if(VALID_ACTIONS.begin(), VALID_ACTIONS.end(), [&action](const auto& p) {
-		return !strcmp(action, p.first);
-	});
+	auto it_action = find_if_contains(action, it_role->second); 
 
-	if (it != VALID_ACTIONS.end()) {
+	if (it_action != it_role->second.end()) {
 		ContractID cid;
 		Env::DocGet("cid", cid); 
-		it->second(cid);
+		it_action->second(cid);
 	} else {
 		On_error("Invalid action");
 	}
