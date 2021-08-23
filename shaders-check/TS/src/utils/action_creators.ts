@@ -1,9 +1,9 @@
 import { FormActions } from '../constants/variables';
 
-export const setRoleAC = (payload:any) => (
+export const setRoleAC = (payload:string) => (
   { action: FormActions.SET_ROLE, payload }
 );
-export const setActionAC = (payload:any) => (
+export const setActionAC = (payload:string) => (
   { action: FormActions.SET_ACTION, payload }
 );
 
