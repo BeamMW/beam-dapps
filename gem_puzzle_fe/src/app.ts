@@ -1,3 +1,4 @@
+import Canvas from './components/canvas/canvas.component';
 import Loader from './components/loader/loader.component';
 import { BeamAPI } from './utils/beamAPI';
 
@@ -12,7 +13,8 @@ export class App {
     this.rootElement.append(new Loader().element);
     this.API.loadAPI()
       .then(() => {
-        this.rootElement.innerHTML = 'Hi';
+        this.rootElement.innerHTML = '';
+        this.rootElement.append(new Canvas().element);
       });
   }
 }

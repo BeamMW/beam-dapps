@@ -31,8 +31,8 @@ export class BeamAPI {
 
   onApiResult = (json: string): void => {
     console.log(json);
-    this.observers.forEach((element: any) => {
-      element.inform(
+    this.observers.forEach((component: any) => {
+      component.inform(
         {
           initShader: this.initShader,
           callApi: this.callApi
@@ -48,32 +48,28 @@ export class BeamAPI {
       window.beam.apiResult$.subscribe(this.onApiResult);
       this.API = beam;
     } else {
-      this.API = (await new Promise<QObject>(
-        (resolve) => new QWebChannel(
-          qt.webChannelTransport, (channel) => {
-            resolve(channel.objects.BEAM.api);
-          }
-        )
-      ));
+      this.API = await new Promise<QObject>(
+        (resolve) => new QWebChannel(qt.webChannelTransport, (channel) => {
+          resolve(channel.objects.BEAM.api);
+        })
+      );
       this.API?.callWalletApiResult.connect(this.onApiResult);
     }
-    this.contract = await fetch(shader).then((response) => response.arrayBuffer());
+    this.contract = await fetch(shader)
+      .then((response) => response.arrayBuffer());
     if (this.contract) {
-    this.callApi(ApiId.CHECK, APIMethods.INVOKE_CONTRACT, {
-      contract: Array.from(new Uint8Array(this.contract)),
-      create_tx: false,
-      args: 'role=manager,action=view_contracts'
-    });
-  }
+      this.initShader();
+      this.callApi(ApiId.CHECK, APIMethods.INVOKE_CONTRACT, {
+        contract: Array.from(new Uint8Array(this.contract)),
+        create_tx: false,
+        args: 'role=manager,action=view_contracts'
+      });
+    }
   };
 
-  initShader = (shader:ArrayBuffer):void => {
-    this.contract = shader;
+  initShader = (): void => {
     if (window.beam) {
-      window.beam.initializeShader(
-        AppSpecs.CID,
-        AppSpecs.TITLE
-      );
+      window.beam.initializeShader(AppSpecs.CID, AppSpecs.TITLE);
     }
   };
 

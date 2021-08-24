@@ -4,5 +4,6 @@ export enum Tags {
   SPAN = 'span',
   FORM = 'form',
   INPUT = 'input',
-  LABEL = 'label'
+  LABEL = 'label',
+  CANVAS = 'canvas'
 }
