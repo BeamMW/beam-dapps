@@ -81,7 +81,7 @@ declare module 'beamApiProps' {
 
   export type BeamApiHandlers = {
     callApi: (callid: string, method: string, params: Params) => void,
-    initShader: (shader: ArrayBuffer) => void
+    addObservers: (component: any) => void
   };
   export type BeamApiParams = {
     contract?: number[];

@@ -1,3 +1,4 @@
+import { BeamApiHandlers } from 'beamApiProps';
 import { Tags } from '../../constants/html_tags';
 
 type HTMLAttributes = {
@@ -6,6 +7,12 @@ type HTMLAttributes = {
 
 export default class BaseComponent {
   readonly element: HTMLElement;
+
+  static apiHandler: BeamApiHandlers;
+
+  static state: any;
+
+  inform: (json:string) => void;
 
   constructor(tag:Tags, styles: string[] = []) {
     this.element = document.createElement(tag);

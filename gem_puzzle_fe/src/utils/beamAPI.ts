@@ -27,6 +27,7 @@ export class BeamAPI {
     components.forEach((component) => {
       this.observers.push(component);
     });
+    console.log(this.observers);
   };
 
   onApiResult = (json: string): void => {
