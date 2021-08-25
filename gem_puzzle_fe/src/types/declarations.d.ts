@@ -54,6 +54,8 @@ declare module 'qwebchannel' {
 }
 
 declare module 'beamApiProps' {
+  import BaseComponent from '../components/base/base.component';
+
   export type APIResponse = {
     id: ReqIds;
     jsonrpc: string;
@@ -79,13 +81,18 @@ declare module 'beamApiProps' {
     roles: IRoleOutput
   }
 
+  export type CallApiType =
+  (callid: string, method: string, params: BeamApiParams) => void;
+
+  export type AddObserversType = (component: BaseComponent) => void;
+
   export type BeamApiHandlers = {
-    callApi: (callid: string, method: string, params: Params) => void,
-    addObservers: (component: any) => void
+    callApi: CallApiType,
+    addObservers: AddObserversType
   };
   export type BeamApiParams = {
     contract?: number[];
-    create_tx: boolean;
+    create_tx?: boolean;
     args?: string;
   };
 }

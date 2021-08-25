@@ -1,6 +1,7 @@
 import { BeamApiParams } from 'beamApiProps';
 import { QWebChannel, QWebChannelTransport, QObject } from 'qwebchannel';
 import shader from '../app.wasm';
+import BaseComponent from '../components/base/base.component';
 import { ApiId, APIMethods, AppSpecs } from '../constants/api_constants';
 
 declare global {
@@ -15,7 +16,7 @@ export class BeamAPI {
 
   private contract: ArrayBuffer | null;
 
-  private readonly observers: any[];
+  private readonly observers: BaseComponent[];
 
   constructor() {
     this.API = null;
@@ -23,23 +24,15 @@ export class BeamAPI {
     this.observers = [];
   }
 
-  addObservers = (...components: any[]): void => {
+  addObservers = (...components: BaseComponent[]): void => {
     components.forEach((component) => {
       this.observers.push(component);
     });
-    console.log(this.observers);
   };
 
   onApiResult = (json: string): void => {
-    console.log(json);
-    this.observers.forEach((component: any) => {
-      component.inform(
-        {
-          initShader: this.initShader,
-          callApi: this.callApi
-        },
-        JSON.parse(json)
-      );
+    this.observers.forEach((component: BaseComponent) => {
+      component.inform(JSON.parse(json));
     });
   };
 
@@ -63,7 +56,7 @@ export class BeamAPI {
       this.callApi(ApiId.CHECK, APIMethods.INVOKE_CONTRACT, {
         contract: Array.from(new Uint8Array(this.contract)),
         create_tx: false,
-        args: 'role=manager,action=view_contracts'
+        args: 'role=player,action=new_game'
       });
     }
   };
@@ -83,6 +76,7 @@ export class BeamAPI {
         method,
         params: { ...params, contract }
       };
+      console.log(request);
       if (window.beam) {
         window.beam.callApi(callid, method, { ...params, contract });
       } else {

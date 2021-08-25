@@ -4,9 +4,17 @@ export enum AppSpecs {
 }
 
 export enum ApiId {
-  CHECK = 'CHECK'
+  CHECK = 'CHECK',
+  START_GAME = 'START_GAME',
+  VIEW_BOARD = 'VIEW_BOARD'
 }
 
 export enum APIMethods {
   INVOKE_CONTRACT = 'invoke_contract'
+}
+
+export enum ContractActions {
+  NEW_GAME = 'new_game',
+  CHECK_SOLUTION = 'check_solution',
+  VIEW_CURRENT_BOARD = 'view_current_game_board'
 }
