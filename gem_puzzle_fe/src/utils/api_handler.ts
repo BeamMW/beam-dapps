@@ -5,7 +5,7 @@ export class ApiHandler {
 
   static callApi: CallApiType;
 
-  static setApiHandlers = (obj: BeamApiHandlers):void => {
+  static setApiHandlers = (obj: BeamApiHandlers): void => {
     ApiHandler.addObservers = obj.addObservers;
     ApiHandler.callApi = obj.callApi;
   };
