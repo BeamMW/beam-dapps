@@ -2,7 +2,7 @@ import { BeamApiParams } from 'beamApiProps';
 import { QWebChannel, QWebChannelTransport, QObject } from 'qwebchannel';
 import shader from '../app.wasm';
 import BaseComponent from '../components/base/base.component';
-import { ApiId, APIMethods, AppSpecs } from '../constants/api_constants';
+import { ReqID, ReqMethods, AppSpecs } from '../constants/api_constants';
 
 declare global {
   interface Window {
@@ -53,10 +53,9 @@ export class BeamAPI {
       .then((response) => response.arrayBuffer());
     if (this.contract) {
       this.initShader();
-      this.callApi(ApiId.CHECK, APIMethods.INVOKE_CONTRACT, {
+      this.callApi(ReqID.CHECK, ReqMethods.INVOKE_CONTRACT, {
         contract: Array.from(new Uint8Array(this.contract)),
-        create_tx: false,
-        args: 'role=player,action=new_game'
+        create_tx: false
       });
     }
   };

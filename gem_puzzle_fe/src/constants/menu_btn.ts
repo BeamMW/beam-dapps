@@ -1,4 +1,4 @@
-import { startGame } from '../utils/request_creators';
+import { startGame, viewBoard, exit } from '../utils/request_creators';
 
 export enum MenuBtn {
   NEW = 'NEW',
@@ -14,12 +14,12 @@ export const menuBtn = [
   },
   {
     key: MenuBtn.OPTIONS,
-    title: 'Options',
-    handler: startGame
+    title: 'View Board',
+    handler: viewBoard
   },
   {
     key: MenuBtn.EXIT,
     title: 'Exit',
-    handler: startGame
+    handler: exit
   }
 ];

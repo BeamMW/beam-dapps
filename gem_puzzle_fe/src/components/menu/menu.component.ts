@@ -1,12 +1,12 @@
 import { APIResponse } from 'beamApiProps';
-import { ApiId } from '../../constants/api_constants';
+import { ReqID } from '../../constants/api_constants';
 import { ApiHandler } from '../../utils/api_handler';
 import { Tags } from '../../constants/html_tags';
 import { menuBtn } from '../../constants/menu_btn';
 import BaseComponent from '../base/base.component';
 import Button from '../button/button.component';
 import './menu.scss';
-import { viewBoard } from '../../utils/request_creators';
+import { invokeData, viewBoard } from '../../utils/request_creators';
 
 export default class Menu extends BaseComponent {
   constructor() {
@@ -23,12 +23,12 @@ export default class Menu extends BaseComponent {
   }
 
   inform = (res: APIResponse): void => {
-    if (res.id === ApiId.START_GAME) {
-      console.log(res);
+    if (res.id === ReqID.START_GAME) {
+      invokeData(res.result.raw_data);
+    }
+    if (res.id === ReqID.INVOKE_DATA) {
       viewBoard();
     }
-    if (res.id === ApiId.VIEW_BOARD) {
-      console.log(res);
-    }
+    console.log(res);
   };
 }

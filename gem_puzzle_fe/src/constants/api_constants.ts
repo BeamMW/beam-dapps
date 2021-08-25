@@ -3,18 +3,21 @@ export enum AppSpecs {
   TITLE = 'PYATNASHKI'
 }
 
-export enum ApiId {
+export enum ReqID {
   CHECK = 'CHECK',
+  INVOKE_DATA = 'INVOKE_DATA',
   START_GAME = 'START_GAME',
-  VIEW_BOARD = 'VIEW_BOARD'
+  VIEW_BOARD = 'VIEW_BOARD',
+  EXIT_GAME = 'EXIT_GAME'
 }
 
-export enum APIMethods {
-  INVOKE_CONTRACT = 'invoke_contract'
+export enum ReqMethods {
+  INVOKE_CONTRACT = 'invoke_contract',
+  PROCESS_INVOKE_DATA = 'process_invoke_data'
 }
 
-export enum ContractActions {
+export enum ReqActions {
   NEW_GAME = 'new_game',
   CHECK_SOLUTION = 'check_solution',
-  VIEW_CURRENT_BOARD = 'view_current_game_board'
+  VIEW_CURRENT_BOARD = 'view_current_game_board',
 }

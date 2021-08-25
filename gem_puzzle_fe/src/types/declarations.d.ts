@@ -62,6 +62,7 @@ declare module 'beamApiProps' {
     result: {
       output: string;
       txid: string;
+      raw_data: number[];
     };
   };
 
@@ -94,5 +95,6 @@ declare module 'beamApiProps' {
     contract?: number[];
     create_tx?: boolean;
     args?: string;
+    data?: number[];
   };
 }
