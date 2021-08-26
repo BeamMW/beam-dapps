@@ -36,7 +36,7 @@ export default class Menu extends BaseComponent {
     this.append(new Header(txid), new Loader());
   };
 
-  initGameField = (board:BoardType):void => {
+  initGameField = (board: BoardType): void => {
     const menu = document.querySelector('.menu');
     menu?.classList.add('active');
     const fl = new Field(board).element;
@@ -44,10 +44,14 @@ export default class Menu extends BaseComponent {
   };
 
   inform = (res: APIResponse): void => {
-    console.log(res);
-
     switch (res.id) {
+      case ReqID.CHECK:
+        console.log(JSON.parse(res.result.output));
+        break;
       case ReqID.START_GAME:
+        invokeData(res.result.raw_data);
+        break;
+      case ReqID.CANCEL_GAME:
         invokeData(res.result.raw_data);
         break;
       case ReqID.INVOKE_DATA:
@@ -62,10 +66,13 @@ export default class Menu extends BaseComponent {
         }
         break;
       case ReqID.VIEW_BOARD:
-        this.initButtonMenu();
-        this.initGameField(
-          JSON.parse(`{${res.result.output}}`).board as BoardType
-        );
+        try {
+          this.initButtonMenu();
+          this.initGameField(JSON.parse(res.result.output).board as BoardType);
+        } catch {
+          console.error(res.result.output);
+        }
+
         break;
       default:
         break;

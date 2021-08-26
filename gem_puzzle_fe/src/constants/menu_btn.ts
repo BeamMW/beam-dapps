@@ -1,9 +1,13 @@
-import { startGame, viewBoard } from '../utils/request_creators';
+import {
+  viewContracts, cancelGame, startGame, viewBoard
+} from '../utils/request_creators';
 
 export enum MenuBtn {
   NEW = 'NEW',
   CONTINUE = 'CONTINUE',
-  OPTIONS = 'OPTIONS'
+  OPTIONS = 'OPTIONS',
+  CANCEL = 'CANCEL',
+  VIEW_CONTRACTS = 'VIEW_CONTRACTS'
 }
 
 export const menuBtn = [
@@ -23,5 +27,15 @@ export const menuBtn = [
     handler: ():void => {
       // TODO
     }
+  },
+  {
+    key: MenuBtn.CANCEL,
+    title: 'CANCEL',
+    handler: cancelGame
+  },
+  {
+    key: MenuBtn.VIEW_CONTRACTS,
+    title: 'VIEW CONTRACTS',
+    handler: viewContracts
   }
 ];
