@@ -85,3 +85,16 @@ BEAM_EXPORT void Method_3(const GemPuzzle::CheckSolutionParams& params)
 		Env::SaveVar_T(cur_game_info.game_id, gr);
 	}
 }
+
+BEAM_EXPORT void Method_4(const GemPuzzle::EndGameParams& params)
+{
+	GemPuzzle::GameInfo cur_game_info;
+	bool is_loaded = Env::LoadVar_T(params.player, cur_game_info);
+
+	if (is_loaded) {
+		if (cur_game_info.game_id != 0) {
+			Env::DelVar_T(cur_game_info.game_id);
+		}
+		Env::DelVar_T(params.player);
+	}
+}

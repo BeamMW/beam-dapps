@@ -90,7 +90,7 @@ bool read_game_result(const ContractID& cid, GemPuzzle::GameResult& game_result)
 	GemPuzzle::GameInfo game_info;
 	bool is_read = Env::VarReader::Read_T(k1, game_info);
 
-	if (!is_read) {
+	if (!is_read || game_info.game_id == 0) {
 		On_error("You don't have any active game. Create new game first.");
 		return false;
 	}
@@ -145,6 +145,14 @@ void On_action_view_current_game_board(const ContractID& cid)
 		Env::DocCloseArray();
 	}
 	Env::DocCloseArray();
+}
+
+void On_action_end_current_game(const ContractID& cid)
+{
+	GemPuzzle::EndGameParams params;
+	Env::DerivePk(params.player, &cid, sizeof(cid));
+	
+	Env::GenerateKernel(&cid, GemPuzzle::EndGameParams::METHOD, &params, sizeof(params), nullptr, 0, nullptr, 0, "Ending existing game", 0);
 }
 
 void On_action_view_check_result(const ContractID& cid)
@@ -233,6 +241,7 @@ BEAM_EXPORT void Method_1()
 		{"check_solution", On_action_check_solution},
 		{"view_current_game_board", On_action_view_current_game_board},
 		{"view_check_result", On_action_view_check_result},
+		{"end_current_game", On_action_end_current_game},
 	};
 
 	const std::vector<std::pair<const char *, Action_func_t>> VALID_MANAGER_ACTIONS = {
