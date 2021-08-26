@@ -136,15 +136,18 @@ void On_action_view_current_game_board(const ContractID& cid)
 	}
 
 	GemPuzzle::Board board(game_info.ngparams.permutation_num);
-	Env::DocAddArray("board");
-	for (size_t i = 0; i < GemPuzzle::Board::BOARD_SIZE; ++i) {
-		Env::DocAddArray("");
-		for (size_t j = 0; j < GemPuzzle::Board::BOARD_SIZE; ++j) {
-			Env::DocAddNum32("", board.get(i, j));	
+	Env::DocGroup root("");
+	{
+		Env::DocAddArray("board");
+		for (size_t i = 0; i < GemPuzzle::Board::BOARD_SIZE; ++i) {
+			Env::DocAddArray("");
+			for (size_t j = 0; j < GemPuzzle::Board::BOARD_SIZE; ++j) {
+				Env::DocAddNum32("", board.get(i, j));	
+			}
+			Env::DocCloseArray();
 		}
 		Env::DocCloseArray();
 	}
-	Env::DocCloseArray();
 }
 
 void On_action_end_current_game(const ContractID& cid)
