@@ -1,0 +1,25 @@
+.field{
+    margin: 10vh auto;
+    width: 400px;
+    height: 400px;
+    border: 2px solid steelblue;
+    background-blend-mode: darken;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.block{
+    width: 98px;
+    height: 98px;
+    background-color: tan;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px dotted fuchsia;
+    border-radius: 10px;
+    font-size: 60px;
+    cursor: pointer;
+    &-0{
+        opacity: 0;
+    }
+}
