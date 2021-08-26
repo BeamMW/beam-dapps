@@ -233,6 +233,10 @@ BEAM_EXPORT void Method_0()
                 Env::DocGroup grMethod("view_check_result");
                 Env::DocAddText("cid", "ContractID");
             }
+            {
+                Env::DocGroup grMethod("end_current_game");
+                Env::DocAddText("cid", "ContractID");
+            }
         }
     }
 }
