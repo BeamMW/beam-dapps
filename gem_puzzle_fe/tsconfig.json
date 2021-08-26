@@ -25,7 +25,7 @@
     "noUncheckedIndexedAccess": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "strictPropertyInitialization":false,
+    "strictPropertyInitialization":true,
   },
   "exclude": [
     "node_modules/"

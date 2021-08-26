@@ -1,25 +1,28 @@
-import { startGame, viewBoard, exit } from '../utils/request_creators';
+import { startGame, viewBoard } from '../utils/request_creators';
 
 export enum MenuBtn {
   NEW = 'NEW',
-  OPTIONS = 'OPTIONS',
-  EXIT = 'EXIT'
+  CONTINUE = 'CONTINUE',
+  EXIT = 'EXIT',
+  OPTIONS = 'OPTIONS'
 }
 
 export const menuBtn = [
   {
-    key: MenuBtn.NEW,
-    title: 'New Game',
-    handler: startGame
-  },
-  {
-    key: MenuBtn.OPTIONS,
-    title: 'View Board',
+    key: MenuBtn.CONTINUE,
+    title: 'CONTINUE',
     handler: viewBoard
   },
   {
+    key: MenuBtn.NEW,
+    title: 'NEW GAME',
+    handler: startGame
+  },
+  {
     key: MenuBtn.EXIT,
-    title: 'Exit',
-    handler: exit
+    title: 'OPTIONS',
+    handler: ():void => {
+      // TODO
+    }
   }
 ];

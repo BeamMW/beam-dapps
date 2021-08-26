@@ -62,8 +62,14 @@ declare module 'beamApiProps' {
     result: {
       output: string;
       txid: string;
+      txId: string;
       raw_data: number[];
+      status_string: string;
     };
+    error?: {
+      code:number;
+      message: string;
+    }
   };
 
   export interface IActionParams {
@@ -96,5 +102,6 @@ declare module 'beamApiProps' {
     create_tx?: boolean;
     args?: string;
     data?: number[];
+    txId?:string
   };
 }
