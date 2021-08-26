@@ -1,5 +1,5 @@
-import { APIResponse } from 'beamApiProps';
-import { ReqID } from '../../constants/api_constants';
+import { APIResponse, BoardType } from 'beamApiProps';
+import { ReqID, ResTXStatus } from '../../constants/api_constants';
 import { ApiHandler } from '../../utils/api_handler';
 import { Tags } from '../../constants/html_tags';
 import { menuBtn } from '../../constants/menu_btn';
@@ -7,37 +7,68 @@ import BaseComponent from '../base/base.component';
 import Button from '../button/button.component';
 import Field from '../field/filed.component';
 import './menu.scss';
-import { invokeData, viewBoard } from '../../utils/request_creators';
+import { invokeData, txStatus, viewBoard } from '../../utils/request_creators';
+import Loader from '../loader/loader.component';
+import Header from '../header/header.component';
 
-const BODY = document.body
+const BODY = document.body;
 export default class Menu extends BaseComponent {
   constructor() {
     super(Tags.DIV, ['menu']);
     ApiHandler.addObservers(this);
+    this.initButtonMenu();
+  }
+
+  initButtonMenu = (): void => {
+    this.removeAll();
     const buttons = menuBtn.map((btn) => {
       const btnKey = new Button();
       btnKey.element.classList.add(`btn_${btn.key}`);
-      btnKey.setAttributes({ value: btn.key });
+      btnKey.setAttributes({ value: btn.title });
       btnKey.element.addEventListener('click', () => btn.handler());
       return btnKey;
     });
     this.append(...buttons);
-  }
+  };
+
+  initLoader = (txid: string): void => {
+    this.removeAll();
+    this.append(new Header(txid), new Loader());
+  };
+
+  initGameField = (board:BoardType):void => {
+    const menu = document.querySelector('.menu');
+    menu?.classList.add('active');
+    const fl = new Field(board).element;
+    BODY.append(fl);
+  };
 
   inform = (res: APIResponse): void => {
-    if (res.id === ReqID.START_GAME || res.id === ReqID.EXIT_GAME) {
-      invokeData(res.result.raw_data);
-    }
-    if (res.id === ReqID.INVOKE_DATA) {
-      viewBoard();
-    }
-    if (res.id === ReqID.VIEW_BOARD){
-      const menu = document.querySelector('.menu')
-      menu && menu.classList.add('active')
-      const fl = new Field().element
-      BODY.append(fl);
-      console.log(res.result)
-    }
     console.log(res);
+
+    switch (res.id) {
+      case ReqID.START_GAME:
+        invokeData(res.result.raw_data);
+        break;
+      case ReqID.INVOKE_DATA:
+        this.initLoader(res.result.txid);
+        txStatus(res.result.txid);
+        break;
+      case ReqID.TX_STATUS:
+        if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
+          txStatus(res.result.txId);
+        } else {
+          viewBoard();
+        }
+        break;
+      case ReqID.VIEW_BOARD:
+        this.initButtonMenu();
+        this.initGameField(
+          JSON.parse(`{${res.result.output}}`).board as BoardType
+        );
+        break;
+      default:
+        break;
+    }
   };
 }

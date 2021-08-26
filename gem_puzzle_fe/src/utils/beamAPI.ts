@@ -31,9 +31,16 @@ export class BeamAPI {
   };
 
   onApiResult = (json: string): void => {
-    this.observers.forEach((component: BaseComponent) => {
-      component.inform(JSON.parse(json));
-    });
+    const res = JSON.parse(json);
+    if ('error' in res) {
+      console.log(res.error.message);
+    } else {
+      this.observers.forEach((component: BaseComponent) => {
+        if (component.inform) {
+          component.inform(res);
+        }
+      });
+    }
   };
 
   loadAPI = async (): Promise<void> => {
@@ -75,7 +82,6 @@ export class BeamAPI {
         method,
         params: { ...params, contract }
       };
-      console.log(request);
       if (window.beam) {
         window.beam.callApi(callid, method, { ...params, contract });
       } else {

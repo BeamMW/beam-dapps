@@ -8,7 +8,7 @@ type HTMLAttributes = {
 export default class BaseComponent {
   readonly element: HTMLElement;
 
-  inform: (res:APIResponse) => void;
+  inform?: (res:APIResponse) => void;
 
   constructor(tag:Tags, styles: string[] = []) {
     this.element = document.createElement(tag);
@@ -20,6 +20,12 @@ export default class BaseComponent {
       (component) => component.element
     );
     this.element.append(...nodes);
+  };
+
+  removeAll = ():void => {
+    while (this.element.firstChild) {
+      this.element.removeChild(this.element.firstChild);
+    }
   };
 
   setAttributes = (obj:HTMLAttributes):void => {
