@@ -7,7 +7,6 @@ import './menu.scss';
 import Loader from '../loader/loader.component';
 import Header from '../header/header.component';
 
-
 export default class Menu extends BaseComponent {
   constructor() {
     super(Tags.DIV, ['menu']);

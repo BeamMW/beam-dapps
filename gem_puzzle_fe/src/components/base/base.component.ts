@@ -13,7 +13,6 @@ export default class BaseComponent {
   constructor(tag:Tags, styles: string[] = []) {
     this.element = document.createElement(tag);
     this.element.classList.add(...styles);
-    this.element.style
   }
 
   append = (...args: BaseComponent[]):void => {

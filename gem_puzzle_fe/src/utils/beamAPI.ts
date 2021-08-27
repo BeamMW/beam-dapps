@@ -32,9 +32,10 @@ export class BeamAPI {
 
   onApiResult = (json: string): void => {
     const res = JSON.parse(json);
-    if ('error' in res) {
+    if (res.error) {
       console.log(res.error.message);
     } else {
+      console.log(res);
       this.observers.forEach((component: BaseComponent) => {
         if (component.inform) {
           component.inform(res);
