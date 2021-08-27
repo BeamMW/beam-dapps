@@ -1,5 +1,5 @@
 .menu {
-    margin: 25vh auto;
+    margin: 10px auto;
     width: 500px;
     height: 350px;
     background-color: palevioletred;
@@ -12,7 +12,7 @@
     justify-content: space-evenly;
 
     &.active {
-        margin: 1vh auto;
+        // margin: 1vh auto;
         width: 550px;
         height: 70px;
         background: none;

@@ -1,9 +1,8 @@
 import Loader from './components/loader/loader.component';
-import StartMenu from './components/menu/menu.component';
 import { BeamAPI } from './utils/beamAPI';
-import bg from './assets/bg.png';
 import { ApiHandler } from './utils/api_handler';
-
+import Main from './components/main/main.component';
+import './style/index.scss'
 const isLoaded = new Loader().element;
 
 export class App {
@@ -21,8 +20,7 @@ export class App {
         addObservers: this.API.addObservers
       });
       this.rootElement.removeChild(isLoaded);
-      this.rootElement.style.backgroundImage = `url('${bg}')`;
-      this.rootElement.append(new StartMenu().element);
+      this.rootElement.append(new Main().element)
     });
   }
 }
