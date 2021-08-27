@@ -17,13 +17,13 @@ After clockwise rotation:
 ## How to play (cli)
 1. Create new game:
 ```bash
-./beam-wallet-masternet -n <your_local_node_address> shader --shader_app_file=<path_to_app.wasm>  --shader_args="action=new_game,cid=596f78d9d2ef4d12b0387e9c191ee45f43ca328f2a17b91664884f4847071c6f"
+./beam-wallet-masternet -n <your_local_node_address> shader --shader_app_file=<path_to_app.wasm>  --shader_args="role=player,action=new_game,cid=596f78d9d2ef4d12b0387e9c191ee45f43ca328f2a17b91664884f4847071c6f"
 ```
 Note: if you already start new game and can't solve it, you can generate another game. To do this add `cancel_previous_game=1` to application shader parameters.
 
 2. Show you current game board:
 ```bash
-./beam-wallet-masternet -n <your_local_node_address> shader --shader_app_file=<path_to_app.wasm>  --shader_args="action=view_current_game_board,cid=596f78d9d2ef4d12b0387e9c191ee45f43ca328f2a17b91664884f4847071c6f"
+./beam-wallet-masternet -n <your_local_node_address> shader --shader_app_file=<path_to_app.wasm>  --shader_args="role=player,action=view_current_game_board,cid=596f78d9d2ef4d12b0387e9c191ee45f43ca328f2a17b91664884f4847071c6f"
 ```
 
 3. Solve it :)
@@ -39,5 +39,5 @@ B -- rotate board counterclockwise.
 ```
 Ex.:  
 ```bash
-./beam-wallet-masternet -n <your_local_node_address> shader --shader_app_file=<path_to_app.wasm>  --shader_args="action=check_solution,solution=uuubrrrdldrd,cid=596f78d9d2ef4d12b0387e9c191ee45f43ca328f2a17b91664884f4847071c6f"
+./beam-wallet-masternet -n <your_local_node_address> shader --shader_app_file=<path_to_app.wasm>  --shader_args="role=player,action=check_solution,solution=uuubrrrdldrd,cid=596f78d9d2ef4d12b0387e9c191ee45f43ca328f2a17b91664884f4847071c6f"
 ```

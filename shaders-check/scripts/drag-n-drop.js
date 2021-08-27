@@ -15,7 +15,6 @@ export const init = (callback) => {
 		return false;
 	};
 	dropZone.addEventListener('drop', async function (e) {
-		window.beam.apiResult$.subscribe(shader.onApiResult);
 		// event - file droped 
 		e.preventDefault();
 		this.classList.remove('hover');

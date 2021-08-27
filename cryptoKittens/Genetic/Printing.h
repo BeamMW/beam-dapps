@@ -5,71 +5,50 @@
 #include "Genotype.h"
 #include "Phenotype.h"
 #include "Statistics.h"
-
-void printChromosome(const Chromosome& chromosome) noexcept
-{
-	static unsigned int countOfSpaces = 0;
-
-	std::cout << static_cast<uint16_t>(chromosome.firstGene)
-		<< static_cast<uint16_t>(chromosome.secondGene) << " "
-		<< static_cast<uint16_t>(chromosome.typeOfDominance) << '\n';
-
-	if (!chromosome.dependentSigns.signs.empty())
-	{
-		++countOfSpaces;
-		for (auto it = chromosome.dependentSigns.signs.cbegin(); it != chromosome.dependentSigns.signs.cend(); ++it)
-		{
-			for (unsigned int i = 0; i < countOfSpaces; ++i)
-			{
-				std::cout << " ";
-			}
-
-			printChromosome(*it);
-		}
-	}
-}
+#include "Mask.h"
 
 void printGenotype(Genotype& genotype) noexcept
 {
-	for (auto it = genotype.setOfGenes.cbegin(); it != genotype.setOfGenes.cend(); ++it)
+	for (auto genotypeIt = genotype.setOfGenes.cbegin(); genotypeIt != genotype.setOfGenes.cend(); ++genotypeIt)
 	{
-		printChromosome(*it);
+		std::cout << static_cast<uint16_t>(genotypeIt->firstGene)
+			<< static_cast<uint16_t>(genotypeIt->secondGene) << ' ';
 	}
 }
 
 void printPhenotype(const Phenotype& phenotype) noexcept
 {
-	for (auto it = phenotype.setOfSigns.cbegin(); it != phenotype.setOfSigns.cend(); ++it)
+	for (auto phenotypeIt = phenotype.setOfSigns.cbegin(); phenotypeIt != phenotype.setOfSigns.cend(); ++phenotypeIt)
 	{
-		std::cout << (*it).first << (*it).second << '\n';
+		std::cout << phenotypeIt->first << ": " << phenotypeIt->second << '\n';
 	}
 }
 
-void printGeneralSignProbability(const genotype& genotype) noexcept
+void printGeneralSignProbability(const ICharacter& character) noexcept
 {
-	Statistics st;
-	auto signsExpressionProbability = st.getGeneralSignsExpressionProbability(genotype);
-	for (auto it = signsExpressionProbability.cbegin(); it != signsExpressionProbability.cend(); ++it)
+	Statistics st(character.phenotype.mask.phenotypeMask);
+	auto signsExpressionProbability = st.getGeneralSignsExpressionProbability();
+	for (auto signIt = signsExpressionProbability.cbegin(); signIt != signsExpressionProbability.cend(); ++signIt)
 	{
-		std::cout << (*it).first << "\n";
-		for (auto it2 = (*it).second.cbegin(); it2 != (*it).second.cend(); ++it2)
+		std::cout << signIt->first << "\n";
+		for (auto signProbabilityIt = signIt->second.cbegin(); signProbabilityIt != signIt->second.cend(); ++signProbabilityIt)
 		{
-			std::cout << (*it2).first << " - " << (*it2).second << '\n';
+			std::cout << signProbabilityIt->first << " - " << signProbabilityIt->second << '\n';
 		}
 		std::cout << "\n";
 	}
 }
 
-void printChildSignProbability(const genotype& firstParentGenotype, const genotype& secondParentGenotype) noexcept
+void printChildSignProbability(const ICharacter& firstParent, const ICharacter& secondParent, const PhenotypeMask& mask) noexcept
 {
-	Statistics st;
-	auto signsExpressionProbability = st.getChildSignsExpressionProbability(firstParentGenotype, secondParentGenotype);
-	for (auto it = signsExpressionProbability.cbegin(); it != signsExpressionProbability.cend(); ++it)
+	Statistics st(mask);
+	auto signsExpressionProbability = st.getChildSignsExpressionProbability(firstParent, secondParent);
+	for (auto signIt = signsExpressionProbability.cbegin(); signIt != signsExpressionProbability.cend(); ++signIt)
 	{
-		std::cout << (*it).first << "\n";
-		for (auto it2 = (*it).second.cbegin(); it2 != (*it).second.cend(); ++it2)
+		std::cout << signIt->first << "\n";
+		for (auto signProbabilityIt = signIt->second.cbegin(); signProbabilityIt != signIt->second.cend(); ++signProbabilityIt)
 		{
-			std::cout << (*it2).first << " - " << (*it2).second << '\n';
+			std::cout << signProbabilityIt->first << " - " << signProbabilityIt->second << '\n';
 		}
 		std::cout << "\n";
 	}
