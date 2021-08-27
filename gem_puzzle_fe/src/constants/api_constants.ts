@@ -11,7 +11,9 @@ export enum ReqID {
   VIEW_BOARD = 'VIEW_BOARD',
   CANCEL_GAME = 'CANCEL_GAME',
   TX_STATUS = 'TX_STATUS',
-  VIEW_CONTRACTS = 'VIEW_CONTRACTS'
+  VIEW_CONTRACTS = 'VIEW_CONTRACTS',
+  CREATE_CONTRACT = 'CREATE_CONTRACT',
+  DESTROY_CONTRACT = 'DESTROY_CONTRACT'
 }
 
 export enum ReqRoles {
@@ -26,11 +28,13 @@ export enum ReqMethods {
 }
 
 export enum ReqActions {
+  CREATE_CONTRACT = 'create_contract',
   VIEW_CONTRACTS = 'view_contracts',
   NEW_GAME = 'new_game',
   CHECK_SOLUTION = 'check_solution',
   VIEW_CURRENT_BOARD = 'view_current_game_board',
-  END_CURRENT_GAME = 'end_current_game'
+  END_CURRENT_GAME = 'end_current_game',
+  DESTROY_CONTRACT = 'destroy_contract'
 }
 
 export enum ResTXStatus {

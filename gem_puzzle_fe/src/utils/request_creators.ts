@@ -79,3 +79,26 @@ export const cancelGame = (): void => {
     args
   });
 };
+
+export const destroyContract = ():void => {
+  const args = argsParser({
+    role: ReqRoles.MANAGER,
+    action: ReqActions.DESTROY_CONTRACT,
+    cid: AppSpecs.CID
+  });
+  ApiHandler.callApi(ReqID.DESTROY_CONTRACT, ReqMethods.INVOKE_CONTRACT, {
+    create_tx: false,
+    args
+  });
+};
+
+export const createContract = ():void => {
+  const args = argsParser({
+    role: ReqRoles.MANAGER,
+    action: ReqActions.CREATE_CONTRACT
+  });
+  ApiHandler.callApi(ReqID.CREATE_CONTRACT, ReqMethods.INVOKE_CONTRACT, {
+    create_tx: false,
+    args
+  });
+};

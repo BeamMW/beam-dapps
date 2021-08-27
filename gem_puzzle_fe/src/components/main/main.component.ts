@@ -29,6 +29,9 @@ export default class Main extends BaseComponent {
       case ReqID.CHECK:
         console.log(JSON.parse(res.result.output));
         break;
+      case ReqID.CREATE_CONTRACT:
+        invokeData(res.result.raw_data);
+        break;
       case ReqID.START_GAME:
         invokeData(res.result.raw_data);
         break;
