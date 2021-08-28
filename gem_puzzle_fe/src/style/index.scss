@@ -1,0 +1,14 @@
+html {
+    height: 100%;
+  }
+body{
+    height: 100%;
+    background-image: linear-gradient(#7B9F35, #226666);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 0 auto;
+    background-image: url('../assets/bg.png');
+
+}

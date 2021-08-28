@@ -1,0 +1,28 @@
+.field{
+    margin: 0 auto;
+    width: 300px;
+    height: 300px;
+    border: 4px solid darkorange;
+    border-radius: 10px;
+    position: relative;
+    margin: 25px auto;
+    user-select: none;
+}
+.block{
+    width: 75px;
+    height: 75px;
+    background-color: rgba(88, 183, 255, 0.2);
+    border: 2px solid rgba(88, 183, 255);
+    border-radius: 10px;
+    position: absolute;
+    box-sizing: border-box;
+    font-size: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s;
+    cursor: pointer;
+    &-0{
+        opacity: 0;
+    }
+}
