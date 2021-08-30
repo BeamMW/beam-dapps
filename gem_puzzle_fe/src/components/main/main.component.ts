@@ -3,7 +3,7 @@ import { APIResponse, BoardType } from 'beamApiProps';
 import BaseComponent from '../base/base.component';
 import { ApiHandler } from '../../utils/api_handler';
 import Menu from '../menu/menu.component';
-import Field from '../field/filed.component';
+import { Field } from '../field/filed.component';
 import { ReqID, ResTXStatus } from '../../constants/api_constants';
 import { invokeData, txStatus, viewBoard } from '../../utils/request_creators';
 
@@ -12,7 +12,6 @@ import './main.scss'
 
 export default class Main extends BaseComponent {
     menu:Menu;
-
     constructor(){
         super(Tags.DIV, ['main']);
         ApiHandler.addObservers(this);
@@ -23,8 +22,9 @@ export default class Main extends BaseComponent {
 
     initGameField = (board:BoardType):void => {
         this.menu.element.classList.add('active');
-        const fl = new Field(board).element;
-        this.element.append(fl)
+        // const fl = new Field(board).element;
+        // this.element.append(fl)
+        Field.ready(board)
       };
 
       inform = (res: APIResponse): void => {
