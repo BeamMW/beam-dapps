@@ -1,11 +1,11 @@
 // import { BoardType } from 'beamApiProps';
 import { BoardType } from 'beamApiProps';
 import { Tags } from '../../constants/html_tags';
-import { Box, isSolved, swapBoxes } from './box.component';
+import { Box, isSolved, swapBoxes } from './box';
 // import BaseComponent from '../base/base.component';
 // import Main from '../../components/main/main.component'
 import './field.scss';
-import { State } from './state.component';
+import { State } from './state';
 
 // function getRandomGrid():any{
 //   let grid = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]];
@@ -51,19 +51,19 @@ export class Field {
     this.render();
   };
 
-  handleClickBox(box: { getNextdoorBoxes: () => any }) {
+  handleClickBox(box: { getNextdoorBoxes: () => any, x:number, y:number }) {
     return () => {
       const nextdoorBoxes = box.getNextdoorBoxes();
       console.log(nextdoorBoxes);
 
       const blankBox = nextdoorBoxes.find(
         (nextdoorBox: {
-          y: string | number; x: string | number
+          y: number; x: number
         }) => this.state.grid[nextdoorBox.y][nextdoorBox.x] === 0
       );
       if (blankBox) {
         const newGrid = [...this.state.grid];
-        swapBoxes(newGrid, box, blankBox);
+        swapBoxes(newGrid, { x: box.x, y: box.y }, blankBox);
         if (isSolved(newGrid)) {
           clearInterval(Field.tickId);
           this.setState({

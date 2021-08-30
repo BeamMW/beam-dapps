@@ -26,10 +26,17 @@ export default class Main extends BaseComponent {
   };
 
   inform = (res: APIResponse): void => {
-    console.log(res);
-
     switch (res.id) {
+      case ReqID.CHECK:
+        console.log(JSON.parse(res.result.output));
+        break;
       case ReqID.START_GAME:
+        invokeData(res.result.raw_data);
+        break;
+      case ReqID.DESTROY:
+        invokeData(res.result.raw_data);
+        break;
+      case ReqID.CANCEL_GAME:
         invokeData(res.result.raw_data);
         break;
       case ReqID.INVOKE_DATA:
@@ -44,10 +51,13 @@ export default class Main extends BaseComponent {
         }
         break;
       case ReqID.VIEW_BOARD:
-        this.menu.initButtonMenu();
-        this.initGameField(
-          JSON.parse(`{${res.result.output}}`).board as BoardType
-        );
+        try {
+          this.menu.initButtonMenu();
+          this.initGameField(JSON.parse(res.result.output).board as BoardType);
+        } catch (err) {
+          console.error(err);
+        }
+
         break;
       default:
         break;

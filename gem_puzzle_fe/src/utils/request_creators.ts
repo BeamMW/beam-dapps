@@ -49,6 +49,29 @@ export const viewBoard = (): void => {
   });
 };
 
+export const viewContracts = ():void => {
+  const args = argsParser({
+    role: ReqRoles.MANAGER,
+    action: ReqActions.VIEW_CONTRACTS
+  });
+  ApiHandler.callApi(ReqID.VIEW_CONTRACTS, ReqMethods.INVOKE_CONTRACT, {
+    create_tx: false,
+    args
+  });
+};
+
+export const destroyContract = ():void => {
+  const args = argsParser({
+    role: ReqRoles.MANAGER,
+    action: ReqActions.DESTROY_CONTRACT,
+    cid: AppSpecs.CID
+  });
+  ApiHandler.callApi(ReqID.DESTROY, ReqMethods.INVOKE_CONTRACT, {
+    create_tx: false,
+    args
+  });
+};
+
 export const txStatus = (txId:string): void => {
   setTimeout(() => {
     ApiHandler.callApi(ReqID.TX_STATUS, ReqMethods.TX_STATUS, {
@@ -57,14 +80,13 @@ export const txStatus = (txId:string): void => {
   }, AppSpecs.TX_CHECK_INTERVAL);
 };
 
-export const exit = (): void => {
+export const cancelGame = (): void => {
   const args = argsParser({
     role: ReqRoles.PLAYER,
-    action: ReqActions.NEW_GAME,
-    cid: AppSpecs.CID,
-    cancel_previous_game: 1
+    action: ReqActions.END_CURRENT_GAME,
+    cid: AppSpecs.CID
   });
-  ApiHandler.callApi(ReqID.EXIT_GAME, ReqMethods.INVOKE_CONTRACT, {
+  ApiHandler.callApi(ReqID.CANCEL_GAME, ReqMethods.INVOKE_CONTRACT, {
     create_tx: false,
     args
   });

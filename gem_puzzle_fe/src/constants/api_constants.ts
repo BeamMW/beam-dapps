@@ -1,5 +1,5 @@
 export enum AppSpecs {
-  CID = '596f78d9d2ef4d12b0387e9c191ee45f43ca328f2a17b91664884f4847071c6f',
+  CID = 'a731ca3feab1049f77e55bc49542a5ce15e8b93aac7f4b2469a242ac6aa745aa',
   TITLE = 'PYATNASHKI',
   TX_CHECK_INTERVAL = 3000
 }
@@ -9,8 +9,10 @@ export enum ReqID {
   INVOKE_DATA = 'INVOKE_DATA',
   START_GAME = 'START_GAME',
   VIEW_BOARD = 'VIEW_BOARD',
-  EXIT_GAME = 'EXIT_GAME',
-  TX_STATUS = 'TX_STATUS'
+  CANCEL_GAME = 'CANCEL_GAME',
+  TX_STATUS = 'TX_STATUS',
+  VIEW_CONTRACTS = 'VIEW_CONTRACTS',
+  DESTROY = 'DESTROY'
 }
 
 export enum ReqRoles {
@@ -25,9 +27,12 @@ export enum ReqMethods {
 }
 
 export enum ReqActions {
+  VIEW_CONTRACTS = 'view_contracts',
   NEW_GAME = 'new_game',
   CHECK_SOLUTION = 'check_solution',
   VIEW_CURRENT_BOARD = 'view_current_game_board',
+  END_CURRENT_GAME = 'end_current_game',
+  DESTROY_CONTRACT = 'destroy_contract'
 }
 
 export enum ResTXStatus {
