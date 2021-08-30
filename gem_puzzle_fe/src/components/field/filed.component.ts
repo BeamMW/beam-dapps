@@ -48,9 +48,6 @@ export class Box {
       this.getLeftBox()
     ].filter(box => box !== null);
   }
-  // check(){
-  //   return this.getEmptyBox()
-  // }
 
   getRandomNextdoorBox() {
     const nextdoorBoxes = this.getNextdoorBoxes();
@@ -69,8 +66,7 @@ function emptyBox(grid:any){
     for (let j = 0; j < 4; j++) {
       if(grid[i][j] === 0) {
          empty = new Box(i,j)
-         
-         
+         console.log(empty)
       }
     }
   }
