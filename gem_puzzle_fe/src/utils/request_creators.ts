@@ -60,6 +60,18 @@ export const viewContracts = ():void => {
   });
 };
 
+export const destroyContract = ():void => {
+  const args = argsParser({
+    role: ReqRoles.MANAGER,
+    action: ReqActions.DESTROY_CONTRACT,
+    cid: AppSpecs.CID
+  });
+  ApiHandler.callApi(ReqID.DESTROY, ReqMethods.INVOKE_CONTRACT, {
+    create_tx: false,
+    args
+  });
+};
+
 export const txStatus = (txId:string): void => {
   setTimeout(() => {
     ApiHandler.callApi(ReqID.TX_STATUS, ReqMethods.TX_STATUS, {

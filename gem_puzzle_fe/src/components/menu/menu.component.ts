@@ -21,7 +21,7 @@ export default class Menu extends BaseComponent {
 
   initButtonMenu = (): void => {
     this.removeAll();
-    const buttons = menuBtn.map((btn) => {
+    const buttons = menuBtn.map(btn => {
       const btnKey = new Button();
       btnKey.element.classList.add(`btn_${btn.key}`);
       btnKey.setAttributes({ value: btn.title });
@@ -49,6 +49,9 @@ export default class Menu extends BaseComponent {
         console.log(JSON.parse(res.result.output));
         break;
       case ReqID.START_GAME:
+        invokeData(res.result.raw_data);
+        break;
+      case ReqID.DESTROY:
         invokeData(res.result.raw_data);
         break;
       case ReqID.CANCEL_GAME:
