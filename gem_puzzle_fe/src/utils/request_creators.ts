@@ -86,18 +86,7 @@ export const destroyContract = ():void => {
     action: ReqActions.DESTROY_CONTRACT,
     cid: AppSpecs.CID
   });
-  ApiHandler.callApi(ReqID.DESTROY_CONTRACT, ReqMethods.INVOKE_CONTRACT, {
-    create_tx: false,
-    args
-  });
-};
-
-export const createContract = ():void => {
-  const args = argsParser({
-    role: ReqRoles.MANAGER,
-    action: ReqActions.CREATE_CONTRACT
-  });
-  ApiHandler.callApi(ReqID.CREATE_CONTRACT, ReqMethods.INVOKE_CONTRACT, {
+  ApiHandler.callApi(ReqID.DESTROY, ReqMethods.INVOKE_CONTRACT, {
     create_tx: false,
     args
   });

@@ -1,5 +1,4 @@
 import {
-  createContract,
   viewContracts, cancelGame, startGame, viewBoard, destroyContract
 } from '../utils/request_creators';
 
@@ -9,7 +8,6 @@ export enum MenuBtn {
   OPTIONS = 'OPTIONS',
   CANCEL = 'CANCEL',
   VIEW_CONTRACTS = 'VIEW_CONTRACTS',
-  CREATE_CONTRACT = 'CREATE_CONTRACT',
   DESTROY_CONTRACT = 'DESTROY_CONTRACT'
 }
 
@@ -43,12 +41,7 @@ export const menuBtn = [
   },
   {
     key: MenuBtn.DESTROY_CONTRACT,
-    title: 'DESTROY CONTRACT',
+    title: 'DESTROY',
     handler: destroyContract
-  },
-  {
-    key: MenuBtn.CREATE_CONTRACT,
-    title: 'CREATE CONTRACT',
-    handler: createContract
   }
 ];

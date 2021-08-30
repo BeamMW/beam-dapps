@@ -2,11 +2,11 @@ import { APIResponse, BoardType } from 'beamApiProps';
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
 import { ApiHandler } from '../../utils/api_handler';
-import Field from '../field/filed.component';
+import Menu from '../menu/menu.component';
+import { Field } from '../field/filed.component';
 import { ReqID, ResTXStatus } from '../../constants/api_constants';
 import { invokeData, txStatus, viewBoard } from '../../utils/request_creators';
 import './main.scss';
-import Menu from '../menu/menu.component';
 
 export default class Main extends BaseComponent {
   menu: Menu;
@@ -20,8 +20,9 @@ export default class Main extends BaseComponent {
 
   initGameField = (board: BoardType): void => {
     this.menu.element.classList.add('active');
-    const fl = new Field(board).element;
-    this.element.append(fl);
+    // const fl = new Field(board).element;
+    // this.element.append(fl)
+    Field.ready(board);
   };
 
   inform = (res: APIResponse): void => {
@@ -29,10 +30,10 @@ export default class Main extends BaseComponent {
       case ReqID.CHECK:
         console.log(JSON.parse(res.result.output));
         break;
-      case ReqID.CREATE_CONTRACT:
+      case ReqID.START_GAME:
         invokeData(res.result.raw_data);
         break;
-      case ReqID.START_GAME:
+      case ReqID.DESTROY:
         invokeData(res.result.raw_data);
         break;
       case ReqID.CANCEL_GAME:
@@ -53,8 +54,8 @@ export default class Main extends BaseComponent {
         try {
           this.menu.initButtonMenu();
           this.initGameField(JSON.parse(res.result.output).board as BoardType);
-        } catch {
-          console.error(res.result.output);
+        } catch (err) {
+          console.error(err);
         }
 
         break;
