@@ -5,8 +5,7 @@ import { Tags } from '../../constants/html_tags';
 // import Main from '../../components/main/main.component'
 
 import './field.scss';
-
-let empty: any 
+let solution:any = []
 export class Box {
   x: any;
   y: any;
@@ -14,19 +13,14 @@ export class Box {
     this.x = x;
     this.y = y;
   }
-  getEmptyBox(){
-    if(this.x === 3 && this.y === 3){
-      console.log(`empty ${this.x} , ${this.y}`)
-    }
-  }
   getTopBox() {
     if (this.y === 0) return null;
-        return new Box(this.x, this.y - 1);
+    return new Box(this.x, this.y - 1);
   }
   
   getRightBox() {
     if (this.x === 3) return null;
-      return new Box(this.x + 1, this.y);
+    return new Box(this.x + 1, this.y);
   }
   
   getBottomBox() {
@@ -48,13 +42,14 @@ export class Box {
       this.getLeftBox()
     ].filter(box => box !== null);
   }
-
+  
   getRandomNextdoorBox() {
     const nextdoorBoxes = this.getNextdoorBoxes();
     return nextdoorBoxes[Math.floor(Math.random() * nextdoorBoxes.length)]&&console.log(nextdoorBoxes);;
     
   }
 }
+let empty = new Box(3,3)
 function swapBoxes(grid:any, box1:any, box2:any) {
   const temp = grid[box1.y][box1.x];
   grid[box1.y][box1.x] = grid[box2.y][box2.x];
@@ -65,8 +60,25 @@ function emptyBox(grid:any){
   for (let i = 0; i < 4; i++) {
     for (let j = 0; j < 4; j++) {
       if(grid[i][j] === 0) {
+        let prev:Box = empty
          empty = new Box(i,j)
-         console.log(empty)
+         if(empty.x > prev.x){
+          solution.push('d')
+           console.log('D');
+         }
+         if(empty.x < prev.x){
+          solution.push('u')
+          console.log('U');
+        }
+        if(empty.y > prev.y){
+          solution.push('r')
+          console.log('R');
+        }
+        if(empty.y < prev.y){
+          solution.push('l')
+          console.log('L');
+        }
+         console.log(solution.join(''))
       }
     }
   }
