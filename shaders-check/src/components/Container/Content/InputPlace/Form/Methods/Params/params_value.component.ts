@@ -1,6 +1,7 @@
 import { IOutput, IActionParams } from 'beamApiProps';
-import { InformArgs } from 'formProps';
+import { FormDispatch, InformArgs, AddObsever } from 'formProps';
 import { Tags } from '../../../../../../../constants/html_elements';
+import { FormActions } from '../../../../../../../constants/variables';
 import BaseComponent from '../../../../../../BaseComponent/base.component';
 import { ParamsLabel } from './params_label.component';
 
@@ -13,29 +14,41 @@ export class Params extends BaseComponent {
     output:IOutput,
     role:string,
     action:string,
+    dispatch: FormDispatch,
     observer: (observer: BaseComponent) => void
   ) {
     super(Tags.DIV, ['input__params']);
     observer(this);
     this.role = role;
     this.action = action;
-    this.render(output);
+    this.render(output, dispatch, observer);
   }
 
-  informForm = ({ currentRole, currentAction, output }:InformArgs):void => {
-    this.role = currentRole;
-    this.action = currentAction;
-    this.render(output);
+  informForm = ({
+    formAction, currentRole, currentAction, output, dispatch, addObserver
+  }:InformArgs):void => {
+    if (formAction === FormActions.SET_ROLE
+      || formAction === FormActions.SET_ACTION) {
+      this.role = currentRole;
+      this.action = currentAction;
+      this.render(output, dispatch, addObserver);
+    }
   };
 
-  render = (output:IOutput):void => {
+  render = (
+    output:IOutput,
+    dispatch:FormDispatch,
+    addObserver: AddObsever
+  ):void => {
     this.element.innerHTML = '';
     const title = new BaseComponent(Tags.DIV, ['params-title']);
     title.element.innerText = 'Params: ';
     const actions = Object.entries(
       output.roles[this.role]?.[this.action] as IActionParams
     );
-    const valuesList = actions.map((el) => new ParamsLabel(el));
+    const valuesList = actions.map(
+      (el) => new ParamsLabel(el[0], dispatch, addObserver)
+    );
     if (valuesList.length) this.append(title, ...valuesList);
   };
 }

@@ -3,15 +3,16 @@ export enum ShaderProps {
 }
 
 export enum ReqID {
-  FORM_GENERATOR = 'form-generator',
+  FORM_GENERATOR = 'FORM_GENERATOR',
   SUBMIT_RESULT = 'SUBMIT_RESULT'
 }
 
-export enum APIMethods {
+export enum ReqMethods {
   INVOKE_CONTRACT = 'invoke_contract'
 }
 
 export enum FormActions {
   SET_ROLE = 'SET_ROLE',
-  SET_ACTION = 'SET_ACTION'
+  SET_ACTION = 'SET_ACTION',
+  SET_PARAM_VALUE = 'SET_PARAM_VALUE'
 }

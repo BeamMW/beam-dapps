@@ -9,14 +9,11 @@ export class InputPlace extends BaseComponent {
     super(Tags.DIV, ['input__place']);
   }
 
-  inform = (json:APIResponse):void => {
-    switch (json.id) {
-      case ReqID.FORM_GENERATOR:
-        this.removeAll();
-        this.append(new Form(JSON.parse(json.result.output)));
-        break;
-      default:
-        break;
+  inform = (res: APIResponse): void => {
+    if (res.id === ReqID.FORM_GENERATOR) {
+      this.removeAll();
+      console.log(res);
+      this.append(new Form(JSON.parse(res.result.output)));
     }
   };
 }

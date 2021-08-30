@@ -16,7 +16,7 @@ export class ValueInput extends BaseComponent {
     this.setAttributes({ type: 'radio', name: 'method' });
     this.element.addEventListener('change', (e) => {
       if ((e.target as HTMLInputElement).checked) {
-        dispatch(setActionAC(this.element.id));
+        dispatch(setActionAC({ action: this.element.id, params: action[1] }));
       }
     });
   }

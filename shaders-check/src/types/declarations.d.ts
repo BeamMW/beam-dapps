@@ -54,15 +54,27 @@ declare module 'qwebchannel' {
 }
 
 declare module 'formProps' {
+  import { FormActions } from '../constants/variables';
+
   export type FormDispatch = (obj: ActionTypes) => void;
 
   export type AddObsever = (element: BaseComponent) => void;
 
+  export type ParamPayloadArgsType = { key:string, value: string };
+
+  export type ActionPayloadArgsType = {
+    action: string,
+    params: IActionParams
+  };
+
   export type InformArgs = {
+    formAction: FormActions
     currentRole: string;
     currentAction: string;
     output: IOutput;
+    currentParams: IActionParams
     dispatch: FormDispatch;
+    addObserver: AddObsever;
   };
 }
 
@@ -97,6 +109,10 @@ declare module 'beamApiProps' {
   export interface IRoleOutput {
     [key: string]: IActionOutput;
   }
+
+  export type ResponseResultType = {
+    [key:string | number]: never | string | number | ResponseResultType
+  };
 
   export interface IOutput {
     roles: IRoleOutput;

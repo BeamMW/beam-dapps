@@ -3,6 +3,7 @@ import { AddObsever, FormDispatch, InformArgs } from 'formProps';
 import BaseComponent from '../../../../../../BaseComponent/base.component';
 import { Tags } from '../../../../../../../constants/html_elements';
 import { ValueLabel } from './action_label.component';
+import { FormActions } from '../../../../../../../constants/variables';
 
 export class Value extends BaseComponent {
   action: string;
@@ -24,14 +25,18 @@ export class Value extends BaseComponent {
   }
 
   informForm = ({
+    formAction,
     currentRole,
     currentAction,
     output,
     dispatch
   }: InformArgs):void => {
-    this.role = currentRole;
-    this.action = currentAction;
-    this.render(output, dispatch);
+    if (formAction === FormActions.SET_ROLE
+      || formAction === FormActions.SET_ACTION) {
+      this.role = currentRole;
+      this.action = currentAction;
+      this.render(output, dispatch);
+    }
   };
 
   render = (output: IOutput, dispatch: FormDispatch):void => {
