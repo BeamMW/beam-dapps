@@ -46,7 +46,8 @@ export class Box {
   };
 }
 
-const solution: ('u' | 'd' | 'r' | 'l')[] = [];
+export const solution: ('u' | 'd' | 'r' | 'l')[] = [];
+
 let empty = new Box(3, 3);
 
 export function swapBoxes(
@@ -59,7 +60,6 @@ export function swapBoxes(
   const temp = box1Y[box1.x] as number;
   box1Y[box1.x] = box2Y[box2.x] as number;
   box2Y[box2.x] = temp;
-  console.log(temp);
 }
 
 export const emptyBox = (grid: BoardType):void => {
@@ -84,15 +84,13 @@ export const emptyBox = (grid: BoardType):void => {
           solution.push('l');
           console.log('L');
         }
-        console.log(solution.join(''));
+      solution
       }
     }
   }
 };
-
 export const isSolved = (grid: BoardType):boolean => {
   emptyBox(grid);
-  console.log(empty);
   return (
     grid[0]?.[0] === 1
     && grid[0][1] === 2
