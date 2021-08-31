@@ -29,6 +29,7 @@ export class BeamAPI {
   };
 
   onApiResult = (json: string): void => {
+    console.log(this.observers);
     this.observers.forEach((element: BaseComponent) => {
       if (element.inform) element.inform(JSON.parse(json));
     });
