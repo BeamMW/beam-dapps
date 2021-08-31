@@ -1,12 +1,10 @@
-// import { BoardType } from 'beamApiProps';
-import { BoardType } from 'beamApiProps';
 import { Tags } from '../../constants/html_tags';
-import { Box, isSolved, swapBoxes } from './box';
-// import BaseComponent from '../base/base.component';
-// import Main from '../../components/main/main.component'
+import { ApiHandler } from '../../utils/api_handler';
+import { Box, isSolved, solution, swapBoxes } from './box';
 import './field.scss';
 import { State } from './state';
-
+import {  BoardType } from 'beamApiProps';
+import { checkSolution } from '../../utils/request_creators';
 // function getRandomGrid():any{
 //   let grid = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]];
 
@@ -28,7 +26,7 @@ export class Field {
 
   [x: string]: any;
 
-  state: any;
+  state?: any;
 
   tickId: any;
 
@@ -38,6 +36,7 @@ export class Field {
     this.tick = this.tick.bind(this);
     this.render();
     this.handleClickBox = this.handleClickBox.bind(this);
+    ApiHandler.addObservers(this);
   }
 
   static ready = (board: BoardType):Field => new Field(State.start(board));
@@ -53,6 +52,8 @@ export class Field {
 
   handleClickBox(box: { getNextdoorBoxes: () => any, x:number, y:number }) {
     return () => {
+      console.log(solution.join(''));
+
       const nextdoorBoxes = box.getNextdoorBoxes();
       console.log(nextdoorBoxes);
 
@@ -65,6 +66,8 @@ export class Field {
         const newGrid = [...this.state.grid];
         swapBoxes(newGrid, { x: box.x, y: box.y }, blankBox);
         if (isSolved(newGrid)) {
+          console.log(solution.join(''));
+          checkSolution(solution.join(''))
           clearInterval(Field.tickId);
           this.setState({
             status: 'won',
@@ -80,6 +83,11 @@ export class Field {
       }
     };
   }
+//  inform = (res:APIResponse):void => {
+//     if (res.id === ReqID.CHECK) {
+//       console.log("WIN")
+//     }
+//   };
 
   render = ():void => {
     const {
@@ -88,7 +96,7 @@ export class Field {
 
     // Render grid
     const main = document.querySelector('.main');
-    const newGrid: any = document.createElement(Tags.DIV);
+const newGrid: any = document.createElement(Tags.DIV);
     newGrid.classList.add('field');
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
@@ -136,3 +144,4 @@ export class Field {
     }
   };
 }
+

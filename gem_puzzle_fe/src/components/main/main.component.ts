@@ -5,11 +5,18 @@ import { ApiHandler } from '../../utils/api_handler';
 import Menu from '../menu/menu.component';
 import { Field } from '../field/filed.component';
 import { ReqID, ResTXStatus } from '../../constants/api_constants';
-import { invokeData, txStatus, viewBoard } from '../../utils/request_creators';
+import {
+  checkSolutionTx,
+  invokeData,
+  invokeDataSolution,
+  txStatus,
+  viewBoard,
+} from '../../utils/request_creators';
 import './main.scss';
 
 export default class Main extends BaseComponent {
   menu: Menu;
+  static element: any;
 
   constructor() {
     super(Tags.DIV, ['main']);
@@ -23,6 +30,9 @@ export default class Main extends BaseComponent {
     // const fl = new Field(board).element;
     // this.element.append(fl)
     Field.ready(board);
+  };
+  cancelGame = (): void => {
+    this.menu.element.classList.remove('active');
   };
 
   inform = (res: APIResponse): void => {
@@ -38,6 +48,7 @@ export default class Main extends BaseComponent {
         break;
       case ReqID.CANCEL_GAME:
         invokeData(res.result.raw_data);
+        this.cancelGame();
         break;
       case ReqID.INVOKE_DATA:
         this.menu.initLoader(res.result.txid);
@@ -57,7 +68,29 @@ export default class Main extends BaseComponent {
         } catch (err) {
           console.error(err);
         }
-
+        break;
+      case ReqID.CHECK_SOLUTION:
+        invokeDataSolution(res.result.raw_data);
+        break;
+      case ReqID.INVOKE_DATA_SOLUTION:
+        this.menu.initLoader(res.result.txid);
+        checkSolutionTx(res.result.txid);
+        console.log(res.result.txid);
+          console.log(res.result.txid);
+        break;
+      case ReqID.TX_CHECK_SOLUTION:
+        if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
+          console.log(res.result.txId);
+          console.log(res.result.txId);
+          
+          
+          checkSolutionTx(res.result.txId);
+        } else {
+          console.log('YOU WIN');
+        }
+        break;
+      case ReqID.VIEW_CHECK_RESULT:
+        console.log('WIN');
         break;
       default:
         break;
