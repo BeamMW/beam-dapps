@@ -6,15 +6,27 @@
     justify-items: center;
     align-items: center;
     border-radius: 15px;
+    user-select: none;
+    
     & button {
-        width: 80px;
-        height: 80px;
-        background-color: rgba(88, 183, 255, 0.2);
-        color: #003333;
-        font-size: 24px;
-        font-weight: bold;
-        border: 1px solid rgba(88, 183, 255);
-        outline: none;
-        cursor: pointer;
+      width: 80px;
+      height: 80px;
+      background-color: rgba(62, 102, 251, .8);
+      border: 2px solid rgb(101, 186, 250, .5);
+      border-radius: 10px;
+      box-sizing: border-box;
+      font-size: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s;
+      cursor: pointer;
+      opacity: 1;
+    }
+    .empty{
+      border: none;
+      opacity: 0;
+      transition: all 0.3s;
+      cursor: default
       }
 }
