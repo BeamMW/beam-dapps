@@ -90,6 +90,8 @@ export const emptyBox = (grid: BoardType):void => {
   }
 };
 export const isSolved = (grid: BoardType):boolean => {
+  console.log(grid);
+  
   emptyBox(grid);
   return (
     grid[0]?.[0] === 1

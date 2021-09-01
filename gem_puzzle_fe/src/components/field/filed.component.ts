@@ -7,6 +7,8 @@ import {
 import './field.scss';
 import { State } from './state';
 import { checkSolution } from '../../utils/request_creators';
+import Menu from '../menu/menu.component';
+
 // function getRandomGrid():any{
 //   let grid = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]];
 
@@ -31,7 +33,7 @@ export class Field {
   state?: any;
 
   tickId: any;
-
+  menu: Menu;
   constructor(state: any) {
     this.state = state;
     this.tickId = null;
@@ -39,6 +41,7 @@ export class Field {
     this.render();
     this.handleClickBox = this.handleClickBox.bind(this);
     ApiHandler.addObservers(this);
+    this.menu = new Menu();
   }
 
   static ready = (board: BoardType):Field => new Field(State.start(board));
@@ -108,8 +111,9 @@ export class Field {
         if (status === 'playing') {
           button.addEventListener('click', this.handleClickBox(new Box(j, i)));
         }
-
+        
         button.textContent = grid[i][j] === 0 ? '' : grid[i][j].toString();
+        grid[i][j] === 0 ? button.classList.add('empty') : button.classList.add('button');
         // console.log(newGrid)
         // console.log(this.main)
         newGrid.appendChild(button);
@@ -121,7 +125,14 @@ export class Field {
     const newButton: any = document.createElement(Tags.BUTTON);
     if (status === 'ready') newButton.textContent = 'Play';
     if (status === 'playing') newButton.textContent = 'Reset';
-    if (status === 'won') alert('YOU WIN');
+    if (status === 'won') {
+      main?.removeChild(newGrid)
+      const popup = document.createElement(Tags.DIV)
+      popup.classList.add('win')
+      popup.textContent='Win'
+      main?.appendChild(popup)
+      
+    }
     newButton.addEventListener('click', () => {
       clearInterval(Field.tickId);
       Field.tickId = setInterval(this.tick, 1000);
