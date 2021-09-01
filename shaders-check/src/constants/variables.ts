@@ -25,5 +25,6 @@ export enum ResTXStatus {
 export enum FormActions {
   SET_ROLE = 'SET_ROLE',
   SET_ACTION = 'SET_ACTION',
-  SET_PARAM_VALUE = 'SET_PARAM_VALUE'
+  SET_PARAM_VALUE = 'SET_PARAM_VALUE',
+  UNSUBSCRIBE = 'UNSUBSCRIBE'
 }

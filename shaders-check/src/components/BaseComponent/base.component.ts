@@ -1,6 +1,7 @@
 import { APIResponse } from 'beamApiProps';
 import { InformArgs } from 'formProps';
 import { Tags } from '../../constants/html_elements';
+import { ApiHandler } from '../../utils/api_handlers';
 
 type HTMLAttributes = {
   [key:string]: string;
@@ -36,5 +37,12 @@ export default class BaseComponent {
     attr.forEach((attribute) => {
       this.element.setAttribute(attribute[0], attribute[1]);
     });
+  };
+
+  unsubscribeBeforeRemove = ():void => {
+    this.element.addEventListener(
+      'DOMNodeRemovedFromDocument',
+      () => ApiHandler.deleteObserver(this.element)
+    );
   };
 }

@@ -1,7 +1,8 @@
 import {
   IOutput,
   IActionOutput,
-  IActionParams
+  IActionParams,
+  DeleteObserverType
 } from 'beamApiProps';
 import {
   ActionPayloadArgsType,
@@ -17,7 +18,7 @@ import { argsStringify, paramsObjectCreator } from './json_handlers';
 export class FormApi {
   private readonly output: IOutput;
 
-  private readonly observers: BaseComponent[];
+  private readonly observers: Set<BaseComponent>;
 
   currentRole: string;
 
@@ -27,7 +28,7 @@ export class FormApi {
 
   constructor(output: IOutput) {
     this.output = output;
-    this.observers = [];
+    this.observers = new Set();
     const roles = Object.entries(this.output.roles);
     const actions = Object.keys(roles[0]?.[1] as IActionOutput);
     this.currentRole = roles[0]?.[0] as string;
@@ -40,7 +41,12 @@ export class FormApi {
   }
 
   addObserver: AddObsever = (element): void => {
-    this.observers.push(element);
+    this.observers.add(element);
+  };
+
+  deleteObserver:DeleteObserverType = (component: BaseComponent) => {
+    console.log(this.observers.size);
+    this.observers.delete(component);
   };
 
   notifyAll = (action:FormActions): void => this.observers.forEach((subs) => {
@@ -71,10 +77,10 @@ export class FormApi {
   };
 
   reducer = (obj: ActionTypes): void => {
-    const { action } = obj;
+    const { action, payload } = obj;
     switch (action) {
       case FormActions.SET_ROLE:
-        this.currentRole = obj.payload as string;
+        this.currentRole = payload as string;
         this.currentAction = Object.keys(
           this.output.roles[this.currentRole] as IActionOutput
         )[0] as string;
@@ -85,7 +91,7 @@ export class FormApi {
         );
         break;
       case FormActions.SET_ACTION:
-        this.currentAction = (obj.payload as ActionPayloadArgsType).action;
+        this.currentAction = (payload as ActionPayloadArgsType).action;
         this.currentParams = paramsObjectCreator(
           this.output.roles?.[this.currentRole]?.[
             this.currentAction
@@ -97,6 +103,9 @@ export class FormApi {
         this.currentParams[
           (obj.payload as ParamPayloadArgsType).key
         ] = (obj.payload as ParamPayloadArgsType).value;
+        break;
+      case FormActions.UNSUBSCRIBE:
+        this.deleteObserver(payload);
         break;
       default:
         break;

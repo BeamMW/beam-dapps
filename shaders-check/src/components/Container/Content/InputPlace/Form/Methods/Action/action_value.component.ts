@@ -4,6 +4,9 @@ import BaseComponent from '../../../../../../BaseComponent/base.component';
 import { Tags } from '../../../../../../../constants/html_elements';
 import { ValueLabel } from './action_label.component';
 import { FormActions } from '../../../../../../../constants/variables';
+import {
+  unsubscribeBeforeRemoveAC
+} from '../../../../../../../utils/action_creators';
 
 export class Value extends BaseComponent {
   action: string;
@@ -22,6 +25,10 @@ export class Value extends BaseComponent {
     this.role = role;
     this.action = action;
     this.render(output, dispatch);
+    this.element.addEventListener(
+      'DOMNodeRemovedFromDocument',
+      () => dispatch(unsubscribeBeforeRemoveAC(this))
+    );
   }
 
   informForm = ({

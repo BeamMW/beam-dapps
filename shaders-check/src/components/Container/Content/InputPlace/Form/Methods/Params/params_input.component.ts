@@ -1,7 +1,10 @@
 import { AddObsever, FormDispatch, InformArgs } from 'formProps';
+import {
+  unsubscribeBeforeRemoveAC,
+  setParamValueAC
+} from '../../../../../../../utils/action_creators';
 import { Tags } from '../../../../../../../constants/html_elements';
 import { FormActions } from '../../../../../../../constants/variables';
-import { setParamValueAC } from '../../../../../../../utils/action_creators';
 import BaseComponent from '../../../../../../BaseComponent/base.component';
 
 export class ParamsInput extends BaseComponent {
@@ -28,6 +31,10 @@ export class ParamsInput extends BaseComponent {
         value: target.value
       }));
     });
+    this.element.addEventListener(
+      'DOMNodeRemovedFromDocument',
+      () => dispatch(unsubscribeBeforeRemoveAC(this))
+    );
   }
 
   formInform = ({ formAction, currentParams }:InformArgs):void => {

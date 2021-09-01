@@ -1,4 +1,5 @@
 import { ActionPayloadArgsType, ParamPayloadArgsType } from 'formProps';
+import BaseComponent from '../components/BaseComponent/base.component';
 import { FormActions } from '../constants/variables';
 
 export const setRoleAC = (payload:string) => (
@@ -9,6 +10,10 @@ export const setActionAC = (payload: ActionPayloadArgsType) => (
 );
 export const setParamValueAC = (payload:ParamPayloadArgsType) => (
   { action: FormActions.SET_PARAM_VALUE, payload }
+);
+
+export const unsubscribeBeforeRemoveAC = (payload:BaseComponent) => (
+  { action: FormActions.UNSUBSCRIBE, payload }
 );
 
 export type ActionTypes = ReturnType<typeof setRoleAC

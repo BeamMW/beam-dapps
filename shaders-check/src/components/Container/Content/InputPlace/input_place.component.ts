@@ -7,6 +7,7 @@ import { Form } from './Form/form.component';
 export class InputPlace extends BaseComponent {
   constructor() {
     super(Tags.DIV, ['input__place']);
+    this.unsubscribeBeforeRemove();
   }
 
   inform = (res: APIResponse): void => {

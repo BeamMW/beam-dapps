@@ -1,4 +1,8 @@
-import { BeamApiParams, AddObserversType } from 'beamApiProps';
+import {
+  BeamApiParams,
+  AddObserversType,
+  DeleteObserverType
+} from 'beamApiProps';
 import { QWebChannel, QWebChannelTransport, QObject } from 'qwebchannel';
 import BaseComponent from '../components/BaseComponent/base.component';
 
@@ -14,25 +18,28 @@ export class BeamAPI {
 
   private contract: ArrayBuffer | null;
 
-  private readonly observers: BaseComponent[];
+  private readonly observers: Set<BaseComponent>;
 
   constructor() {
     this.API = null;
     this.contract = null;
-    this.observers = [];
+    this.observers = new Set();
   }
 
   addObservers:AddObserversType = (...components): void => {
     components.forEach((component) => {
-      this.observers.push(component);
+      this.observers.add(component);
     });
   };
 
   onApiResult = (json: string): void => {
-    console.log(this.observers);
     this.observers.forEach((element: BaseComponent) => {
       if (element.inform) element.inform(JSON.parse(json));
     });
+  };
+
+  deleteObserver:DeleteObserverType = (component: BaseComponent) => {
+    this.observers.delete(component);
   };
 
   loadAPI = async (): Promise<void> => {

@@ -9,6 +9,7 @@ import { invokeData, txStatus } from '../../../../utils/request_creators';
 export class OutputPlace extends BaseComponent {
   constructor() {
     super(Tags.DIV, ['output__place']);
+    this.unsubscribeBeforeRemove();
   }
 
   inform = (res: APIResponse): void => {

@@ -2,6 +2,9 @@ import { IOutput, IActionParams } from 'beamApiProps';
 import { FormDispatch, InformArgs, AddObsever } from 'formProps';
 import { Tags } from '../../../../../../../constants/html_elements';
 import { FormActions } from '../../../../../../../constants/variables';
+import {
+  unsubscribeBeforeRemoveAC
+} from '../../../../../../../utils/action_creators';
 import BaseComponent from '../../../../../../BaseComponent/base.component';
 import { ParamsLabel } from './params_label.component';
 
@@ -22,6 +25,10 @@ export class Params extends BaseComponent {
     this.role = role;
     this.action = action;
     this.render(output, dispatch, observer);
+    this.element.addEventListener(
+      'DOMNodeRemovedFromDocument',
+      () => dispatch(unsubscribeBeforeRemoveAC(this))
+    );
   }
 
   informForm = ({

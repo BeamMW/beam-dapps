@@ -18,7 +18,8 @@ export class App {
         ApiHandler.setApiHandlers({
           addObservers: this.API.addObservers,
           callApi: this.API.callApi,
-          initShader: this.API.initShader
+          initShader: this.API.initShader,
+          deleteObserver: this.API.deleteObserver
         });
         this.rootElement.innerHTML = '';
         this.rootElement.append(new Container().element);

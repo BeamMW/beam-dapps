@@ -124,13 +124,16 @@ declare module 'beamApiProps' {
     params: BeamApiParams
   ) => void;
 
-  export type AddObserversType = (...args: BaseComponent[]) => void;
+  export type AddObserversType = (...components: BaseComponent[]) => void;
+
+  export type DeleteObserverType = (components: BaseComponent) => void;
 
   export type InitShaderType = (shader:ArrayBuffer) => void;
 
   export type BeamApiHandlers = {
     callApi: CallApiType;
     addObservers: AddObserversType;
+    deleteObserver: DeleteObserverType;
     initShader: InitShaderType;
   };
 
