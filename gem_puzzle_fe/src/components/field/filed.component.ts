@@ -1,9 +1,11 @@
+import { BoardType } from 'beamApiProps';
 import { Tags } from '../../constants/html_tags';
 import { ApiHandler } from '../../utils/api_handler';
-import { Box, isSolved, solution, swapBoxes } from './box';
+import {
+  Box, isSolved, solution, swapBoxes
+} from './box';
 import './field.scss';
 import { State } from './state';
-import {  BoardType } from 'beamApiProps';
 import { checkSolution } from '../../utils/request_creators';
 // function getRandomGrid():any{
 //   let grid = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]];
@@ -67,7 +69,7 @@ export class Field {
         swapBoxes(newGrid, { x: box.x, y: box.y }, blankBox);
         if (isSolved(newGrid)) {
           console.log(solution.join(''));
-          checkSolution(solution.join(''))
+          checkSolution(solution.join(''));
           clearInterval(Field.tickId);
           this.setState({
             status: 'won',
@@ -96,7 +98,7 @@ export class Field {
 
     // Render grid
     const main = document.querySelector('.main');
-const newGrid: any = document.createElement(Tags.DIV);
+    const newGrid: any = document.createElement(Tags.DIV);
     newGrid.classList.add('field');
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
@@ -113,7 +115,7 @@ const newGrid: any = document.createElement(Tags.DIV);
         newGrid.appendChild(button);
       }
     }
-    (document.querySelector('.field') as HTMLElement).replaceWith(newGrid);
+    newGrid.replaceWith(newGrid);
 
     // Render button
     const newButton: any = document.createElement(Tags.BUTTON);
@@ -144,4 +146,3 @@ const newGrid: any = document.createElement(Tags.DIV);
     }
   };
 }
-

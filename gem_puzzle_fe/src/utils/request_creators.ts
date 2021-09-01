@@ -3,14 +3,14 @@ import {
   ReqMethods,
   ReqActions,
   ReqID,
-  AppSpecs,
+  AppSpecs
 } from '../constants/api_constants';
 import { ApiHandler } from './api_handler';
 
 export type ReqArgsType = {
   action: ReqActions;
   role: ReqRoles;
-  solution?:string, 
+  solution?: string;
   cid?: AppSpecs.CID;
   cancel_previous_game?: 1;
 };
@@ -38,9 +38,13 @@ export const invokeData = (data: number[]): void => {
   });
 };
 export const invokeDataSolution = (data: number[]): void => {
-  ApiHandler.callApi(ReqID.INVOKE_DATA_SOLUTION, ReqMethods.PROCESS_INVOKE_DATA, {
-    data
-  });
+  ApiHandler.callApi(
+    ReqID.INVOKE_DATA_SOLUTION,
+    ReqMethods.PROCESS_INVOKE_DATA,
+    {
+      data
+    }
+  );
 };
 
 export const viewBoard = (): void => {
@@ -55,7 +59,7 @@ export const viewBoard = (): void => {
   });
 };
 
-export const viewContracts = ():void => {
+export const viewContracts = (): void => {
   const args = argsParser({
     role: ReqRoles.MANAGER,
     action: ReqActions.VIEW_CONTRACTS
@@ -66,7 +70,7 @@ export const viewContracts = ():void => {
   });
 };
 
-export const txStatus = (txId:string): void => {
+export const txStatus = (txId: string): void => {
   setTimeout(() => {
     ApiHandler.callApi(ReqID.TX_STATUS, ReqMethods.TX_STATUS, {
       txId
@@ -86,7 +90,7 @@ export const cancelGame = (): void => {
   });
 };
 
-export const destroyContract = ():void => {
+export const destroyContract = (): void => {
   const args = argsParser({
     role: ReqRoles.MANAGER,
     action: ReqActions.DESTROY_CONTRACT,
@@ -96,35 +100,35 @@ export const destroyContract = ():void => {
     create_tx: false,
     args
   });
-}
-  export const checkSolution = (sol:any):void => {
-    const args = argsParser({
-      role: ReqRoles.PLAYER,
-      action: ReqActions.CHECK_SOLUTION,
-      solution: sol,
-      cid: AppSpecs.CID
+};
+export const checkSolution = (sol: any): void => {
+  const args = argsParser({
+    role: ReqRoles.PLAYER,
+    action: ReqActions.CHECK_SOLUTION,
+    solution: sol,
+    cid: AppSpecs.CID
+  });
+  ApiHandler.callApi(ReqID.CHECK_SOLUTION, ReqMethods.INVOKE_CONTRACT, {
+    create_tx: false,
+    args
+  });
+};
+export const viewCheckResult = (): void => {
+  const args = argsParser({
+    role: ReqRoles.PLAYER,
+    action: ReqActions.VIEW_CHECK_RESULT,
+    cid: AppSpecs.CID
+  });
+  ApiHandler.callApi(ReqID.VIEW_CHECK_RESULT, ReqMethods.INVOKE_CONTRACT, {
+    create_tx: false,
+    args
+  });
+};
+export const checkSolutionTx = (txId: string): void => {
+  setTimeout(() => {
+    console.log(txId);
+    ApiHandler.callApi(ReqID.TX_CHECK_SOLUTION, ReqMethods.TX_STATUS, {
+      txId
     });
-    ApiHandler.callApi(ReqID.CHECK_SOLUTION, ReqMethods.INVOKE_CONTRACT, {
-      create_tx: false,
-      args
-    });
-  }
-  export const viewCheckResult = ():void => {
-    const args = argsParser({
-      role: ReqRoles.PLAYER,
-      action: ReqActions.VIEW_CHECK_RESULT,
-      cid: AppSpecs.CID
-    });
-    ApiHandler.callApi(ReqID.VIEW_CHECK_RESULT, ReqMethods.INVOKE_CONTRACT, {
-      create_tx: false,
-      args
-    });
-  }
-  export const checkSolutionTx = (txId:string): void => {
-      setTimeout(() => {
-        console.log(txId);
-        ApiHandler.callApi(ReqID.TX_CHECK_SOLUTION, ReqMethods.TX_STATUS, {
-          txId
-        });
-      }, AppSpecs.TX_CHECK_INTERVAL);
-    };
+  }, AppSpecs.TX_CHECK_INTERVAL);
+};

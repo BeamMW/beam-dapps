@@ -10,12 +10,13 @@ import {
   invokeData,
   invokeDataSolution,
   txStatus,
-  viewBoard,
+  viewBoard
 } from '../../utils/request_creators';
 import './main.scss';
 
 export default class Main extends BaseComponent {
   menu: Menu;
+
   static element: any;
 
   constructor() {
@@ -31,6 +32,7 @@ export default class Main extends BaseComponent {
     // this.element.append(fl)
     Field.ready(board);
   };
+
   cancelGame = (): void => {
     this.menu.element.classList.remove('active');
   };
@@ -76,14 +78,12 @@ export default class Main extends BaseComponent {
         this.menu.initLoader(res.result.txid);
         checkSolutionTx(res.result.txid);
         console.log(res.result.txid);
-          console.log(res.result.txid);
+        console.log(res.result.txid);
         break;
       case ReqID.TX_CHECK_SOLUTION:
         if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
           console.log(res.result.txId);
           console.log(res.result.txId);
-          
-          
           checkSolutionTx(res.result.txId);
         } else {
           console.log('YOU WIN');

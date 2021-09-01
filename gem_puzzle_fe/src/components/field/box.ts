@@ -84,7 +84,7 @@ export const emptyBox = (grid: BoardType):void => {
           solution.push('l');
           console.log('L');
         }
-      solution
+      // solution
       }
     }
   }
