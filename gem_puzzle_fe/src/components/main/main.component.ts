@@ -17,7 +17,7 @@ import './main.scss';
 export default class Main extends BaseComponent {
   menu: Menu;
   static element: any;
-
+  
   constructor() {
     super(Tags.DIV, ['main']);
     ApiHandler.addObservers(this);
