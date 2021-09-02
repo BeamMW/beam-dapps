@@ -13,18 +13,21 @@ import {
   viewBoard,
 } from '../../utils/request_creators';
 import './main.scss';
+import { Win } from '../win/win.components';
 
 export default class Main extends BaseComponent {
   menu: Menu;
+  win: Win;
   static element: any;
   
   constructor() {
     super(Tags.DIV, ['main']);
     ApiHandler.addObservers(this);
     this.menu = new Menu();
+    this.win = new Win();
     this.append(this.menu);
   }
-
+  
   initGameField = (board: BoardType): void => {
     this.menu.element.classList.add('active');
     // const fl = new Field(board).element;
@@ -32,24 +35,33 @@ export default class Main extends BaseComponent {
     Field.ready(board);
   };
   cancelGame = (): void => {
+    this.removeAll()
     this.menu.element.classList.remove('active');
+    this.append(this.menu);
   };
 
+  winner = (): void => {
+    this.menu.initButtonMenu()
+    this.menu.element.classList.add('active');
+    this.append(this.menu)
+    this.append(this.win)
+  };
+  
   inform = (res: APIResponse): void => {
     switch (res.id) {
       case ReqID.CHECK:
         console.log(JSON.parse(res.result.output));
         break;
-      case ReqID.START_GAME:
-        invokeData(res.result.raw_data);
-        break;
-      case ReqID.DESTROY:
-        invokeData(res.result.raw_data);
-        break;
-      case ReqID.CANCEL_GAME:
-        invokeData(res.result.raw_data);
-        this.cancelGame();
-        break;
+        case ReqID.START_GAME:
+          invokeData(res.result.raw_data);
+          break;
+          case ReqID.DESTROY:
+            invokeData(res.result.raw_data);
+            break;
+            case ReqID.CANCEL_GAME:
+              invokeData(res.result.raw_data);
+              this.cancelGame();
+              break;
       case ReqID.INVOKE_DATA:
         this.menu.initLoader(res.result.txid);
         txStatus(res.result.txid);
@@ -72,21 +84,16 @@ export default class Main extends BaseComponent {
       case ReqID.CHECK_SOLUTION:
         invokeDataSolution(res.result.raw_data);
         break;
-      case ReqID.INVOKE_DATA_SOLUTION:
-        this.menu.initLoader(res.result.txid);
-        checkSolutionTx(res.result.txid);
-        console.log(res.result.txid);
-          console.log(res.result.txid);
-        break;
-      case ReqID.TX_CHECK_SOLUTION:
-        if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
-          console.log(res.result.txId);
-          console.log(res.result.txId);
-          
-          
-          checkSolutionTx(res.result.txId);
+        case ReqID.INVOKE_DATA_SOLUTION:
+          this.menu.initLoader(res.result.txid);
+          this.menu.element.classList.remove('active');
+          checkSolutionTx(res.result.txid);
+          break;
+          case ReqID.TX_CHECK_SOLUTION:
+            if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
+            checkSolutionTx(res.result.txId);
         } else {
-          console.log('YOU WIN');
+          this.winner()
         }
         break;
       case ReqID.VIEW_CHECK_RESULT:
