@@ -25,12 +25,6 @@ GemPuzzle::Verdict check_solution(uint64_t permutation_num, const char* solution
 		case 'D':
 			cur_move = GemPuzzle::Board::DOWN;
 			break;
-		case 'F':
-			cur_move = GemPuzzle::Board::CLOCKWISE;
-			break;
-		case 'B':
-			cur_move = GemPuzzle::Board::COUNTERCLOCKWISE;
-			break;
 		default:
 			return GemPuzzle::Verdict::ERROR;
 		}

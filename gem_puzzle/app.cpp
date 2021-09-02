@@ -67,7 +67,10 @@ void On_action_new_game(const ContractID& cid)
 	std::mt19937_64 gen(seed);
 	std::uniform_int_distribution<uint64_t> distrib(1, factorial(GemPuzzle::Board::PERMUTATION_LEN) - 1);
 
-	uint64_t permutation_num = distrib(gen);
+	uint64_t permutation_num;
+	do {
+		permutation_num = distrib(gen);
+	} while (!GemPuzzle::Board(permutation_num).is_solvable());
 
 	Env::DerivePk(params.player, &cid, sizeof(cid));
 	params.height = hdr.m_Height;
@@ -340,29 +343,6 @@ TEST(FactorialTest, PositiveInput) {
 	ASSERT_EQ(factorial(3), 6);
 	ASSERT_EQ(factorial(4), 24);
 	ASSERT_EQ(factorial(15), 1307674368000);
-}
-
-TEST(CheckSolutionTest, BoardRotations) {
-	uint32_t moves_num;
-
-	ASSERT_EQ(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "FFFF", moves_num), GemPuzzle::Verdict::WIN);
-	ASSERT_EQ(moves_num, 4);
-	ASSERT_EQ(check_solution(_permutation_to_num({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}), "BBBB", moves_num), GemPuzzle::Verdict::WIN);
-	ASSERT_EQ(moves_num, 4);
-
-	// 4 8 12 15
-	// 3 7 11 14
-	// 2 6 10 13
-	// 1 5 9 *
-	ASSERT_EQ(check_solution(_permutation_to_num({4, 8, 12, 15, 3, 7, 11, 14, 2, 6, 10, 13, 1, 5, 9}), "FRRR", moves_num), GemPuzzle::Verdict::WIN);
-	ASSERT_EQ(moves_num, 4);
-
-	// 13 9 5 1
-	// 14 10 6 2
-	// 15 11 7 3
-	// 12 8 4 *
-	ASSERT_EQ(check_solution(_permutation_to_num({13, 9, 5, 1, 14, 10, 6, 2, 15, 11, 7, 3, 12, 8, 4}), "BDDD", moves_num), GemPuzzle::Verdict::WIN);
-	ASSERT_EQ(moves_num, 4);
 }
 
 TEST(CheckSolutionTest, ValidMoves) {
