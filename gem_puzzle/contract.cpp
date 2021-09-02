@@ -85,6 +85,7 @@ BEAM_EXPORT void Method_3(const GemPuzzle::CheckSolutionParams& params)
 			Env::LoadVar_T(0, initial_params);
 			Amount reward = std::max(initial_params.multiplier - std::max(acc_info.game_result.time - initial_params.free_time, 0ull) * initial_params.game_speed / 100, 0ull) * acc_info.game_info.ngparams.bet;
 			Strict::Add(acc_info.pending_rewards, reward);
+			acc_info.has_active_game = false;
 		}
 
 		Env::SaveVar_T(params.player, acc_info);
