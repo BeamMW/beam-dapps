@@ -214,6 +214,62 @@ void On_action_take_pending_rewards(const ContractID& cid)
 	Env::GenerateKernel(&cid, GemPuzzle::TakePendingRewards::METHOD, &params, sizeof(params), &fc, 1, nullptr, 0, "Taking pending rewards", 0);
 }
 
+void On_action_view_tops(const ContractID& cid)
+{
+	Env::Key_T<int> k;
+	k.m_Prefix.m_Cid = cid;
+	k.m_KeyInContract = 0;
+
+	GemPuzzle::InitialParams params;
+	if (!Env::VarReader::Read_T(k, params))
+		return On_error("Failed to read contract's initial params");
+	
+	std::vector<GemPuzzle::GameResult> table(params.last_used_game_id);
+	for (uint64_t i = 1; i <= params.last_used_game_id; ++i) {
+		k.m_KeyInContract = i;		
+		Env::VarReader::Read_T(k, table[i - 1]);
+	}
+
+	Env::DocGroup root("");
+	{
+		for (size_t i = 0; i < table.size(); ++i) {
+			Env::DocGroup cur("");
+			{
+				Env::DocAddBlob_T("Account", table[i].player);
+				Env::DocAddNum64("time", table[i].time);
+				Env::DocAddNum32("moves", table[i].moves_num);
+				Env::DocAddNum64("permutation", table[i].permutation_num);
+			}
+		}
+	}
+}
+
+void On_action_get_my_pkey(const ContractID& cid)
+{
+	PubKey my_key;
+	Env::DerivePk(my_key, &cid, sizeof(cid));
+	Env::DocAddBlob_T("My public key", my_key);
+}
+
+void On_action_view_contract_params(const ContractID& cid)
+{
+	Env::Key_T<int> k;
+	k.m_Prefix.m_Cid = cid;
+	k.m_KeyInContract = 0;
+
+	GemPuzzle::InitialParams params;
+	if (!Env::VarReader::Read_T(k, params))
+		return On_error("Failed to read contract's initial params");
+
+	Env::DocGroup gr("params");
+	{
+		Env::DocAddNum64("max_bet", params.max_bet);
+		Env::DocAddNum64("multiplier", params.multiplier);
+		Env::DocAddNum64("free_time", params.free_time);
+		Env::DocAddNum32("game_speed", params.game_speed);
+	}
+}
+
 template <typename T>
 auto find_if_contains(const char* str, const std::vector<std::pair<const char *, T>>& v) {
 	return std::find_if(v.begin(), v.end(), [&str](const auto& p) {
@@ -242,6 +298,10 @@ BEAM_EXPORT void Method_0()
             {
                 Env::DocGroup grMethod("view_contracts");
             }
+			{
+				Env::DocGroup grMethod("view_contract_params");
+				Env::DocAddText("cid", "ContractID");
+			}
         }
         {
             Env::DocGroup grRole("player");
@@ -267,6 +327,14 @@ BEAM_EXPORT void Method_0()
                 Env::DocGroup grMethod("end_current_game");
                 Env::DocAddText("cid", "ContractID");
             }
+			{
+				Env::DocGroup grMethod("get_my_pkey");
+				Env::DocAddText("cid", "ContractID");
+			}
+			{
+				Env::DocGroup grMethod("view_tops");
+				Env::DocAddText("cid", "ContractID");
+			}
         }
     }
 }
@@ -280,12 +348,15 @@ BEAM_EXPORT void Method_1()
 		{"view_check_result", On_action_view_check_result},
 		{"end_current_game", On_action_end_current_game},
 		{"take_pending_rewards", On_action_take_pending_rewards},
+		{"get_my_pkey", On_action_get_my_pkey},
+		{"view_tops", On_action_view_tops},
 	};
 
 	const std::vector<std::pair<const char *, Action_func_t>> VALID_MANAGER_ACTIONS = {
 		{"create_contract", On_action_create_contract},
 		{"destroy_contract", On_action_destroy_contract},
 		{"view_contracts", On_action_view_contracts},
+		{"view_contract_params", On_action_view_contract_params},
 	};
 
 	const std::vector<std::pair<const char *, const std::vector<std::pair<const char *, Action_func_t>>&>> VALID_ROLES = {

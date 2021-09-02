@@ -79,6 +79,7 @@ BEAM_EXPORT void Method_3(const GemPuzzle::CheckSolutionParams& params)
 		Height cur_height = Env::get_Height();
 		acc_info.game_result.verdict = check_solution(acc_info.game_info.ngparams.permutation_num, params.solution, acc_info.game_result.moves_num);
 		acc_info.game_result.time = cur_height - acc_info.game_info.ngparams.height;
+		acc_info.game_result.permutation_num = acc_info.game_info.ngparams.permutation_num;
 
 		if (acc_info.game_result.verdict == GemPuzzle::Verdict::WIN) {
 			GemPuzzle::InitialParams initial_params;
@@ -86,6 +87,8 @@ BEAM_EXPORT void Method_3(const GemPuzzle::CheckSolutionParams& params)
 			Amount reward = std::max(initial_params.multiplier - std::max(acc_info.game_result.time - initial_params.free_time, 0ull) * initial_params.game_speed / 100, 0ull) * acc_info.game_info.ngparams.bet;
 			Strict::Add(acc_info.pending_rewards, reward);
 			acc_info.has_active_game = false;
+			
+			Env::SaveVar_T(++initial_params.last_used_game_id, acc_info.game_result);
 		}
 
 		Env::SaveVar_T(params.player, acc_info);
@@ -108,7 +111,7 @@ BEAM_EXPORT void Method_5(const GemPuzzle::TakePendingRewards& params)
 	GemPuzzle::AccountInfo acc_info;
 	bool is_loaded = Env::LoadVar_T(params.player, acc_info);
 	if (is_loaded && acc_info.pending_rewards) {
-		Env::FundsUnlock(0, acc_info.pending_rewards);	
+		Env::FundsUnlock(0, acc_info.pending_rewards);
 		acc_info.pending_rewards = 0;
 		Env::SaveVar_T(params.player, acc_info);
 	}
