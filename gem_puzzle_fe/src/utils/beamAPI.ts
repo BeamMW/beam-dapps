@@ -83,6 +83,7 @@ export class BeamAPI {
         method,
         params: { ...params, contract }
       };
+      console.log('request: ', request);
       if (window.beam) {
         window.beam.callApi(callid, method, { ...params, contract });
       } else {

@@ -6,12 +6,17 @@ export enum AppSpecs {
 
 export enum ReqID {
   CHECK = 'CHECK',
+  CHECK_SOLUTION = 'CHECK_SOLUTION',
   INVOKE_DATA = 'INVOKE_DATA',
   START_GAME = 'START_GAME',
   VIEW_BOARD = 'VIEW_BOARD',
   CANCEL_GAME = 'CANCEL_GAME',
   TX_STATUS = 'TX_STATUS',
-  VIEW_CONTRACTS = 'VIEW_CONTRACTS'
+  VIEW_CONTRACTS = 'VIEW_CONTRACTS',
+  DESTROY = 'DESTROY',
+  INVOKE_DATA_SOLUTION = 'INVOKE_DATA_SOLUTION',
+  TX_CHECK_SOLUTION='TX_CHECK_SOLUTION',
+  VIEW_CHECK_RESULT='VIEW_CHECK_RESULT'
 }
 
 export enum ReqRoles {
@@ -26,11 +31,14 @@ export enum ReqMethods {
 }
 
 export enum ReqActions {
+  CREATE_CONTRACT = 'create_contract',
   VIEW_CONTRACTS = 'view_contracts',
   NEW_GAME = 'new_game',
   CHECK_SOLUTION = 'check_solution',
   VIEW_CURRENT_BOARD = 'view_current_game_board',
-  END_CURRENT_GAME = 'end_current_game'
+  END_CURRENT_GAME = 'end_current_game',
+  DESTROY_CONTRACT = 'destroy_contract',
+  VIEW_CHECK_RESULT='view_check_result'
 }
 
 export enum ResTXStatus {
