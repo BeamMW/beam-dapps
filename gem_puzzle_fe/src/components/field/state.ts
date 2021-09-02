@@ -7,10 +7,10 @@ export class State {
 
   time: number;
 
-  status: 'ready' | 'playing';
+  status: 'ready' | 'playing' | 'won';
 
   constructor(
-    grid: BoardType, move: number, time: number, status: 'ready' | 'playing'
+    grid: BoardType, move: number, time: number, status: 'ready' | 'playing' | 'won'
   ) {
     this.grid = grid;
     this.move = move;

@@ -41,6 +41,9 @@ export default class Main extends BaseComponent {
   };
 
   winner = (): void => {
+    this.menu.initButtonMenu()
+    this.menu.element.classList.add('active');
+    this.append(this.menu)
     this.append(this.win)
   };
   
@@ -81,15 +84,15 @@ export default class Main extends BaseComponent {
       case ReqID.CHECK_SOLUTION:
         invokeDataSolution(res.result.raw_data);
         break;
-      case ReqID.INVOKE_DATA_SOLUTION:
-        this.win.initLoader(res.result.txid);
-        checkSolutionTx(res.result.txid);
-        break;
-      case ReqID.TX_CHECK_SOLUTION:
-        if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
-          checkSolutionTx(res.result.txId);
+        case ReqID.INVOKE_DATA_SOLUTION:
+          this.menu.initLoader(res.result.txid);
+          this.menu.element.classList.remove('active');
+          checkSolutionTx(res.result.txid);
+          break;
+          case ReqID.TX_CHECK_SOLUTION:
+            if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
+            checkSolutionTx(res.result.txId);
         } else {
-          console.log('you win')
           this.winner()
         }
         break;

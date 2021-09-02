@@ -50,14 +50,13 @@ export class Field {
     this.setState({ time: this.state.time + 1 });
   };
 
-  setState = (newState: any):void => {
+  setState = (newState: any) => {
     this.state = { ...this.state, ...newState };
     this.render();
   };
 
   handleClickBox(box: { getNextdoorBoxes: () => any, x:number, y:number }) {
     return () => {
-      console.log(solution.join(''));
 
       const nextdoorBoxes = box.getNextdoorBoxes();
       console.log(nextdoorBoxes);
@@ -71,8 +70,6 @@ export class Field {
         const newGrid = [...this.state.grid];
         swapBoxes(newGrid, { x: box.x, y: box.y }, blankBox);
         if (isSolved(newGrid)) {
-          console.log(solution.join(''));
-          checkSolution(solution.join(''))
           clearInterval(Field.tickId);
           this.setState({
             status: 'won',
@@ -98,7 +95,6 @@ export class Field {
     const {
       grid, move, time, status
     } = this.state;
-
     // Render grid
     const main = document.querySelector('.main');
 const newGrid = new BaseComponent(Tags.DIV,['field']);
@@ -123,15 +119,17 @@ const newGrid = new BaseComponent(Tags.DIV,['field']);
 
     // Render button
     
-    const setTimer =()=>{
-      clearInterval(Field.tickId);
-      Field.tickId = setInterval(this.tick, 1000);
-      this.setState(State.start(this.board));
-    };
-    if (status === 'ready') {setTimer()}
-    if (status === 'playing')
-    if (status === 'won') {
-      main?.removeChild(newGrid.element)
+    // const setTimer =()=>{
+    //   clearInterval(Field.tickId);
+    //   Field.tickId = setInterval(this.tick, 1000);
+    //   this.setState(State.start(this.board));
+    // };
+    if (status === 'ready') console.log('ready');
+    
+    if (status === 'playing') console.log(newGrid.element);
+    if (status === 'won') { console.log('won');
+    main?.removeChild(newGrid.element)
+    checkSolution(solution.join(''))
     }
     // Render move
     (document.getElementById('move') as HTMLElement)
