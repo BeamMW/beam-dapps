@@ -28,7 +28,10 @@ constexpr size_t ROLE_BUF_SIZE = 16;
 void On_error(const char* msg)
 {
 #ifndef ENABLE_UNIT_TESTS_
-	Env::DocAddText("error", msg);
+	Env::DocGroup root("");
+	{
+		Env::DocAddText("error", msg);
+	}
 #else
 	std::cerr << msg << std::endl;
 #endif // ENABLE_UNIT_TESTS_
