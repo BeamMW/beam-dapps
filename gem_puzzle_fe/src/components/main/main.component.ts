@@ -16,9 +16,14 @@ import './main.scss';
 import Router from '../../logic/router/router';
 import { RouterMode, Routes } from '../../constants/menu_btn';
 import Options from '../options/options.component';
+import { Win } from '../win/win.components';
 
 export default class Main extends BaseComponent {
   menu: Menu;
+
+  win: Win;
+
+  static element: any;
 
   private readonly router: Router;
 
@@ -30,16 +35,14 @@ export default class Main extends BaseComponent {
       mode: RouterMode.HISTORY,
       root: Routes.MAIN
     });
+    this.win = new Win();
     this.append(this.menu);
-    this.router
-      .add(Routes.OPTIONS, this.optionsField);
-    this.router
-      .add(Routes.RETURN, this.cancelGame);
-    this.router
-      .add(Routes.BEST, this.bestField);
+    this.router.add(Routes.OPTIONS, this.optionsField);
+    this.router.add(Routes.RETURN, this.cancelGame);
+    this.router.add(Routes.BEST, this.bestField);
   }
 
-  cancelGame = ():void => {
+  cancelGame = (): void => {
     this.removeAll();
     this.menu.classList.remove('active');
     this.menu.initButtonMenu();
@@ -47,7 +50,7 @@ export default class Main extends BaseComponent {
     window.history.pushState({}, '', Routes.MAIN);
   };
 
-  bestField = ():void => {
+  bestField = (): void => {
     console.log('best');
   };
 
@@ -67,6 +70,13 @@ export default class Main extends BaseComponent {
     this.append(this.menu, options);
   };
 
+  winner = (): void => {
+    this.menu.initButtonMenu();
+    this.menu.element.classList.add('active');
+    this.append(this.menu);
+    this.append(this.win);
+  };
+
   inform = (res: APIResponse): void => {
     switch (res.id) {
       case ReqID.CHECK:
@@ -74,6 +84,13 @@ export default class Main extends BaseComponent {
         break;
       case ReqID.START_GAME:
         invokeData(res.result.raw_data);
+        break;
+      case ReqID.DESTROY:
+        invokeData(res.result.raw_data);
+        break;
+      case ReqID.CANCEL_GAME:
+        invokeData(res.result.raw_data);
+        this.cancelGame();
         break;
       case ReqID.INVOKE_DATA:
         this.menu.initLoader(res.result.txid);
@@ -99,13 +116,14 @@ export default class Main extends BaseComponent {
         break;
       case ReqID.INVOKE_DATA_SOLUTION:
         this.menu.initLoader(res.result.txid);
+        this.menu.element.classList.remove('active');
         checkSolutionTx(res.result.txid);
         break;
       case ReqID.TX_CHECK_SOLUTION:
         if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
           checkSolutionTx(res.result.txId);
         } else {
-          console.log('YOU WIN');
+          this.winner();
         }
         break;
       case ReqID.VIEW_CHECK_RESULT:
@@ -116,7 +134,7 @@ export default class Main extends BaseComponent {
     }
   };
 
-  informApp = (state: any) => {
+  informApp = (state: any): void => {
     console.log(state);
   };
 }

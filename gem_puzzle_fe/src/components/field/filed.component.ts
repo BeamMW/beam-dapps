@@ -8,6 +8,7 @@ import './field.scss';
 import { State } from './state';
 import { checkSolution } from '../../utils/request_creators';
 import Menu from '../menu/menu.component';
+import BaseComponent from '../base/base.component';
 
 // function getRandomGrid():any{
 //   let grid = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]];
@@ -46,9 +47,9 @@ export class Field {
     this.menu = new Menu();
   }
 
-  static ready = (board: BoardType):Field => new Field(State.start(board));
+  static ready = (board: BoardType): Field => new Field(State.start(board));
 
-  tick = ():void => {
+  tick = (): void => {
     this.setState({ time: this.state.time + 1 });
   };
 
@@ -57,10 +58,8 @@ export class Field {
     this.render();
   };
 
-  handleClickBox(box: { getNextdoorBoxes: () => any, x:number, y:number }) {
-    return () => {
-      console.log(solution.join(''));
-
+  handleClickBox(box: { getNextdoorBoxes: () => any; x: number; y: number }) {
+    return ():void => {
       const nextdoorBoxes = box.getNextdoorBoxes();
       console.log(nextdoorBoxes);
 
@@ -75,6 +74,7 @@ export class Field {
         if (isSolved(newGrid)) {
           console.log(solution.join(''));
           checkSolution(solution.join(''));
+
           clearInterval(Field.tickId);
           this.setState({
             status: 'won',
@@ -90,73 +90,78 @@ export class Field {
       }
     };
   }
-//  inform = (res:APIResponse):void => {
-//     if (res.id === ReqID.CHECK) {
-//       console.log("WIN")
-//     }
-//   };
+  //  inform = (res:APIResponse):void => {
+  //     if (res.id === ReqID.CHECK) {
+  //       console.log("WIN")
+  //     }
+  //   };
 
-  render = ():void => {
+  render = (): void => {
     const {
       grid, move, time, status
     } = this.state;
-
     // Render grid
     const main = document.querySelector('.main');
-    const newGrid: any = document.createElement(Tags.DIV);
-    newGrid.classList.add('field');
+    const newGrid = new BaseComponent(Tags.DIV, ['field']);
+    // newGrid.classList.add('field');
+
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
-        const button = document.createElement(Tags.BUTTON);
-        main?.append(newGrid);
-        button.classList.add('button');
+        const button = new BaseComponent(Tags.BUTTON, ['button']);
+        main?.append(newGrid.element);
+        // button.classList.add('button');
         if (status === 'playing') {
-          button.addEventListener('click', this.handleClickBox(new Box(j, i)));
+          button.element.addEventListener(
+            'click',
+            this.handleClickBox(new Box(j, i))
+          );
         }
-        button.textContent = grid[i][j] === 0 ? '' : grid[i][j].toString();
+
+        button.element.textContent = grid[i][j] === 0
+          ? ''
+          : grid[i][j].toString();
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         grid[i][j] === 0
-          ? button.classList.add('empty')
-          : button.classList.add('button');
+          ? button.element.classList.add('empty')
+          : button.element.classList.add('button');
         // console.log(newGrid)
         // console.log(this.main)
-        newGrid.appendChild(button);
+        newGrid.element.append(button.element);
       }
     }
-    (document.querySelector('.field') as HTMLElement).replaceWith(newGrid);
+    (document.querySelector('.field') as HTMLElement).replaceWith(
+      newGrid.element
+    );
 
     // Render button
-    const newButton: any = document.createElement(Tags.BUTTON);
-    if (status === 'ready') newButton.textContent = 'Play';
-    if (status === 'playing') newButton.textContent = 'Reset';
+    // const setTimer =()=>{
+    //   clearInterval(Field.tickId);
+    //   Field.tickId = setInterval(this.tick, 1000);
+    //   this.setState(State.start(this.board));
+    // };
+    if (status === 'ready') console.log('ready');
+
+    if (status === 'playing') console.log(newGrid.element);
     if (status === 'won') {
-      main?.removeChild(newGrid);
-      const popup = document.createElement(Tags.DIV);
-      popup.classList.add('win');
-      popup.textContent = 'Win';
-      main?.appendChild(popup);
+      console.log('won');
+      main?.removeChild(newGrid.element);
+      checkSolution(solution.join(''));
     }
-    newButton.addEventListener('click', () => {
-      clearInterval(Field.tickId);
-      Field.tickId = setInterval(this.tick, 1000);
-      this.setState(State.start(this.board));
-    });
-    (document.querySelector('.footer button') as HTMLElement)
-      .replaceWith(newButton);
     // Render move
-    (document.getElementById('move') as HTMLElement)
-      .textContent = `Move: ${move}`;
+    (
+      document.getElementById('move') as HTMLElement
+    ).textContent = `Move: ${move}`;
     // Render time
-    (document.getElementById('time') as HTMLElement)
-      .textContent = `Time: ${time}`;
+    (
+      document.getElementById('time') as HTMLElement
+    ).textContent = `Time: ${time}`;
     // Render message
 
     if (status === 'won') {
       (document.querySelector('.message') as HTMLElement)
         .textContent = 'You win!';
     } else {
-      (document.querySelector('.message') as HTMLElement)
-        .textContent = '';
+      (document.querySelector('.message') as HTMLElement).textContent = '';
     }
   };
 }

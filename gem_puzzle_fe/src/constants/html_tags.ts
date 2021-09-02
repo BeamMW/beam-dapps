@@ -7,5 +7,6 @@ export enum Tags {
   LABEL = 'label',
   CANVAS = 'canvas',
   BUTTON = 'button',
-  A = 'a'
+  A = 'a',
+  H1 = 'h1'
 }

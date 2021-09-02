@@ -1,0 +1,17 @@
+.winner{
+    margin: 10px auto;
+    width: 500px;
+    height: 350px;
+    background-color: palevioletred;
+    border: 3px dotted cornflowerblue;
+    opacity: .8;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    & h1 {
+        font-size: 35px;
+        color: turquoise;
+    }
+}

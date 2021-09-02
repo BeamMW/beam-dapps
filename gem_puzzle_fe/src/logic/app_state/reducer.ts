@@ -34,13 +34,11 @@ export default class AppState {
 
   notifyAll = (): void => this.observers.forEach((subs) => {
     if (subs.appInform) {
-      console.log('туц');
       subs.appInform(this.state);
     }
   });
 
   dispatch = (action: ActionTypes): void => {
-    console.log('туц');
     this.reducer(action);
   };
 
