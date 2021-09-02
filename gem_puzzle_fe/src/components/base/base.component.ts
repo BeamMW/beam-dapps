@@ -18,6 +18,10 @@ export default class BaseComponent {
     this.element.classList.add(...styles);
   }
 
+  public get classList():DOMTokenList { return this.element.classList; }
+
+  public set innerHTML(inner: string) { this.element.innerHTML = inner; }
+
   append = (...args: BaseComponent[]):void => {
     const nodes = args.map(
       (component) => component.element
@@ -30,8 +34,6 @@ export default class BaseComponent {
       this.element.removeChild(this.element.firstChild);
     }
   };
-
-  public get classList():DOMTokenList { return this.element.classList; }
 
   setAttributes = (obj:HTMLAttributes):void => {
     const attr = Object.entries(obj);

@@ -5,7 +5,7 @@ import BaseComponent from '../base/base.component';
 import Button from '../button/button.component';
 import './menu.scss';
 import Loader from '../loader/loader.component';
-import Header from '../header/header.component';
+import TxBoard from '../txboard/txboard.component';
 
 export default class Menu extends BaseComponent {
   constructor() {
@@ -16,18 +16,19 @@ export default class Menu extends BaseComponent {
 
   initButtonMenu = (): void => {
     this.removeAll();
-    console.log(this.classList.contains('active'));
     const buttons = menuBtn
-      .filter(
-        (btn) => {
-          if (
-            btn.key === MenuBtn.RETURN
-            && !this.classList.contains('active')
-          ) {
-            return false;
-          } return true;
+      .filter((btn) => {
+        if (this.classList.contains('active') && btn.key !== MenuBtn.RETURN) {
+          return false;
         }
-      )
+        if (
+          !this.classList.contains('active')
+          && btn.key === MenuBtn.RETURN
+        ) {
+          return false;
+        }
+        return true;
+      })
       .map((btn) => {
         const btnKey = new Button();
         btnKey.element.classList.add(`btn_${btn.key}`);
@@ -40,6 +41,6 @@ export default class Menu extends BaseComponent {
 
   initLoader = (txid: string): void => {
     this.removeAll();
-    this.append(new Header(txid), new Loader());
+    this.append(new TxBoard(txid), new Loader());
   };
 }

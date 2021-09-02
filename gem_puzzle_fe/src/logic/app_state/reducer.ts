@@ -2,12 +2,14 @@ import { IAppState, INewState } from 'AppStateProps';
 import { AddObserversType } from 'beamApiProps';
 import BaseComponent from '../../components/base/base.component';
 import { AppStateActions } from '../../constants/app_actions';
+import { ActionTypes } from './app_action_creators';
 
 const initialState:IAppState = {
   mode: 4,
   move: '',
   time: 0,
-  picture: 'none'
+  picture: 'none',
+  rate: 100000000
 };
 
 export default class AppState {
@@ -32,9 +34,15 @@ export default class AppState {
 
   notifyAll = (): void => this.observers.forEach((subs) => {
     if (subs.appInform) {
+      console.log('туц');
       subs.appInform(this.state);
     }
   });
+
+  dispatch = (action: ActionTypes): void => {
+    console.log('туц');
+    this.reducer(action);
+  };
 
   getState = ():IAppState => this.state;
 
@@ -54,9 +62,7 @@ export default class AppState {
     this.observers.delete(component);
   };
 
-  reducer = (obj: {
-    action: AppStateActions, payload: string | number
-  }): void => {
+  reducer = (obj: ActionTypes): void => {
     const { action, payload } = obj;
     switch (action) {
       case AppStateActions.SET_TIME:
@@ -65,8 +71,12 @@ export default class AppState {
       case AppStateActions.SET_MOVE:
         this.setState({ move: payload as string });
         break;
+      case AppStateActions.SET_RATE:
+        this.setState({ rate: payload as number });
+        break;
       default:
         break;
     }
+    this.notifyAll();
   };
 }

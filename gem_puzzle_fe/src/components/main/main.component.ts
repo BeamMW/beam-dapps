@@ -15,6 +15,7 @@ import {
 import './main.scss';
 import Router from '../../logic/router/router';
 import { RouterMode, Routes } from '../../constants/menu_btn';
+import Options from '../options/options.component';
 
 export default class Main extends BaseComponent {
   menu: Menu;
@@ -51,7 +52,7 @@ export default class Main extends BaseComponent {
   };
 
   initGameField = (board: BoardType): void => {
-    this.menu.element.classList.add('active');
+    this.menu.classList.add('active');
     this.menu.initButtonMenu();
     // const fl = new Field(board).element;
     // this.element.append(fl)
@@ -59,7 +60,11 @@ export default class Main extends BaseComponent {
   };
 
   optionsField = (): void => {
-    console.log('field');
+    this.removeAll();
+    this.menu.classList.add('active');
+    this.menu.initButtonMenu();
+    const options = new Options();
+    this.append(this.menu, options);
   };
 
   inform = (res: APIResponse): void => {

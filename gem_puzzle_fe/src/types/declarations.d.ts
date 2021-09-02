@@ -56,17 +56,20 @@ declare module 'qwebchannel' {
 declare module 'AppStateProps' {
 
   interface IAppState {
+    [key:string];
     mode: 3 | 4 | 5;
     move: string;
     picture: 'none';
-    time: number
+    time: number;
+    rate: number;
   }
 
   interface INewState {
     mode?: 3 | 4 | 5,
     move?: string,
     time?: number,
-    picture?: 'none'
+    picture?: 'none';
+    rate?: number;
   }
 
 }
