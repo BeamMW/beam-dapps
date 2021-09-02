@@ -1,8 +1,8 @@
 import { BeamApiParams } from 'beamApiProps';
 import { QWebChannel, QWebChannelTransport, QObject } from 'qwebchannel';
-import shader from '../app.wasm';
-import BaseComponent from '../components/base/base.component';
-import { ReqID, ReqMethods, AppSpecs } from '../constants/api_constants';
+import shader from './app.wasm';
+import BaseComponent from '../../components/base/base.component';
+import { ReqID, ReqMethods, AppSpecs } from '../../constants/api_constants';
 
 declare global {
   interface Window {

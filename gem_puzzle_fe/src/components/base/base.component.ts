@@ -1,3 +1,4 @@
+import { IAppState } from 'AppStateProps';
 import { APIResponse } from 'beamApiProps';
 import { Tags } from '../../constants/html_tags';
 
@@ -9,6 +10,8 @@ export default class BaseComponent {
   readonly element: HTMLElement;
 
   inform?: (res:APIResponse) => void;
+
+  appInform?:(state: IAppState) => void;
 
   constructor(tag:Tags, styles: string[] = []) {
     this.element = document.createElement(tag);
@@ -27,6 +30,8 @@ export default class BaseComponent {
       this.element.removeChild(this.element.firstChild);
     }
   };
+
+  public get classList():DOMTokenList { return this.element.classList; }
 
   setAttributes = (obj:HTMLAttributes):void => {
     const attr = Object.entries(obj);

@@ -1,5 +1,5 @@
 import { APIResponse } from 'beamApiProps';
-import { ApiHandler } from '../../utils/api_handler';
+import { ApiHandler } from '../../logic/beam_api/api_handler';
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
 import { ReqID, ResTXStatus } from '../../constants/api_constants';

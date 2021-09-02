@@ -1,8 +1,9 @@
 import Loader from './components/loader/loader.component';
-import { BeamAPI } from './utils/beamAPI';
-import { ApiHandler } from './utils/api_handler';
+import { BeamAPI } from './logic/beam_api/beamAPI';
+import { ApiHandler } from './logic/beam_api/api_handler';
 import Main from './components/main/main.component';
-import './style/index.scss'
+import './style/index.scss';
+
 const isLoaded = new Loader().element;
 
 export class App {
@@ -20,7 +21,7 @@ export class App {
         addObservers: this.API.addObservers
       });
       this.rootElement.removeChild(isLoaded);
-      this.rootElement.append(new Main().element)
+      this.rootElement.append(new Main().element);
     });
   }
 }

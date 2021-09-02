@@ -53,6 +53,24 @@ declare module 'qwebchannel' {
   }
 }
 
+declare module 'AppStateProps' {
+
+  interface IAppState {
+    mode: 3 | 4 | 5;
+    move: string;
+    picture: 'none';
+    time: number
+  }
+
+  interface INewState {
+    mode?: 3 | 4 | 5,
+    move?: string,
+    time?: number,
+    picture?: 'none'
+  }
+
+}
+
 declare module 'beamApiProps' {
   import BaseComponent from '../components/base/base.component';
 

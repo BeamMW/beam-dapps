@@ -5,7 +5,7 @@ import {
   ReqID,
   AppSpecs
 } from '../constants/api_constants';
-import { ApiHandler } from './api_handler';
+import { ApiHandler } from '../logic/beam_api/api_handler';
 
 export type ReqArgsType = {
   action: ReqActions;
@@ -37,6 +37,7 @@ export const invokeData = (data: number[]): void => {
     data
   });
 };
+
 export const invokeDataSolution = (data: number[]): void => {
   ApiHandler.callApi(
     ReqID.INVOKE_DATA_SOLUTION,

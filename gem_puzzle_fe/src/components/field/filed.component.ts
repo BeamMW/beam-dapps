@@ -1,6 +1,6 @@
 import { BoardType } from 'beamApiProps';
 import { Tags } from '../../constants/html_tags';
-import { ApiHandler } from '../../utils/api_handler';
+import { ApiHandler } from '../../logic/beam_api/api_handler';
 import {
   Box, isSolved, solution, swapBoxes
 } from './box';
@@ -33,7 +33,9 @@ export class Field {
   state?: any;
 
   tickId: any;
+
   menu: Menu;
+
   constructor(state: any) {
     this.state = state;
     this.tickId = null;
@@ -111,27 +113,28 @@ export class Field {
         if (status === 'playing') {
           button.addEventListener('click', this.handleClickBox(new Box(j, i)));
         }
-        
         button.textContent = grid[i][j] === 0 ? '' : grid[i][j].toString();
-        grid[i][j] === 0 ? button.classList.add('empty') : button.classList.add('button');
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        grid[i][j] === 0
+          ? button.classList.add('empty')
+          : button.classList.add('button');
         // console.log(newGrid)
         // console.log(this.main)
         newGrid.appendChild(button);
       }
     }
-    newGrid.replaceWith(newGrid);
+    (document.querySelector('.field') as HTMLElement).replaceWith(newGrid);
 
     // Render button
     const newButton: any = document.createElement(Tags.BUTTON);
     if (status === 'ready') newButton.textContent = 'Play';
     if (status === 'playing') newButton.textContent = 'Reset';
     if (status === 'won') {
-      main?.removeChild(newGrid)
-      const popup = document.createElement(Tags.DIV)
-      popup.classList.add('win')
-      popup.textContent='Win'
-      main?.appendChild(popup)
-      
+      main?.removeChild(newGrid);
+      const popup = document.createElement(Tags.DIV);
+      popup.classList.add('win');
+      popup.textContent = 'Win';
+      main?.appendChild(popup);
     }
     newButton.addEventListener('click', () => {
       clearInterval(Field.tickId);

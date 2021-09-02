@@ -1,7 +1,7 @@
 import { APIResponse, BoardType } from 'beamApiProps';
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
-import { ApiHandler } from '../../utils/api_handler';
+import { ApiHandler } from '../../logic/beam_api/api_handler';
 import Menu from '../menu/menu.component';
 import { Field } from '../field/filed.component';
 import { ReqID, ResTXStatus } from '../../constants/api_constants';
@@ -13,28 +13,53 @@ import {
   viewBoard
 } from '../../utils/request_creators';
 import './main.scss';
+import Router from '../../logic/router/router';
+import { RouterMode, Routes } from '../../constants/menu_btn';
 
 export default class Main extends BaseComponent {
   menu: Menu;
 
-  static element: any;
-  
+  private readonly router: Router;
+
   constructor() {
     super(Tags.DIV, ['main']);
     ApiHandler.addObservers(this);
     this.menu = new Menu();
+    this.router = new Router({
+      mode: RouterMode.HISTORY,
+      root: Routes.MAIN
+    });
     this.append(this.menu);
+    this.router
+      .add(Routes.OPTIONS, this.optionsField);
+    this.router
+      .add(Routes.RETURN, this.cancelGame);
+    this.router
+      .add(Routes.BEST, this.bestField);
   }
+
+  cancelGame = ():void => {
+    this.removeAll();
+    this.menu.classList.remove('active');
+    this.menu.initButtonMenu();
+    this.append(this.menu);
+    window.history.pushState({}, '', Routes.MAIN);
+  };
+
+  bestField = ():void => {
+    console.log('best');
+  };
 
   initGameField = (board: BoardType): void => {
     this.menu.element.classList.add('active');
+    this.menu.initButtonMenu();
     // const fl = new Field(board).element;
     // this.element.append(fl)
     Field.ready(board);
   };
 
-  cancelGame = (): void => {
-    this.menu.element.classList.remove('active');
+  optionsField = (): void => {
+    console.log('field');
   };
 
   inform = (res: APIResponse): void => {
@@ -44,13 +69,6 @@ export default class Main extends BaseComponent {
         break;
       case ReqID.START_GAME:
         invokeData(res.result.raw_data);
-        break;
-      case ReqID.DESTROY:
-        invokeData(res.result.raw_data);
-        break;
-      case ReqID.CANCEL_GAME:
-        invokeData(res.result.raw_data);
-        this.cancelGame();
         break;
       case ReqID.INVOKE_DATA:
         this.menu.initLoader(res.result.txid);
@@ -77,13 +95,9 @@ export default class Main extends BaseComponent {
       case ReqID.INVOKE_DATA_SOLUTION:
         this.menu.initLoader(res.result.txid);
         checkSolutionTx(res.result.txid);
-        console.log(res.result.txid);
-        console.log(res.result.txid);
         break;
       case ReqID.TX_CHECK_SOLUTION:
         if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
-          console.log(res.result.txId);
-          console.log(res.result.txId);
           checkSolutionTx(res.result.txId);
         } else {
           console.log('YOU WIN');
@@ -95,5 +109,9 @@ export default class Main extends BaseComponent {
       default:
         break;
     }
+  };
+
+  informApp = (state: any) => {
+    console.log(state);
   };
 }
