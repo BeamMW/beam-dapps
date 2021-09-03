@@ -9,6 +9,7 @@ const initialState:IAppState = {
   move: '',
   time: 0,
   picture: 'none',
+  pKey: '',
   rate: 1
 };
 
@@ -74,6 +75,9 @@ export default class AppState {
         break;
       case AppStateActions.SET_RATE:
         this.setState({ rate: payload as number });
+        break;
+      case AppStateActions.SET_PKEY:
+        this.setState({ pKey: payload as string });
         break;
       default:
         break;

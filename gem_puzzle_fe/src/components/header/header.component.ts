@@ -1,4 +1,3 @@
-import { AppSpecs } from '../../constants/api_constants';
 import { AppStateHandler } from '../../logic/app_state/state.handler';
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
@@ -9,7 +8,7 @@ import { boardSchemeMaker } from '../../utils/string_handlers';
 export default class Header extends BaseComponent {
   constructor() {
     super(Tags.DIV, ['header']);
-    const { rate, mode } = AppStateHandler.getState();
+    const { rate, mode, pKey } = AppStateHandler.getState();
     const rateBlock = new InfoBLock({
       key: 'rate',
       title: 'RATE',
@@ -24,9 +23,9 @@ export default class Header extends BaseComponent {
       callback: boardSchemeMaker
     });
     const cidBlock = new InfoBLock({
-      key: 'ContractID',
-      title: 'ContractID',
-      value: AppSpecs.CID,
+      key: 'pKey',
+      title: 'KEY',
+      value: pKey,
       after: ''
     });
     this.append(rateBlock, modeBlock, cidBlock);

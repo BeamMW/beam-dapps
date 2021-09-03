@@ -7,8 +7,6 @@ import './style/index.scss';
 import AppState from './logic/app_state/reducer';
 import Header from './components/header/header.component';
 
-const isLoaded = new Loader().element;
-
 export class App {
   private readonly rootElement: HTMLElement;
 
@@ -17,8 +15,9 @@ export class App {
   private readonly AppState: AppState;
 
   constructor(rootElement: HTMLElement) {
+    const loader = new Loader().element;
     this.rootElement = rootElement;
-    this.rootElement.append(isLoaded);
+    this.rootElement.append(loader);
     this.API = new BeamAPI();
     this.AppState = new AppState();
     this.API.loadAPI().then(() => {
@@ -31,7 +30,7 @@ export class App {
         callApi: this.API.callApi,
         addObservers: this.API.addObservers
       });
-      this.rootElement.removeChild(isLoaded);
+      this.rootElement.removeChild(loader);
       this.rootElement.append(new Header().element, new Main().element);
     });
   }

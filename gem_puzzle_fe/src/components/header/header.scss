@@ -4,5 +4,13 @@
   display: flex;
   justify-content: space-between;
   background-color: rgba($color: #3e66fb, $alpha: 0.3);
-  color: #f9fce1;
+  .title{
+    color: #7400b8;
+  }
+  .value{
+    color: #80ffdb;  
+  }
+  .after{
+    color: #7400b8;
+  }
 }

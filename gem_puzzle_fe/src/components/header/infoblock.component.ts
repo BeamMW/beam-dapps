@@ -12,6 +12,12 @@ export default class InfoBLock extends BaseComponent {
 
   after: string;
 
+  titleDOM: BaseComponent;
+
+  valueDOM: BaseComponent;
+
+  afterDOM?: BaseComponent;
+
   callback?: (numb:number) => string;
 
   constructor({
@@ -33,12 +39,23 @@ export default class InfoBLock extends BaseComponent {
     this.title = title;
     this.value = value;
     this.after = after;
+    this.titleDOM = new BaseComponent(Tags.SPAN, ['title']);
+    this.valueDOM = new BaseComponent(Tags.SPAN, ['value']);
     if (callback) this.callback = callback;
+    this.append(this.titleDOM, this.valueDOM);
+    if (this.after.length) {
+      this.afterDOM = new BaseComponent(Tags.SPAN, ['after']);
+      this.append(this.afterDOM);
+    }
     this.render();
   }
 
   render = (): void => {
-    this.innerHTML = `${this.title}: ${this.value} ${this.after}`;
+    this.titleDOM.innerHTML = `${this.title}: `;
+    this.valueDOM.innerHTML = `${this.value}`;
+    if (this.afterDOM) {
+      this.afterDOM.innerHTML = ` ${this.after}`;
+    }
   };
 
   appInform = (state: IAppState): void => {

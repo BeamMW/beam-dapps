@@ -127,9 +127,20 @@ export const viewCheckResult = (): void => {
 };
 export const checkSolutionTx = (txId: string): void => {
   setTimeout(() => {
-    console.log(txId);
     ApiHandler.callApi(ReqID.TX_CHECK_SOLUTION, ReqMethods.TX_STATUS, {
       txId
     });
   }, AppSpecs.TX_CHECK_INTERVAL);
+};
+
+export const getPlayerKey = (): void => {
+  const args = argsParser({
+    role: ReqRoles.PLAYER,
+    action: ReqActions.GET_MY_PKEY,
+    cid: AppSpecs.CID
+  });
+  ApiHandler.callApi(ReqID.GET_PKEY, ReqMethods.INVOKE_CONTRACT, {
+    create_tx: false,
+    args
+  });
 };

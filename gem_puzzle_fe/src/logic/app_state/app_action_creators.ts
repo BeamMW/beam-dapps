@@ -24,6 +24,11 @@ export const setRateAC:ActionCreatorType<number> = (payload:number) => ({
   payload
 });
 
+export const setPKeyAC:ActionCreatorType<string> = (payload:string) => ({
+  action: AppStateActions.SET_PKEY,
+  payload
+});
+
 export type ActionTypes = ReturnType<
 typeof setTimeAC
 | typeof setMoveAC
