@@ -1,11 +1,12 @@
 import { ApiHandler } from '../../logic/beam_api/api_handler';
 import { Tags } from '../../constants/html_tags';
-import { MenuBtn, menuBtn } from '../../constants/menu_btn';
 import BaseComponent from '../base/base.component';
 import Button from '../button/button.component';
 import './menu.scss';
 import Loader from '../loader/loader.component';
 import TxBoard from '../txboard/txboard.component';
+import { MenuBtn } from '../../constants/app_constants';
+import { menuProps } from '../../constants/menu_btn';
 
 export default class Menu extends BaseComponent {
   constructor() {
@@ -16,7 +17,7 @@ export default class Menu extends BaseComponent {
 
   initButtonMenu = (): void => {
     this.removeAll();
-    const buttons = menuBtn
+    const buttons = menuProps
       .filter((btn) => {
         if (this.classList.contains('active') && btn.key !== MenuBtn.RETURN) {
           return false;

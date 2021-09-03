@@ -120,10 +120,8 @@ export class Field {
         button.element.textContent = grid[i][j] === 0
           ? ''
           : grid[i][j].toString();
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        grid[i][j] === 0
-          ? button.element.classList.add('empty')
-          : button.element.classList.add('button');
+        button.element.classList.add(grid[i][j] === 0 ? 'empty' : 'button');
+
         // console.log(newGrid)
         // console.log(this.main)
         newGrid.element.append(button.element);

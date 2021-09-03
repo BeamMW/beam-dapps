@@ -4,6 +4,7 @@ import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
 import InfoBLock from './infoblock.component';
 import './header.scss';
+import { boardSchemeMaker } from '../../utils/string_handlers';
 
 export default class Header extends BaseComponent {
   constructor() {
@@ -12,17 +13,21 @@ export default class Header extends BaseComponent {
     const rateBlock = new InfoBLock({
       key: 'rate',
       title: 'RATE',
-      value: rate
+      value: rate,
+      after: 'BEAM'
     });
     const modeBlock = new InfoBLock({
       key: 'mode',
       title: 'MODE',
-      value: mode
+      value: boardSchemeMaker(mode),
+      after: '',
+      callback: boardSchemeMaker
     });
     const cidBlock = new InfoBLock({
       key: 'ContractID',
       title: 'ContractID',
-      value: AppSpecs.CID
+      value: AppSpecs.CID,
+      after: ''
     });
     this.append(rateBlock, modeBlock, cidBlock);
   }

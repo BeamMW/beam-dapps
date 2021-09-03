@@ -22,6 +22,10 @@ export default class BaseComponent {
 
   public set innerHTML(inner: string) { this.element.innerHTML = inner; }
 
+  public set checked(bool: boolean) {
+    (this.element as HTMLInputElement).checked = bool;
+  }
+
   append = (...args: BaseComponent[]):void => {
     const nodes = args.map(
       (component) => component.element

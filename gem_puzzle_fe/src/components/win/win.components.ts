@@ -3,8 +3,6 @@ import BaseComponent from '../base/base.component';
 import './win.scss';
 
 export class Win extends BaseComponent {
-  [x: string]: any;
-
   constructor() {
     super(Tags.DIV, ['winner']);
     this.initWinnerPopUp();

@@ -14,9 +14,9 @@ import {
 } from '../../utils/request_creators';
 import './main.scss';
 import Router from '../../logic/router/router';
-import { RouterMode, Routes } from '../../constants/menu_btn';
 import Options from '../options/options.component';
 import { Win } from '../win/win.components';
+import { RouterMode, Routes } from '../../constants/app_constants';
 
 export default class Main extends BaseComponent {
   menu: Menu;
@@ -57,8 +57,6 @@ export default class Main extends BaseComponent {
   initGameField = (board: BoardType): void => {
     this.menu.classList.add('active');
     this.menu.initButtonMenu();
-    // const fl = new Field(board).element;
-    // this.element.append(fl)
     Field.ready(board);
   };
 
