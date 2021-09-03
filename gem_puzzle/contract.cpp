@@ -1,5 +1,6 @@
 #include "Shaders/common.h"
 #include "Shaders/app_common_impl.h"
+#include "Shaders/Math.h"
 #include "contract.h"
 
 #include "board.h"
@@ -24,12 +25,6 @@ GemPuzzle::Verdict check_solution(uint64_t permutation_num, const char* solution
 		case 'D':
 			cur_move = GemPuzzle::Board::DOWN;
 			break;
-		case 'F':
-			cur_move = GemPuzzle::Board::CLOCKWISE;
-			break;
-		case 'B':
-			cur_move = GemPuzzle::Board::COUNTERCLOCKWISE;
-			break;
 		default:
 			return GemPuzzle::Verdict::ERROR;
 		}
@@ -40,9 +35,10 @@ GemPuzzle::Verdict check_solution(uint64_t permutation_num, const char* solution
 	} return board.is_solved() ? GemPuzzle::Verdict::WIN : GemPuzzle::Verdict::LOSE;
 }
 
-BEAM_EXPORT void Ctor(void* a)
+BEAM_EXPORT void Ctor(GemPuzzle::InitialParams& params)
 {
-	Env::SaveVar_T(0, (uint64_t)0);
+	params.last_used_game_id = 0;
+	Env::SaveVar_T(0, params);
 }
 
 BEAM_EXPORT void Dtor(void* a)
@@ -52,49 +48,71 @@ BEAM_EXPORT void Dtor(void* a)
 
 BEAM_EXPORT void Method_2(const GemPuzzle::NewGameParams& params)
 {
-	GemPuzzle::GameInfo cur_game_info;
-	bool is_loaded = Env::LoadVar_T(params.player, cur_game_info);
+	GemPuzzle::AccountInfo acc_info;
+	bool is_loaded = Env::LoadVar_T(params.player, acc_info);
 
-	if (!is_loaded || params.cancel_previous_game) {
-		if (is_loaded && params.cancel_previous_game) {
-			Env::DelVar_T(cur_game_info.game_id);
-			Env::DelVar_T(params.player);
-		}
-		Env::LoadVar_T(0, cur_game_info.game_id);
-		++cur_game_info.game_id;
-		cur_game_info.ngparams = params;
-		Env::SaveVar_T(params.player, cur_game_info);
-		Env::SaveVar_T(0, cur_game_info.game_id);
+	if (!is_loaded) {
+		acc_info.pending_rewards = 0;
 	} else {
-		Env::Halt();
+		if (acc_info.has_active_game) {
+			Env::Halt();
+		}
 	}
+
+	acc_info.game_info.ngparams = params;
+	acc_info.has_active_game = true;
+	Env::SaveVar_T(params.player, acc_info);
+	if (params.bet != 0) {
+		Env::FundsLock(0, params.bet);
+	}
+	Env::AddSig(params.player);
 }
 
 BEAM_EXPORT void Method_3(const GemPuzzle::CheckSolutionParams& params)
 {
-	GemPuzzle::GameInfo cur_game_info;
-	bool is_loaded = Env::LoadVar_T(params.player, cur_game_info);
+	GemPuzzle::AccountInfo acc_info;
+	bool is_loaded = Env::LoadVar_T(params.player, acc_info);
 
-	if (!is_loaded) {
+	if (!is_loaded || !acc_info.has_active_game) {
 		Env::Halt();
 	} else {
-		GemPuzzle::GameResult gr;
-		gr.verdict = check_solution(cur_game_info.ngparams.permutation_num, params.solution, gr.moves_num);
-		gr.time = Env::get_Height() - cur_game_info.ngparams.height;
+		Height cur_height = Env::get_Height();
+		acc_info.game_result.verdict = check_solution(acc_info.game_info.ngparams.permutation_num, params.solution, acc_info.game_result.moves_num);
+		acc_info.game_result.time = cur_height - acc_info.game_info.ngparams.height;
+		acc_info.game_result.permutation_num = acc_info.game_info.ngparams.permutation_num;
 
-		Env::SaveVar_T(cur_game_info.game_id, gr);
+		if (acc_info.game_result.verdict == GemPuzzle::Verdict::WIN) {
+			GemPuzzle::InitialParams initial_params;
+			Env::LoadVar_T(0, initial_params);
+			Amount reward = std::max(initial_params.multiplier - std::max(acc_info.game_result.time - initial_params.free_time, 0ull) * initial_params.game_speed / 100, 0ull) * acc_info.game_info.ngparams.bet;
+			Strict::Add(acc_info.pending_rewards, reward);
+			acc_info.has_active_game = false;
+			
+			Env::SaveVar_T(++initial_params.last_used_game_id, acc_info.game_result);
+		}
+
+		Env::SaveVar_T(params.player, acc_info);
 	}
 }
 
 BEAM_EXPORT void Method_4(const GemPuzzle::EndGameParams& params)
 {
-	GemPuzzle::GameInfo cur_game_info;
-	bool is_loaded = Env::LoadVar_T(params.player, cur_game_info);
+	GemPuzzle::AccountInfo acc_info;
+	bool is_loaded = Env::LoadVar_T(params.player, acc_info);
 
-	if (is_loaded) {
-		if (cur_game_info.game_id != 0) {
-			Env::DelVar_T(cur_game_info.game_id);
-		}
-		Env::DelVar_T(params.player);
+	if (is_loaded && acc_info.has_active_game) {
+		acc_info.has_active_game = false;
+		Env::SaveVar_T(params.player, acc_info);
+	}
+}
+
+BEAM_EXPORT void Method_5(const GemPuzzle::TakePendingRewards& params)
+{
+	GemPuzzle::AccountInfo acc_info;
+	bool is_loaded = Env::LoadVar_T(params.player, acc_info);
+	if (is_loaded && acc_info.pending_rewards) {
+		Env::FundsUnlock(0, acc_info.pending_rewards);
+		acc_info.pending_rewards = 0;
+		Env::SaveVar_T(params.player, acc_info);
 	}
 }

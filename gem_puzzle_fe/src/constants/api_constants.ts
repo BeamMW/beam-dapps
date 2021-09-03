@@ -15,8 +15,8 @@ export enum ReqID {
   VIEW_CONTRACTS = 'VIEW_CONTRACTS',
   DESTROY = 'DESTROY',
   INVOKE_DATA_SOLUTION = 'INVOKE_DATA_SOLUTION',
-  TX_CHECK_SOLUTION='TX_CHECK_SOLUTION',
-  VIEW_CHECK_RESULT='VIEW_CHECK_RESULT'
+  TX_CHECK_SOLUTION = 'TX_CHECK_SOLUTION',
+  VIEW_CHECK_RESULT = 'VIEW_CHECK_RESULT'
 }
 
 export enum ReqRoles {
@@ -38,7 +38,7 @@ export enum ReqActions {
   VIEW_CURRENT_BOARD = 'view_current_game_board',
   END_CURRENT_GAME = 'end_current_game',
   DESTROY_CONTRACT = 'destroy_contract',
-  VIEW_CHECK_RESULT='view_check_result'
+  VIEW_CHECK_RESULT = 'view_check_result'
 }
 
 export enum ResTXStatus {
