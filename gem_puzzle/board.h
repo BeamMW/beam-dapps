@@ -15,11 +15,12 @@ namespace GemPuzzle {
 		static constexpr size_t BOARD_SIZE = 4;
 		static constexpr uint8_t PERMUTATION_LEN = BOARD_SIZE * BOARD_SIZE - 1;
 
-		enum Moves { RIGHT, LEFT, UP, DOWN, CLOCKWISE, COUNTERCLOCKWISE };
+		enum Moves { RIGHT, LEFT, UP, DOWN };
 
 		Board(uint64_t permutation_num);
 
 		bool is_solved();
+		bool is_solvable();
 		bool move(Moves m);
 		uint8_t get(size_t i, size_t j)
 		{

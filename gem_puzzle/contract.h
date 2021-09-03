@@ -3,8 +3,8 @@
 #include <cstddef>
 
 namespace GemPuzzle {
-	// SID: 2c2da023826d3bfc62260bbf7f32b95c3103b5298e35a82db50d7693ccd65ecd
-static const ShaderID s_SID = {0x2c,0x2d,0xa0,0x23,0x82,0x6d,0x3b,0xfc,0x62,0x26,0x0b,0xbf,0x7f,0x32,0xb9,0x5c,0x31,0x03,0xb5,0x29,0x8e,0x35,0xa8,0x2d,0xb5,0x0d,0x76,0x93,0xcc,0xd6,0x5e,0xcd};
+	// SID: 255b3626ef95dc247b720188363f698e0fabe8198ada1153304e1613f80cffde
+	static const ShaderID s_SID = {0x25,0x5b,0x36,0x26,0xef,0x95,0xdc,0x24,0x7b,0x72,0x01,0x88,0x36,0x3f,0x69,0x8e,0x0f,0xab,0xe8,0x19,0x8a,0xda,0x11,0x53,0x30,0x4e,0x16,0x13,0xf8,0x0c,0xff,0xde};
 
 	constexpr size_t SOLUTION_BUF_SIZE = 8192;
 
@@ -12,12 +12,21 @@ static const ShaderID s_SID = {0x2c,0x2d,0xa0,0x23,0x82,0x6d,0x3b,0xfc,0x62,0x26
 
 #pragma pack(push, 1)
 
+	struct InitialParams {
+		static const uint32_t METHOD = 0;
+		Amount max_bet;
+		Amount multiplier;
+		Height free_time;
+		uint64_t last_used_game_id;
+		uint32_t game_speed;
+	};
+
 	struct NewGameParams {
 		static const uint32_t METHOD = 2;
 		Height height;
+		Amount bet;
 		PubKey player;
 		uint64_t permutation_num;
-		bool cancel_previous_game;
 	};
 
 	struct CheckSolutionParams {
@@ -31,15 +40,28 @@ static const ShaderID s_SID = {0x2c,0x2d,0xa0,0x23,0x82,0x6d,0x3b,0xfc,0x62,0x26
 		PubKey player;
 	};
 
+	struct TakePendingRewards {
+		static const uint32_t METHOD = 5;
+		PubKey player;
+	};
+
 	struct GameResult {
+		uint64_t permutation_num;
 		Verdict verdict;
 		uint32_t moves_num;
 		Height time;
+		PubKey player;
 	};
 
 	struct GameInfo {
 		NewGameParams ngparams;
-		uint64_t game_id;
+	};
+
+	struct AccountInfo {
+		GameInfo game_info;
+		GameResult game_result;
+		Amount pending_rewards;
+		bool has_active_game;
 	};
 
 #pragma pack(pop)

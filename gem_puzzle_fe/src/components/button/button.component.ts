@@ -7,7 +7,6 @@ export default class Button extends BaseComponent {
     super(Tags.INPUT, ['button']);
     this.setAttributes({
       type: 'button'
-      //  value: 'New Game'
     });
   }
 }
