@@ -23,8 +23,6 @@ export default class Main extends BaseComponent {
 
   win: Win;
 
-  static element: any;
-
   private readonly router: Router;
 
   constructor() {
@@ -130,9 +128,5 @@ export default class Main extends BaseComponent {
       default:
         break;
     }
-  };
-
-  informApp = (state: any): void => {
-    console.log(state);
   };
 }
