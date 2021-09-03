@@ -1,4 +1,4 @@
-import { AppStateHandler } from './logic/app_state/state.handler';
+import { AppStateHandler } from './logic/app_state/state_handler';
 import Loader from './components/loader/loader.component';
 import { BeamAPI } from './logic/beam_api/beamAPI';
 import { ApiHandler } from './logic/beam_api/api_handler';

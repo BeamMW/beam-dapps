@@ -28,3 +28,8 @@ export const handleString = (next:string):boolean => {
   }
   return result;
 };
+
+export const parseToGroth = (beams: number):string => (
+  (<string>(beams * (10 ** (-8))).toPrecision(10).split('e')[0])
+    .split('.').join('').slice(0, -1)
+);

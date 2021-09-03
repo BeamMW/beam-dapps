@@ -6,7 +6,7 @@ import {
 } from './box';
 import './field.scss';
 import { State } from './state';
-import { checkSolution } from '../../utils/request_creators';
+import { checkSolution } from '../../logic/beam_api/request_creators';
 import Menu from '../menu/menu.component';
 import BaseComponent from '../base/base.component';
 

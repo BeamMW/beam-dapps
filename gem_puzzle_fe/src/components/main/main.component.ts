@@ -1,6 +1,6 @@
 import { APIResponse, BoardType } from 'beamApiProps';
 import { setPKeyAC } from '../../logic/app_state/app_action_creators';
-import { AppStateHandler } from '../../logic/app_state/state.handler';
+import { AppStateHandler } from '../../logic/app_state/state_handler';
 import { ApiHandler } from '../../logic/beam_api/api_handler';
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
@@ -14,7 +14,7 @@ import {
   invokeDataSolution,
   txStatus,
   viewBoard
-} from '../../utils/request_creators';
+} from '../../logic/beam_api/request_creators';
 import './main.scss';
 import Router from '../../logic/router/router';
 import Options from '../options/options.component';

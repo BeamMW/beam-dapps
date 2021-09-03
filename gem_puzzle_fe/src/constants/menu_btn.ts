@@ -1,6 +1,6 @@
 import {
   startGame, viewBoard
-} from '../utils/request_creators';
+} from '../logic/beam_api/request_creators';
 import { MenuBtn, Routes } from './app_constants';
 
 export const menuProps = [

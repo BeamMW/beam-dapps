@@ -4,12 +4,12 @@ export enum AppStateActions {
   SET_MOVE = 'SET_MOVE',
   SET_PIC = 'SET_PIC',
   SET_RATE = 'SET_RATE',
-  SET_PKEY = "SET_PKEY"
+  SET_PKEY = 'SET_PKEY'
 }
 
 export enum BeamAmmount {
   MIN_AMOUNT = 0,
-  MAX_AMOUNT = 100,
+  MAX_AMOUNT = 10,
   GROTHS_IN_BEAM = 100000000
 }
 

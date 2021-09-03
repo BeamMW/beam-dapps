@@ -1,4 +1,4 @@
-import { AppStateHandler } from '../../logic/app_state/state.handler';
+import { AppStateHandler } from '../../logic/app_state/state_handler';
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
 import InfoBLock from './infoblock.component';
