@@ -8,7 +8,7 @@ import './txboard.scss';
 export default class TxBoard extends BaseComponent {
   constructor(txId:string | null) {
     super(Tags.DIV, ['txboard']);
-    this.element.innerText = `
+    this.innerHTML = `
     TxId: ${txId || 'not avialable'} status: ${ResTXStatus.IN_PROGRESS}
     `;
     ApiHandler.addObservers(this);
@@ -16,7 +16,7 @@ export default class TxBoard extends BaseComponent {
 
   inform = (res:APIResponse):void => {
     if (res.id === ReqID.TX_STATUS) {
-      this.element.innerText = `
+      this.innerHTML = `
       TxId: ${res.result.txId} status: ${res.result.status_string}
       `;
     }

@@ -1,8 +1,8 @@
-import { IAppState } from 'AppStateProps';
 import { setRateAC } from '../../logic/app_state/app_action_creators';
-import { AppStateHandler } from '../../logic/app_state/state.handler';
+import { AppStateHandler } from '../../logic/app_state/state_handler';
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
+import { handleString } from '../../utils/string_handlers';
 
 export default class Rate extends BaseComponent {
   rateInput: BaseComponent;
@@ -23,9 +23,8 @@ export default class Rate extends BaseComponent {
       value: String(rate)
     });
     this.rateInput.element.addEventListener('input', (e:Event) => {
-      e.preventDefault();
       const target = e.target as HTMLInputElement;
-      if (target.value.match(/^\d+$/) || target.value === '') {
+      if (handleString(target.value)) {
         AppStateHandler.dispatch(setRateAC(+target.value));
       } else {
         target.value = String(AppStateHandler.getState().rate);
@@ -34,10 +33,10 @@ export default class Rate extends BaseComponent {
     this.append(rateLabel, this.rateInput);
   }
 
-  appInform = (state:IAppState):void => {
-    const { rate } = state;
-    this.rateInput.setAttributes({
-      value: String(rate)
-    });
-  };
+  // appInform = (state:IAppState):void => {
+  //   const { rate } = state;
+  //   this.rateInput.setAttributes({
+  //     value: String(rate)
+  //   });
+  // };
 }

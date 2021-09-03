@@ -1,35 +1,37 @@
 import { APIResponse, BoardType } from 'beamApiProps';
+import { setPKeyAC } from '../../logic/app_state/app_action_creators';
+import { AppStateHandler } from '../../logic/app_state/state_handler';
+import { ApiHandler } from '../../logic/beam_api/api_handler';
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
-import { ApiHandler } from '../../logic/beam_api/api_handler';
 import Menu from '../menu/menu.component';
 import { Field } from '../field/filed.component';
 import { ReqID, ResTXStatus } from '../../constants/api_constants';
 import {
   checkSolutionTx,
+  getPlayerKey,
   invokeData,
   invokeDataSolution,
   txStatus,
   viewBoard
-} from '../../utils/request_creators';
+} from '../../logic/beam_api/request_creators';
 import './main.scss';
 import Router from '../../logic/router/router';
-import { RouterMode, Routes } from '../../constants/menu_btn';
 import Options from '../options/options.component';
 import { Win } from '../win/win.components';
+import { RouterMode, Routes } from '../../constants/app_constants';
 
 export default class Main extends BaseComponent {
   menu: Menu;
 
   win: Win;
 
-  static element: any;
-
   private readonly router: Router;
 
   constructor() {
     super(Tags.DIV, ['main']);
     ApiHandler.addObservers(this);
+    getPlayerKey();
     this.menu = new Menu();
     this.router = new Router({
       mode: RouterMode.HISTORY,
@@ -57,8 +59,6 @@ export default class Main extends BaseComponent {
   initGameField = (board: BoardType): void => {
     this.menu.classList.add('active');
     this.menu.initButtonMenu();
-    // const fl = new Field(board).element;
-    // this.element.append(fl)
     Field.ready(board);
   };
 
@@ -79,6 +79,11 @@ export default class Main extends BaseComponent {
 
   inform = (res: APIResponse): void => {
     switch (res.id) {
+      case ReqID.GET_PKEY:
+        AppStateHandler.dispatch(
+          setPKeyAC(JSON.parse(`{${res.result.output}}`)['My public key'])
+        );
+        break;
       case ReqID.CHECK:
         console.log(JSON.parse(res.result.output));
         break;
@@ -104,12 +109,8 @@ export default class Main extends BaseComponent {
         }
         break;
       case ReqID.VIEW_BOARD:
-        try {
-          this.menu.initButtonMenu();
-          this.initGameField(JSON.parse(res.result.output).board as BoardType);
-        } catch (err) {
-          console.error(err);
-        }
+        this.menu.initButtonMenu();
+        this.initGameField(JSON.parse(res.result.output).board as BoardType);
         break;
       case ReqID.CHECK_SOLUTION:
         invokeDataSolution(res.result.raw_data);
@@ -132,9 +133,5 @@ export default class Main extends BaseComponent {
       default:
         break;
     }
-  };
-
-  informApp = (state: any): void => {
-    console.log(state);
   };
 }

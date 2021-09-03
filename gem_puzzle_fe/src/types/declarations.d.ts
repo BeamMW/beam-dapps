@@ -62,6 +62,7 @@ declare module 'AppStateProps' {
     picture: 'none';
     time: number;
     rate: number;
+    pKey: string;
   }
 
   interface INewState {
@@ -70,6 +71,7 @@ declare module 'AppStateProps' {
     time?: number,
     picture?: 'none';
     rate?: number;
+    pKey?: string;
   }
 
 }

@@ -1,7 +1,7 @@
 import { IAppState, INewState } from 'AppStateProps';
 import { AddObserversType } from 'beamApiProps';
 import BaseComponent from '../../components/base/base.component';
-import { AppStateActions } from '../../constants/app_actions';
+import { AppStateActions } from '../../constants/app_constants';
 import { ActionTypes } from './app_action_creators';
 
 const initialState:IAppState = {
@@ -9,7 +9,8 @@ const initialState:IAppState = {
   move: '',
   time: 0,
   picture: 'none',
-  rate: 100000000
+  pKey: '',
+  rate: 1
 };
 
 export default class AppState {
@@ -69,8 +70,14 @@ export default class AppState {
       case AppStateActions.SET_MOVE:
         this.setState({ move: payload as string });
         break;
+      case AppStateActions.SET_MODE:
+        this.setState({ mode: payload as 3 | 4 | 5 });
+        break;
       case AppStateActions.SET_RATE:
         this.setState({ rate: payload as number });
+        break;
+      case AppStateActions.SET_PKEY:
+        this.setState({ pKey: payload as string });
         break;
       default:
         break;
