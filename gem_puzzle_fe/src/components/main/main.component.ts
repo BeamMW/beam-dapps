@@ -1,5 +1,7 @@
-import { APIResponse, BoardType } from 'beamApiProps';
-import { setPKeyAC } from '../../logic/app_state/app_action_creators';
+import { APIResponse, BoardLengthType, BoardType } from 'beamApiProps';
+import {
+  setModeAC, setPKeyAC
+} from '../../logic/app_state/app_action_creators';
 import { AppStateHandler } from '../../logic/app_state/state_handler';
 import { ApiHandler } from '../../logic/beam_api/api_handler';
 import { Tags } from '../../constants/html_tags';
@@ -57,6 +59,9 @@ export default class Main extends BaseComponent {
   };
 
   initGameField = (board: BoardType): void => {
+    if (AppStateHandler.getState().mode !== board.length) {
+      AppStateHandler.dispatch(setModeAC(board.length as BoardLengthType));
+    }
     this.menu.classList.add('active');
     this.menu.initButtonMenu();
     Field.ready(board);
@@ -78,6 +83,7 @@ export default class Main extends BaseComponent {
   };
 
   inform = (res: APIResponse): void => {
+    console.log(res);
     switch (res.id) {
       case ReqID.GET_PKEY:
         AppStateHandler.dispatch(

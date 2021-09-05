@@ -34,14 +34,21 @@ export default class Menu extends BaseComponent {
         const btnKey = new Button();
         btnKey.element.classList.add(`btn_${btn.key}`);
         btnKey.setAttributes({ value: btn.title });
-        btnKey.element.addEventListener('click', () => btn.handler());
+        btnKey.element.addEventListener('click', () => {
+          // this.initLoader();
+          btn.handler();
+        });
         return btnKey;
       });
     this.append(...buttons);
   };
 
-  initLoader = (txid: string): void => {
+  initLoader = (txid?: string): void => {
+    const args = [new Loader()];
+    if (txid) {
+      args.unshift(new TxBoard(txid));
+    }
     this.removeAll();
-    this.append(new TxBoard(txid), new Loader());
+    this.append(...args);
   };
 }

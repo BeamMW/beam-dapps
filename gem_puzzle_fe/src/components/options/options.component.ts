@@ -6,7 +6,7 @@ import Rate from './rate.component';
 
 export default class Options extends BaseComponent {
   constructor() {
-    super(Tags.DIV, ['menu']);
+    super(Tags.DIV, ['options']);
     const rate = new Rate();
     const mode = new Mode();
     this.append(rate, mode);

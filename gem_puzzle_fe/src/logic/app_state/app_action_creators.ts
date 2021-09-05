@@ -1,3 +1,4 @@
+import { BoardLengthType } from 'beamApiProps';
 import { AppStateActions } from '../../constants/app_constants';
 
 type ActionCreatorType<T> = (payloaad: T) => {
@@ -14,7 +15,9 @@ export const setMoveAC:ActionCreatorType<string> = (payload:string) => ({
   payload
 });
 
-export const setModeAC:ActionCreatorType<3 | 4 | 5> = (payload:3 | 4 | 5) => ({
+export const setModeAC:ActionCreatorType<BoardLengthType> = (
+  payload:BoardLengthType
+) => ({
   action: AppStateActions.SET_MODE,
   payload
 });

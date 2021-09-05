@@ -26,6 +26,8 @@ export default class BaseComponent {
     (this.element as HTMLInputElement).checked = bool;
   }
 
+  public get style():CSSStyleDeclaration { return this.element.style; }
+
   append = (...args: BaseComponent[]):void => {
     const nodes = args.map(
       (component) => component.element

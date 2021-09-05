@@ -10,7 +10,7 @@ const initialState:IAppState = {
   time: 0,
   picture: 'none',
   pKey: '',
-  rate: 1
+  rate: 0.01
 };
 
 export default class AppState {

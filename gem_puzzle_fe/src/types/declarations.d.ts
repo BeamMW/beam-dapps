@@ -124,6 +124,8 @@ declare module 'beamApiProps' {
 
   export type BoardType = (number[])[];
 
+  export type BoardLengthType = 3 | 4 | 5;
+
   export type BeamApiParams = {
     contract?: number[];
     create_tx?: boolean;
