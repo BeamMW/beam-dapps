@@ -118,6 +118,7 @@ void On_action_create_contract(const ContractID& unused)
 		return On_error("game_speed must be in percents (100% maximum)");
 	}
 	Env::DocGetNum64("free_time", &params.free_time);
+	Env::DocGetNum64("multiplier", &params.multiplier);
 
 	Env::GenerateKernel(nullptr, GemPuzzle::InitialParams::METHOD, &params, sizeof(params), nullptr, 0, nullptr, 0, "Create GemPuzzle contract", 0);
 }
@@ -262,12 +263,10 @@ void On_action_view_contract_params(const ContractID& cid)
 		return On_error("Failed to read contract's initial params");
 
 	Env::DocGroup gr("params");
-	{
-		Env::DocAddNum64("max_bet", params.max_bet);
-		Env::DocAddNum64("multiplier", params.multiplier);
-		Env::DocAddNum64("free_time", params.free_time);
-		Env::DocAddNum32("game_speed", params.game_speed);
-	}
+	Env::DocAddNum64("max_bet", params.max_bet);
+	Env::DocAddNum64("multiplier", params.multiplier);
+	Env::DocAddNum64("free_time", params.free_time);
+	Env::DocAddNum32("game_speed", params.game_speed);
 }
 
 template <typename T>
