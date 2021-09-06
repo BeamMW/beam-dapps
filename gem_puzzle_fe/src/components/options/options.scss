@@ -13,7 +13,6 @@
   .rate {
       width: 100%;
       position: relative;
-      margin-bottom: 40px;
     input {
       display: block;
       width: 100%;
@@ -35,7 +34,7 @@
       font-size: 20px;
       font-weight: 300;
       transform: translateY(-35px);
-      transition: all 0.2s ease;
+      transition: transform 0.2s ease;
     }
     input:hover {
       border-color: #80ffdb;
@@ -52,7 +51,7 @@
     display: flex;
     justify-content: space-around;
     position: relative;
-    margin-bottom: 40px;
+    margin-bottom: 25px;
     border-bottom: 2px dotted #4a90e2;
     width: 100%;
     line-height: 40px;
@@ -64,16 +63,15 @@
       color: #4a90e2;
       font-size: 20px;
       font-weight: 300;
-      transition: all 0.2s ease;
+      transition: transform 0.2s ease;
     }
     .value {
       opacity: 0;
       margin: 0;
       padding: 0;
-      transition: opacity 0.2s ease;
       cursor: pointer;
       color: wheat;
-      transition: color 0.2s ease;
+      transition: all 0.2s ease;
       user-select: none;
       font-size: 18px;
     }
@@ -81,6 +79,11 @@
       display: none;
     }
   }
+
+  .mode:hover{
+    border-color:#80ffdb;
+  }
+
   .mode:hover .value {
     opacity: 1;
   }

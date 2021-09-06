@@ -21,6 +21,7 @@ export default class Rate extends BaseComponent {
     this.rateInput.setAttributes({
       id: 'rate',
       type: 'text',
+      autocomplete: 'off',
       value: String(rate)
     });
     this.rateInput.element.addEventListener('input', (e:Event) => {

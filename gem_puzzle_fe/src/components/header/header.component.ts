@@ -8,12 +8,20 @@ import { boardSchemeMaker } from '../../utils/string_handlers';
 export default class Header extends BaseComponent {
   constructor() {
     super(Tags.DIV, ['header']);
-    const { rate, mode, pKey } = AppStateHandler.getState();
+    const {
+      rate, mode, pKey, picOpt
+    } = AppStateHandler.getState();
     const rateBlock = new InfoBLock({
       key: 'rate',
       title: 'RATE',
       value: rate,
       after: 'BEAM'
+    });
+    const viewBlock = new InfoBLock({
+      key: 'picOpt',
+      title: 'VIEW',
+      value: picOpt,
+      after: ''
     });
     const modeBlock = new InfoBLock({
       key: 'mode',
@@ -28,6 +36,6 @@ export default class Header extends BaseComponent {
       value: pKey,
       after: ''
     });
-    this.append(rateBlock, modeBlock, cidBlock);
+    this.append(cidBlock, rateBlock, viewBlock, modeBlock);
   }
 }
