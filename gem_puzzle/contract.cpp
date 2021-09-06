@@ -80,6 +80,7 @@ BEAM_EXPORT void Method_3(const GemPuzzle::CheckSolutionParams& params)
 		acc_info.game_result.verdict = check_solution(acc_info.game_info.ngparams.permutation_num, params.solution, acc_info.game_result.moves_num);
 		acc_info.game_result.time = cur_height - acc_info.game_info.ngparams.height;
 		acc_info.game_result.permutation_num = acc_info.game_info.ngparams.permutation_num;
+		acc_info.game_result.player = acc_info.game_info.ngparams.player;
 
 		if (acc_info.game_result.verdict == GemPuzzle::Verdict::WIN) {
 			GemPuzzle::InitialParams initial_params;
@@ -89,6 +90,7 @@ BEAM_EXPORT void Method_3(const GemPuzzle::CheckSolutionParams& params)
 			acc_info.has_active_game = false;
 			
 			Env::SaveVar_T(++initial_params.last_used_game_id, acc_info.game_result);
+			Env::SaveVar_T(0, initial_params);
 		}
 
 		Env::SaveVar_T(params.player, acc_info);
