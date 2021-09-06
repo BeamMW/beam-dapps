@@ -1,17 +1,9 @@
 import {
-  viewContracts, cancelGame, startGame, viewBoard, destroyContract
-} from '../utils/request_creators';
+  startGame, viewBoard
+} from '../logic/beam_api/request_creators';
+import { MenuBtn, Routes } from './app_constants';
 
-export enum MenuBtn {
-  NEW = 'NEW',
-  CONTINUE = 'CONTINUE',
-  OPTIONS = 'OPTIONS',
-  CANCEL = 'CANCEL',
-  VIEW_CONTRACTS = 'VIEW_CONTRACTS',
-  DESTROY_CONTRACT = 'DESTROY_CONTRACT'
-}
-
-export const menuBtn = [
+export const menuProps = [
   {
     key: MenuBtn.CONTINUE,
     title: 'CONTINUE',
@@ -26,22 +18,21 @@ export const menuBtn = [
     key: MenuBtn.OPTIONS,
     title: 'OPTIONS',
     handler: ():void => {
-      // TODO
+      window.history.pushState({}, '', `/${Routes.OPTIONS}`);
     }
   },
   {
-    key: MenuBtn.CANCEL,
-    title: 'CANCEL',
-    handler: cancelGame
+    key: MenuBtn.BEST,
+    title: 'VIEW BEST',
+    handler: ():void => {
+      window.history.pushState({}, '', `/${Routes.BEST}`);
+    }
   },
   {
-    key: MenuBtn.VIEW_CONTRACTS,
-    title: 'VIEW CONTRACTS',
-    handler: viewContracts
-  },
-  {
-    key: MenuBtn.DESTROY_CONTRACT,
-    title: 'DESTROY',
-    handler: destroyContract
+    key: MenuBtn.RETURN,
+    title: 'RETURN TO MAIN',
+    handler: ():void => {
+      window.history.pushState({}, '', `/${Routes.RETURN}`);
+    }
   }
 ];

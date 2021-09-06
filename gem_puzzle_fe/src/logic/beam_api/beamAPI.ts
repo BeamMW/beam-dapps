@@ -1,8 +1,8 @@
 import { BeamApiParams } from 'beamApiProps';
 import { QWebChannel, QWebChannelTransport, QObject } from 'qwebchannel';
-import shader from '../app.wasm';
-import BaseComponent from '../components/base/base.component';
-import { ReqID, ReqMethods, AppSpecs } from '../constants/api_constants';
+import shader from './app.wasm';
+import BaseComponent from '../../components/base/base.component';
+import { ReqID, ReqMethods, AppSpecs } from '../../constants/api_constants';
 
 declare global {
   interface Window {
@@ -35,7 +35,6 @@ export class BeamAPI {
     if (res.error) {
       console.log(res.error.message);
     } else {
-      console.log(res);
       this.observers.forEach((component: BaseComponent) => {
         if (component.inform) {
           component.inform(res);

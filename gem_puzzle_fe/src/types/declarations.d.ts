@@ -53,6 +53,30 @@ declare module 'qwebchannel' {
   }
 }
 
+declare module 'AppStateProps' {
+
+  interface IAppState {
+    [key:string];
+    mode: 3 | 4 | 5;
+    move: string;
+    time: number;
+    rate: number;
+    pKey: string;
+    picOpt: BoardView;
+  }
+
+  interface INewState {
+    mode?: 3 | 4 | 5,
+    move?: string,
+    time?: number,
+    picture?: 'none';
+    rate?: number;
+    pKey?: string;
+    picOpt?: BoardView;
+  }
+
+}
+
 declare module 'beamApiProps' {
   import BaseComponent from '../components/base/base.component';
 
@@ -100,6 +124,8 @@ declare module 'beamApiProps' {
   };
 
   export type BoardType = (number[])[];
+
+  export type BoardLengthType = 3 | 4 | 5;
 
   export type BeamApiParams = {
     contract?: number[];

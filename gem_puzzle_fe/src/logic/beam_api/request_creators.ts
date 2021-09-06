@@ -1,18 +1,21 @@
+import { AppStateHandler } from '../app_state/state_handler';
 import {
   ReqRoles,
   ReqMethods,
   ReqActions,
   ReqID,
-  AppSpecs,
-} from '../constants/api_constants';
+  AppSpecs
+} from '../../constants/api_constants';
 import { ApiHandler } from './api_handler';
+import { parseToGroth } from '../../utils/string_handlers';
 
 export type ReqArgsType = {
   action: ReqActions;
   role: ReqRoles;
-  solution?:string, 
+  solution?: string;
   cid?: AppSpecs.CID;
   cancel_previous_game?: 1;
+  bet?: string
 };
 
 const argsParser = (args: ReqArgsType) => Object.entries(args)
@@ -24,7 +27,7 @@ export const startGame = (): void => {
     role: ReqRoles.PLAYER,
     action: ReqActions.NEW_GAME,
     cid: AppSpecs.CID,
-    cancel_previous_game: 1
+    bet: parseToGroth(AppStateHandler.getState().rate)
   });
   ApiHandler.callApi(ReqID.START_GAME, ReqMethods.INVOKE_CONTRACT, {
     create_tx: false,
@@ -37,10 +40,15 @@ export const invokeData = (data: number[]): void => {
     data
   });
 };
+
 export const invokeDataSolution = (data: number[]): void => {
-  ApiHandler.callApi(ReqID.INVOKE_DATA_SOLUTION, ReqMethods.PROCESS_INVOKE_DATA, {
-    data
-  });
+  ApiHandler.callApi(
+    ReqID.INVOKE_DATA_SOLUTION,
+    ReqMethods.PROCESS_INVOKE_DATA,
+    {
+      data
+    }
+  );
 };
 
 export const viewBoard = (): void => {
@@ -55,7 +63,7 @@ export const viewBoard = (): void => {
   });
 };
 
-export const viewContracts = ():void => {
+export const viewContracts = (): void => {
   const args = argsParser({
     role: ReqRoles.MANAGER,
     action: ReqActions.VIEW_CONTRACTS
@@ -66,7 +74,7 @@ export const viewContracts = ():void => {
   });
 };
 
-export const txStatus = (txId:string): void => {
+export const txStatus = (txId: string): void => {
   setTimeout(() => {
     ApiHandler.callApi(ReqID.TX_STATUS, ReqMethods.TX_STATUS, {
       txId
@@ -86,7 +94,7 @@ export const cancelGame = (): void => {
   });
 };
 
-export const destroyContract = ():void => {
+export const destroyContract = (): void => {
   const args = argsParser({
     role: ReqRoles.MANAGER,
     action: ReqActions.DESTROY_CONTRACT,
@@ -96,35 +104,46 @@ export const destroyContract = ():void => {
     create_tx: false,
     args
   });
-}
-  export const checkSolution = (sol:any):void => {
-    const args = argsParser({
-      role: ReqRoles.PLAYER,
-      action: ReqActions.CHECK_SOLUTION,
-      solution: sol,
-      cid: AppSpecs.CID
+};
+export const checkSolution = (sol: string): void => {
+  const args = argsParser({
+    role: ReqRoles.PLAYER,
+    action: ReqActions.CHECK_SOLUTION,
+    solution: sol,
+    cid: AppSpecs.CID
+  });
+  ApiHandler.callApi(ReqID.CHECK_SOLUTION, ReqMethods.INVOKE_CONTRACT, {
+    create_tx: false,
+    args
+  });
+};
+export const viewCheckResult = (): void => {
+  const args = argsParser({
+    role: ReqRoles.PLAYER,
+    action: ReqActions.VIEW_CHECK_RESULT,
+    cid: AppSpecs.CID
+  });
+  ApiHandler.callApi(ReqID.VIEW_CHECK_RESULT, ReqMethods.INVOKE_CONTRACT, {
+    create_tx: false,
+    args
+  });
+};
+export const checkSolutionTx = (txId: string): void => {
+  setTimeout(() => {
+    ApiHandler.callApi(ReqID.TX_CHECK_SOLUTION, ReqMethods.TX_STATUS, {
+      txId
     });
-    ApiHandler.callApi(ReqID.CHECK_SOLUTION, ReqMethods.INVOKE_CONTRACT, {
-      create_tx: false,
-      args
-    });
-  }
-  export const viewCheckResult = ():void => {
-    const args = argsParser({
-      role: ReqRoles.PLAYER,
-      action: ReqActions.VIEW_CHECK_RESULT,
-      cid: AppSpecs.CID
-    });
-    ApiHandler.callApi(ReqID.VIEW_CHECK_RESULT, ReqMethods.INVOKE_CONTRACT, {
-      create_tx: false,
-      args
-    });
-  }
-  export const checkSolutionTx = (txId:string): void => {
-      setTimeout(() => {
-        console.log(txId);
-        ApiHandler.callApi(ReqID.TX_CHECK_SOLUTION, ReqMethods.TX_STATUS, {
-          txId
-        });
-      }, AppSpecs.TX_CHECK_INTERVAL);
-    };
+  }, AppSpecs.TX_CHECK_INTERVAL);
+};
+
+export const getPlayerKey = (): void => {
+  const args = argsParser({
+    role: ReqRoles.PLAYER,
+    action: ReqActions.GET_MY_PKEY,
+    cid: AppSpecs.CID
+  });
+  ApiHandler.callApi(ReqID.GET_PKEY, ReqMethods.INVOKE_CONTRACT, {
+    create_tx: false,
+    args
+  });
+};

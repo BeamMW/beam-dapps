@@ -84,14 +84,13 @@ export const emptyBox = (grid: BoardType):void => {
           solution.push('l');
           console.log('L');
         }
-      solution
+      // solution
       }
     }
   }
 };
 export const isSolved = (grid: BoardType):boolean => {
   console.log(grid);
-  
   emptyBox(grid);
   return (
     grid[0]?.[0] === 1

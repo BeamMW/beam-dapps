@@ -1,23 +1,41 @@
-import { APIResponse } from 'beamApiProps';
-import { ApiHandler } from '../../utils/api_handler';
+import { AppStateHandler } from '../../logic/app_state/state_handler';
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
-import { ReqID, ResTXStatus } from '../../constants/api_constants';
+import InfoBLock from './infoblock.component';
+import './header.scss';
+import { boardSchemeMaker } from '../../utils/string_handlers';
 
 export default class Header extends BaseComponent {
-  constructor(txId:string | null) {
-    super(Tags.DIV);
-    this.element.innerText = `
-    TxId: ${txId || 'not avialable'} status: ${ResTXStatus.IN_PROGRESS}
-    `;
-    ApiHandler.addObservers(this);
+  constructor() {
+    super(Tags.DIV, ['header']);
+    const {
+      rate, mode, pKey, picOpt
+    } = AppStateHandler.getState();
+    const rateBlock = new InfoBLock({
+      key: 'rate',
+      title: 'RATE',
+      value: rate,
+      after: 'BEAM'
+    });
+    const viewBlock = new InfoBLock({
+      key: 'picOpt',
+      title: 'VIEW',
+      value: picOpt,
+      after: ''
+    });
+    const modeBlock = new InfoBLock({
+      key: 'mode',
+      title: 'MODE',
+      value: boardSchemeMaker(mode),
+      after: '',
+      callback: boardSchemeMaker
+    });
+    const cidBlock = new InfoBLock({
+      key: 'pKey',
+      title: 'KEY',
+      value: pKey,
+      after: ''
+    });
+    this.append(cidBlock, rateBlock, viewBlock, modeBlock);
   }
-
-  inform = (res:APIResponse):void => {
-    if (res.id === ReqID.TX_STATUS) {
-      this.element.innerText = `
-      TxId: ${res.result.txId} status: ${res.result.status_string}
-      `;
-    }
-  };
 }

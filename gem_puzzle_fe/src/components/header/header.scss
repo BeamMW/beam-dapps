@@ -1,0 +1,22 @@
+.header{
+  padding: 10px 5px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  background-color: rgba($color: #3e66fb, $alpha: 0.3);
+  div + div{
+    margin-left: 20px;
+  }
+  div:first-child{
+    margin-right: auto;
+  }
+  .title{
+    color: #7400b8;
+  }
+  .value{
+    color: #80ffdb;  
+  }
+  .after{
+    color: #7400b8;
+  }
+}
