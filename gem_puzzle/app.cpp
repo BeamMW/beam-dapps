@@ -285,6 +285,21 @@ void On_action_has_active_game(const ContractID& cid)
 	}
 }
 
+void On_action_view_my_pending_rewards(const ContractID& cid)
+{
+	GemPuzzle::AccountInfo acc_info;
+	bool is_read = read_my_account_info(cid, acc_info);
+
+	if (!is_read) {
+		acc_info.pending_rewards = 0;
+	}
+
+	Env::DocGroup root("");
+	{
+		Env::DocAddNum64("pending_rewards", acc_info.pending_rewards);
+	}
+}
+
 template <typename T>
 auto find_if_contains(const char* str, const std::vector<std::pair<const char *, T>>& v) {
 	return std::find_if(v.begin(), v.end(), [&str](const auto& p) {
@@ -358,6 +373,10 @@ BEAM_EXPORT void Method_0()
 				Env::DocGroup grMethod("has_active_game");
 				Env::DocAddText("cid", "ContractID");
 			}
+			{
+				Env::DocGroup grMethod("view_my_pending_rewards");
+				Env::DocAddText("cid", "ContractID");
+			}
         }
     }
 }
@@ -374,6 +393,7 @@ BEAM_EXPORT void Method_1()
 		{"get_my_pkey", On_action_get_my_pkey},
 		{"view_tops", On_action_view_tops},
 		{"has_active_game", On_action_has_active_game},
+		{"view_my_pending_rewards", On_action_view_my_pending_rewards},
 	};
 
 	const std::vector<std::pair<const char *, Action_func_t>> VALID_MANAGER_ACTIONS = {
