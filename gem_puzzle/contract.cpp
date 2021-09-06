@@ -32,7 +32,8 @@ GemPuzzle::Verdict check_solution(uint64_t permutation_num, const char* solution
 			return GemPuzzle::Verdict::ERROR;
 		}
 		++moves_num;
-	} return board.is_solved() ? GemPuzzle::Verdict::WIN : GemPuzzle::Verdict::LOSE;
+	}
+	return board.is_solved() ? GemPuzzle::Verdict::WIN : GemPuzzle::Verdict::LOSE;
 }
 
 BEAM_EXPORT void Ctor(GemPuzzle::InitialParams& params)
@@ -85,7 +86,19 @@ BEAM_EXPORT void Method_3(const GemPuzzle::CheckSolutionParams& params)
 		if (acc_info.game_result.verdict == GemPuzzle::Verdict::WIN) {
 			GemPuzzle::InitialParams initial_params;
 			Env::LoadVar_T(0, initial_params);
-			Amount reward = std::max(initial_params.multiplier - std::max(acc_info.game_result.time - initial_params.free_time, 0ull) * initial_params.game_speed / 100, 0ull) * acc_info.game_info.ngparams.bet;
+
+			Amount reward = 0;
+			if (acc_info.game_result.time <= initial_params.free_time) {
+				reward = initial_params.multiplier * acc_info.game_info.ngparams.bet;
+			} else {
+				Amount tmp = (acc_info.game_result.time - initial_params.free_time) * initial_params.game_speed / 100;
+				if (initial_params.multiplier <= tmp) {
+					reward = 0;
+				} else {
+					reward = (initial_params.multiplier - tmp) * acc_info.game_info.ngparams.bet;
+				}
+			}
+			// Amount reward = std::max(initial_params.multiplier - std::max(acc_info.game_result.time - initial_params.free_time, 0ll) * initial_params.game_speed / 100, 0ll) * acc_info.game_info.ngparams.bet;
 			Strict::Add(acc_info.pending_rewards, reward);
 			acc_info.has_active_game = false;
 			
