@@ -59,10 +59,10 @@ declare module 'AppStateProps' {
     [key:string];
     mode: 3 | 4 | 5;
     move: string;
-    picture: 'none';
     time: number;
     rate: number;
     pKey: string;
+    picOpt: BoardView;
   }
 
   interface INewState {
@@ -72,6 +72,7 @@ declare module 'AppStateProps' {
     picture?: 'none';
     rate?: number;
     pKey?: string;
+    picOpt?: BoardView;
   }
 
 }
@@ -123,6 +124,8 @@ declare module 'beamApiProps' {
   };
 
   export type BoardType = (number[])[];
+
+  export type BoardLengthType = 3 | 4 | 5;
 
   export type BeamApiParams = {
     contract?: number[];

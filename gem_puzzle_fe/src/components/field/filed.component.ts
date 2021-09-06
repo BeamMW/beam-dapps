@@ -1,4 +1,6 @@
 import { BoardType } from 'beamApiProps';
+import { BoardView } from '../../constants/app_constants';
+import { AppStateHandler } from '../../logic/app_state/state_handler';
 import { Tags } from '../../constants/html_tags';
 import { ApiHandler } from '../../logic/beam_api/api_handler';
 import {
@@ -9,6 +11,8 @@ import { State } from './state';
 import { checkSolution } from '../../logic/beam_api/request_creators';
 import Menu from '../menu/menu.component';
 import BaseComponent from '../base/base.component';
+import { boxPozition } from '../../utils/string_handlers';
+import img from '../../assets/pic320.jpg';
 
 // function getRandomGrid():any{
 //   let grid = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]];
@@ -104,10 +108,22 @@ export class Field {
     const main = document.querySelector('.main');
     const newGrid = new BaseComponent(Tags.DIV, ['field']);
     // newGrid.classList.add('field');
-
+    const { picOpt } = AppStateHandler.getState();
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
         const button = new BaseComponent(Tags.BUTTON, ['button']);
+        if (picOpt === BoardView.PICTURE) {
+          const position = boxPozition(grid[i][j]);
+          if (position) {
+            button.style.backgroundImage = `url(${img})`;
+            button.style.backgroundPosition = `
+            ${position.x * 80 * -1}px ${position.y * 80 * -1}px`;
+          }
+        } else {
+          button.element.textContent = grid[i][j] === 0
+            ? ''
+            : grid[i][j].toString();
+        }
         main?.append(newGrid.element);
         // button.classList.add('button');
         if (status === 'playing') {
@@ -116,10 +132,6 @@ export class Field {
             this.handleClickBox(new Box(j, i))
           );
         }
-
-        button.element.textContent = grid[i][j] === 0
-          ? ''
-          : grid[i][j].toString();
         button.element.classList.add(grid[i][j] === 0 ? 'empty' : 'button');
 
         // console.log(newGrid)

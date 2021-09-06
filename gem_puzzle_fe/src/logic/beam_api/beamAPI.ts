@@ -35,7 +35,6 @@ export class BeamAPI {
     if (res.error) {
       console.log(res.error.message);
     } else {
-      console.log(res);
       this.observers.forEach((component: BaseComponent) => {
         if (component.inform) {
           component.inform(res);

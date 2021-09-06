@@ -1,31 +1,39 @@
-import { AppStateActions } from '../../constants/app_constants';
+import { BoardLengthType } from 'beamApiProps';
+import { AppStateActions, BoardView } from '../../constants/app_constants';
 
 type ActionCreatorType<T> = (payloaad: T) => {
   action: AppStateActions, payload: T
 };
 
-export const setTimeAC:ActionCreatorType<number> = (payload:number) => ({
+export const setTimeAC:ActionCreatorType<number> = (payload) => ({
   action: AppStateActions.SET_TIME,
   payload
 });
 
-export const setMoveAC:ActionCreatorType<string> = (payload:string) => ({
+export const setMoveAC:ActionCreatorType<string> = (payload) => ({
   action: AppStateActions.SET_MOVE,
   payload
 });
 
-export const setModeAC:ActionCreatorType<3 | 4 | 5> = (payload:3 | 4 | 5) => ({
+export const setModeAC:ActionCreatorType<BoardLengthType> = (
+  payload
+) => ({
   action: AppStateActions.SET_MODE,
   payload
 });
 
-export const setRateAC:ActionCreatorType<number> = (payload:number) => ({
+export const setRateAC:ActionCreatorType<number> = (payload) => ({
   action: AppStateActions.SET_RATE,
   payload
 });
 
-export const setPKeyAC:ActionCreatorType<string> = (payload:string) => ({
+export const setPKeyAC:ActionCreatorType<string> = (payload) => ({
   action: AppStateActions.SET_PKEY,
+  payload
+});
+
+export const setPicOptAC:ActionCreatorType<BoardView> = (payload) => ({
+  action: AppStateActions.SET_PIC_OPT,
   payload
 });
 
@@ -33,4 +41,7 @@ export type ActionTypes = ReturnType<
 typeof setTimeAC
 | typeof setMoveAC
 | typeof setRateAC
+| typeof setModeAC
+| typeof setPKeyAC
+| typeof setPicOptAC
 >;

@@ -16,13 +16,13 @@ export default class Mode extends BaseComponent {
     super(Tags.DIV, ['mode']);
     AppStateHandler.addObservers(this);
     const { mode } = AppStateHandler.getState();
-    this.modeLabel = new BaseComponent(Tags.LABEL);
+    this.modeLabel = new BaseComponent(Tags.LABEL, ['title']);
     this.modeLabel.innerHTML = 'mode';
     this.modeLabel.setAttributes({
       for: 'mode'
     });
     this.radioButton = boardLength.map((value) => {
-      const label = new BaseComponent(Tags.LABEL);
+      const label = new BaseComponent(Tags.LABEL, ['value']);
       const radio = new BaseComponent(Tags.INPUT);
       label.innerHTML = boardSchemeMaker(value);
       radio.setAttributes({
@@ -30,6 +30,9 @@ export default class Mode extends BaseComponent {
         'data-value': String(value)
       });
       radio.checked = value === mode;
+      label.style.color = value === mode
+        ? '#80ffdb'
+        : '';
 
       radio.element.addEventListener('input', () => {
         AppStateHandler.dispatch(setModeAC(value));
@@ -38,7 +41,7 @@ export default class Mode extends BaseComponent {
       return label;
     });
 
-    this.append(this.modeLabel, ...this.radioButton);
+    this.append(...this.radioButton, this.modeLabel);
   }
 
   appInform = ({ mode }: IAppState): void => {
@@ -47,6 +50,9 @@ export default class Mode extends BaseComponent {
       const { value } = radio.dataset;
       if (value) {
         radio.checked = +value === mode;
+        label.style.color = +value === mode
+          ? '#80ffdb'
+          : '';
       }
     });
   };
