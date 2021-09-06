@@ -152,6 +152,7 @@ export class Field {
     if (status === 'won') {
       console.log('won');
       main?.removeChild(newGrid.element);
+      console.log(solution.join(''));
       checkSolution(solution.join(''));
     }
     // Render move

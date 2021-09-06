@@ -14,14 +14,18 @@ import {
   getPlayerKey,
   invokeData,
   invokeDataSolution,
+  takePendingRewards,
   txStatus,
-  viewBoard
+  viewBoard,
+  viewCheckResult,
+  viewTops
 } from '../../logic/beam_api/request_creators';
 import './main.scss';
 import Router from '../../logic/router/router';
 import Options from '../options/options.component';
 import { Win } from '../win/win.components';
 import { RouterMode, Routes } from '../../constants/app_constants';
+import { Best } from '../best/best.component';
 
 export default class Main extends BaseComponent {
   menu: Menu;
@@ -55,7 +59,13 @@ export default class Main extends BaseComponent {
   };
 
   bestField = (): void => {
+    viewTops()
     console.log('best');
+    this.removeAll();
+    this.menu.classList.add('active');
+    this.menu.initButtonMenu();
+    const best = new Best();
+    this.append(this.menu, best);
   };
 
   initGameField = (board: BoardType): void => {
@@ -130,12 +140,18 @@ export default class Main extends BaseComponent {
         if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
           checkSolutionTx(res.result.txId);
         } else {
-          this.winner();
+          viewCheckResult()
         }
         break;
-      case ReqID.VIEW_CHECK_RESULT:
-        console.log('WIN');
+        case ReqID.VIEW_CHECK_RESULT:
+        this.winner();
+        takePendingRewards()
+        console.log(res);
+        
         break;
+      case ReqID.VIEW_TOPS:
+        console.log(JSON.parse(res.result.output));
+      break;
       default:
         break;
     }
