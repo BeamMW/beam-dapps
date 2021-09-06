@@ -180,3 +180,15 @@ export const viewMyPendingRewards = (): void => {
     args
   });
 };
+
+export const checkActiveGame = (): void => {
+  const args = argsParser({
+    role: ReqRoles.PLAYER,
+    action: ReqActions.HAS_ACTIVE_GAME,
+    cid: AppSpecs.CID
+  });
+  ApiHandler.callApi(ReqID.HAS_ACTIVE_GAME, ReqMethods.INVOKE_CONTRACT, {
+    create_tx: false,
+    args
+  });
+};

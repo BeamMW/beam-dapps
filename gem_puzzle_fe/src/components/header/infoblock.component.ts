@@ -8,7 +8,7 @@ export default class InfoBLock extends BaseComponent {
 
   title: string;
 
-  value: string | number;
+  value: string | number | boolean;
 
   after: string;
 
@@ -18,7 +18,7 @@ export default class InfoBLock extends BaseComponent {
 
   afterDOM?: BaseComponent;
 
-  callback?: (numb:number) => string;
+  callback?: ((numb:number) => string) | ((str:boolean) => string);
 
   constructor({
     key,
@@ -29,9 +29,9 @@ export default class InfoBLock extends BaseComponent {
   }: {
     key: string;
     title: string;
-    value: string | number;
+    value: string | number | boolean;
     after: string;
-    callback?: (numb:number) => string;
+    callback?: ((numb:number) => string) | ((str:boolean) => string);
   }) {
     super(Tags.DIV, ['infoblock']);
     AppStateHandler.addObservers(this);
@@ -62,7 +62,7 @@ export default class InfoBLock extends BaseComponent {
     if (this.key in state) {
       if (this.value !== state[this.key]) {
         this.value = this.callback
-          ? this.callback(state[this.key])
+          ? this.callback(state[this.key] as never)
           : state[this.key];
         this.render();
       }

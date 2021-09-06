@@ -5,10 +5,11 @@ import { AppStateActions, BoardView } from '../../constants/app_constants';
 import { ActionTypes } from './app_action_creators';
 
 const initialState:IAppState = {
+  activeGame: false,
   mode: 4,
   move: '',
   time: 0,
-  pKey: '',
+  pKey: '...',
   picOpt: BoardView.NUMBERS,
   rate: 0.01
 };
@@ -75,6 +76,9 @@ export default class AppState {
         break;
       case AppStateActions.SET_PIC_OPT:
         this.setState({ picOpt: payload as BoardView });
+        break;
+      case AppStateActions.SET_ACTIVE:
+        this.setState({ activeGame: payload as boolean });
         break;
       default:
         break;

@@ -5,7 +5,8 @@ export enum AppStateActions {
   SET_PIC = 'SET_PIC',
   SET_RATE = 'SET_RATE',
   SET_PKEY = 'SET_PKEY',
-  SET_PIC_OPT = 'SET_PIC_OPT'
+  SET_PIC_OPT = 'SET_PIC_OPT',
+  SET_ACTIVE = 'SET_ACTIVE'
 }
 
 export enum BeamAmmount {

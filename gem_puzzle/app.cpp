@@ -106,6 +106,8 @@ void On_action_check_solution(const ContractID& cid)
 	Env::DocGetText("solution", params.solution, sizeof(params.solution));
 	Env::DerivePk(params.player, &cid, sizeof(cid));
 
+	Env::DocAddText("debug_solution", params.solution);
+
 	Env::GenerateKernel(&cid, GemPuzzle::CheckSolutionParams::METHOD, &params, sizeof(params), nullptr, 0, nullptr, 0, "Checking solution", 0);
 }
 

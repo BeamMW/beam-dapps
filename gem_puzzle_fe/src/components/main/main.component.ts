@@ -1,5 +1,6 @@
 import { APIResponse, BoardLengthType, BoardType } from 'beamApiProps';
 import {
+  setActiveGameAC,
   setModeAC, setPKeyAC
 } from '../../logic/app_state/app_action_creators';
 import { AppStateHandler } from '../../logic/app_state/state_handler';
@@ -44,10 +45,10 @@ export default class Main extends BaseComponent {
       root: Routes.MAIN
     });
     this.win = new Win();
-    this.append(this.menu);
     this.router.add(Routes.OPTIONS, this.optionsField);
     this.router.add(Routes.RETURN, this.cancelGame);
     this.router.add(Routes.BEST, this.bestField);
+    this.append(this.menu);
   }
 
   cancelGame = (): void => {
@@ -97,7 +98,12 @@ export default class Main extends BaseComponent {
     switch (res.id) {
       case ReqID.GET_PKEY:
         AppStateHandler.dispatch(
-          setPKeyAC(JSON.parse(`{${res.result.output}}`)['My public key'])
+          setPKeyAC(JSON.parse(res.result.output)['My public key'])
+        );
+        break;
+      case ReqID.HAS_ACTIVE_GAME:
+        AppStateHandler.dispatch(
+          (setActiveGameAC(!!(JSON.parse(res.result.output).has_active_game)))
         );
         break;
       case ReqID.CHECK:
