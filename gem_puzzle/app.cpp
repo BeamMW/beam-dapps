@@ -251,7 +251,10 @@ void On_action_get_my_pkey(const ContractID& cid)
 {
 	PubKey my_key;
 	Env::DerivePk(my_key, &cid, sizeof(cid));
-	Env::DocAddBlob_T("My public key", my_key);
+	Env::DocGroup root("");
+	{
+		Env::DocAddBlob_T("My public key", my_key);
+	}
 }
 
 void On_action_view_contract_params(const ContractID& cid)
