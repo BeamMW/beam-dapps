@@ -1,4 +1,5 @@
 import {
+  cancelGame,
   startGame, viewBoard
 } from '../logic/beam_api/request_creators';
 import { MenuBtn, Routes } from './app_constants';
@@ -34,5 +35,10 @@ export const menuProps = [
     handler: ():void => {
       window.history.pushState({}, '', `/${Routes.RETURN}`);
     }
+  },
+  {
+    key: MenuBtn.CANCEL,
+    title: 'CANCEL GAME',
+    handler: cancelGame
   }
 ];
