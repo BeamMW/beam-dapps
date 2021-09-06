@@ -76,9 +76,6 @@ export class Field {
         const newGrid = [...this.state.grid];
         swapBoxes(newGrid, { x: box.x, y: box.y }, blankBox);
         if (isSolved(newGrid)) {
-          console.log(solution.join(''));
-          checkSolution(solution.join(''));
-
           clearInterval(Field.tickId);
           this.setState({
             status: 'won',
