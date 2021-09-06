@@ -339,6 +339,10 @@ BEAM_EXPORT void Method_0()
 				Env::DocGroup grMethod("view_tops");
 				Env::DocAddText("cid", "ContractID");
 			}
+			{
+				Env::DocGroup grMethod("take_pending_rewards");
+				Env::DocAddText("cid", "ContractID");
+			}
         }
     }
 }
