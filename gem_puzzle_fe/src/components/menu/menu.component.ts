@@ -7,6 +7,7 @@ import Loader from '../loader/loader.component';
 import TxBoard from '../txboard/txboard.component';
 import { MenuBtn } from '../../constants/app_constants';
 import { menuProps } from '../../constants/menu_btn';
+import { checkActiveGame } from '../../logic/beam_api/request_creators';
 
 export default class Menu extends BaseComponent {
   constructor() {
@@ -17,6 +18,7 @@ export default class Menu extends BaseComponent {
 
   initButtonMenu = (): void => {
     this.removeAll();
+    checkActiveGame();
     const buttons = menuProps
       .filter((btn) => {
         if (this.classList.contains('active') && btn.key !== MenuBtn.RETURN) {
