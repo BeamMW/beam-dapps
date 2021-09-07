@@ -171,6 +171,17 @@ export const viewTops = (): void => {
     args
   });
 };
+export const takePendingRewards = (): void => {
+  const args = argsParser({
+    role: ReqRoles.PLAYER,
+    action: ReqActions.TAKE_PENDING_REWARDS,
+    cid: AppSpecs.CID
+  });
+  ApiHandler.callApi(ReqID.TAKE_PENDING_REWARDS, ReqMethods.INVOKE_CONTRACT, {
+    create_tx: false,
+    args
+  });
+};
 
 export const pendingRewardsTx = (txId: string): void => {
   setTimeout(() => {

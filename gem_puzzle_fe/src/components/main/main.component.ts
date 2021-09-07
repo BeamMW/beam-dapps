@@ -18,6 +18,7 @@ import {
   invokeDataPendingReward,
   invokeDataSolution,
   pendingRewardsTx,
+  takePendingRewards,
   txStatus,
   viewBoard,
   viewCheckResult,
@@ -154,7 +155,7 @@ export default class Main extends BaseComponent {
         }
         break;
       case ReqID.VIEW_CHECK_RESULT:
-        pendingRewardsTx(res.result.txId);
+        takePendingRewards()
         break;
       case ReqID.TAKE_PENDING_REWARDS:
         invokeDataPendingReward(res.result.raw_data);
