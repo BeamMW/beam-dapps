@@ -154,6 +154,7 @@ export class Field {
       main?.removeChild(newGrid.element);
       console.log(solution.join(''));
       checkSolution(solution.join(''));
+      solution.length = 0
     }
     // Render move
     (

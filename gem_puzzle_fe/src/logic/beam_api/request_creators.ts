@@ -50,6 +50,15 @@ export const invokeDataSolution = (data: number[]): void => {
     }
   );
 };
+export const invokeDataPendingReward = (data: number[]): void => {
+  ApiHandler.callApi(
+    ReqID.INVOKE_DATA_PENDING_REWARDS,
+    ReqMethods.PROCESS_INVOKE_DATA,
+    {
+      data
+    }
+  );
+};
 
 export const viewBoard = (): void => {
   const args = argsParser({
@@ -168,6 +177,13 @@ export const takePendingRewards = (): void => {
       create_tx: false,
       args
     });
+};
+export const pendingRewardsTx = (txId: string): void => {
+  setTimeout(() => {
+    ApiHandler.callApi(ReqID.TX_PENDING_REWARDS, ReqMethods.TX_STATUS, {
+      txId
+    });
+  }, AppSpecs.TX_CHECK_INTERVAL);
 };
 export const viewMyPendingRewards = (): void => {
   const args = argsParser({

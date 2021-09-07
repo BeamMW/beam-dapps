@@ -14,11 +14,14 @@ import {
   checkSolutionTx,
   getPlayerKey,
   invokeData,
+  invokeDataPendingReward,
   invokeDataSolution,
+  pendingRewardsTx,
   takePendingRewards,
   txStatus,
   viewBoard,
   viewCheckResult,
+  viewMyPendingRewards,
   viewTops
 } from '../../logic/beam_api/request_creators';
 import './main.scss';
@@ -68,8 +71,8 @@ export default class Main extends BaseComponent {
     const best = new Best();
     this.append(this.menu, best);
   };
-
   initGameField = (board: BoardType): void => {
+    viewMyPendingRewards()
     if (AppStateHandler.getState().mode !== board.length) {
       AppStateHandler.dispatch(setModeAC(board.length as BoardLengthType));
     }
@@ -150,10 +153,23 @@ export default class Main extends BaseComponent {
         }
         break;
         case ReqID.VIEW_CHECK_RESULT:
-        this.winner();
-        takePendingRewards()
+          takePendingRewards()        
+        break;
+        case ReqID.TAKE_PENDING_REWARDS:
+        invokeDataPendingReward(res.result.raw_data)
+        break;
+        case ReqID.INVOKE_DATA_PENDING_REWARDS:
+          this.menu.initLoader(res.result.txid);
+          this.menu.element.classList.remove('active');
+          pendingRewardsTx(res.result.txid)
         console.log(res);
-        
+        break;
+        case ReqID.TX_PENDING_REWARDS:
+        if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
+          pendingRewardsTx(res.result.txId);
+        } else {
+         this.winner()
+        }
         break;
       case ReqID.VIEW_TOPS:
         console.log(JSON.parse(res.result.output));
