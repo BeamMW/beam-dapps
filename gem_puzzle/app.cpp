@@ -229,7 +229,7 @@ void On_action_view_tops(const ContractID& cid)
 	
 	std::vector<GemPuzzle::GameResult> table(params.last_used_game_id);
 	Env::Key_T<uint64_t> k1;
-	k.m_Prefix.m_Cid = cid;
+	k1.m_Prefix.m_Cid = cid;
 	for (uint64_t i = 1; i <= params.last_used_game_id; ++i) {
 		k1.m_KeyInContract = i;
 		Env::VarReader::Read_T(k1, table[i - 1]);
