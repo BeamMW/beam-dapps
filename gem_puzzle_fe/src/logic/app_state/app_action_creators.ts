@@ -42,6 +42,11 @@ export const setActiveGameAC:ActionCreatorType<boolean> = (payload) => ({
   payload
 });
 
+export const setAutoplayAC:ActionCreatorType<boolean> = (payload) => ({
+  action: AppStateActions.SET_AUTOPLAY,
+  payload
+});
+
 export type ActionTypes = ReturnType<
 typeof setTimeAC
 | typeof setMoveAC
@@ -50,4 +55,5 @@ typeof setTimeAC
 | typeof setPKeyAC
 | typeof setPicOptAC
 | typeof setActiveGameAC
+| typeof setAutoplayAC
 >;

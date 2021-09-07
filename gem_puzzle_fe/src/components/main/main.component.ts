@@ -11,11 +11,13 @@ import Menu from '../menu/menu.component';
 import { Field } from '../field/filed.component';
 import { ReqID, ResTXStatus } from '../../constants/api_constants';
 import {
+  checkActiveGame,
   checkSolutionTx,
   getPlayerKey,
   invokeData,
+  invokeDataPendingReward,
   invokeDataSolution,
-  takePendingRewards,
+  pendingRewardsTx,
   txStatus,
   viewBoard,
   viewCheckResult,
@@ -27,7 +29,6 @@ import Options from '../options/options.component';
 import { Win } from '../win/win.components';
 import { RouterMode, Routes } from '../../constants/app_constants';
 import { Best } from '../best/best.component';
-import NPuzzleSolver from '../../logic/solver/solvers';
 
 export default class Main extends BaseComponent {
   menu: Menu;
@@ -40,6 +41,7 @@ export default class Main extends BaseComponent {
     super(Tags.DIV, ['main']);
     ApiHandler.addObservers(this);
     getPlayerKey();
+    checkActiveGame();
     this.menu = new Menu();
     this.router = new Router({
       mode: RouterMode.HISTORY,
@@ -53,42 +55,42 @@ export default class Main extends BaseComponent {
   }
 
   cancelGame = (): void => {
+    checkActiveGame();
     this.removeAll();
     this.menu.classList.remove('active');
-    this.menu.initButtonMenu();
     this.append(this.menu);
     window.history.pushState({}, '', Routes.MAIN);
   };
 
   bestField = (): void => {
+    checkActiveGame();
     viewTops();
     console.log('best');
     this.removeAll();
     this.menu.classList.add('active');
-    this.menu.initButtonMenu();
     const best = new Best();
     this.append(this.menu, best);
   };
 
   initGameField = (board: BoardType): void => {
+    checkActiveGame();
     if (AppStateHandler.getState().mode !== board.length) {
       AppStateHandler.dispatch(setModeAC(board.length as BoardLengthType));
     }
     this.menu.classList.add('active');
-    this.menu.initButtonMenu();
     Field.ready(board);
   };
 
   optionsField = (): void => {
+    checkActiveGame();
     this.removeAll();
     this.menu.classList.add('active');
-    this.menu.initButtonMenu();
     const options = new Options();
     this.append(this.menu, options);
   };
 
   winner = (): void => {
-    this.menu.initButtonMenu();
+    checkActiveGame();
     this.menu.element.classList.add('active');
     this.append(this.menu);
     this.append(this.win);
@@ -106,6 +108,7 @@ export default class Main extends BaseComponent {
         AppStateHandler.dispatch(
           (setActiveGameAC(!!(JSON.parse(res.result.output).has_active_game)))
         );
+        this.menu.initButtonMenu();
         break;
       case ReqID.CHECK:
         console.log(JSON.parse(res.result.output));
@@ -133,11 +136,6 @@ export default class Main extends BaseComponent {
         break;
       case ReqID.VIEW_BOARD:
         this.menu.initButtonMenu();
-        console.log(
-          new NPuzzleSolver(
-            JSON.parse(res.result.output).board as BoardType
-          ).solve()
-        );
         this.initGameField(JSON.parse(res.result.output).board as BoardType);
         break;
       case ReqID.CHECK_SOLUTION:
@@ -156,9 +154,23 @@ export default class Main extends BaseComponent {
         }
         break;
       case ReqID.VIEW_CHECK_RESULT:
-        this.winner();
-        takePendingRewards();
+        pendingRewardsTx(res.result.txId);
+        break;
+      case ReqID.TAKE_PENDING_REWARDS:
+        invokeDataPendingReward(res.result.raw_data);
+        break;
+      case ReqID.INVOKE_DATA_PENDING_REWARDS:
+        this.menu.initLoader(res.result.txid);
+        this.menu.element.classList.remove('active');
+        pendingRewardsTx(res.result.txid);
         console.log(res);
+        break;
+      case ReqID.TX_PENDING_REWARDS:
+        if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
+          pendingRewardsTx(res.result.txId);
+        } else {
+          this.winner();
+        }
         break;
       case ReqID.VIEW_TOPS:
         console.log(JSON.parse(res.result.output));

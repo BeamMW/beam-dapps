@@ -11,7 +11,8 @@ const initialState:IAppState = {
   time: 0,
   pKey: '...',
   picOpt: BoardView.NUMBERS,
-  rate: 0.01
+  rate: 0.01,
+  autoPlay: true
 };
 
 export default class AppState {
@@ -79,6 +80,9 @@ export default class AppState {
         break;
       case AppStateActions.SET_ACTIVE:
         this.setState({ activeGame: payload as boolean });
+        break;
+      case AppStateActions.SET_AUTOPLAY:
+        this.setState({ autoPlay: payload as boolean });
         break;
       default:
         break;

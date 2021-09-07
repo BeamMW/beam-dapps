@@ -9,7 +9,7 @@ export default class Header extends BaseComponent {
   constructor() {
     super(Tags.DIV, ['header']);
     const {
-      rate, mode, pKey, picOpt, activeGame
+      rate, mode, pKey, picOpt, activeGame, autoPlay
     } = AppStateHandler.getState();
     const rateBlock = new InfoBLock({
       key: 'rate',
@@ -37,6 +37,14 @@ export default class Header extends BaseComponent {
       after: ''
     });
 
+    const autoPlayBlock = new InfoBLock({
+      key: 'autoPlay',
+      title: 'AUTOPLAY',
+      value: `${autoPlay}`.toUpperCase(),
+      after: '',
+      callback: (str:boolean):string => `${str}`.toUpperCase()
+    });
+
     const isActiveBlock = new InfoBLock({
       key: 'activeGame',
       title: 'ACTIVE GAME',
@@ -44,6 +52,13 @@ export default class Header extends BaseComponent {
       after: '',
       callback: (str:boolean):string => `${str}`.toUpperCase()
     });
-    this.append(cidBlock, isActiveBlock, rateBlock, viewBlock, modeBlock);
+    this.append(
+      cidBlock,
+      isActiveBlock,
+      rateBlock,
+      viewBlock,
+      modeBlock,
+      autoPlayBlock
+    );
   }
 }

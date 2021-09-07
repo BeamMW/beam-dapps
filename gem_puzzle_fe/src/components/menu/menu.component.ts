@@ -7,6 +7,7 @@ import Loader from '../loader/loader.component';
 import TxBoard from '../txboard/txboard.component';
 import { MenuBtn } from '../../constants/app_constants';
 import { menuProps } from '../../constants/menu_btn';
+import { AppStateHandler } from '../../logic/app_state/state_handler';
 
 export default class Menu extends BaseComponent {
   constructor() {
@@ -17,7 +18,7 @@ export default class Menu extends BaseComponent {
 
   initButtonMenu = (): void => {
     this.removeAll();
-    // const { activeGame } = AppStateHandler.getState();
+    const { activeGame } = AppStateHandler.getState();
     const buttons = menuProps
       .filter((btn) => {
         if (this.classList.contains('active') && btn.key !== MenuBtn.RETURN) {
@@ -29,14 +30,15 @@ export default class Menu extends BaseComponent {
         ) {
           return false;
         }
-        // if (activeGame && btn.key === MenuBtn.NEW) {
-        //   return false;
-        // }
-        // if (!activeGame && (
-        //   btn.key === MenuBtn.CANCEL
-        // )) {
-        //   return false;
-        // }
+        if (activeGame && btn.key === MenuBtn.NEW) {
+          return false;
+        }
+        if (!activeGame && (
+          btn.key === MenuBtn.CANCEL
+          || btn.key === MenuBtn.CONTINUE
+        )) {
+          return false;
+        }
         return true;
       })
       .map((btn) => {
