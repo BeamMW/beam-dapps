@@ -1,5 +1,5 @@
 export enum AppSpecs {
-  CID = '68940a43a84500500d75d05ff988feccd8b743819b79f7c11503a4da5e3dd109',
+  CID = '39af3be470583de54b468f5d731dfae6c092168b9520c9666e285e292c5460e5',
   TITLE = 'PYATNASHKI',
   TX_CHECK_INTERVAL = 3000
 }
@@ -17,7 +17,13 @@ export enum ReqID {
   INVOKE_DATA_SOLUTION = 'INVOKE_DATA_SOLUTION',
   TX_CHECK_SOLUTION = 'TX_CHECK_SOLUTION',
   VIEW_CHECK_RESULT = 'VIEW_CHECK_RESULT',
-  GET_PKEY = 'GET_PKEY'
+  GET_PKEY = 'GET_PKEY',
+  VIEW_TOPS = 'VIEW_TOPS',
+  TAKE_PENDING_REWARDS = 'TAKE_PENDING_REWARDS',
+  VIEW_MY_PENDING_REWARDS = 'VIEW_PENDING_REWARDS',
+  INVOKE_DATA_PENDING_REWARDS = 'INVOKE_DATA_PENDING_REWARDS',
+  TX_PENDING_REWARDS = 'TX_PENDING_REWARDS',
+  HAS_ACTIVE_GAME = 'HAS_ACTIVE_GAME'
 }
 
 export enum ReqRoles {
@@ -40,7 +46,11 @@ export enum ReqActions {
   END_CURRENT_GAME = 'end_current_game',
   DESTROY_CONTRACT = 'destroy_contract',
   VIEW_CHECK_RESULT = 'view_check_result',
-  GET_MY_PKEY = 'get_my_pkey'
+  GET_MY_PKEY = 'get_my_pkey',
+  VIEW_TOPS = 'view_tops',
+  TAKE_PENDING_REWARDS = 'take_pending_rewards',
+  VIEW_MY_PENDING_REWARDS= 'view_my_pending_rewards',
+  HAS_ACTIVE_GAME = 'has_active_game'
 }
 
 export enum ResTXStatus {

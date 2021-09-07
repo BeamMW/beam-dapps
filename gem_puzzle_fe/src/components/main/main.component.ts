@@ -1,5 +1,6 @@
 import { APIResponse, BoardLengthType, BoardType } from 'beamApiProps';
 import {
+  setActiveGameAC,
   setModeAC, setPKeyAC
 } from '../../logic/app_state/app_action_creators';
 import { AppStateHandler } from '../../logic/app_state/state_handler';
@@ -13,15 +14,22 @@ import {
   checkSolutionTx,
   getPlayerKey,
   invokeData,
+  invokeDataPendingReward,
   invokeDataSolution,
+  pendingRewardsTx,
+  takePendingRewards,
   txStatus,
-  viewBoard
+  viewBoard,
+  viewCheckResult,
+  viewMyPendingRewards,
+  viewTops
 } from '../../logic/beam_api/request_creators';
 import './main.scss';
 import Router from '../../logic/router/router';
 import Options from '../options/options.component';
 import { Win } from '../win/win.components';
 import { RouterMode, Routes } from '../../constants/app_constants';
+import { Best } from '../best/best.component';
 
 export default class Main extends BaseComponent {
   menu: Menu;
@@ -40,10 +48,10 @@ export default class Main extends BaseComponent {
       root: Routes.MAIN
     });
     this.win = new Win();
-    this.append(this.menu);
     this.router.add(Routes.OPTIONS, this.optionsField);
     this.router.add(Routes.RETURN, this.cancelGame);
     this.router.add(Routes.BEST, this.bestField);
+    this.append(this.menu);
   }
 
   cancelGame = (): void => {
@@ -55,10 +63,16 @@ export default class Main extends BaseComponent {
   };
 
   bestField = (): void => {
+    viewTops()
     console.log('best');
+    this.removeAll();
+    this.menu.classList.add('active');
+    this.menu.initButtonMenu();
+    const best = new Best();
+    this.append(this.menu, best);
   };
-
   initGameField = (board: BoardType): void => {
+    viewMyPendingRewards()
     if (AppStateHandler.getState().mode !== board.length) {
       AppStateHandler.dispatch(setModeAC(board.length as BoardLengthType));
     }
@@ -87,7 +101,12 @@ export default class Main extends BaseComponent {
     switch (res.id) {
       case ReqID.GET_PKEY:
         AppStateHandler.dispatch(
-          setPKeyAC(JSON.parse(`{${res.result.output}}`)['My public key'])
+          setPKeyAC(JSON.parse(res.result.output)['My public key'])
+        );
+        break;
+      case ReqID.HAS_ACTIVE_GAME:
+        AppStateHandler.dispatch(
+          (setActiveGameAC(!!(JSON.parse(res.result.output).has_active_game)))
         );
         break;
       case ReqID.CHECK:
@@ -130,12 +149,31 @@ export default class Main extends BaseComponent {
         if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
           checkSolutionTx(res.result.txId);
         } else {
-          this.winner();
+          viewCheckResult()
         }
         break;
-      case ReqID.VIEW_CHECK_RESULT:
-        console.log('WIN');
+        case ReqID.VIEW_CHECK_RESULT:
+          takePendingRewards()        
         break;
+        case ReqID.TAKE_PENDING_REWARDS:
+        invokeDataPendingReward(res.result.raw_data)
+        break;
+        case ReqID.INVOKE_DATA_PENDING_REWARDS:
+          this.menu.initLoader(res.result.txid);
+          this.menu.element.classList.remove('active');
+          pendingRewardsTx(res.result.txid)
+        console.log(res);
+        break;
+        case ReqID.TX_PENDING_REWARDS:
+        if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
+          pendingRewardsTx(res.result.txId);
+        } else {
+         this.winner()
+        }
+        break;
+      case ReqID.VIEW_TOPS:
+        console.log(JSON.parse(res.result.output));
+      break;
       default:
         break;
     }

@@ -1,15 +1,15 @@
 import { AppStateHandler } from '../../logic/app_state/state_handler';
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
-import InfoBLock from './infoblock.component';
 import './header.scss';
 import { boardSchemeMaker } from '../../utils/string_handlers';
+import InfoBLock from './infoblock.component';
 
 export default class Header extends BaseComponent {
   constructor() {
     super(Tags.DIV, ['header']);
     const {
-      rate, mode, pKey, picOpt
+      rate, mode, pKey, picOpt, activeGame
     } = AppStateHandler.getState();
     const rateBlock = new InfoBLock({
       key: 'rate',
@@ -36,6 +36,14 @@ export default class Header extends BaseComponent {
       value: pKey,
       after: ''
     });
-    this.append(cidBlock, rateBlock, viewBlock, modeBlock);
+
+    const isActiveBlock = new InfoBLock({
+      key: 'activeGame',
+      title: 'ACTIVE GAME',
+      value: activeGame,
+      after: '',
+      callback: (str:boolean):string => `${str}`.toUpperCase()
+    });
+    this.append(cidBlock, isActiveBlock, rateBlock, viewBlock, modeBlock);
   }
 }

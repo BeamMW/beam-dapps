@@ -46,7 +46,7 @@ export class Box {
   };
 }
 
-export const solution: ('u' | 'd' | 'r' | 'l')[] = [];
+export let solution: ('u' | 'd' | 'r' | 'l')[] = [];
 
 let empty = new Box(3, 3);
 

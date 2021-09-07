@@ -37,6 +37,11 @@ export const setPicOptAC:ActionCreatorType<BoardView> = (payload) => ({
   payload
 });
 
+export const setActiveGameAC:ActionCreatorType<boolean> = (payload) => ({
+  action: AppStateActions.SET_ACTIVE,
+  payload
+});
+
 export type ActionTypes = ReturnType<
 typeof setTimeAC
 | typeof setMoveAC
@@ -44,4 +49,5 @@ typeof setTimeAC
 | typeof setModeAC
 | typeof setPKeyAC
 | typeof setPicOptAC
+| typeof setActiveGameAC
 >;

@@ -57,6 +57,7 @@ declare module 'AppStateProps' {
 
   interface IAppState {
     [key:string];
+    activeGame: boolean;
     mode: 3 | 4 | 5;
     move: string;
     time: number;
@@ -66,6 +67,7 @@ declare module 'AppStateProps' {
   }
 
   interface INewState {
+    activeGame?: boolean;
     mode?: 3 | 4 | 5,
     move?: string,
     time?: number,
