@@ -40,7 +40,7 @@ export default class Header extends BaseComponent {
     const isActiveBlock = new InfoBLock({
       key: 'activeGame',
       title: 'ACTIVE GAME',
-      value: activeGame,
+      value: `${activeGame}`.toUpperCase(),
       after: '',
       callback: (str:boolean):string => `${str}`.toUpperCase()
     });

@@ -27,6 +27,7 @@ import Options from '../options/options.component';
 import { Win } from '../win/win.components';
 import { RouterMode, Routes } from '../../constants/app_constants';
 import { Best } from '../best/best.component';
+import NPuzzleSolver from '../../logic/solver/solvers';
 
 export default class Main extends BaseComponent {
   menu: Menu;
@@ -60,7 +61,7 @@ export default class Main extends BaseComponent {
   };
 
   bestField = (): void => {
-    viewTops()
+    viewTops();
     console.log('best');
     this.removeAll();
     this.menu.classList.add('active');
@@ -132,6 +133,11 @@ export default class Main extends BaseComponent {
         break;
       case ReqID.VIEW_BOARD:
         this.menu.initButtonMenu();
+        console.log(
+          new NPuzzleSolver(
+            JSON.parse(res.result.output).board as BoardType
+          ).solve()
+        );
         this.initGameField(JSON.parse(res.result.output).board as BoardType);
         break;
       case ReqID.CHECK_SOLUTION:
@@ -146,18 +152,17 @@ export default class Main extends BaseComponent {
         if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
           checkSolutionTx(res.result.txId);
         } else {
-          viewCheckResult()
+          viewCheckResult();
         }
         break;
-        case ReqID.VIEW_CHECK_RESULT:
+      case ReqID.VIEW_CHECK_RESULT:
         this.winner();
-        takePendingRewards()
+        takePendingRewards();
         console.log(res);
-        
         break;
       case ReqID.VIEW_TOPS:
         console.log(JSON.parse(res.result.output));
-      break;
+        break;
       default:
         break;
     }
