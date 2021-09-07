@@ -49,7 +49,7 @@ export enum ReqActions {
   GET_MY_PKEY = 'get_my_pkey',
   VIEW_TOPS = 'view_tops',
   TAKE_PENDING_REWARDS = 'take_pending_rewards',
-  VIEW_MY_PENDING_REWARDS= 'view_my_pending_rewards',
+  VIEW_MY_PENDING_REWARDS = 'view_my_pending_rewards',
   HAS_ACTIVE_GAME = 'has_active_game'
 }
 
