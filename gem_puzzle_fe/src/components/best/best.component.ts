@@ -45,7 +45,7 @@ export class Best extends BaseComponent {
           if (key[1]) {
             td.element.textContent = `${key[1]}`;
             if (key[1] === pKey) {
-              tr.element.style.background = 'rgba(62, 102, 251, .7)';
+              tr.style.background = 'rgba(62, 102, 251, .7)';
             }
             tr.append(td);
           }
@@ -83,7 +83,6 @@ export class Best extends BaseComponent {
     best.append(trHeader);
     trHeader.append(thPos, thAcc, thTime, thMoves, thPermutation);
     top?.sort((obj1: any, obj2: any) => obj1.moves - obj2.moves)
-      // eslint-disable-next-line array-callback-return
       .forEach((el: any, idx: any) => {
         const tdN = new BaseComponent(Tags.TD);
         const tr = new BaseComponent(Tags.TR);
@@ -95,7 +94,7 @@ export class Best extends BaseComponent {
           if (key[1]) {
             td.element.textContent = `${key[1]}`;
             if (key[1] === pKey) {
-              tr.element.style.background = 'rgba(62, 102, 251, .7)';
+              tr.style.background = 'rgba(62, 102, 251, .7)';
             }
             tr.append(td);
           }

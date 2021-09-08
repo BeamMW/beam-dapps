@@ -106,6 +106,9 @@ export default class Main extends BaseComponent {
     if (result.status_string === ResTXStatus.IN_PROGRESS) {
       txStatus(result.txId);
     }
+    if (result.status_string === ResTXStatus.FAILED) {
+      this.cancelGame();
+    }
     if (result.status_string === ResTXStatus.COMPLETED) {
       switch (result.comment) {
         case ResTXComment.CREATE_NEW_GAME:
@@ -142,8 +145,10 @@ export default class Main extends BaseComponent {
         break;
 
       case ReqID.INVOKE_DATA:
-        this.menu.initLoader(res.result.txid);
-        txStatus(res.result.txid);
+        if (res.result?.txid) {
+          this.menu.initLoader(res.result.txid);
+          txStatus(res.result.txid);
+        }
         break;
 
       case ReqID.TX_STATUS:

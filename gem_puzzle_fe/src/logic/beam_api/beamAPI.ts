@@ -32,15 +32,11 @@ export class BeamAPI {
 
   onApiResult = (json: string): void => {
     const res = JSON.parse(json);
-    if (res.error) {
-      console.log(res.error.message);
-    } else {
-      this.observers.forEach((component: BaseComponent) => {
-        if (component.inform) {
-          component.inform(res);
-        }
-      });
-    }
+    this.observers.forEach((component: BaseComponent) => {
+      if (component.inform) {
+        component.inform(res);
+      }
+    });
   };
 
   loadAPI = async (): Promise<void> => {

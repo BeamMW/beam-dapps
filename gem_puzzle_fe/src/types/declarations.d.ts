@@ -91,12 +91,14 @@ declare module 'beamApiProps' {
     id: ReqIds;
     jsonrpc: string;
     result: {
+      [key:string];
       output: string;
       txid: string;
       txId: string;
       raw_data: number[];
       comment: ResTXComment;
       status_string: ResTXStatus;
+      failure_reason: string;
       board?:BoardType;
     };
     error?: {

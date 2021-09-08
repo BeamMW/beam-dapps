@@ -55,7 +55,7 @@ export enum ReqActions {
 
 export enum ResTXStatus {
   IN_PROGRESS = 'in progress',
-  FAILED = 'Failed',
+  FAILED = 'failed',
   COMPLETED = 'completed'
 }
 
