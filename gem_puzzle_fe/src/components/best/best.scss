@@ -1,7 +1,7 @@
-.best {
+.top {
     margin: 10px auto;
-    width: 500px;
-    height: 350px;
+    width: 80%;
+    height: auto;
     background-color: palevioletred;
     border: 3px dotted cornflowerblue;
     opacity: .8;
@@ -10,4 +10,43 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
+    overflow-y: auto;
+    font-size: 20px;
+
+    &__best {
+        width: 100%;
+
+        // height: 100%;
+        .thHeader {
+            background-color: rgba(116, 0, 184, .4);
+            border: 1px dotted blueviolet;
+
+            .use {
+                cursor: pointer;
+
+                &:hover {
+                    transform:  scaleY(1.2);
+                    font-weight: 400;
+                    border-color: #80ffdb;
+                    color: #80ffdb;
+                }
+            }
+            .active {
+                background-color: rgba(116, 0, 184, 1);
+            }
+        }
+
+        th {
+            font-size: 25px;
+            padding: 10px;
+        }
+
+        tr {
+            text-align: center;
+        }
+
+        td {
+            padding: 10px;
+        }
+    }
 }

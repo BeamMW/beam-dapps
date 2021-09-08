@@ -63,14 +63,17 @@ export default class Main extends BaseComponent {
     window.history.pushState({}, '', Routes.MAIN);
   };
 
-  bestField = (): void => {
+  bestField = (top:any): void => {
     checkActiveGame();
-    viewTops();
-    console.log('best');
-    this.removeAll();
+    const best = new Best(top);
+    if(!top){
+      best.initLoader()
+      viewTops();
+    }
+    this.removeAll()
     this.menu.classList.add('active');
-    const best = new Best();
     this.append(this.menu, best);
+    
   };
 
   initGameField = (board: BoardType): void => {
@@ -164,7 +167,6 @@ export default class Main extends BaseComponent {
         this.menu.initLoader(res.result.txid);
         this.menu.element.classList.remove('active');
         pendingRewardsTx(res.result.txid);
-        console.log(res);
         break;
       case ReqID.TX_PENDING_REWARDS:
         if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
@@ -174,7 +176,7 @@ export default class Main extends BaseComponent {
         }
         break;
       case ReqID.VIEW_TOPS:
-        console.log(JSON.parse(res.result.output));
+        this.bestField(JSON.parse(`[${res.result.output.slice(1, -1)}]`));
         break;
       default:
         break;

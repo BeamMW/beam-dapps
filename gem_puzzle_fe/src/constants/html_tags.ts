@@ -7,6 +7,10 @@ export enum Tags {
   LABEL = 'label',
   CANVAS = 'canvas',
   BUTTON = 'button',
+  TABLE = 'table',
+  TR = 'tr',
+  TH = 'th',
+  TD = 'td',
   A = 'a',
   H1 = 'h1'
 }
