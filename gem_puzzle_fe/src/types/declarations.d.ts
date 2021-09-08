@@ -77,14 +77,15 @@ declare module 'AppStateProps' {
     pKey?: string;
     picOpt?: BoardView;
     autoPlay?: boolean
-
   }
 
 }
 
 declare module 'beamApiProps' {
-  import BaseComponent from '../components/base/base.component';
-  import { ResTXStatus, ResTXComment } from '../constants/api_constants';
+
+  type BaseComponent = import('../components/base/base.component').default;
+  type ResTXComment = import('../constants/api_constants').ResTXComment;
+  type ResTXStatus = import('../constants/api_constants').ResTXStatus;
 
   export type APIResponse = {
     id: ReqIds;
@@ -124,5 +125,13 @@ declare module 'beamApiProps' {
     args?: string;
     data?: number[];
     txId?:string
+  };
+}
+
+declare module 'ComponentProps' {
+  export type WinArgsType = {
+    verdict: string;
+    moves: number;
+    ['time (min)']: number;
   };
 }

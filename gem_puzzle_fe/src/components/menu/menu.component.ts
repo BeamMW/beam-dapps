@@ -13,7 +13,6 @@ export default class Menu extends BaseComponent {
   constructor() {
     super(Tags.DIV, ['menu']);
     ApiHandler.addObservers(this);
-    this.initButtonMenu();
   }
 
   initButtonMenu = (): void => {
@@ -53,6 +52,10 @@ export default class Menu extends BaseComponent {
       });
     this.append(...buttons);
   };
+
+  removeActive = ():void => this.classList.remove('active');
+
+  addActive = ():void => this.classList.add('active');
 
   initLoader = (txid?: string): void => {
     const args = [new Loader()];

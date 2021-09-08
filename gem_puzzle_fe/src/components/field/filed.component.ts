@@ -2,7 +2,6 @@ import { BoardType } from 'beamApiProps';
 import { BoardView } from '../../constants/app_constants';
 import { AppStateHandler } from '../../logic/app_state/state_handler';
 import { Tags } from '../../constants/html_tags';
-import { ApiHandler } from '../../logic/beam_api/api_handler';
 import {
   Box, isSolved, solution, swapBoxes
 } from './box';
@@ -54,7 +53,6 @@ export class Field {
     this.tick = this.tick.bind(this);
     this.render();
     this.handleClickBox = this.handleClickBox.bind(this);
-    ApiHandler.addObservers(this);
     this.menu = new Menu();
   }
 

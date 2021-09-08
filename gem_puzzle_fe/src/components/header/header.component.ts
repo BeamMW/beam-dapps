@@ -9,7 +9,7 @@ export default class Header extends BaseComponent {
   constructor() {
     super(Tags.DIV, ['header']);
     const {
-      rate, mode, pKey, picOpt, activeGame, autoPlay
+      rate, mode, picOpt, activeGame, autoPlay
     } = AppStateHandler.getState();
     const rateBlock = new InfoBLock({
       key: 'rate',
@@ -30,12 +30,6 @@ export default class Header extends BaseComponent {
       after: '',
       callback: boardSchemeMaker
     });
-    const cidBlock = new InfoBLock({
-      key: 'pKey',
-      title: 'KEY',
-      value: pKey,
-      after: ''
-    });
 
     const autoPlayBlock = new InfoBLock({
       key: 'autoPlay',
@@ -53,7 +47,6 @@ export default class Header extends BaseComponent {
       callback: (str:boolean):string => `${str}`.toUpperCase()
     });
     this.append(
-      cidBlock,
       isActiveBlock,
       rateBlock,
       viewBlock,
