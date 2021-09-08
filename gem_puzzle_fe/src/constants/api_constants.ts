@@ -58,3 +58,10 @@ export enum ResTXStatus {
   FAILED = 'Failed',
   COMPLETED = 'completed'
 }
+
+export enum ResTXComment{
+  CREATE_NEW_GAME = 'Create new game',
+  ENDING_EXISTING_GAME = 'Ending existing game',
+  CHECKIN_SOLUTION = 'Checking solution',
+  TAKING_PENDING_REWARS = 'Taking pending rewards'
+}

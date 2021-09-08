@@ -9,7 +9,7 @@ import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
 import Menu from '../menu/menu.component';
 import { Field } from '../field/filed.component';
-import { ReqID, ResTXStatus } from '../../constants/api_constants';
+import { ReqID, ResTXComment, ResTXStatus } from '../../constants/api_constants';
 import {
   checkActiveGame,
   checkSolutionTx,
@@ -97,6 +97,21 @@ export default class Main extends BaseComponent {
     this.append(this.win);
   };
 
+  transactionHandler = (res: APIResponse):void => {
+    console.log(res);
+    if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
+      txStatus(res.result.txId);
+    } else {
+      switch (res.result.comment) {
+        case ResTXComment.CREATE_NEW_GAME:
+          // todo
+          break;
+        default:
+          break;
+      }
+    }
+  };
+
   inform = (res: APIResponse): void => {
     console.log(res);
     switch (res.id) {
@@ -155,7 +170,7 @@ export default class Main extends BaseComponent {
         }
         break;
       case ReqID.VIEW_CHECK_RESULT:
-        takePendingRewards()
+        takePendingRewards();
         break;
       case ReqID.TAKE_PENDING_REWARDS:
         invokeDataPendingReward(res.result.raw_data);

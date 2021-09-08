@@ -84,6 +84,7 @@ declare module 'AppStateProps' {
 
 declare module 'beamApiProps' {
   import BaseComponent from '../components/base/base.component';
+  import { ResTXStatus, ResTXComment } from '../constants/api_constants';
 
   export type APIResponse = {
     id: ReqIds;
@@ -93,7 +94,8 @@ declare module 'beamApiProps' {
       txid: string;
       txId: string;
       raw_data: number[];
-      status_string: string;
+      comment: ResTXComment;
+      status_string: ResTXStatus;
       board?:BoardType;
     };
     error?: {
@@ -101,22 +103,6 @@ declare module 'beamApiProps' {
       message: string;
     }
   };
-
-  export interface IActionParams {
-    [key:string]: string
-  }
-
-  export interface IActionOutput {
-    [key:string]: never | IActionParams
-  }
-
-  export interface IRoleOutput {
-    [key:string]:IActionOutput
-  }
-
-  export interface IOutput {
-    roles: IRoleOutput
-  }
 
   export type CallApiType =
   (callid: string, method: string, params: BeamApiParams) => void;
