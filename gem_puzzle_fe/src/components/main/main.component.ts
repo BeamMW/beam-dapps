@@ -36,7 +36,6 @@ export default class Main extends BaseComponent {
 
   private readonly router: Router;
 
- // "{"verdict": "WIN","moves": 142,"time (min)": 2}",
   constructor() {
     super(Tags.DIV, ['main']);
     ApiHandler.addObservers(this);
@@ -67,13 +66,15 @@ export default class Main extends BaseComponent {
     window.history.pushState({}, '', Routes.MAIN);
   };
 
-  bestField = (): void => {
+  bestField = (top:any): void => {
     checkActiveGame();
-    viewTops();
-    console.log('best');
+    const best = new Best(top);
+    if (!top) {
+      best.initLoader();
+      viewTops();
+    }
     this.removeAll();
-    this.menu.addActive();
-    const best = new Best();
+    this.menu.classList.add('active');
     this.append(this.menu, best);
   };
 
@@ -165,9 +166,8 @@ export default class Main extends BaseComponent {
         this.menu.initButtonMenu();
         this.initGameField(JSON.parse(res.result.output).board as BoardType);
         break;
-
       case ReqID.VIEW_TOPS:
-        console.log(JSON.parse(res.result.output));
+        this.bestField(JSON.parse(`[${res.result.output.slice(1, -1)}]`));
         break;
 
       case ReqID.VIEW_CHECK_RESULT:
