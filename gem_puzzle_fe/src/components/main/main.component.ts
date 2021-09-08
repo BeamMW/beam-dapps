@@ -105,7 +105,8 @@ export default class Main extends BaseComponent {
   transactionHandler = (result: APIResponse['result']):void => {
     if (result.status_string === ResTXStatus.IN_PROGRESS) {
       txStatus(result.txId);
-    } else {
+    }
+    if (result.status_string === ResTXStatus.COMPLETED) {
       switch (result.comment) {
         case ResTXComment.CREATE_NEW_GAME:
           viewBoard();
@@ -114,7 +115,7 @@ export default class Main extends BaseComponent {
           this.initMainMenu();
           break;
         case ResTXComment.TAKING_PENDING_REWARS:
-          viewCheckResult();
+          this.initMainMenu();
           break;
         case ResTXComment.CHECKIN_SOLUTION:
           viewCheckResult();

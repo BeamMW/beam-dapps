@@ -7,7 +7,7 @@ export enum AppStateActions {
   SET_PKEY = 'SET_PKEY',
   SET_PIC_OPT = 'SET_PIC_OPT',
   SET_ACTIVE = 'SET_ACTIVE',
-  SET_AUTOPLAY = "SET_AUTOPLAY"
+  SET_AUTOPLAY = 'SET_AUTOPLAY'
 }
 
 export enum BeamAmmount {
@@ -29,7 +29,8 @@ export enum MenuBtn {
   VIEW_CONTRACTS = 'VIEW_CONTRACTS',
   DESTROY_CONTRACT = 'DESTROY_CONTRACT',
   RETURN = 'RETURN',
-  BEST = 'BEST'
+  BEST = 'BEST',
+  TAKE_REWARD = 'TAKE_REWARD'
 }
 
 export enum RouterMode {
