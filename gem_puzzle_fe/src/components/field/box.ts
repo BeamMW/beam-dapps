@@ -70,19 +70,15 @@ export const emptyBox = (grid: BoardType):void => {
         empty = new Box(i, j);
         if (empty.x > prev.x) {
           solution.push('d');
-          console.log('D');
         }
         if (empty.x < prev.x) {
           solution.push('u');
-          console.log('U');
         }
         if (empty.y > prev.y) {
           solution.push('r');
-          console.log('R');
         }
         if (empty.y < prev.y) {
           solution.push('l');
-          console.log('L');
         }
       // solution
       }

@@ -1,11 +1,13 @@
+import { AppStateHandler } from '../app_state/state_handler';
 import {
   ReqRoles,
   ReqMethods,
   ReqActions,
   ReqID,
   AppSpecs
-} from '../constants/api_constants';
-import { ApiHandler } from '../logic/beam_api/api_handler';
+} from '../../constants/api_constants';
+import { ApiHandler } from './api_handler';
+import { parseToGroth } from '../../utils/string_handlers';
 
 export type ReqArgsType = {
   action: ReqActions;
@@ -13,6 +15,7 @@ export type ReqArgsType = {
   solution?: string;
   cid?: AppSpecs.CID;
   cancel_previous_game?: 1;
+  bet?: string
 };
 
 const argsParser = (args: ReqArgsType) => Object.entries(args)
@@ -24,7 +27,7 @@ export const startGame = (): void => {
     role: ReqRoles.PLAYER,
     action: ReqActions.NEW_GAME,
     cid: AppSpecs.CID,
-    cancel_previous_game: 1
+    bet: parseToGroth(AppStateHandler.getState().rate)
   });
   ApiHandler.callApi(ReqID.START_GAME, ReqMethods.INVOKE_CONTRACT, {
     create_tx: false,
@@ -41,6 +44,15 @@ export const invokeData = (data: number[]): void => {
 export const invokeDataSolution = (data: number[]): void => {
   ApiHandler.callApi(
     ReqID.INVOKE_DATA_SOLUTION,
+    ReqMethods.PROCESS_INVOKE_DATA,
+    {
+      data
+    }
+  );
+};
+export const invokeDataPendingReward = (data: number[]): void => {
+  ApiHandler.callApi(
+    ReqID.INVOKE_DATA_PENDING_REWARDS,
     ReqMethods.PROCESS_INVOKE_DATA,
     {
       data
@@ -102,7 +114,8 @@ export const destroyContract = (): void => {
     args
   });
 };
-export const checkSolution = (sol: any): void => {
+
+export const checkSolution = (sol: string): void => {
   const args = argsParser({
     role: ReqRoles.PLAYER,
     action: ReqActions.CHECK_SOLUTION,
@@ -114,6 +127,7 @@ export const checkSolution = (sol: any): void => {
     args
   });
 };
+
 export const viewCheckResult = (): void => {
   const args = argsParser({
     role: ReqRoles.PLAYER,
@@ -125,11 +139,78 @@ export const viewCheckResult = (): void => {
     args
   });
 };
+
 export const checkSolutionTx = (txId: string): void => {
   setTimeout(() => {
-    console.log(txId);
     ApiHandler.callApi(ReqID.TX_CHECK_SOLUTION, ReqMethods.TX_STATUS, {
       txId
     });
   }, AppSpecs.TX_CHECK_INTERVAL);
+};
+
+export const getPlayerKey = (): void => {
+  const args = argsParser({
+    role: ReqRoles.PLAYER,
+    action: ReqActions.GET_MY_PKEY,
+    cid: AppSpecs.CID
+  });
+  ApiHandler.callApi(ReqID.GET_PKEY, ReqMethods.INVOKE_CONTRACT, {
+    create_tx: false,
+    args
+  });
+};
+
+export const viewTops = (): void => {
+  const args = argsParser({
+    role: ReqRoles.PLAYER,
+    action: ReqActions.VIEW_TOPS,
+    cid: AppSpecs.CID
+  });
+  ApiHandler.callApi(ReqID.VIEW_TOPS, ReqMethods.INVOKE_CONTRACT, {
+    create_tx: false,
+    args
+  });
+};
+export const takePendingRewards = (): void => {
+  const args = argsParser({
+    role: ReqRoles.PLAYER,
+    action: ReqActions.TAKE_PENDING_REWARDS,
+    cid: AppSpecs.CID
+  });
+  ApiHandler.callApi(ReqID.TAKE_PENDING_REWARDS, ReqMethods.INVOKE_CONTRACT, {
+    create_tx: false,
+    args
+  });
+};
+
+export const pendingRewardsTx = (txId: string): void => {
+  setTimeout(() => {
+    ApiHandler.callApi(ReqID.TX_PENDING_REWARDS, ReqMethods.TX_STATUS, {
+      txId
+    });
+  }, AppSpecs.TX_CHECK_INTERVAL);
+};
+
+export const viewMyPendingRewards = (): void => {
+  const args = argsParser({
+    role: ReqRoles.PLAYER,
+    action: ReqActions.VIEW_MY_PENDING_REWARDS,
+    cid: AppSpecs.CID
+  });
+  ApiHandler.callApi(ReqID.VIEW_MY_PENDING_REWARDS, ReqMethods.INVOKE_CONTRACT, {
+    create_tx: false,
+    args
+  });
+};
+
+export const checkActiveGame = (): void => {
+  const args = argsParser({
+    role: ReqRoles.PLAYER,
+    action: ReqActions.HAS_ACTIVE_GAME,
+    cid: AppSpecs.CID
+  });
+  ApiHandler.callApi(ReqID.HAS_ACTIVE_GAME, ReqMethods.INVOKE_CONTRACT, {
+    create_tx: false,
+    args
+  });
 };

@@ -1,80 +1,137 @@
-import { APIResponse, BoardType } from 'beamApiProps';
+import { APIResponse, BoardLengthType, BoardType } from 'beamApiProps';
+import { WinArgsType } from 'ComponentProps';
+import { Win } from '../win/win.components';
+import {
+  setActiveGameAC,
+  setModeAC, setMyPendingRewardAC, setPKeyAC
+} from '../../logic/app_state/app_action_creators';
+import { AppStateHandler } from '../../logic/app_state/state_handler';
+import { ApiHandler } from '../../logic/beam_api/api_handler';
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
-import { ApiHandler } from '../../logic/beam_api/api_handler';
 import Menu from '../menu/menu.component';
 import { Field } from '../field/filed.component';
-import { ReqID, ResTXStatus } from '../../constants/api_constants';
 import {
-  checkSolutionTx,
+  ReqID,
+  ResTXComment,
+  ResTXStatus
+} from '../../constants/api_constants';
+import {
+  checkActiveGame,
+  getPlayerKey,
   invokeData,
-  invokeDataSolution,
   txStatus,
-  viewBoard
-} from '../../utils/request_creators';
+  viewBoard,
+  viewCheckResult,
+  viewMyPendingRewards,
+  viewTops
+} from '../../logic/beam_api/request_creators';
 import './main.scss';
 import Router from '../../logic/router/router';
-import { RouterMode, Routes } from '../../constants/menu_btn';
 import Options from '../options/options.component';
-import { Win } from '../win/win.components';
+import { RouterMode, Routes, BeamAmmount } from '../../constants/app_constants';
+import { Best } from '../best/best.component';
 
 export default class Main extends BaseComponent {
-  menu: Menu;
-
-  win: Win;
-
-  static element: any;
+  private readonly menu: Menu;
 
   private readonly router: Router;
 
   constructor() {
     super(Tags.DIV, ['main']);
     ApiHandler.addObservers(this);
+    getPlayerKey();
+    checkActiveGame();
+    viewMyPendingRewards();
     this.menu = new Menu();
     this.router = new Router({
       mode: RouterMode.HISTORY,
       root: Routes.MAIN
     });
-    this.win = new Win();
-    this.append(this.menu);
     this.router.add(Routes.OPTIONS, this.optionsField);
     this.router.add(Routes.RETURN, this.cancelGame);
     this.router.add(Routes.BEST, this.bestField);
+    this.initMainMenu();
   }
 
+  initMainMenu = ():void => {
+    checkActiveGame();
+    viewMyPendingRewards();
+    this.menu.removeActive();
+    this.append(this.menu);
+  };
+
   cancelGame = (): void => {
+    checkActiveGame();
     this.removeAll();
-    this.menu.classList.remove('active');
-    this.menu.initButtonMenu();
+    this.menu.removeActive();
     this.append(this.menu);
     window.history.pushState({}, '', Routes.MAIN);
   };
 
-  bestField = (): void => {
-    console.log('best');
+  bestField = (top:any): void => {
+    checkActiveGame();
+    viewMyPendingRewards();
+    const best = new Best(top);
+    if (!top) {
+      best.initLoader();
+      viewTops();
+    }
+    this.removeAll();
+    this.menu.classList.add('active');
+    this.append(this.menu, best);
   };
 
   initGameField = (board: BoardType): void => {
+    checkActiveGame();
+    if (AppStateHandler.getState().mode !== board.length) {
+      AppStateHandler.dispatch(setModeAC(board.length as BoardLengthType));
+    }
     this.menu.classList.add('active');
-    this.menu.initButtonMenu();
-    // const fl = new Field(board).element;
-    // this.element.append(fl)
     Field.ready(board);
   };
 
   optionsField = (): void => {
+    checkActiveGame();
     this.removeAll();
-    this.menu.classList.add('active');
-    this.menu.initButtonMenu();
+    this.menu.addActive();
     const options = new Options();
     this.append(this.menu, options);
   };
 
-  winner = (): void => {
-    this.menu.initButtonMenu();
-    this.menu.element.classList.add('active');
-    this.append(this.menu);
-    this.append(this.win);
+  winner = (res:WinArgsType): void => {
+    checkActiveGame();
+    viewMyPendingRewards();
+    this.menu.addActive();
+    const win = new Win(res);
+    this.append(this.menu, win);
+  };
+
+  transactionHandler = (result: APIResponse['result']):void => {
+    if (result.status_string === ResTXStatus.IN_PROGRESS) {
+      txStatus(result.txId);
+    }
+    if (result.status_string === ResTXStatus.FAILED) {
+      this.cancelGame();
+    }
+    if (result.status_string === ResTXStatus.COMPLETED) {
+      switch (result.comment) {
+        case ResTXComment.CREATE_NEW_GAME:
+          viewBoard();
+          break;
+        case ResTXComment.ENDING_EXISTING_GAME:
+          this.initMainMenu();
+          break;
+        case ResTXComment.TAKING_PENDING_REWARS:
+          this.initMainMenu();
+          break;
+        case ResTXComment.CHECKIN_SOLUTION:
+          viewCheckResult();
+          break;
+        default:
+          break;
+      }
+    }
   };
 
   inform = (res: APIResponse): void => {
@@ -82,59 +139,60 @@ export default class Main extends BaseComponent {
       case ReqID.CHECK:
         console.log(JSON.parse(res.result.output));
         break;
+
       case ReqID.START_GAME:
-        invokeData(res.result.raw_data);
-        break;
-      case ReqID.DESTROY:
-        invokeData(res.result.raw_data);
-        break;
       case ReqID.CANCEL_GAME:
-        invokeData(res.result.raw_data);
-        this.cancelGame();
-        break;
-      case ReqID.INVOKE_DATA:
-        this.menu.initLoader(res.result.txid);
-        txStatus(res.result.txid);
-        break;
-      case ReqID.TX_STATUS:
-        if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
-          txStatus(res.result.txId);
-        } else {
-          viewBoard();
-        }
-        break;
-      case ReqID.VIEW_BOARD:
-        try {
-          this.menu.initButtonMenu();
-          this.initGameField(JSON.parse(res.result.output).board as BoardType);
-        } catch (err) {
-          console.error(err);
-        }
-        break;
       case ReqID.CHECK_SOLUTION:
-        invokeDataSolution(res.result.raw_data);
+      case ReqID.TAKE_PENDING_REWARDS:
+        this.menu.removeActive();
+        invokeData(res.result.raw_data);
         break;
-      case ReqID.INVOKE_DATA_SOLUTION:
-        this.menu.initLoader(res.result.txid);
-        this.menu.element.classList.remove('active');
-        checkSolutionTx(res.result.txid);
-        break;
-      case ReqID.TX_CHECK_SOLUTION:
-        if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
-          checkSolutionTx(res.result.txId);
-        } else {
-          this.winner();
+
+      case ReqID.INVOKE_DATA:
+        if (res.result?.txid) {
+          this.menu.initLoader(res.result.txid);
+          txStatus(res.result.txid);
         }
         break;
+
+      case ReqID.TX_STATUS:
+        this.transactionHandler(res.result);
+        break;
+
+      case ReqID.GET_PKEY:
+        AppStateHandler.dispatch(
+          setPKeyAC(JSON.parse(res.result.output)['My public key'])
+        );
+        break;
+
+      case ReqID.HAS_ACTIVE_GAME:
+        AppStateHandler.dispatch(
+          (setActiveGameAC(!!(JSON.parse(res.result.output).has_active_game)))
+        );
+        this.menu.initButtonMenu();
+        break;
+
+      case ReqID.VIEW_BOARD:
+        this.menu.initButtonMenu();
+        this.initGameField(JSON.parse(res.result.output).board as BoardType);
+        break;
+      case ReqID.VIEW_TOPS:
+        this.bestField(JSON.parse(`[${res.result.output.slice(1, -1)}]`));
+        break;
+
       case ReqID.VIEW_CHECK_RESULT:
-        console.log('WIN');
+        this.winner(JSON.parse(res.result.output));
+        break;
+
+      case ReqID.VIEW_MY_PENDING_REWARDS:
+        AppStateHandler.dispatch(
+          setMyPendingRewardAC(
+            JSON.parse(res.result.output).pending_rewards / BeamAmmount.GROTHS_IN_BEAM
+            )
+        );
         break;
       default:
         break;
     }
-  };
-
-  informApp = (state: any): void => {
-    console.log(state);
   };
 }
