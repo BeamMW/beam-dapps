@@ -12,6 +12,14 @@
     justify-content: space-evenly;
     & h1 {
         font-size: 35px;
-        color: turquoise;
+        color: #80ffdb;
+    }
+    div{
+        span:first-child{
+            color: #7400b8;
+        }
+        span:last-child{
+            color: #80ffdb;
+        }
     }
 }

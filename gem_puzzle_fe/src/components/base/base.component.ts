@@ -22,6 +22,12 @@ export default class BaseComponent {
 
   public set innerHTML(inner: string) { this.element.innerHTML = inner; }
 
+  public set checked(bool: boolean) {
+    (this.element as HTMLInputElement).checked = bool;
+  }
+
+  public get style():CSSStyleDeclaration { return this.element.style; }
+
   append = (...args: BaseComponent[]):void => {
     const nodes = args.map(
       (component) => component.element
