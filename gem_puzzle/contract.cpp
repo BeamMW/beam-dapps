@@ -91,14 +91,12 @@ BEAM_EXPORT void Method_3(const GemPuzzle::CheckSolutionParams& params)
 			if (acc_info.game_result.time <= initial_params.free_time) {
 				reward = initial_params.multiplier * acc_info.game_info.ngparams.bet;
 			} else {
-				Amount tmp = (acc_info.game_result.time - initial_params.free_time) * initial_params.game_speed / 100;
-				if (initial_params.multiplier <= tmp) {
-					reward = 0;
-				} else {
-					reward = (initial_params.multiplier - tmp) * acc_info.game_info.ngparams.bet;
+				Amount lost = (acc_info.game_result.time - initial_params.free_time) * initial_params.game_speed * acc_info.game_info.ngparams.bet / 100;
+				Amount max_earn = initial_params.multiplier * acc_info.game_info.ngparams.bet;
+				if (lost < max_earn) {
+					reward = max_earn - lost;
 				}
 			}
-			// Amount reward = std::max(initial_params.multiplier - std::max(acc_info.game_result.time - initial_params.free_time, 0ll) * initial_params.game_speed / 100, 0ll) * acc_info.game_info.ngparams.bet;
 			Strict::Add(acc_info.pending_rewards, reward);
 			acc_info.has_active_game = false;
 			
