@@ -105,11 +105,9 @@ export class Best extends BaseComponent {
 
     thMoves.element.addEventListener('click', () => {
       this.initTableMove(top);
-      console.log(2);
     });
     thTime.element.addEventListener('click', () => {
       this.initTableTime(top);
-      console.log(1);
     });
   };
 

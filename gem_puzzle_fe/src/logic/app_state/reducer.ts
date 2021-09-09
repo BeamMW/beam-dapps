@@ -12,7 +12,8 @@ const initialState:IAppState = {
   pKey: '...',
   picOpt: BoardView.NUMBERS,
   rate: 0.01,
-  autoPlay: true
+  autoPlay: true,
+  reward: 0
 };
 
 export default class AppState {
@@ -83,6 +84,9 @@ export default class AppState {
         break;
       case AppStateActions.SET_AUTOPLAY:
         this.setState({ autoPlay: payload as boolean });
+        break;
+      case AppStateActions.SET_REWARD:
+        this.setState({ reward: payload as number });
         break;
       default:
         break;

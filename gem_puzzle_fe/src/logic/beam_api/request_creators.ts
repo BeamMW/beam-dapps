@@ -194,10 +194,10 @@ export const pendingRewardsTx = (txId: string): void => {
 export const viewMyPendingRewards = (): void => {
   const args = argsParser({
     role: ReqRoles.PLAYER,
-    action: ReqActions.TAKE_PENDING_REWARDS,
+    action: ReqActions.VIEW_MY_PENDING_REWARDS,
     cid: AppSpecs.CID
   });
-  ApiHandler.callApi(ReqID.TAKE_PENDING_REWARDS, ReqMethods.INVOKE_CONTRACT, {
+  ApiHandler.callApi(ReqID.VIEW_MY_PENDING_REWARDS, ReqMethods.INVOKE_CONTRACT, {
     create_tx: false,
     args
   });

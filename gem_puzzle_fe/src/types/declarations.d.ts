@@ -64,7 +64,8 @@ declare module 'AppStateProps' {
     rate: number;
     pKey: string;
     picOpt: BoardView;
-    autoPlay: boolean
+    autoPlay: boolean;
+    reward: number;
   }
 
   interface INewState {
@@ -77,6 +78,7 @@ declare module 'AppStateProps' {
     pKey?: string;
     picOpt?: BoardView;
     autoPlay?: boolean
+    reward?: number;
   }
 
 }

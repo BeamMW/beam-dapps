@@ -3,7 +3,7 @@ import { WinArgsType } from 'ComponentProps';
 import { Win } from '../win/win.components';
 import {
   setActiveGameAC,
-  setModeAC, setPKeyAC
+  setModeAC, setMyPendingRewardAC, setPKeyAC
 } from '../../logic/app_state/app_action_creators';
 import { AppStateHandler } from '../../logic/app_state/state_handler';
 import { ApiHandler } from '../../logic/beam_api/api_handler';
@@ -23,12 +23,13 @@ import {
   txStatus,
   viewBoard,
   viewCheckResult,
+  viewMyPendingRewards,
   viewTops
 } from '../../logic/beam_api/request_creators';
 import './main.scss';
 import Router from '../../logic/router/router';
 import Options from '../options/options.component';
-import { RouterMode, Routes } from '../../constants/app_constants';
+import { RouterMode, Routes, BeamAmmount } from '../../constants/app_constants';
 import { Best } from '../best/best.component';
 
 export default class Main extends BaseComponent {
@@ -41,6 +42,7 @@ export default class Main extends BaseComponent {
     ApiHandler.addObservers(this);
     getPlayerKey();
     checkActiveGame();
+    viewMyPendingRewards();
     this.menu = new Menu();
     this.router = new Router({
       mode: RouterMode.HISTORY,
@@ -54,6 +56,7 @@ export default class Main extends BaseComponent {
 
   initMainMenu = ():void => {
     checkActiveGame();
+    viewMyPendingRewards();
     this.menu.removeActive();
     this.append(this.menu);
   };
@@ -68,6 +71,7 @@ export default class Main extends BaseComponent {
 
   bestField = (top:any): void => {
     checkActiveGame();
+    viewMyPendingRewards();
     const best = new Best(top);
     if (!top) {
       best.initLoader();
@@ -97,6 +101,7 @@ export default class Main extends BaseComponent {
 
   winner = (res:WinArgsType): void => {
     checkActiveGame();
+    viewMyPendingRewards();
     this.menu.addActive();
     const win = new Win(res);
     this.append(this.menu, win);
@@ -180,6 +185,12 @@ export default class Main extends BaseComponent {
         this.winner(JSON.parse(res.result.output));
         break;
 
+      case ReqID.VIEW_MY_PENDING_REWARDS:
+        AppStateHandler.dispatch(
+          // eslint-disable-next-line max-len
+          setMyPendingRewardAC(JSON.parse(res.result.output).pending_rewards / BeamAmmount.GROTHS_IN_BEAM)
+        );
+        break;
       default:
         break;
     }
