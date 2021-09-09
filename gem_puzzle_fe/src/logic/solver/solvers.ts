@@ -38,7 +38,7 @@ export default class NPuzzleSolver {
     try {
       this.solveGrid(this.grid.length);
     } catch (err: any) {
-      console.log(err.message);
+      console.error(err.message);
       return null;
     }
     return this.solution;

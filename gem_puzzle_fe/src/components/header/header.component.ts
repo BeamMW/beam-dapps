@@ -55,9 +55,9 @@ export default class Header extends BaseComponent {
     this.append(
       isActiveBlock,
       rateBlock,
+      rewardBlock,
       viewBlock,
       modeBlock,
-      rewardBlock,
       autoPlayBlock
     );
   }

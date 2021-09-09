@@ -12,7 +12,7 @@ const initialState:IAppState = {
   pKey: '...',
   picOpt: BoardView.NUMBERS,
   rate: 0.01,
-  autoPlay: true,
+  autoPlay: false,
   reward: 0
 };
 

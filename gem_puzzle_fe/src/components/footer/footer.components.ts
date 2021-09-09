@@ -24,7 +24,7 @@ export default class Footer extends BaseComponent {
         this.innerHTML = '';
         this.timeoutId = null;
       }, 300);
-    }, 2000);
+    }, 5000);
   };
 
   inform = (res: APIResponse):void => {

@@ -14,22 +14,6 @@ import { boxPozition } from '../../utils/string_handlers';
 import img from '../../assets/pic320.jpg';
 import NPuzzleSolver from '../../logic/solver/solvers';
 
-// function getRandomGrid():any{
-//   let grid = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]];
-
-//   // Shuffle
-//   let blankBox: Box | null | undefined = new Box(3, 3);
-//   for (let i = 0; i < 1000; i++) {
-//     const randomNextdoorBox:any = blankBox?.getRandomNextdoorBox();
-//     swapBoxes(grid, blankBox, randomNextdoorBox);
-//     blankBox = randomNextdoorBox;
-//   }
-
-//   if (isSolved(grid)) return getRandomGrid();
-//   console.log(grid)
-//   return grid;
-// };
-
 export class Field {
   static tickId: any;
 
@@ -74,7 +58,6 @@ export class Field {
 
   handleClickBox = (box: Box):void => {
     const nextdoorBoxes = box.getNextdoorBoxes();
-    console.log(nextdoorBoxes);
     const blankBox = nextdoorBoxes.find(
       (nextdoorBox: {
         y: number; x: number
@@ -98,11 +81,6 @@ export class Field {
       }
     }
   };
-  //  inform = (res:APIResponse):void => {
-  //     if (res.id === ReqID.CHECK) {
-  //       console.log("WIN")
-  //     }
-  //   };
 
   render = (): void => {
     const {
@@ -111,7 +89,6 @@ export class Field {
     // Render grid
     const main = document.querySelector('.main');
     const newGrid = new BaseComponent(Tags.DIV, ['field']);
-    // newGrid.classList.add('field');
     const { picOpt, autoPlay } = AppStateHandler.getState();
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
@@ -137,9 +114,6 @@ export class Field {
           );
         }
         button.element.classList.add(grid[i][j] === 0 ? 'empty' : 'button');
-
-        // console.log(newGrid)
-        // console.log(this.main)
         newGrid.element.append(button.element);
       }
     }
@@ -149,25 +123,15 @@ export class Field {
     if (autoPlay && status === 'playing') {
       const { piece } = this.solveList?.shift();
       this.timeOutId = setTimeout(() => {
-        console.log(new Box(piece.x, piece.y));
         this.handleClickBox(new Box(piece.x, piece.y));
-      }, 50);
+      }, 150);
     }
 
     newGrid.element.addEventListener('DOMNodeRemovedFromDocument', () => {
       clearTimeout(this.timeOutId as NodeJS.Timeout);
     });
     // Render button
-    // const setTimer =()=>{
-    //   clearInterval(Field.tickId);
-    //   Field.tickId = setInterval(this.tick, 1000);
-    //   this.setState(State.start(this.board));
-    // };
-    if (status === 'ready') console.log('ready');
-
-    if (status === 'playing') console.log(newGrid.element);
     if (status === 'won') {
-      console.log('won');
       setTimeout(() => {
         main?.removeChild(newGrid.element);
         console.log(solution.join(''));

@@ -135,7 +135,6 @@ export default class Main extends BaseComponent {
   };
 
   inform = (res: APIResponse): void => {
-    console.log(res);
     switch (res.id) {
       case ReqID.CHECK:
         console.log(JSON.parse(res.result.output));
@@ -187,8 +186,9 @@ export default class Main extends BaseComponent {
 
       case ReqID.VIEW_MY_PENDING_REWARDS:
         AppStateHandler.dispatch(
-          // eslint-disable-next-line max-len
-          setMyPendingRewardAC(JSON.parse(res.result.output).pending_rewards / BeamAmmount.GROTHS_IN_BEAM)
+          setMyPendingRewardAC(
+            JSON.parse(res.result.output).pending_rewards / BeamAmmount.GROTHS_IN_BEAM
+            )
         );
         break;
       default:

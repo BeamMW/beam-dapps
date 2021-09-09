@@ -45,7 +45,6 @@ export default class Menu extends BaseComponent {
         btnKey.element.classList.add(`btn_${btn.key}`);
         btnKey.setAttributes({ value: btn.title });
         btnKey.element.addEventListener('click', () => {
-          // this.initLoader();
           btn.handler();
         });
         return btnKey;

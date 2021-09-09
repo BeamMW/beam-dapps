@@ -24,13 +24,13 @@ export class BeamAPI {
     this.observers = [];
   }
 
-  addObservers = (...components: BaseComponent[]): void => {
+  readonly addObservers = (...components: BaseComponent[]): void => {
     components.forEach((component) => {
       this.observers.push(component);
     });
   };
 
-  onApiResult = (json: string): void => {
+  private readonly onApiResult = (json: string): void => {
     const res = JSON.parse(json);
     this.observers.forEach((component: BaseComponent) => {
       if (component.inform) {
@@ -39,7 +39,7 @@ export class BeamAPI {
     });
   };
 
-  loadAPI = async (): Promise<void> => {
+  readonly loadAPI = async (): Promise<void> => {
     const { qt, beam } = window;
     if (beam) {
       window.beam.apiResult$.subscribe(this.onApiResult);
@@ -63,13 +63,13 @@ export class BeamAPI {
     }
   };
 
-  initShader = (): void => {
+  private readonly initShader = (): void => {
     if (window.beam) {
       window.beam.initializeShader(AppSpecs.CID, AppSpecs.TITLE);
     }
   };
 
-  callApi = (callid: string, method: string, params: BeamApiParams): void => {
+  readonly callApi = (callid: string, method: string, params: BeamApiParams): void => {
     if (this.contract) {
       const contract = Array.from(new Uint8Array(this.contract));
       const request = {
