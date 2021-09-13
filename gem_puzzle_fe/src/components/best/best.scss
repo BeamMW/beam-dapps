@@ -30,6 +30,8 @@ tr {
   overflow: hidden;
   overflow-y: scroll;
   justify-content: center;
+  border-radius: 10px;
+
 
   background-color: rgba($color: #dffd94, $alpha: 1);
   &__best {
@@ -38,7 +40,6 @@ tr {
     flex-direction: column;
     max-height: 70vh;
     //  margin: 62px 2px 121px 141px;
-    border-radius: 10px;
     background-color: rgba($color: #dffd94, $alpha: 1);
 
     tr {

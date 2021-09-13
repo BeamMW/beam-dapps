@@ -1,4 +1,4 @@
 export enum GrState {
-MainTitle = 'WELCOME TO THE GEM_PUZZLE',
-MainDesc = 'Play tot he earn'
+MainTitle = 'WELCOME TO GEM-PUZZLE!',
+MainDesc = 'Play and earn!'
 }
