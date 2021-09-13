@@ -8,10 +8,15 @@ import TxBoard from '../txboard/txboard.component';
 import { MenuBtn } from '../../constants/app_constants';
 import { menuProps } from '../../constants/menu_btn';
 import { AppStateHandler } from '../../logic/app_state/state_handler';
+import Greeting from '../greeting/greeting.component';
+import { GrState } from '../greeting/greeting_state';
 
 export default class Menu extends BaseComponent {
+  private readonly greeting: Greeting;
+
   constructor() {
     super(Tags.DIV, ['menu']);
+    this.greeting = new Greeting(GrState.MainTitle, GrState.MainDesc);
     ApiHandler.addObservers(this);
   }
 
@@ -23,19 +28,17 @@ export default class Menu extends BaseComponent {
         if (this.classList.contains('active') && btn.key !== MenuBtn.RETURN) {
           return false;
         }
-        if (
-          !this.classList.contains('active')
-          && btn.key === MenuBtn.RETURN
-        ) {
+        if (!this.classList.contains('active') && btn.key === MenuBtn.RETURN) {
+          this.append(this.greeting);
           return false;
         }
         if (activeGame && btn.key === MenuBtn.NEW) {
           return false;
         }
-        if (!activeGame && (
-          btn.key === MenuBtn.CANCEL
-          || btn.key === MenuBtn.CONTINUE
-        )) {
+        if (
+          !activeGame
+          && (btn.key === MenuBtn.CANCEL || btn.key === MenuBtn.CONTINUE)
+        ) {
           return false;
         }
         return true;
@@ -43,7 +46,13 @@ export default class Menu extends BaseComponent {
       .map((btn) => {
         const btnKey = new Button();
         btnKey.element.classList.add(`btn_${btn.key}`);
-        btnKey.setAttributes({ value: btn.title });
+        if (!btn.icon) {
+          btnKey.element.innerHTML = ` <span>
+          
+        ${btn.title}</span>`;
+        } else {
+          btnKey.element.innerHTML = `${btn.icon} <span>${btn.title}</span>`;
+        }
         btnKey.element.addEventListener('click', () => {
           btn.handler();
         });
@@ -52,9 +61,11 @@ export default class Menu extends BaseComponent {
     this.append(...buttons);
   };
 
-  removeActive = ():void => this.classList.remove('active');
+  removeActive = (): void => this.classList.remove('active');
 
-  addActive = ():void => this.classList.add('active');
+  addActive = (): void => {
+    this.classList.add('active');
+  };
 
   initLoader = (txid?: string): void => {
     const args = [new Loader()];

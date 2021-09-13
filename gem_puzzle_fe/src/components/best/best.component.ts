@@ -23,8 +23,8 @@ export class Best extends BaseComponent {
     const thMoves = new BaseComponent(Tags.TH);
     const thPermutation = new BaseComponent(Tags.TH);
     trHeader.classList.add('thHeader');
-    thPos.element.textContent = '№';
-    thAcc.element.textContent = 'Account';
+    thPos.element.textContent = 'RANK';
+    thAcc.element.textContent = 'PUBLIC KEY';
     thTime.element.textContent = 'Time';
     thMoves.element.textContent = 'Moves';
     thPermutation.element.textContent = 'Permutation';
@@ -36,6 +36,7 @@ export class Best extends BaseComponent {
       .forEach((el: any, idx: any):void => {
         const tdN = new BaseComponent(Tags.TD);
         const tr = new BaseComponent(Tags.TR);
+        tr.element.classList.add('tRow');
         tdN.element.textContent = idx + 1;
         tr.append(tdN);
 
@@ -45,7 +46,8 @@ export class Best extends BaseComponent {
           if (key[1]) {
             td.element.textContent = `${key[1]}`;
             if (key[1] === pKey) {
-              tr.style.background = 'rgba(62, 102, 251, .7)';
+              tr.style.backgroundColor = 'rgba(0, 191, 74, 0.3)';
+              tr.style.border = 'solid 2px #00bf4a';
             }
             tr.append(td);
           }

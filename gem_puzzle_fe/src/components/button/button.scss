@@ -1,16 +1,77 @@
 .button {
-    justify-content: center;
-    align-items: center;
-    padding: 8px;
-    background: #3E66FB;
-    border-radius: 8px;
-    width: 150px;
+    position: relative;
+    width: 368px;
     height: 60px;
-    font-style: normal;
-    font-size: 12px;
-    line-height: 16px;
+    margin: 0 0 10px;
+    padding: 13px 86px;
+    background-color: rgba($color: #20866f, $alpha: .5);
     display: flex;
     align-items: center;
-    text-align: center;
-    color: #FFFFFF;
+    justify-content: center;
+    margin: 0 0 0 11px;
+    font-family: Ubuntu;
+    font-size: 20px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.7;
+    letter-spacing: normal;
+    color: #fff;
+    box-shadow: inset 0 -4px 0 0 rgba(0, 0, 0, 0.3);
+
+    &::before {
+        content: "";
+        position: absolute;
+        height: 0;
+        width: 0;
+        left: -15px;
+        top: 0px;
+        border-top: 30px solid transparent;
+        border-bottom: 30px solid transparent;
+        border-right: 15px solid rgba($color: #20866f, $alpha: .5);
+        box-shadow: inset -3px -4px 0 0 rgba(0, 0, 0, 0.3);
+
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        height: 0;
+        width: 0;
+        right: -15px;
+        top: 0px;
+        border-top: 30px solid transparent;
+        border-bottom: 30px solid transparent;
+        border-left: 15px solid rgba($color: #20866f, $alpha: .5);
+        // border-radius: 10px;
+    box-shadow: inset -3px -4px 0 0 rgba(0, 0, 0, 0.3);
+    // box-shadow: transparent -3px -4px 0 0 rgba(0, 0, 0, 0.3);
+    // border-width: 5px;
+
+    }
+
+    &:hover {
+        cursor: pointer;
+        transition: ease-in .3s; 
+        background-color: rgba($color: #00ff64, $alpha: .5);
+        
+
+    }
+
+    &:hover::before {
+        cursor: pointer;
+        transition: ease-in .3s; 
+        border-right: 15px solid rgba($color: #00ff64, $alpha: .5);
+
+    }
+
+    &:hover::after {
+        cursor: pointer;
+        transition: ease-in .3s; 
+        border-left: 15px solid rgba($color: #00ff64, $alpha: .5);
+
+    }
+    span {
+        margin-left: 11px;
+    }
 }
