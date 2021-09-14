@@ -1,4 +1,5 @@
 import {
+  takePendingRewards,
   cancelGame,
   startGame, viewBoard
 } from '../logic/beam_api/request_creators';
@@ -40,5 +41,10 @@ export const menuProps = [
     key: MenuBtn.CANCEL,
     title: 'CANCEL GAME',
     handler: cancelGame
+  },
+  {
+    key: MenuBtn.TAKE_REWARD,
+    title: 'TAKE REWARD',
+    handler: takePendingRewards
   }
 ];

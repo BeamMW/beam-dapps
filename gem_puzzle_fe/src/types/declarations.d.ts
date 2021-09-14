@@ -64,6 +64,8 @@ declare module 'AppStateProps' {
     rate: number;
     pKey: string;
     picOpt: BoardView;
+    autoPlay: boolean;
+    reward: number;
   }
 
   interface INewState {
@@ -75,22 +77,30 @@ declare module 'AppStateProps' {
     rate?: number;
     pKey?: string;
     picOpt?: BoardView;
+    autoPlay?: boolean
+    reward?: number;
   }
 
 }
 
 declare module 'beamApiProps' {
-  import BaseComponent from '../components/base/base.component';
+
+  type BaseComponent = import('../components/base/base.component').default;
+  type ResTXComment = import('../constants/api_constants').ResTXComment;
+  type ResTXStatus = import('../constants/api_constants').ResTXStatus;
 
   export type APIResponse = {
     id: ReqIds;
     jsonrpc: string;
     result: {
+      [key:string];
       output: string;
       txid: string;
       txId: string;
       raw_data: number[];
-      status_string: string;
+      comment: ResTXComment;
+      status_string: ResTXStatus;
+      failure_reason: string;
       board?:BoardType;
     };
     error?: {
@@ -98,22 +108,6 @@ declare module 'beamApiProps' {
       message: string;
     }
   };
-
-  export interface IActionParams {
-    [key:string]: string
-  }
-
-  export interface IActionOutput {
-    [key:string]: never | IActionParams
-  }
-
-  export interface IRoleOutput {
-    [key:string]:IActionOutput
-  }
-
-  export interface IOutput {
-    roles: IRoleOutput
-  }
 
   export type CallApiType =
   (callid: string, method: string, params: BeamApiParams) => void;
@@ -135,5 +129,13 @@ declare module 'beamApiProps' {
     args?: string;
     data?: number[];
     txId?:string
+  };
+}
+
+declare module 'ComponentProps' {
+  export type WinArgsType = {
+    verdict: string;
+    moves: number;
+    ['time (min)']: number;
   };
 }

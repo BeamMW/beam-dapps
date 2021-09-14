@@ -2,7 +2,6 @@ import { BoardType } from 'beamApiProps';
 import { BoardView } from '../../constants/app_constants';
 import { AppStateHandler } from '../../logic/app_state/state_handler';
 import { Tags } from '../../constants/html_tags';
-import { ApiHandler } from '../../logic/beam_api/api_handler';
 import {
   Box, isSolved, solution, swapBoxes
 } from './box';
@@ -13,27 +12,10 @@ import Menu from '../menu/menu.component';
 import BaseComponent from '../base/base.component';
 import { boxPozition } from '../../utils/string_handlers';
 import img from '../../assets/pic320.jpg';
-
-// function getRandomGrid():any{
-//   let grid = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]];
-
-//   // Shuffle
-//   let blankBox: Box | null | undefined = new Box(3, 3);
-//   for (let i = 0; i < 1000; i++) {
-//     const randomNextdoorBox:any = blankBox?.getRandomNextdoorBox();
-//     swapBoxes(grid, blankBox, randomNextdoorBox);
-//     blankBox = randomNextdoorBox;
-//   }
-
-//   if (isSolved(grid)) return getRandomGrid();
-//   console.log(grid)
-//   return grid;
-// };
+import NPuzzleSolver from '../../logic/solver/solvers';
 
 export class Field {
   static tickId: any;
-
-  [x: string]: any;
 
   state?: any;
 
@@ -41,17 +23,29 @@ export class Field {
 
   menu: Menu;
 
-  constructor(state: any) {
+  solveList: any [] | null;
+
+  timeOutId: null | NodeJS.Timeout;
+
+  constructor(state: any, solveList?: any[]) {
     this.state = state;
     this.tickId = null;
+    this.timeOutId = null;
+    if (solveList) {
+      this.solveList = solveList;
+    } else this.solveList = null;
     this.tick = this.tick.bind(this);
     this.render();
     this.handleClickBox = this.handleClickBox.bind(this);
-    ApiHandler.addObservers(this);
     this.menu = new Menu();
   }
 
-  static ready = (board: BoardType): Field => new Field(State.start(board));
+  static ready = (board: BoardType): Field => {
+    const { autoPlay } = AppStateHandler.getState();
+    const solveBoard = new NPuzzleSolver(board).solve() as any [];
+    if (autoPlay) { return new Field(State.start(board), solveBoard); }
+    return new Field(State.start(board));
+  };
 
   tick = (): void => {
     this.setState({ time: this.state.time + 1 });
@@ -62,50 +56,40 @@ export class Field {
     this.render();
   };
 
-  handleClickBox(box: { getNextdoorBoxes: () => any; x: number; y: number }) {
-    return ():void => {
-      const nextdoorBoxes = box.getNextdoorBoxes();
-      console.log(nextdoorBoxes);
-
-      const blankBox = nextdoorBoxes.find(
-        (nextdoorBox: {
-          y: number; x: number
-        }) => this.state.grid[nextdoorBox.y][nextdoorBox.x] === 0
-      );
-      if (blankBox) {
-        const newGrid = [...this.state.grid];
-        swapBoxes(newGrid, { x: box.x, y: box.y }, blankBox);
-        if (isSolved(newGrid)) {
-          clearInterval(Field.tickId);
-          this.setState({
-            status: 'won',
-            grid: newGrid,
-            move: this.state.move + 1
-          });
-        } else {
-          this.setState({
-            grid: newGrid,
-            move: this.state.move + 1
-          });
-        }
+  handleClickBox = (box: Box):void => {
+    const nextdoorBoxes = box.getNextdoorBoxes();
+    const blankBox = nextdoorBoxes.find(
+      (nextdoorBox: {
+        y: number; x: number
+      }) => this.state.grid[nextdoorBox.y][nextdoorBox.x] === 0
+    );
+    if (blankBox) {
+      const newGrid = [...this.state.grid];
+      swapBoxes(newGrid, { x: box.x, y: box.y }, blankBox);
+      if (isSolved(newGrid)) {
+        clearInterval(Field.tickId);
+        this.setState({
+          status: 'won',
+          grid: newGrid,
+          move: this.state.move + 1
+        });
+      } else {
+        this.setState({
+          grid: newGrid,
+          move: this.state.move + 1
+        });
       }
-    };
-  }
-  //  inform = (res:APIResponse):void => {
-  //     if (res.id === ReqID.CHECK) {
-  //       console.log("WIN")
-  //     }
-  //   };
+    }
+  };
 
   render = (): void => {
     const {
-      grid, move, time, status
+      grid, status
     } = this.state;
     // Render grid
     const main = document.querySelector('.main');
     const newGrid = new BaseComponent(Tags.DIV, ['field']);
-    // newGrid.classList.add('field');
-    const { picOpt } = AppStateHandler.getState();
+    const { picOpt, autoPlay } = AppStateHandler.getState();
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
         const button = new BaseComponent(Tags.BUTTON, ['button']);
@@ -122,55 +106,54 @@ export class Field {
             : grid[i][j].toString();
         }
         main?.append(newGrid.element);
-        // button.classList.add('button');
-        if (status === 'playing') {
+        button.classList.add('button');
+        if (status === 'playing' && !autoPlay) {
           button.element.addEventListener(
             'click',
-            this.handleClickBox(new Box(j, i))
+            () => this.handleClickBox(new Box(j, i))
           );
         }
         button.element.classList.add(grid[i][j] === 0 ? 'empty' : 'button');
-
-        // console.log(newGrid)
-        // console.log(this.main)
         newGrid.element.append(button.element);
       }
     }
     (document.querySelector('.field') as HTMLElement).replaceWith(
       newGrid.element
     );
-
-    // Render button
-    // const setTimer =()=>{
-    //   clearInterval(Field.tickId);
-    //   Field.tickId = setInterval(this.tick, 1000);
-    //   this.setState(State.start(this.board));
-    // };
-    if (status === 'ready') console.log('ready');
-
-    if (status === 'playing') console.log(newGrid.element);
-    if (status === 'won') {
-      console.log('won');
-      main?.removeChild(newGrid.element);
-      console.log(solution.join(''));
-      checkSolution(solution.join(''));
-      solution.length = 0
+    if (autoPlay && status === 'playing') {
+      const { piece } = this.solveList?.shift();
+      this.timeOutId = setTimeout(() => {
+        this.handleClickBox(new Box(piece.x, piece.y));
+      }, 150);
     }
-    // Render move
-    (
-      document.getElementById('move') as HTMLElement
-    ).textContent = `Move: ${move}`;
-    // Render time
-    (
-      document.getElementById('time') as HTMLElement
-    ).textContent = `Time: ${time}`;
-    // Render message
+
+    newGrid.element.addEventListener('DOMNodeRemovedFromDocument', () => {
+      clearTimeout(this.timeOutId as NodeJS.Timeout);
+    });
+    // Render button
+    if (status === 'won') {
+      setTimeout(() => {
+        main?.removeChild(newGrid.element);
+        console.log(solution.join(''));
+        checkSolution(solution.join(''));
+        solution.length = 0;
+      }, 2000);
+    }
+    // // Render move
+    // (
+    //   document.getElementById('move') as HTMLElement
+    // ).textContent = `Move: ${move}`;
+    // // Render time
+    // (
+    //   document.getElementById('time') as HTMLElement
+    // ).textContent = `Time: ${time}`;
+    // // Render message
 
     if (status === 'won') {
       (document.querySelector('.message') as HTMLElement)
         .textContent = 'You win!';
     } else {
-      (document.querySelector('.message') as HTMLElement).textContent = '';
+      // (document.querySelector('.message') as HTMLElement).textContent = '';
     }
   };
 }

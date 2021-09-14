@@ -6,6 +6,7 @@ import Main from './components/main/main.component';
 import './style/index.scss';
 import AppState from './logic/app_state/reducer';
 import Header from './components/header/header.component';
+import Footer from './components/footer/footer.components';
 
 export class App {
   private readonly rootElement: HTMLElement;
@@ -31,7 +32,11 @@ export class App {
         addObservers: this.API.addObservers
       });
       this.rootElement.removeChild(loader);
-      this.rootElement.append(new Header().element, new Main().element);
+      this.rootElement.append(
+        new Header().element,
+        new Main().element,
+        new Footer().element
+      );
     });
   }
 }

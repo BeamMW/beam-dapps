@@ -1,5 +1,6 @@
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
+import AutoPlayOpt from './autoplay.option.component';
 import Mode from './mode.option.component';
 import './options.scss';
 import PicOption from './picture.option.component';
@@ -11,6 +12,7 @@ export default class Options extends BaseComponent {
     const rate = new Rate();
     const mode = new Mode();
     const picOpt = new PicOption();
-    this.append(rate, mode, picOpt);
+    const autoplay = new AutoPlayOpt();
+    this.append(rate, mode, picOpt, autoplay);
   }
 }
