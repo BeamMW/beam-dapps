@@ -5,6 +5,8 @@
 
 #include "board.h"
 
+#include <random>
+
 GemPuzzle::Verdict check_solution(uint64_t permutation_num, const char* solution, uint32_t& moves_num)
 {
 	GemPuzzle::Board board(permutation_num);
@@ -47,8 +49,26 @@ BEAM_EXPORT void Dtor(void* a)
 	Env::DelVar_T(0);
 }
 
-BEAM_EXPORT void Method_2(const GemPuzzle::NewGameParams& params)
+BEAM_EXPORT void Method_2(GemPuzzle::NewGameParams& params)
 {
+	BlockHeader::Info hdr;
+	hdr.m_Height = Env::get_Height();
+	Env::get_HdrInfo(hdr);
+
+	uint64_t seed = 0;
+	Env::Memcpy(&seed, &hdr.m_Hash.m_p, 32);
+	
+	std::mt19937_64 gen(seed);
+	std::uniform_int_distribution<uint64_t> distrib(1, factorial(GemPuzzle::Board::PERMUTATION_LEN) - 1);
+
+	uint64_t permutation_num;
+	do {
+		permutation_num = distrib(gen);
+	} while (!GemPuzzle::Board(permutation_num).is_solvable());
+
+	params.height = hdr.m_Height;
+	params.permutation_num = permutation_num;
+
 	GemPuzzle::AccountInfo acc_info;
 	bool is_loaded = Env::LoadVar_T(params.player, acc_info);
 
@@ -91,14 +111,12 @@ BEAM_EXPORT void Method_3(const GemPuzzle::CheckSolutionParams& params)
 			if (acc_info.game_result.time <= initial_params.free_time) {
 				reward = initial_params.multiplier * acc_info.game_info.ngparams.bet;
 			} else {
-				Amount tmp = (acc_info.game_result.time - initial_params.free_time) * initial_params.game_speed / 100;
-				if (initial_params.multiplier <= tmp) {
-					reward = 0;
-				} else {
-					reward = (initial_params.multiplier - tmp) * acc_info.game_info.ngparams.bet;
+				Amount lost = (acc_info.game_result.time - initial_params.free_time) * initial_params.game_speed * acc_info.game_info.ngparams.bet / 100;
+				Amount max_earn = initial_params.multiplier * acc_info.game_info.ngparams.bet;
+				if (lost < max_earn) {
+					reward = max_earn - lost;
 				}
 			}
-			// Amount reward = std::max(initial_params.multiplier - std::max(acc_info.game_result.time - initial_params.free_time, 0ll) * initial_params.game_speed / 100, 0ll) * acc_info.game_info.ngparams.bet;
 			Strict::Add(acc_info.pending_rewards, reward);
 			acc_info.has_active_game = false;
 			
