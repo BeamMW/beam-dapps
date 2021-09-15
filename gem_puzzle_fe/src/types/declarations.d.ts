@@ -138,4 +138,10 @@ declare module 'ComponentProps' {
     moves: number;
     ['time (min)']: number;
   };
+
+  export type CellToRender = {
+    index: number,
+    x: number,
+    y: number
+  };
 }

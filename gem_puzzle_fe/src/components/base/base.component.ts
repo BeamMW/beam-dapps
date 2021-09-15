@@ -28,6 +28,8 @@ export default class BaseComponent {
 
   public get style():CSSStyleDeclaration { return this.element.style; }
 
+  public get dataset():DOMStringMap { return this.element.dataset; }
+
   append = (...args: BaseComponent[]):void => {
     const nodes = args.map(
       (component) => component.element

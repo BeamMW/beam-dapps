@@ -1,4 +1,5 @@
 import { BoardType } from 'beamApiProps';
+import { CellToRender } from 'ComponentProps';
 
 export class Box {
   x: number;
@@ -10,38 +11,57 @@ export class Box {
     this.y = y;
   }
 
-  getTopBox = ():Box | null => {
-    if (this.y === 0) return null;
-    return new Box(this.x, this.y - 1);
+  getTopBox = ():Box[] => {
+    const topBox:Box[] = [];
+    let { y } = this;
+    while (y > 0) {
+      topBox.push(new Box(this.x, y - 1));
+      y--;
+    }
+    return topBox;
   };
 
-  getRightBox = ():Box | null => {
-    if (this.x === 3) return null;
-    return new Box(this.x + 1, this.y);
+  getRightBox = ():Box[] => {
+    const rightBox:Box[] = [];
+    let { x } = this;
+    while (x < 3) {
+      rightBox.push(new Box(x + 1, this.y));
+      x++;
+    }
+    return rightBox;
   };
 
-  getBottomBox = ():Box | null => {
-    if (this.y === 3) return null;
-    return new Box(this.x, this.y + 1);
+  getBottomBox = ():Box[] => {
+    const bottomBox:Box[] = [];
+    let { y } = this;
+    while (y < 3) {
+      bottomBox.push(new Box(this.x, y + 1));
+      y++;
+    }
+    return bottomBox;
   };
 
-  getLeftBox = ():Box | null => {
-    if (this.x === 0) return null;
-    return new Box(this.x - 1, this.y);
+  getLeftBox = ():Box[] => {
+    const leftBox:Box[] = [];
+    let { x } = this;
+    while (x > 0) {
+      leftBox.push(new Box(x - 1, this.y));
+      x--;
+    }
+    return leftBox;
   };
 
   getNextdoorBoxes = ():Box[] => [
-    this.getTopBox(),
-    this.getRightBox(),
-    this.getBottomBox(),
-    this.getLeftBox()
-  ].filter((box) => box !== null) as Box[];
+    ...this.getTopBox(),
+    ...this.getRightBox(),
+    ...this.getBottomBox(),
+    ...this.getLeftBox()
+  ];
 
-  getRandomNextdoorBox = ():void => {
+  getRandomNextdoorBox = ():Box | void => {
     const nextdoorBoxes = this.getNextdoorBoxes();
     return (
       nextdoorBoxes[Math.floor(Math.random() * nextdoorBoxes.length)]
-      && console.log(nextdoorBoxes)
     );
   };
 }
@@ -52,14 +72,44 @@ let empty = new Box(3, 3);
 
 export function swapBoxes(
   grid: BoardType,
-  box1: { x: number, y: number },
-  box2: { x: number, y: number }
-):void {
-  const box1Y = grid[box1.y] as number[];
-  const box2Y = grid[box2.y] as number[];
-  const temp = box1Y[box1.x] as number;
-  box1Y[box1.x] = box2Y[box2.x] as number;
-  box2Y[box2.x] = temp;
+  f: { x: number, y: number },
+  e: { x: number, y: number }
+):CellToRender[] {
+  const toRender:CellToRender[] = [];
+  let { x, y } = e;
+  if (f.y === e.y) {
+    const eBox = grid[e.y] as number[];
+    const k = e.x > f.x ? -1 : 1;
+    while (x !== f.x) {
+      eBox[x] = <number>eBox
+        .splice(x + k, 1, <number>eBox[x])[0];
+      toRender.push({
+        index: <number>eBox[x] - 1,
+        x,
+        y
+      });
+      solution.push(k > 0 ? 'r' : 'l');
+      x += k;
+    }
+  }
+  if (f.x === e.x) {
+    const k = e.y > f.y ? -1 : 1;
+    while (y !== f.y) {
+      const eBox = grid[y] as number[];
+      const fBox = grid[y + k] as number[];
+      eBox[x] = <number>fBox
+        .splice(x, 1, <number>eBox[x])[0];
+      toRender.push({
+        index: <number>eBox[x] - 1,
+        x,
+        y
+      });
+      solution.push(k > 0 ? 'd' : 'u');
+      y += k;
+    }
+  }
+  console.log(solution.join(''));
+  return toRender;
 }
 
 export const emptyBox = (grid: BoardType):void => {
@@ -85,11 +135,8 @@ export const emptyBox = (grid: BoardType):void => {
     }
   }
 };
-export const isSolved = (grid: BoardType):boolean => {
-  console.log(grid);
-  emptyBox(grid);
-  return (
-    grid[0]?.[0] === 1
+export const isSolved = (grid: BoardType):boolean => (
+  grid[0]?.[0] === 1
     && grid[0][1] === 2
     && grid[0][2] === 3
     && grid[0][3] === 4
@@ -105,5 +152,4 @@ export const isSolved = (grid: BoardType):boolean => {
     && grid[3][1] === 14
     && grid[3][2] === 15
     && grid[3][3] === 0
-  );
-};
+);

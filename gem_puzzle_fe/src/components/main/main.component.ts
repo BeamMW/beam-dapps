@@ -1,16 +1,16 @@
-import { APIResponse, BoardLengthType, BoardType } from 'beamApiProps';
+import { APIResponse } from 'beamApiProps';
 import { WinArgsType } from 'ComponentProps';
 import { Win } from '../win/win.components';
 import {
   setActiveGameAC,
-  setModeAC, setMyPendingRewardAC, setPKeyAC
+  setMyPendingRewardAC, setPKeyAC
 } from '../../logic/app_state/app_action_creators';
 import { AppStateHandler } from '../../logic/app_state/state_handler';
 import { ApiHandler } from '../../logic/beam_api/api_handler';
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
 import Menu from '../menu/menu.component';
-import { Field } from '../field/filed.component';
+import { Field } from '../field/field.component';
 import {
   ReqID,
   ResTXComment,
@@ -21,7 +21,6 @@ import {
   getPlayerKey,
   invokeData,
   txStatus,
-  viewBoard,
   viewCheckResult,
   viewMyPendingRewards,
   viewTops
@@ -51,6 +50,7 @@ export default class Main extends BaseComponent {
     this.router.add(Routes.OPTIONS, this.optionsField);
     this.router.add(Routes.RETURN, this.cancelGame);
     this.router.add(Routes.BEST, this.bestField);
+    this.router.add(Routes.PLAY, this.initGameField);
     this.initMainMenu();
   }
 
@@ -82,13 +82,10 @@ export default class Main extends BaseComponent {
     this.append(this.menu, best);
   };
 
-  initGameField = (board: BoardType): void => {
-    checkActiveGame();
-    if (AppStateHandler.getState().mode !== board.length) {
-      AppStateHandler.dispatch(setModeAC(board.length as BoardLengthType));
-    }
+  initGameField = (): void => {
     this.menu.classList.add('active');
-    Field.ready(board);
+    this.menu.initButtonMenu();
+    this.append(new Field());
   };
 
   optionsField = (): void => {
@@ -117,7 +114,7 @@ export default class Main extends BaseComponent {
     if (result.status_string === ResTXStatus.COMPLETED) {
       switch (result.comment) {
         case ResTXComment.CREATE_NEW_GAME:
-          viewBoard();
+          window.history.pushState({}, '', `/${Routes.PLAY}`);
           break;
         case ResTXComment.ENDING_EXISTING_GAME:
           this.initMainMenu();
@@ -144,10 +141,11 @@ export default class Main extends BaseComponent {
       case ReqID.CANCEL_GAME:
       case ReqID.CHECK_SOLUTION:
       case ReqID.TAKE_PENDING_REWARDS:
+        this.removeAll();
         this.menu.removeActive();
+        this.append(this.menu);
         invokeData(res.result.raw_data);
         break;
-
       case ReqID.INVOKE_DATA:
         if (res.result?.txid) {
           this.menu.initLoader(res.result.txid);
@@ -172,10 +170,6 @@ export default class Main extends BaseComponent {
         this.menu.initButtonMenu();
         break;
 
-      case ReqID.VIEW_BOARD:
-        this.menu.initButtonMenu();
-        this.initGameField(JSON.parse(res.result.output).board as BoardType);
-        break;
       case ReqID.VIEW_TOPS:
         this.bestField(JSON.parse(`[${res.result.output.slice(1, -1)}]`));
         break;
@@ -187,8 +181,9 @@ export default class Main extends BaseComponent {
       case ReqID.VIEW_MY_PENDING_REWARDS:
         AppStateHandler.dispatch(
           setMyPendingRewardAC(
-            JSON.parse(res.result.output).pending_rewards / BeamAmmount.GROTHS_IN_BEAM
-            )
+            JSON.parse(res.result.output)
+              .pending_rewards / BeamAmmount.GROTHS_IN_BEAM
+          )
         );
         break;
       default:

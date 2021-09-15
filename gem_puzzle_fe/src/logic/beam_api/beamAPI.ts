@@ -16,22 +16,33 @@ export class BeamAPI {
 
   private contract: ArrayBuffer | null;
 
-  private readonly observers: BaseComponent[];
+  private readonly observers: Set<BaseComponent>;
 
   constructor() {
     this.API = null;
     this.contract = null;
-    this.observers = [];
+    this.observers = new Set();
   }
 
   readonly addObservers = (...components: BaseComponent[]): void => {
     components.forEach((component) => {
-      this.observers.push(component);
+      this.observers.add(component);
+      component.element
+        .addEventListener(
+          'DOMNodeRemovedFromDocument', () => this.deleteObserver(component)
+        );
     });
+  };
+
+  private readonly deleteObserver:(
+    component: BaseComponent
+  ) => void = (component: BaseComponent) => {
+    this.observers.delete(component);
   };
 
   private readonly onApiResult = (json: string): void => {
     const res = JSON.parse(json);
+    console.log('response: ', res);
     this.observers.forEach((component: BaseComponent) => {
       if (component.inform) {
         component.inform(res);
@@ -69,7 +80,9 @@ export class BeamAPI {
     }
   };
 
-  readonly callApi = (callid: string, method: string, params: BeamApiParams): void => {
+  readonly callApi = (
+    callid: string, method: string, params: BeamApiParams
+  ): void => {
     if (this.contract) {
       const contract = Array.from(new Uint8Array(this.contract));
       const request = {
