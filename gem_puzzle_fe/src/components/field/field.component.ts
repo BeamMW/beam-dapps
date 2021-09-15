@@ -39,7 +39,7 @@ export class Field extends BaseComponent {
 
   private readonly innerField: BaseComponent;
 
-  private timeOutId: NodeJS.Timeout | null;
+  timeOutId: NodeJS.Timeout | null;
 
   constructor() {
     super(Tags.DIV, ['field']);
@@ -50,10 +50,6 @@ export class Field extends BaseComponent {
     this.nodeList = [];
     this.state = null;
     viewBoard();
-    this.element.addEventListener('DOMNodeRemovedFromDocument', () => {
-      clearTimeout(this.timeOutId as NodeJS.Timeout);
-      this.solveList = null;
-    });
   }
 
   inform = (res: APIResponse):void => {
@@ -66,19 +62,32 @@ export class Field extends BaseComponent {
     }
   };
 
+  listener = (e: Event):void => {
+    const target = e.target as HTMLDivElement;
+    const inner = target.closest('.cell-inner') as HTMLElement;
+    if (inner?.dataset?.number) {
+      const number = +inner.dataset.number;
+      const { x, y } = this.nodeList[number] as Cell;
+      this.handleClickBox(new Box(x, y));
+    }
+  };
+
   startGame = (board: BoardType):void => {
     const { autoPlay, mode } = AppStateHandler.getState();
     if (mode !== board.length) {
       AppStateHandler.dispatch(setModeAC(board.length as BoardLengthType));
     }
     this.state = new State(board, 0, 0, 'playing');
-
     this.init(board);
     this.innerField.append(...this.nodeList as BaseComponent[]);
     if (autoPlay) {
       this.solveList = new NPuzzleSolver(board).solve();
       this.autoPlayHandle();
-    } else this.solveList = null;
+    } else {
+      this.solveList = null;
+      this.innerField.element.addEventListener('click',
+        this.listener);
+    }
   };
 
   setState = (newState: Partial<State>):void => {
@@ -150,11 +159,7 @@ export class Field extends BaseComponent {
         }
       }
     }
-    this.nodeList.sort((a, b) => {
-      const aNum = Number(a.dataset.number as string);
-      const bNum = Number(b.dataset.number as string);
-      return aNum - bNum;
-    });
+    this.nodeList.sort((a, b) => a.index - b.index);
   };
 
   autoPlayHandle = ():void => {
