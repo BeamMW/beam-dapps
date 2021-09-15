@@ -1,16 +1,33 @@
 .button {
-    justify-content: center;
-    align-items: center;
-    padding: 8px;
-    background: #3E66FB;
-    border-radius: 8px;
-    width: 150px;
+    position: relative;
+    width: 314px;
     height: 60px;
-    font-style: normal;
-    font-size: 12px;
-    line-height: 16px;
+    margin: 0 0 10px;
+    // padding: 13px 86px;
+    background-image: url('../../assets/icon/button-settings.svg');
+    background-repeat: no-repeat;
     display: flex;
     align-items: center;
-    text-align: center;
-    color: #FFFFFF;
+    justify-content: center;
+    margin: 0 0 0 11px;
+    font-family: Ubuntu;
+    font-size: 20px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.7;
+    letter-spacing: normal;
+    color: #fff;
+
+    &:hover {
+        cursor: pointer;
+        transition: ease-in .2s;
+        background-image: url('../../assets/icon/button-new-game.svg');
+    }
+
+
+}
+
+span {
+    margin-left: 11px;
 }

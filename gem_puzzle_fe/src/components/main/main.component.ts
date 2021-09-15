@@ -79,7 +79,7 @@ export default class Main extends BaseComponent {
     }
     this.removeAll();
     this.menu.classList.add('active');
-    this.append(this.menu, best);
+    this.append(best, this.menu);
   };
 
   initGameField = (): void => {
@@ -93,7 +93,7 @@ export default class Main extends BaseComponent {
     this.removeAll();
     this.menu.addActive();
     const options = new Options();
-    this.append(this.menu, options);
+    this.append(options, this.menu);
   };
 
   winner = (res:WinArgsType): void => {
