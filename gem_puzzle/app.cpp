@@ -8,10 +8,9 @@
 
 #include "board.h"
 
-#include <algorithm>
 #include <bitset>
 #include <iostream>
-#include <random>
+#include <vector>
 
 #ifndef ENABLE_UNIT_TESTS_
 using Action_func_t = void (*)(const ContractID&);
@@ -57,24 +56,7 @@ void On_action_new_game(const ContractID& cid)
 		return On_error("Bet must be less or equal than contract's max_bet");
 	}
 
-	BlockHeader::Info hdr;
-	hdr.m_Height = Env::get_Height();
-	Env::get_HdrInfo(hdr);
-
-	uint64_t seed = 0;
-	Env::Memcpy(&seed, &hdr.m_Hash.m_p, 32);
-	
-	std::mt19937_64 gen(seed);
-	std::uniform_int_distribution<uint64_t> distrib(1, factorial(GemPuzzle::Board::PERMUTATION_LEN) - 1);
-
-	uint64_t permutation_num;
-	do {
-		permutation_num = distrib(gen);
-	} while (!GemPuzzle::Board(permutation_num).is_solvable());
-
 	Env::DerivePk(params.player, &cid, sizeof(cid));
-	params.height = hdr.m_Height;
-	params.permutation_num = permutation_num;
 
 	SigRequest sig;
 	sig.m_pID = &cid;

@@ -1,7 +1,6 @@
 import {
-  takePendingRewards,
   cancelGame,
-  startGame, viewBoard
+  startGame
 } from '../logic/beam_api/request_creators';
 import { MenuBtn, Routes } from './app_constants';
 
@@ -9,7 +8,9 @@ export const menuProps = [
   {
     key: MenuBtn.CONTINUE,
     title: 'CONTINUE',
-    handler: viewBoard
+    handler: ():void => {
+      window.history.pushState({}, '', `/${Routes.PLAY}`);
+    }
   },
   {
     key: MenuBtn.NEW,

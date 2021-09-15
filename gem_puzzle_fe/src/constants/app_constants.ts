@@ -11,6 +11,10 @@ export enum AppStateActions {
   SET_REWARD = 'SET_REWARD'
 }
 
+export enum PuzzleReducerActions {
+  SET_GRID = 'SET_GRID'
+}
+
 export enum BeamAmmount {
   MIN_AMOUNT = 0,
   MAX_AMOUNT = 10,
@@ -43,5 +47,6 @@ export enum Routes {
   OPTIONS = 'options',
   RETURN = 'return',
   MAIN = '/',
-  BEST = 'best'
+  BEST = 'best',
+  PLAY = 'play'
 }

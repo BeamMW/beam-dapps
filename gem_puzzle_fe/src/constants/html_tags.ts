@@ -14,3 +14,7 @@ export enum Tags {
   A = 'a',
   H1 = 'h1'
 }
+
+export enum HtmlProps {
+  PuzzleSize = 100
+}
