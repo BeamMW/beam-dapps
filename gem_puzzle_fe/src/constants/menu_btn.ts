@@ -1,5 +1,4 @@
 import {
-  takePendingRewards,
   cancelGame,
   startGame
 } from '../logic/beam_api/request_creators';
