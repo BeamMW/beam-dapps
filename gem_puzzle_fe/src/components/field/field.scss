@@ -1,4 +1,4 @@
-$time:0.2s;
+$time:150ms;
 .field{
     padding: 10px;
     border-radius: 20px;
@@ -13,14 +13,14 @@ $time:0.2s;
       content: "";
     } 
     .cell {
-      will-change: left, top; 
+      display: inline-block;
+      will-change: transform; 
       outline: none;
-      position: absolute;
       width: 100px;
       height: 100px;   
       background-repeat: no-repeat;
       background-size: auto auto; 
-      transition: top $time, left $time;
+      transition: transform $time;
       text-align: center;
       opacity: 1;
       .cell-inner {

@@ -8,10 +8,14 @@ export class Cell extends BaseComponent {
 
   y: number;
 
+  sizeX: number;
+
+  sizeY: number;
+
   readonly index: number;
 
   constructor({
-    x, y, value, callback
+    x, y, value
   }:{
     x:number,
     y:number,
@@ -21,6 +25,8 @@ export class Cell extends BaseComponent {
     super(Tags.DIV, ['cell']);
     this.x = x;
     this.y = y;
+    this.sizeY = 0;
+    this.sizeX = 0;
     this.index = value - 1;
     const cellInner = new BaseComponent(Tags.DIV, ['cell-inner']);
     const cellInnerOval = new BaseComponent(Tags.DIV, ['oval']);
@@ -28,21 +34,41 @@ export class Cell extends BaseComponent {
     cellInner.setAttributes({
       'data-number': String(this.index)
     });
-    this.rerender({
-      x, y, callback
-    });
+    // this.render({
+    //   x, y, callback
+    // });
     cellInner.append(cellInnerOval);
     this.append(cellInner);
   }
 
-  rerender = ({ x, y }:{
+  render = ({ x, y }:{
     x: number,
     y: number,
     callback: (box: Box, component: Cell) => void
   }):void => {
+    const kX = x > this.x ? 1 : -1;
+    const kY = y > this.y ? 1 : -1;
+    if (this.x !== x) {
+      this.sizeX += (HtmlProps.PuzzleSize * kX);
+    }
+    if (this.y !== y) {
+      this.sizeY += (HtmlProps.PuzzleSize * kY);
+    }
+    this.style.transform = `translate(${this.sizeX}px, ${this.sizeY}px)`;
     this.x = x;
     this.y = y;
-    this.style.left = `${x * HtmlProps.PuzzleSize}px`;
-    this.style.top = `${y * HtmlProps.PuzzleSize}px`;
+    // this.style.left = `${x * HtmlProps.PuzzleSize}px`;
+    // this.style.top = `${y * HtmlProps.PuzzleSize}px`;
+    // this.style.transform = `translate(${
+    //   this.x !== x
+    //     ? x * HtmlProps.PuzzleSize
+    //     : 0
+    // }px, ${
+    //   this.y !== y
+    //     ? y * HtmlProps.PuzzleSize
+    //     : 0
+    // }px )`;
+    // this.x = x;
+    // this.y = y;
   };
 }

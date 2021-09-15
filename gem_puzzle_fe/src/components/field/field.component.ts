@@ -48,8 +48,16 @@ export class Field extends BaseComponent {
     this.timeOutId = null;
     this.solveList = [];
     this.nodeList = [];
+    solution.length = 0;
     this.state = null;
     viewBoard();
+    this.element.addEventListener('DOMNodeRemovedFromDocument',
+      () => {
+        if (this.timeOutId) {
+          clearTimeout(this.timeOutId);
+          this.timeOutId = null;
+        }
+      });
   }
 
   inform = (res: APIResponse):void => {
@@ -79,7 +87,6 @@ export class Field extends BaseComponent {
     }
     this.state = new State(board, 0, 0, 'playing');
     this.init(board);
-    this.innerField.append(...this.nodeList as BaseComponent[]);
     if (autoPlay) {
       this.solveList = new NPuzzleSolver(board).solve();
       this.autoPlayHandle();
@@ -111,8 +118,7 @@ export class Field extends BaseComponent {
           grid: newGrid,
           move: this.state.move + 1
         });
-        this.timeOutId = null;
-        setTimeout(() => {
+        this.timeOutId = setTimeout(() => {
           this.removeAll();
           checkSolution(solution.join(''));
           solution.length = 0;
@@ -133,7 +139,7 @@ export class Field extends BaseComponent {
   rerender = (swapped: CellToRender[]):void => {
     swapped.forEach(({ index, x, y }) => {
       const node = this.nodeList[index] as Cell;
-      node.rerender({
+      node.render({
         x, y, callback: this.handleClickBox
       });
     });
@@ -155,6 +161,7 @@ export class Field extends BaseComponent {
             value,
             callback: this.handleClickBox
           });
+          this.innerField.append(button);
           this.nodeList.push(button);
         }
       }
