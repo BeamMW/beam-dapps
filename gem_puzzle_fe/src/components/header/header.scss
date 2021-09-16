@@ -1,7 +1,10 @@
 .header {
-  width: 1023px;
-  height: 230px;
-  margin: 0 10px 0 9px;
+  // width: 1023px;
+  // height: 230px;
+  // margin: 0 10px 0 9px;
+  width: 872px;
+  padding: 0 10px 32px 10px;
+  margin: 0 auto;
   border-radius: 37.5px;
   display: flex;
   flex-direction: column;
@@ -57,10 +60,10 @@
     cursor: pointer;
   }
   .infoblock:first-child {
+    margin-bottom: 10px;
     width: 285px;
     height: 75px;
     padding: 17px 25px 18px;
-    margin: 32px 271px 70px 0;
     border-radius: 37.5px;
     background-color: rgba(255, 255, 255, 0.1);
     background-image: none;

@@ -1,0 +1,28 @@
+.widget{
+  position: absolute;
+  z-index: 1;
+  bottom:0;
+  right: -500px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: cornflowerblue;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  min-width: 380px;
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  padding: 14px 14px 14px;
+  border-radius: 10px;
+  transition: right 200ms ease-in;
+    &.active {
+      right: 20px;
+    }
+  .tx-infoblock{
+    .title{
+      color: #dffd94;
+    }
+    .value{
+      color: #fff;;  
+    }
+  }
+}

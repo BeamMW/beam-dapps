@@ -1,58 +1,80 @@
 ﻿#include "../common.h"
 #include "../Math.h"
 #include "contract.h"
-
-BEAM_EXPORT void Ctor()
+#include <utility>
+BEAM_EXPORT void Ctor(CryptoKittens::StartGameParams& params)
 {
-	// create all kinds of kittens
+	CryptoKittens::CurrentGameState st;
 
-	// set height of new giveaway
-	// set period of giveaway 
-	// set duration of giveaway 
-	
-	// create map {kitten, public key of owner}
+	st.heightOfNextGiveaway = Env::get_Height() + params.periodOfGiveaway;
+	st.kittensAndOwners = {};
 
-	// save this params - Env::SaveVar_T
+	// generating Zero kittens
+	for (size_t i = 0; i < params.numberOfAllKittens; ++i)
+	{
+		st.allKittens.push(Kitten());
+	}
 
+	// generating kittens for giveaway
+	for (size_t i = 0; i < params.numberOfKittensForGiveAway || !st.allKittens.empty(); ++i)
+	{
+		st.kittensForGiveaway.insert(std::make_pair(st.allKittens.front().id, st.allKittens.front()));
+		st.allKittens.pop();
+	}
+
+	Env::SaveVar_T("StartGameParams", params);
+	Env::SaveVar_T("CurrentGameState", st);
 }
 
 BEAM_EXPORT void Dtor(void*)
 {
-	// delete saved earlier params - Env::DelVar_T
+	Env::DelVar_T("CurrentGameState");
+	Env::DelVar_T("StartGameParams");
 }
 
 BEAM_EXPORT void Method_2(const CryptoKittens::WithdrawKitten& r)
 {
-	// check the current height
-	// if current height isn't a part of
-	// {the start block of giveaway; the last block of giveaway},
-	//		exit, revert the transaction (halt)
-
-	// load kittensForGiveaway - Env::LoadVarT
-
-	// check if user hasn't got a kitten in this giveaway
-	// - need to check birthDates of his kittens
-	// if there is a kitten with birthBlock is a part of
-	// {the start block of giveaway; the last block of giveaway},
-	//		exit, revert the transaction (halt)
+	CryptoKittens::CurrentGameState st;
 	
-	// if count of kittensForGiveaway == 0
-	// 	    new height of next giveaway (+period+duration) and save it
-	//		generate new kittens for next giveaway
-	// 	    save new kittensForGiveaway - Env::SaveVar_T
-	// else	 
-	// {
-	//		if kitten from transaction is a part of kittensForGiveaway
-	//		{
-	//				if there is enough kittens of this kind for giveaway (>=1)
-	// 				{
-	// 					get current height and set it as kitten's birthBlock
-	//					get user public key
-	//					add to map{cats, users} new pair
-	//					(number of kittens of  this kind for giveaway)-- 
-	// 				}
-	//				else  revert the transaction (halt)
-	//		}
-	//		else  revert the transaction (halt)
-	// }
+	bool isLoaded = Env::LoadVar_T("CurrentGameState", st);
+	Env::Halt_if(!isLoaded);
+	
+	//checking height
+	Env::Halt_if(st.heightOfNextGiveaway != Env::get_Height());
+
+	// checking if there are kittens for giveaway
+	if (!st.kittensForGiveaway.empty())
+	{
+		// checking if the kitten (by id) is a part of kittens for giveaway
+		auto kittenIt = st.kittensForGiveaway.find(r.kittenId);
+		Env::Halt_if(kittenIt == st.kittensForGiveaway.end());
+
+		// giving the kitten for player
+		
+		//
+		// 
+		st.kittensAndOwners.insert(std::make_pair(1/*r.m_Account*/, st.kittensForGiveaway[r.kittenId])); // CHANGE (pub key and vector)
+		// 
+		
+		//deleting the kitten from kittens for giveaway
+		st.kittensForGiveaway.erase(r.kittenId);
+	}
+
+	CryptoKittens::StartGameParams params;
+	isLoaded = Env::LoadVar_T("StartGameParams", params);
+	Env::Halt_if(!isLoaded);
+
+	// generating new kittens for giveaway
+	if (st.kittensForGiveaway.empty())
+	{
+		st.heightOfNextGiveaway = Env::get_Height() + params.periodOfGiveaway;
+		
+		for (size_t i = 0; i < params.numberOfKittensForGiveAway || !st.allKittens.empty(); ++i)
+		{
+			st.kittensForGiveaway.insert(std::make_pair(st.allKittens.front().id, st.allKittens.front()));
+			st.allKittens.pop();
+		}
+	}
+
+	Env::SaveVar_T("CurrentGameState", st);
 }
