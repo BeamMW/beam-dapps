@@ -8,36 +8,36 @@ import TxBoard from '../txboard/txboard.component';
 import { MenuBtn } from '../../constants/app_constants';
 import { menuProps } from '../../constants/menu_btn';
 import { AppStateHandler } from '../../logic/app_state/state_handler';
-import Greeting from '../greeting/greeting.component';
-import { GrState } from '../greeting/greeting_state';
 
 export default class Menu extends BaseComponent {
-  private readonly greeting: Greeting;
+  desc: BaseComponent;
 
   constructor() {
     super(Tags.DIV, ['menu']);
-    this.greeting = new Greeting(GrState.MainTitle, GrState.MainDesc);
     ApiHandler.addObservers(this);
+    this.desc = new BaseComponent(Tags.SPAN, ['desc']);
   }
 
   initButtonMenu = (): void => {
     this.removeAll();
     const { activeGame } = AppStateHandler.getState();
+    if (!this.classList.contains('active')) {
+      this.desc.element.textContent = 'Play and earn!';
+      this.append(this.desc);
+    }
     const buttons = menuProps
       .filter((btn) => {
         if (this.classList.contains('active') && btn.key !== MenuBtn.RETURN) {
           return false;
         }
         if (!this.classList.contains('active') && btn.key === MenuBtn.RETURN) {
-          this.append(this.greeting);
           return false;
         }
         if (activeGame && btn.key === MenuBtn.NEW) {
           return false;
         }
         if (
-          !activeGame
-          && (btn.key === MenuBtn.CANCEL || btn.key === MenuBtn.CONTINUE)
+          !activeGame && (btn.key === MenuBtn.CANCEL || btn.key === MenuBtn.CONTINUE)
         ) {
           return false;
         }

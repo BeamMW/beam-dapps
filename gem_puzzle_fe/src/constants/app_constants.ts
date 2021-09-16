@@ -35,7 +35,7 @@ export enum MenuBtn {
   DESTROY_CONTRACT = 'DESTROY_CONTRACT',
   RETURN = 'RETURN',
   BEST = 'BEST',
-  TAKE_REWARD = 'TAKE_REWARD'
+  CLAIM_REWARD = 'CLAIM_REWARD'
 }
 
 export enum RouterMode {

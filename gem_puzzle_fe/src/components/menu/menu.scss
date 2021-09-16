@@ -1,7 +1,7 @@
 .menu {
     margin: 0 auto;
     width: 525px;
-    height: 350px;
+    height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -17,12 +17,22 @@
         align-content: center;
     }
 
-    // .button {
-    //     background: green;
-    //     position: relative;
-    //     width: 100px;
-    //     height: 50px;
-    // }
+     .desc{
+            width: 100%;
+            margin: 0 0px 40px 0;
+            font-size: 20px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.5;
+            letter-spacing: normal;
+            text-align: center;
+            color: #fff;
+    }
+
+    .button {
+       margin-bottom: 10px;
+    }
 
     // .button::before {
     //     content: "";

@@ -5,16 +5,16 @@ import './greeting.scss';
 export default class Greeting extends BaseComponent {
   title: string;
 
-  desc: string;
-
-  constructor(title:string, desc:string) {
+  constructor(title: string) {
     super(Tags.DIV, ['description']);
     this.title = title;
-    this.desc = desc;
     const titleDom = new BaseComponent(Tags.SPAN, ['title']);
-    const descDom = new BaseComponent(Tags.SPAN, ['desc']);
+    const back = new BaseComponent(Tags.BUTTON, ['backBtn']);
     titleDom.element.textContent = title;
-    descDom.element.textContent = desc;
-    this.append(titleDom, descDom);
+    // back.element.textContent = ' back to mane menu';
+    // back.element.addEventListener('click', () => {
+    //   window.history.pushState({}, '', `/${Routes.RETURN}`);
+    // });
+    this.append(titleDom);
   }
 }
