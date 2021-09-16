@@ -108,7 +108,6 @@ export function swapBoxes(
       y += k;
     }
   }
-  console.log(solution.join(''));
   return toRender;
 }
 

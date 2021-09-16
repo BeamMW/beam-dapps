@@ -1,4 +1,5 @@
 .button {
+    will-change: background-image; 
     position: relative;
     width: 314px;
     height: 60px;
@@ -21,7 +22,7 @@
 
     &:hover {
         cursor: pointer;
-        transition: ease-in .2s;
+        transition: background-image .2s ease-in;
         background-image: url('../../assets/icon/button-new-game.svg');
     }
 

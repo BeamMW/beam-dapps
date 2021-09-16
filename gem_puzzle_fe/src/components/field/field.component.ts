@@ -39,7 +39,7 @@ export class Field extends BaseComponent {
 
   private readonly innerField: BaseComponent;
 
-  private timeOutId: NodeJS.Timeout | null;
+  timeOutId: NodeJS.Timeout | null;
 
   constructor() {
     super(Tags.DIV, ['field']);
@@ -48,12 +48,16 @@ export class Field extends BaseComponent {
     this.timeOutId = null;
     this.solveList = [];
     this.nodeList = [];
+    solution.length = 0;
     this.state = null;
     viewBoard();
-    this.element.addEventListener('DOMNodeRemovedFromDocument', () => {
-      clearTimeout(this.timeOutId as NodeJS.Timeout);
-      this.solveList = null;
-    });
+    this.element.addEventListener('DOMNodeRemovedFromDocument',
+      () => {
+        if (this.timeOutId) {
+          clearTimeout(this.timeOutId);
+          this.timeOutId = null;
+        }
+      });
   }
 
   inform = (res: APIResponse):void => {
@@ -66,19 +70,31 @@ export class Field extends BaseComponent {
     }
   };
 
+  listener = (e: Event):void => {
+    const target = e.target as HTMLDivElement;
+    const inner = target.closest('.cell-inner') as HTMLElement;
+    if (inner?.dataset?.number) {
+      const number = +inner.dataset.number;
+      const { x, y } = this.nodeList[number] as Cell;
+      this.handleClickBox(new Box(x, y));
+    }
+  };
+
   startGame = (board: BoardType):void => {
     const { autoPlay, mode } = AppStateHandler.getState();
     if (mode !== board.length) {
       AppStateHandler.dispatch(setModeAC(board.length as BoardLengthType));
     }
     this.state = new State(board, 0, 0, 'playing');
-
     this.init(board);
-    this.innerField.append(...this.nodeList as BaseComponent[]);
     if (autoPlay) {
       this.solveList = new NPuzzleSolver(board).solve();
       this.autoPlayHandle();
-    } else this.solveList = null;
+    } else {
+      this.solveList = null;
+      this.innerField.element.addEventListener('click',
+        this.listener);
+    }
   };
 
   setState = (newState: Partial<State>):void => {
@@ -102,8 +118,7 @@ export class Field extends BaseComponent {
           grid: newGrid,
           move: this.state.move + 1
         });
-        this.timeOutId = null;
-        setTimeout(() => {
+        this.timeOutId = setTimeout(() => {
           this.removeAll();
           checkSolution(solution.join(''));
           solution.length = 0;
@@ -124,7 +139,7 @@ export class Field extends BaseComponent {
   rerender = (swapped: CellToRender[]):void => {
     swapped.forEach(({ index, x, y }) => {
       const node = this.nodeList[index] as Cell;
-      node.rerender({
+      node.render({
         x, y, callback: this.handleClickBox
       });
     });
@@ -146,15 +161,12 @@ export class Field extends BaseComponent {
             value,
             callback: this.handleClickBox
           });
+          this.innerField.append(button);
           this.nodeList.push(button);
         }
       }
     }
-    this.nodeList.sort((a, b) => {
-      const aNum = Number(a.dataset.number as string);
-      const bNum = Number(b.dataset.number as string);
-      return aNum - bNum;
-    });
+    this.nodeList.sort((a, b) => a.index - b.index);
   };
 
   autoPlayHandle = ():void => {
