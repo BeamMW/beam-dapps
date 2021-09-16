@@ -2,7 +2,6 @@ import { Tags } from '../../constants/html_tags';
 import { AppStateHandler } from '../../logic/app_state/state_handler';
 import BaseComponent from '../base/base.component';
 import Loader from '../loader/loader.component';
-import TxBoard from '../txboard/txboard.component';
 import './best.scss';
 
 export class Best extends BaseComponent {
@@ -140,11 +139,11 @@ export class Best extends BaseComponent {
     });
   };
 
-  initLoader = (txid?: string): void => {
+  initLoader = (): void => {
     const args = [new Loader()];
-    if (txid) {
-      args.unshift(new TxBoard(txid));
-    }
+    // if (txid) {
+    //   args.unshift(new TxBoard(txid));
+    // }
     this.removeAll();
     this.append(...args);
   };

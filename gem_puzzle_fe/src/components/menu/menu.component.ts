@@ -4,7 +4,6 @@ import BaseComponent from '../base/base.component';
 import Button from '../button/button.component';
 import './menu.scss';
 import Loader from '../loader/loader.component';
-import TxBoard from '../txboard/txboard.component';
 import { MenuBtn } from '../../constants/app_constants';
 import { menuProps } from '../../constants/menu_btn';
 import { AppStateHandler } from '../../logic/app_state/state_handler';
@@ -23,8 +22,16 @@ export default class Menu extends BaseComponent {
   initButtonMenu = (): void => {
     this.removeAll();
     const { activeGame } = AppStateHandler.getState();
+    const txId = window.localStorage.getItem('txId');
     const buttons = menuProps
       .filter((btn) => {
+        if (txId && (
+          btn.key === MenuBtn.CANCEL
+          || btn.key === MenuBtn.CONTINUE
+          || btn.key === MenuBtn.NEW
+        )) {
+          return false;
+        }
         if (this.classList.contains('active') && btn.key !== MenuBtn.RETURN) {
           return false;
         }
@@ -67,11 +74,11 @@ export default class Menu extends BaseComponent {
     this.classList.add('active');
   };
 
-  initLoader = (txid?: string): void => {
+  initLoader = (): void => {
     const args = [new Loader()];
-    if (txid) {
-      args.unshift(new TxBoard(txid));
-    }
+    // if (txid) {
+    //   args.unshift(new TxBoard(txid));
+    // }
     this.removeAll();
     this.append(...args);
   };

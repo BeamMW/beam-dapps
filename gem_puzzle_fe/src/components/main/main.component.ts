@@ -51,25 +51,28 @@ export default class Main extends BaseComponent {
     this.router.add(Routes.RETURN, this.cancelGame);
     this.router.add(Routes.BEST, this.bestField);
     this.router.add(Routes.PLAY, this.initGameField);
+    this.router.add('', this.initMainMenu);
     this.initMainMenu();
   }
 
   initMainMenu = ():void => {
     checkActiveGame();
     viewMyPendingRewards();
+    this.removeAll();
     this.menu.removeActive();
+    this.menu.initButtonMenu();
     this.append(this.menu);
   };
 
   cancelGame = (): void => {
-    checkActiveGame();
     this.removeAll();
+    checkActiveGame();
     this.menu.removeActive();
-    this.append(this.menu);
     window.history.pushState({}, '', Routes.MAIN);
   };
 
   bestField = (top:any): void => {
+    console.log(this.router);
     checkActiveGame();
     viewMyPendingRewards();
     const best = new Best(top);
@@ -83,15 +86,19 @@ export default class Main extends BaseComponent {
   };
 
   initGameField = (): void => {
+    console.log(this.router);
     this.menu.classList.add('active');
     this.menu.initButtonMenu();
     this.append(new Field());
   };
 
   optionsField = (): void => {
+    console.log(this.router);
+
     checkActiveGame();
     this.removeAll();
     this.menu.addActive();
+    this.menu.initButtonMenu();
     const options = new Options();
     this.append(options, this.menu);
   };
@@ -113,19 +120,25 @@ export default class Main extends BaseComponent {
     }
     if (result.status_string === ResTXStatus.COMPLETED) {
       switch (result.comment) {
-        case ResTXComment.CREATE_NEW_GAME:
-          window.history.pushState({}, '', `/${Routes.PLAY}`);
-          break;
-        case ResTXComment.ENDING_EXISTING_GAME:
-          this.initMainMenu();
-          break;
-        case ResTXComment.TAKING_PENDING_REWARS:
-          this.initMainMenu();
-          break;
+        // case ResTXComment.CREATE_NEW_GAME:
+        //   window.history.pushState({}, '', `/${Routes.PLAY}`);
+        //   break;
+        // case ResTXComment.ENDING_EXISTING_GAME:
+        //   this.initMainMenu();
+        //   break;
+        // case ResTXComment.TAKING_PENDING_REWARS:
+        //   this.initMainMenu();
+        //   break;
         case ResTXComment.CHECKIN_SOLUTION:
-          viewCheckResult();
+          if (this.router.current !== '') {
+            window.history.pushState({}, '', Routes.MAIN);
+            viewCheckResult();
+          }
           break;
         default:
+          if (this.router.current === '') {
+            this.initMainMenu();
+          }
           break;
       }
     }
@@ -146,9 +159,10 @@ export default class Main extends BaseComponent {
         this.append(this.menu);
         invokeData(res.result.raw_data);
         break;
+
       case ReqID.INVOKE_DATA:
         if (res.result?.txid) {
-          this.menu.initLoader(res.result.txid);
+          this.initMainMenu();
           txStatus(res.result.txid);
         }
         break;
@@ -186,6 +200,7 @@ export default class Main extends BaseComponent {
           )
         );
         break;
+
       default:
         break;
     }

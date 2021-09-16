@@ -1,4 +1,4 @@
-import loader from '../../assets/loader.svg';
+import loader from '../../assets/icon/loader.svg';
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
 import './loader.scss';
