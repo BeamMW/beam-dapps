@@ -52,34 +52,38 @@ namespace GemPuzzle {
 		return result;
 	}
 
+	bool Board::is_solvable()
+	{
+		uint8_t inversions = 0;
+		for (size_t i = 0; i < BOARD_SIZE; ++i) {
+			for (size_t j = 0; j < BOARD_SIZE; ++j) {
+				if (i * BOARD_SIZE + j != 15) {
+					for (size_t k = 0; k < BOARD_SIZE; ++k) {
+						for (size_t l = 0; l < BOARD_SIZE; ++l) {
+							if (k * BOARD_SIZE + l < i * BOARD_SIZE + j) {
+								inversions += (board[k][l] > board[i][j]);
+							} else {
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		return !(inversions & 1);
+	}
+
 	bool GemPuzzle::Board::move(GemPuzzle::Board::Moves m)
 	{
 		auto old_empty_cell = empty_cell;
 		const int8_t dx[] = { 1, -1, 0, 0 };
 		const int8_t dy[] = { 0, 0, -1, 1 };
 
-		switch (m) {
-		case RIGHT: case LEFT: case UP: case DOWN:
-			empty_cell.x += dx[static_cast<uint8_t>(m)];
-			empty_cell.y += dy[static_cast<uint8_t>(m)];
-			if (empty_cell.x >= BOARD_SIZE || empty_cell.y >= BOARD_SIZE)
-				return false;
-			std::swap(board[old_empty_cell.y][old_empty_cell.x], board[empty_cell.y][empty_cell.x]);
-			break;
-		case CLOCKWISE: case COUNTERCLOCKWISE: {
-			for (size_t i = 0; i < BOARD_SIZE / 2; ++i)
-				for (size_t j = i; j < BOARD_SIZE - i - 1; ++j) {
-					std::swap(board[i][j], m == CLOCKWISE ? board[j][BOARD_SIZE - i - 1] : board[BOARD_SIZE - j - 1][i]);
-					std::swap(board[i][j], board[BOARD_SIZE - i - 1][BOARD_SIZE - j - 1]);
-					std::swap(board[i][j], m == CLOCKWISE ? board[BOARD_SIZE - j - 1][i] : board[j][BOARD_SIZE - i - 1]);
-				}
-			std::swap(empty_cell.x, empty_cell.y);
-			(m == CLOCKWISE ? empty_cell.x : empty_cell.y) = BOARD_SIZE - (m == CLOCKWISE ? empty_cell.x : empty_cell.y) - 1;
-			break;
-		}
-		default:
+		empty_cell.x += dx[static_cast<uint8_t>(m)];
+		empty_cell.y += dy[static_cast<uint8_t>(m)];
+		if (empty_cell.x >= BOARD_SIZE || empty_cell.y >= BOARD_SIZE)
 			return false;
-		}
+		std::swap(board[old_empty_cell.y][old_empty_cell.x], board[empty_cell.y][empty_cell.x]);
 #ifdef DEBUG
 		for (size_t k = 0; k < BOARD_SIZE; ++k) {
 			for (size_t j = 0; j < BOARD_SIZE; ++j) {

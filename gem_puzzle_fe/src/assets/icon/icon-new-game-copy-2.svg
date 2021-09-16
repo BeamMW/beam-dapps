@@ -1,0 +1,16 @@
+<svg width="25" height="35" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <filter x="-16%" y="-11.4%" width="132%" height="122.9%" filterUnits="objectBoundingBox" id="a">
+            <feOffset dx="2" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0" in="shadowOffsetOuter1" result="shadowMatrixOuter1"/>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+    </defs>
+    <g filter="url(#a)" fill-rule="nonzero" fill="none">
+        <path d="M6.348 1c.501 0 .908.407.908.908v.412a.496.496 0 0 1-.496.496.496.496 0 0 0-.496.496v23.573a.92.92 0 0 1-.003.069 4.213 4.213 0 0 1 3.45 4.138l-.005.106a.908.908 0 0 1-.902.802H1.908A.908.908 0 0 1 1 31.092a4.214 4.214 0 0 1 3.451-4.139l-.003-.068V3.312a.496.496 0 0 0-.496-.496.496.496 0 0 1-.496-.496v-.412c0-.501.407-.908.908-.908z" stroke="#FF5700" fill="#FF6400"/>
+        <path d="M20.383 4.31H7.25v11h13.133a1 1 0 0 0 .856-1.517l-2.095-3.466a1 1 0 0 1 0-1.034l2.095-3.466a1 1 0 0 0-.856-1.517z" stroke="#FFE400" fill="#FFE300"/>
+    </g>
+</svg>

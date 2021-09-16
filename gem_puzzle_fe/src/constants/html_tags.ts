@@ -6,5 +6,15 @@ export enum Tags {
   INPUT = 'input',
   LABEL = 'label',
   CANVAS = 'canvas',
-  BUTTON = 'button'
+  BUTTON = 'button',
+  TABLE = 'table',
+  TR = 'tr',
+  TH = 'th',
+  TD = 'td',
+  A = 'a',
+  H1 = 'h1'
+}
+
+export enum HtmlProps {
+  PuzzleSize = 100
 }

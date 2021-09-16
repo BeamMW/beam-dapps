@@ -1,8 +1,8 @@
 import { BeamApiParams } from 'beamApiProps';
 import { QWebChannel, QWebChannelTransport, QObject } from 'qwebchannel';
-import shader from '../app.wasm';
-import BaseComponent from '../components/base/base.component';
-import { ReqID, ReqMethods, AppSpecs } from '../constants/api_constants';
+import shader from './app.wasm';
+import BaseComponent from '../../components/base/base.component';
+import { ReqID, ReqMethods, AppSpecs } from '../../constants/api_constants';
 
 declare global {
   interface Window {
@@ -16,35 +16,41 @@ export class BeamAPI {
 
   private contract: ArrayBuffer | null;
 
-  private readonly observers: BaseComponent[];
+  private readonly observers: Set<BaseComponent>;
 
   constructor() {
     this.API = null;
     this.contract = null;
-    this.observers = [];
+    this.observers = new Set();
   }
 
-  addObservers = (...components: BaseComponent[]): void => {
+  readonly addObservers = (...components: BaseComponent[]): void => {
     components.forEach((component) => {
-      this.observers.push(component);
+      this.observers.add(component);
+      component.element
+        .addEventListener(
+          'DOMNodeRemovedFromDocument', () => this.deleteObserver(component)
+        );
     });
   };
 
-  onApiResult = (json: string): void => {
-    const res = JSON.parse(json);
-    if (res.error) {
-      console.log(res.error.message);
-    } else {
-      console.log(res);
-      this.observers.forEach((component: BaseComponent) => {
-        if (component.inform) {
-          component.inform(res);
-        }
-      });
-    }
+  private readonly deleteObserver:(
+    component: BaseComponent
+  ) => void = (component: BaseComponent) => {
+    this.observers.delete(component);
   };
 
-  loadAPI = async (): Promise<void> => {
+  private readonly onApiResult = (json: string): void => {
+    const res = JSON.parse(json);
+    console.log('response: ', res);
+    this.observers.forEach((component: BaseComponent) => {
+      if (component.inform) {
+        component.inform(res);
+      }
+    });
+  };
+
+  readonly loadAPI = async (): Promise<void> => {
     const { qt, beam } = window;
     if (beam) {
       window.beam.apiResult$.subscribe(this.onApiResult);
@@ -68,13 +74,15 @@ export class BeamAPI {
     }
   };
 
-  initShader = (): void => {
+  private readonly initShader = (): void => {
     if (window.beam) {
       window.beam.initializeShader(AppSpecs.CID, AppSpecs.TITLE);
     }
   };
 
-  callApi = (callid: string, method: string, params: BeamApiParams): void => {
+  readonly callApi = (
+    callid: string, method: string, params: BeamApiParams
+  ): void => {
     if (this.contract) {
       const contract = Array.from(new Uint8Array(this.contract));
       const request = {
@@ -83,6 +91,7 @@ export class BeamAPI {
         method,
         params: { ...params, contract }
       };
+      console.log('request: ', request);
       if (window.beam) {
         window.beam.callApi(callid, method, { ...params, contract });
       } else {

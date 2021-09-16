@@ -1,0 +1,76 @@
+.header {
+  width: 872px;
+  height: 75px;
+  margin: 32px 10px 32px 10px;
+  border-radius: 37.5px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  div + div{
+    margin-left: 23px;
+  }
+  div:last-child{
+    margin-right: 23px;
+  }
+  div:first-child{
+    margin-left: 23px;
+    margin-right: auto;
+  };
+  
+  .infoblock {
+    width: 314px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 3px 493px 3px 14px;
+    background-image: url('../../assets/icon/button-0-funt.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    span{
+      color:rgba($color: #fff, $alpha: 1);
+      font-size: 20px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.42;
+      letter-spacing: normal;
+      color: #fff;
+    }
+    .title{
+      margin: 0 16px 0 0;
+    }
+    .before{
+      margin: 0 0 0 0 ;
+    }
+    .value{
+      margin: 0 5px 0 5px;
+    }
+  }
+  .infoblock:hover{
+    background-image: url('../../assets/icon/button-new-game.svg');
+    cursor: pointer;
+
+  }
+  .infoblock:first-child {
+    width: 285px;
+    height: 75px;
+    padding: 17px 25px 18px;
+    border-radius: 37.5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    background-image: none;
+    .after{
+      padding: 0 0 0 0 ;
+    }
+    span{
+      color:rgba($color: #fff, $alpha: 1);
+      font-size: 24px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.42;
+      letter-spacing: normal;
+      color: #fff;
+    }
+  }
+}
