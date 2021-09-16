@@ -10,23 +10,31 @@
 
 html {
   height: 100%;
-
+  overflow-x: hidden;
 }
 
 body {
-  margin: 0 auto;
   height: 100%;
-  width: 100%;
+  margin: 0 auto;
+  min-height: 100vh;
   display: flex;
+  justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  justify-content:center;
+  width: 100%;
   background-color: #081d11;
   background-image: linear-gradient(to top,
       rgba(0, 255, 100, 0),
       rgba(0, 255, 100, 0.2));
+  background-repeat: no-repeat;
 }
+
+
 
 .footer {
   margin-top: auto;
+  // position: fixed;
+  // z-index: -1;
+  // left: 0;
+  // bottom: 0;
 }
