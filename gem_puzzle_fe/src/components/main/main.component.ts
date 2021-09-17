@@ -78,24 +78,30 @@ export default class Main extends BaseComponent {
     if (this.child) this.remove(this.child);
     viewActiveGame();
     viewMyPendingRewards();
-    this.child = new Best(top);
     if (!top) viewTops();
+    this.child = new Best(top);
+    this.menu.replace(this.child);
     this.menu.addActive();
-    this.append(this.child);
+    this.append(this.menu);
+    AppStateHandler.addObservers(this.menu);
   };
 
   initGameField = (): void => {
     if (this.child) this.remove(this.child);
     this.child = new Field();
+    this.menu.replace(this.child);
     this.menu.addActive();
-    this.append(this.child);
+    this.append(this.menu);
+    AppStateHandler.addObservers(this.menu);
   };
 
   optionsField = (): void => {
     if (this.child) this.remove(this.child);
     this.menu.addActive();
     this.child = new Options();
-    this.append(this.child);
+    this.menu.replace(this.child);
+    this.append(this.menu);
+    AppStateHandler.addObservers(this.menu);
   };
 
   winner = (res:WinArgsType): void => {
