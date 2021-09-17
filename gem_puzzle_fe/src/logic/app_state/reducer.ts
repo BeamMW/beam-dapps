@@ -1,4 +1,4 @@
-import { IAppState, INewState } from 'AppStateProps';
+import { IAppState } from 'AppStateProps';
 import { AddObserversType } from 'beamApiProps';
 import BaseComponent from '../../components/base/base.component';
 import { AppStateActions, BoardView } from '../../constants/app_constants';
@@ -13,7 +13,8 @@ const initialState:IAppState = {
   picOpt: BoardView.NUMBERS,
   rate: 0.01,
   autoPlay: false,
-  reward: 0
+  reward: 0,
+  isTx: false
 };
 
 export default class AppState {
@@ -48,7 +49,7 @@ export default class AppState {
     });
   };
 
-  private readonly setState = (newState: INewState):void => {
+  private readonly setState = (newState: Partial<IAppState>):void => {
     this.state = { ...this.state, ...newState };
   };
 
@@ -87,6 +88,9 @@ export default class AppState {
         break;
       case AppStateActions.SET_REWARD:
         this.setState({ reward: payload as number });
+        break;
+      case AppStateActions.SET_TX:
+        this.setState({ isTx: payload as boolean });
         break;
       default:
         break;

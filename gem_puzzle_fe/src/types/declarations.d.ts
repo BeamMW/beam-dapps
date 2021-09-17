@@ -66,21 +66,8 @@ declare module 'AppStateProps' {
     picOpt: BoardView;
     autoPlay: boolean;
     reward: number;
+    isTx: boolean
   }
-
-  interface INewState {
-    activeGame?: boolean;
-    mode?: 3 | 4 | 5,
-    move?: string,
-    time?: number,
-    picture?: 'none';
-    rate?: number;
-    pKey?: string;
-    picOpt?: BoardView;
-    autoPlay?: boolean
-    reward?: number;
-  }
-
 }
 
 declare module 'beamApiProps' {

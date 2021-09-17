@@ -17,8 +17,8 @@ import {
   ResTXStatus
 } from '../../constants/api_constants';
 import {
-  checkActiveGame,
-  getPlayerKey,
+  viewActiveGame,
+  viewPlayerKey,
   invokeData,
   txStatus,
   viewCheckResult,
@@ -28,7 +28,11 @@ import {
 import './main.scss';
 import Router from '../../logic/router/router';
 import Options from '../options/options.component';
-import { RouterMode, Routes, BeamAmmount } from '../../constants/app_constants';
+import {
+  RouterMode,
+  Routes,
+  BeamAmmount
+} from '../../constants/app_constants';
 import { Best } from '../best/best.component';
 
 export default class Main extends BaseComponent {
@@ -36,72 +40,76 @@ export default class Main extends BaseComponent {
 
   private readonly router: Router;
 
+  private child: Field | Win | Options | Best | null;
+
   constructor() {
     super(Tags.DIV, ['main']);
     ApiHandler.addObservers(this);
-    getPlayerKey();
-    checkActiveGame();
+    viewPlayerKey();
     viewMyPendingRewards();
+    viewActiveGame();
     this.menu = new Menu();
     this.router = new Router({
       mode: RouterMode.HISTORY,
       root: Routes.MAIN
     });
+    this.child = null;
     this.router.add(Routes.OPTIONS, this.optionsField);
     this.router.add(Routes.RETURN, this.cancelGame);
     this.router.add(Routes.BEST, this.bestField);
     this.router.add(Routes.PLAY, this.initGameField);
-    this.initMainMenu();
+    this.router.add('', this.initMainMenu);
+    this.append(this.menu);
   }
 
   initMainMenu = ():void => {
-    checkActiveGame();
-    viewMyPendingRewards();
-    this.menu.removeActive();
-    this.append(this.menu);
+    this.child = null;
   };
 
   cancelGame = (): void => {
-    checkActiveGame();
-    this.removeAll();
+    if (this.child) this.remove(this.child);
     this.menu.removeActive();
-    this.append(this.menu);
+    viewActiveGame();
+    viewMyPendingRewards();
     window.history.pushState({}, '', Routes.MAIN);
   };
 
   bestField = (top:any): void => {
-    checkActiveGame();
+    if (this.child) this.remove(this.child);
+    viewActiveGame();
     viewMyPendingRewards();
-    const best = new Best(top);
-    if (!top) {
-      best.initLoader();
-      viewTops();
-    }
-    this.removeAll();
-    this.menu.classList.add('active');
-    this.append(best, this.menu);
+    if (!top) viewTops();
+    this.child = new Best(top);
+    this.menu.replace(this.child);
+    this.menu.addActive();
+    this.append(this.menu);
+    AppStateHandler.addObservers(this.menu);
   };
 
   initGameField = (): void => {
-    this.menu.classList.add('active');
-    this.menu.initButtonMenu();
-    this.append(new Field());
+    if (this.child) this.remove(this.child);
+    this.child = new Field();
+    this.menu.replace(this.child);
+    this.menu.addActive();
+    this.append(this.menu);
+    AppStateHandler.addObservers(this.menu);
   };
 
   optionsField = (): void => {
-    checkActiveGame();
-    this.removeAll();
+    if (this.child) this.remove(this.child);
     this.menu.addActive();
-    const options = new Options();
-    this.append(options, this.menu);
+    this.child = new Options();
+    this.menu.replace(this.child);
+    this.append(this.menu);
+    AppStateHandler.addObservers(this.menu);
   };
 
   winner = (res:WinArgsType): void => {
-    checkActiveGame();
+    if (this.child) this.remove(this.child);
     viewMyPendingRewards();
     this.menu.addActive();
-    const win = new Win(res);
-    this.append(this.menu, win);
+    this.child = new Win(res);
+    this.append(this.child);
   };
 
   transactionHandler = (result: APIResponse['result']):void => {
@@ -112,20 +120,13 @@ export default class Main extends BaseComponent {
       this.cancelGame();
     }
     if (result.status_string === ResTXStatus.COMPLETED) {
+      window.localStorage.removeItem('txId');
       switch (result.comment) {
-        case ResTXComment.CREATE_NEW_GAME:
-          window.history.pushState({}, '', `/${Routes.PLAY}`);
-          break;
-        case ResTXComment.ENDING_EXISTING_GAME:
-          this.initMainMenu();
-          break;
-        case ResTXComment.TAKING_PENDING_REWARS:
-          this.initMainMenu();
-          break;
         case ResTXComment.CHECKIN_SOLUTION:
           viewCheckResult();
           break;
         default:
+          viewActiveGame();
           break;
       }
     }
@@ -141,14 +142,14 @@ export default class Main extends BaseComponent {
       case ReqID.CANCEL_GAME:
       case ReqID.CHECK_SOLUTION:
       case ReqID.TAKE_PENDING_REWARDS:
-        this.removeAll();
-        this.menu.removeActive();
-        this.append(this.menu);
         invokeData(res.result.raw_data);
+        if (this.router.current) {
+          window.history.pushState({}, '', `/${Routes.RETURN}`);
+        }
         break;
+
       case ReqID.INVOKE_DATA:
         if (res.result?.txid) {
-          this.menu.initLoader(res.result.txid);
           txStatus(res.result.txid);
         }
         break;
@@ -167,7 +168,6 @@ export default class Main extends BaseComponent {
         AppStateHandler.dispatch(
           (setActiveGameAC(!!(JSON.parse(res.result.output).has_active_game)))
         );
-        this.menu.initButtonMenu();
         break;
 
       case ReqID.VIEW_TOPS:
@@ -186,6 +186,7 @@ export default class Main extends BaseComponent {
           )
         );
         break;
+
       default:
         break;
     }

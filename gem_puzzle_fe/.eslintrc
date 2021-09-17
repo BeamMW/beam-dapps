@@ -17,7 +17,7 @@
   "plugins": [
     "@typescript-eslint"
   ],
-  "ignorePatterns": ["*.config.js", "node_modules/", "dist/"],
+  "ignorePatterns": ["*.config.js", "node_modules/", "dist/", "*.icons.ts"],
   "rules": {
     "prefer-destructuring": ["error", {
       "array": false,

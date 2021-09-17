@@ -1,6 +1,6 @@
 import { APIResponse } from 'beamApiProps';
-import { ResTXStatus } from '../../constants/api_constants';
 import { Tags } from '../../constants/html_tags';
+import { ResTXStatus } from '../../constants/api_constants';
 import { ApiHandler } from '../../logic/beam_api/api_handler';
 import BaseComponent from '../base/base.component';
 import './footer.scss';
@@ -8,20 +8,26 @@ import './footer.scss';
 export default class Footer extends BaseComponent {
   private timeoutId: null | NodeJS.Timeout;
 
+  errorBlock: BaseComponent;
+
+  // loaderBlock: BaseComponent;
+
   constructor() {
     super(Tags.DIV, ['footer']);
     this.timeoutId = null;
+    this.errorBlock = new BaseComponent(Tags.DIV, ['errorBlock']);
     ApiHandler.addObservers(this);
+    this.append(this.errorBlock);
   }
 
   private readonly viewMessage = (message:string) => {
     if (this.timeoutId) clearTimeout(this.timeoutId);
-    this.innerHTML = message;
-    this.classList.add('active');
+    this.errorBlock.innerHTML = message;
+    this.errorBlock.classList.add('active');
     this.timeoutId = setTimeout(() => {
-      this.classList.remove('active');
+      this.errorBlock.classList.remove('active');
       this.timeoutId = setTimeout(() => {
-        this.innerHTML = '';
+        this.errorBlock.innerHTML = '';
         this.timeoutId = null;
       }, 300);
     }, 5000);
@@ -35,9 +41,10 @@ export default class Footer extends BaseComponent {
     } else if (res.result?.output) {
       try {
         const output = JSON.parse(res.result?.output);
-        console.log(output);
+        console.log('output JSON', output);
       } catch (error) {
         this.viewMessage(error as string);
+        console.log('output not JSON', res.result.output);
       }
     }
   };

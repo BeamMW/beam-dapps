@@ -9,4 +9,8 @@ export default class Button extends BaseComponent {
       type: 'button'
     });
   }
+
+  public set setDisplay(value : boolean) {
+    this.style.display = value ? 'flex' : 'none';
+  }
 }

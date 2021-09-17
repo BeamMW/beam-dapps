@@ -43,6 +43,16 @@ export default class BaseComponent {
     }
   };
 
+  remove = (...args: BaseComponent[]):void => {
+    args.forEach(
+      (component) => this.element.removeChild(component.element)
+    );
+  };
+
+  replace = (component:BaseComponent):void => {
+    this.element.replaceWith(component.element);
+  };
+
   setAttributes = (obj:HTMLAttributes):void => {
     const attr = Object.entries(obj);
     attr.forEach((attribute) => {
