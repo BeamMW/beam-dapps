@@ -79,6 +79,28 @@ void On_action_withdraw_kitten(const ContractID& cid, const CharacterId kittenId
 
 void On_action_view_my_kittens(const ContractID& cid)
 {
+    Env::Key_T<const char*> k;
+    k.m_Prefix.m_Cid = cid;
+    k.m_KeyInContract = "CurrentGameState";
+
+    CryptoKittens::CurrentGameState params;
+    if (!Env::VarReader::Read_T(k, params))
+        return On_error("Failed to read contract's params");
+
+    Env::DocGroup gr("myKittens");
+
+    for (auto kittenIt = params.kittensAndOwners[1/*r.m_Account*/].cbegin();
+        kittenIt != params.kittensAndOwners[1/*r.m_Account*/].cend();
+        ++kittenIt)
+    {
+        Env::DocGroup kitten("");
+
+        for (auto phenotypeIt = kittenIt->phenotype.setOfSigns.cbegin();
+            phenotypeIt != kittenIt->phenotype.setOfSigns.cend(); ++phenotypeIt)
+        {
+            Env::DocAddText(phenotypeIt->first.c_str(), phenotypeIt->second.c_str());
+        }
+    }
 
 }
 
@@ -90,7 +112,7 @@ void On_action_view_kittens_for_giveaway(const ContractID& cid)
 
     CryptoKittens::CurrentGameState params;
     if (!Env::VarReader::Read_T(k, params))
-        return On_error("Failed to read contract's initial params");
+        return On_error("Failed to read contract's params");
 
     Env::DocGroup gr("kittensForGiveaway");
 
@@ -164,7 +186,7 @@ BEAM_EXPORT void Method_0()
                 {
                     Env::DocGroup grMethod("withdraw_kitten");
                     Env::DocAddText("cid", "ContractID");
-                    Env::DocAddText("kittenId", "uint32");
+                    Env::DocAddText("kittenId", "CharacterId");
                 }
                 {
                     Env::DocGroup grMethod("view_my_kittens");
@@ -201,13 +223,12 @@ auto find_if_contains(const char* str, const std::vector<std::pair<const char*, 
 
 BEAM_EXPORT void Method_1()
 {
-    const std::vector<std::pair<const char*, Action_func_t>> VALID_PLAYER_ACTIONS = 
-    {
-        {"withdraw_kitten", On_action_withdraw_kitten},
+    const std::vector<std::pair<const char*, Action_func_t>> VALID_PLAYER_ACTIONS = {
+        //{"withdraw_kitten", On_action_withdraw_kitten},
         {"view_my_kittens", On_action_view_my_kittens},
         {"view_kittens_for_giveaway", On_action_view_kittens_for_giveaway},
         {"view_number_of_next_giveaway_block", On_action_view_number_of_next_giveaway_block},
-        {"get_my_pkey", On_action_get_my_pkey}
+        {"get_my_pkey", On_action_get_my_pkey},
     };
 
     const std::vector<std::pair<const char*, Action_func_t>> VALID_MANAGER_ACTIONS = 
@@ -218,7 +239,8 @@ BEAM_EXPORT void Method_1()
         {"view_contract_params", On_action_view_contract_params}
     };
 
-    const std::vector<std::pair<const char*, const std::vector<std::pair<const char*, Action_func_t>>&>> VALID_ROLES = {
+    const std::vector<std::pair<const char*, const std::vector<std::pair<const char*, Action_func_t>>&>> 
+        VALID_ROLES = {
         {"player", VALID_PLAYER_ACTIONS},
         {"manager", VALID_MANAGER_ACTIONS}
     };
