@@ -29,6 +29,7 @@
     width: 314px;
     height: 60px;
     display: flex;
+    user-select: none;
     justify-content: center;
     align-items: center;
     margin: 40px 493px 3px 14px;
@@ -57,7 +58,6 @@
   }
   .infoblock:hover{
     background-image: url('../../assets/icon/button-new-game.svg');
-    cursor: pointer;
   }
   .infoblock:first-child {
     margin-bottom: 10px;
@@ -66,6 +66,7 @@
     padding: 17px 25px 18px;
     border-radius: 37.5px;
     background-color: rgba(255, 255, 255, 0.1);
+    cursor: default;
     background-image: none;
     .after{
       padding: 0 0 0 0 ;

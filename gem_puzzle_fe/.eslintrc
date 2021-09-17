@@ -11,7 +11,7 @@
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "tsconfig.json",
-    "tsconfigRootDir": "dirname/gem_puzzle_fe",
+    "tsconfigRootDir": "./",
     "sourceType": "module"
   },
   "plugins": [

@@ -23,10 +23,9 @@ body {
   flex-direction: column;
   width: 100%;
   background-color: #081d11;
-  background-image: linear-gradient(to top,
-      rgba(0, 255, 100, 0),
-      rgba(0, 255, 100, 0.2));
+  background-image: url('../assets/bg.svg');
   background-repeat: no-repeat;
+  background-size: cover;
 }
 
 

@@ -47,9 +47,7 @@ export default class Header extends BaseComponent {
     `;
     this.rewardBlock.style.cursor = 'default';
     this.headerTop.append(this.rewardBlock);
-    this.append(this.headerTop, 
-      this.greeting
-      );
+    this.append(this.headerTop, this.greeting);
   };
 
   appInform = ({ reward }: IAppState): void => {
@@ -57,10 +55,7 @@ export default class Header extends BaseComponent {
       this.rewardBlock.element.innerHTML = `
       ${SVG.funt} <span> CLAIM ${reward} FUNT</span>
       `;
-      // this.rewardBlock.style.backgroundsv = ${SVG.claimBtn}`;
-      // this.rewardBlock.element.addEventListener('click', () => {
-      //   takePendingRewards();
-      // });
+      this.rewardBlock.style.cursor = 'pointer';
     } else {
       this.rewardBlock.element.innerHTML = `
       ${SVG.funt} <span> ${reward} FUNT</span>
