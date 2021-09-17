@@ -8,7 +8,8 @@ export enum AppStateActions {
   SET_PIC_OPT = 'SET_PIC_OPT',
   SET_ACTIVE = 'SET_ACTIVE',
   SET_AUTOPLAY = 'SET_AUTOPLAY',
-  SET_REWARD = 'SET_REWARD'
+  SET_REWARD = 'SET_REWARD',
+  SET_TX = 'SET_TX'
 }
 
 export enum PuzzleReducerActions {

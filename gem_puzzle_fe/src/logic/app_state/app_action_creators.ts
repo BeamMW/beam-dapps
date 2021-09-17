@@ -52,6 +52,11 @@ export const setMyPendingRewardAC:ActionCreatorType<number> = (payload) => ({
   payload
 });
 
+export const setIsTxAC:ActionCreatorType<boolean> = (payload) => ({
+  action: AppStateActions.SET_TX,
+  payload
+});
+
 export type ActionTypes = ReturnType<
 typeof setTimeAC
 | typeof setMoveAC
@@ -62,4 +67,5 @@ typeof setTimeAC
 | typeof setActiveGameAC
 | typeof setAutoplayAC
 | typeof setMyPendingRewardAC
+| typeof setIsTxAC
 >;

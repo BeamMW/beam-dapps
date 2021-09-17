@@ -16,7 +16,6 @@ export default class Footer extends BaseComponent {
     super(Tags.DIV, ['footer']);
     this.timeoutId = null;
     this.errorBlock = new BaseComponent(Tags.DIV, ['errorBlock']);
-    // this.loaderBlock = new TxBoard();
     ApiHandler.addObservers(this);
     this.append(this.errorBlock);
   }

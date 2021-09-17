@@ -1,4 +1,6 @@
 import { APIResponse } from 'beamApiProps';
+import { setIsTxAC } from '../../logic/app_state/app_action_creators';
+import { AppStateHandler } from '../../logic/app_state/state_handler';
 import { ReqID, ResTXStatus } from '../../constants/api_constants';
 import { Tags } from '../../constants/html_tags';
 import { ApiHandler } from '../../logic/beam_api/api_handler';
@@ -17,6 +19,7 @@ export default class Widget extends BaseComponent {
     const txId = window.localStorage.getItem('txId');
     if (txId) {
       txStatus(txId);
+      AppStateHandler.dispatch(setIsTxAC(true));
       this.classList.add('active');
     }
     const transactionId = new WidgetProps(
@@ -48,6 +51,7 @@ export default class Widget extends BaseComponent {
     if (res.id === ReqID.INVOKE_DATA) {
       if (res.result.txid) {
         window.localStorage.setItem('txId', res.result.txid);
+        AppStateHandler.dispatch(setIsTxAC(true));
         this.classList.add('active');
       }
     }
@@ -56,6 +60,7 @@ export default class Widget extends BaseComponent {
         || res.result.status_string === ResTXStatus.COMPLETED) {
         this.classList.remove('active');
         window.localStorage.removeItem('txId');
+        AppStateHandler.dispatch(setIsTxAC(false));
       }
     }
   };
