@@ -1,0 +1,31 @@
+<svg width="956" height="933" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <filter x="-36%" y="-36%" width="171.9%" height="171.9%" filterUnits="objectBoundingBox" id="c">
+            <feGaussianBlur stdDeviation="50" in="SourceGraphic"/>
+        </filter>
+        <filter x="-55.1%" y="-55.1%" width="210.3%" height="210.3%" filterUnits="objectBoundingBox" id="e">
+            <feGaussianBlur stdDeviation="50" in="SourceGraphic"/>
+        </filter>
+        <radialGradient cx="50%" cy="50%" fx="50%" fy="50%" r="50%" id="b">
+            <stop stop-color="#20866F" offset="0%"/>
+            <stop stop-color="#20866F" stop-opacity="0" offset="100%"/>
+        </radialGradient>
+        <linearGradient x1="50%" y1="100%" x2="50%" y2="0%" id="f">
+            <stop stop-color="#00FF64" stop-opacity="0" offset="0%"/>
+            <stop stop-color="#00FF64" stop-opacity=".2" offset="100%"/>
+        </linearGradient>
+        <path id="a" d="M0 0h954v933H0z"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <path fill="#081D11" d="M1 0h954v933H1z"/>
+        <g transform="translate(1)">
+            <mask id="d" fill="#fff">
+                <use xlink:href="#a"/>
+            </mask>
+            <use fill="#081D11" xlink:href="#a"/>
+            <circle fill="url(#b)" opacity=".4" filter="url(#c)" mask="url(#d)" cx="-11.5" cy="703.5" r="208.5"/>
+            <circle fill="#DFFD94" opacity=".103" filter="url(#e)" mask="url(#d)" transform="rotate(119 926.882 369.882)" cx="926.882" cy="369.882" r="136"/>
+        </g>
+        <path fill="url(#f)" fill-rule="nonzero" d="M0 0h1024v230H0z" transform="translate(-68)"/>
+    </g>
+</svg>
