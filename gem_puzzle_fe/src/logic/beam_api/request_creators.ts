@@ -83,7 +83,7 @@ export const viewContracts = (): void => {
   });
 };
 
-export const txStatus = (txId: string): void => {
+export const viewTxStatus = (txId: string): void => {
   setTimeout(() => {
     ApiHandler.callApi(ReqID.TX_STATUS, ReqMethods.TX_STATUS, {
       txId

@@ -174,7 +174,7 @@ export class Field extends BaseComponent {
       this.timeOutId = setTimeout(() => {
         const { piece } = (this.solveList)?.shift() as PuzzleSolveType;
         this.handleClickBox(new Box(piece.x, piece.y));
-      }, 120);
+      }, 160);
     }
   };
 }

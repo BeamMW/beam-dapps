@@ -7,7 +7,7 @@ import './style/index.scss';
 import AppState from './logic/app_state/reducer';
 import Header from './components/header/header.component';
 import Footer from './components/footer/footer.components';
-import Widget from './components/txboard/widget.component';
+import Widget from './components/widget/widget.component';
 
 export class App {
   private readonly rootElement: HTMLElement;

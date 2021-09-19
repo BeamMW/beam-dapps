@@ -12,16 +12,11 @@ import BaseComponent from '../base/base.component';
 import Menu from '../menu/menu.component';
 import { Field } from '../field/field.component';
 import {
-  ReqID,
-  ResTXComment,
-  ResTXStatus
+  ReqID
 } from '../../constants/api_constants';
 import {
   viewActiveGame,
   viewPlayerKey,
-  invokeData,
-  txStatus,
-  viewCheckResult,
   viewMyPendingRewards,
   viewTops
 } from '../../logic/beam_api/request_creators';
@@ -112,50 +107,15 @@ export default class Main extends BaseComponent {
     this.append(this.child);
   };
 
-  transactionHandler = (result: APIResponse['result']):void => {
-    if (result.status_string === ResTXStatus.IN_PROGRESS) {
-      txStatus(result.txId);
-    }
-    if (result.status_string === ResTXStatus.FAILED) {
-      this.cancelGame();
-    }
-    if (result.status_string === ResTXStatus.COMPLETED) {
-      window.localStorage.removeItem('txId');
-      switch (result.comment) {
-        case ResTXComment.CHECKIN_SOLUTION:
-          viewCheckResult();
-          break;
-        default:
-          viewActiveGame();
-          break;
-      }
-    }
-  };
-
   inform = (res: APIResponse): void => {
     switch (res.id) {
       case ReqID.CHECK:
         console.log(JSON.parse(res.result.output));
         break;
-
-      case ReqID.START_GAME:
-      case ReqID.CANCEL_GAME:
       case ReqID.CHECK_SOLUTION:
-      case ReqID.TAKE_PENDING_REWARDS:
-        invokeData(res.result.raw_data);
-        if (this.router.current) {
-          window.history.pushState({}, '', `/${Routes.RETURN}`);
+        if (this.router.current?.length) {
+          this.cancelGame();
         }
-        break;
-
-      case ReqID.INVOKE_DATA:
-        if (res.result?.txid) {
-          txStatus(res.result.txid);
-        }
-        break;
-
-      case ReqID.TX_STATUS:
-        this.transactionHandler(res.result);
         break;
 
       case ReqID.GET_PKEY:

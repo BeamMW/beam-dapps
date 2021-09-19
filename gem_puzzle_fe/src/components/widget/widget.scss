@@ -2,7 +2,8 @@
   position: absolute;
   z-index: 1;
   bottom:0;
-  right: -500px;
+  right: 20px;
+  transform: translate(500px, 0px);
   background-color: rgba(255, 255, 255, 0.1);
   color: cornflowerblue;
   display: flex;
@@ -13,9 +14,9 @@
   backdrop-filter: blur(24px);
   padding: 14px 14px 14px;
   border-radius: 10px;
-  transition: right 200ms ease-in;
+  transition: transform 200ms ease-in;
     &.active {
-      right: 20px;
+      transform: none;
     }
   .tx-infoblock{
     .title{
