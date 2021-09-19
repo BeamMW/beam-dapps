@@ -50,11 +50,7 @@ BEAM_EXPORT void Method_2(const CryptoKittens::WithdrawKitten& r)
 		Env::Halt_if(kittenIt == st.kittensForGiveaway.end());
 
 		// giving the kitten for player
-		
-		//
-		// 
-		st.kittensAndOwners.insert(std::make_pair(1/*r.m_Account*/, st.kittensForGiveaway[r.kittenId])); // CHANGE (pub key and vector)
-		// 
+		st.kittensAndOwners[1/*r.m_Account*/].push_back(st.kittensForGiveaway[r.kittenId]); 
 		
 		//deleting the kitten from kittens for giveaway
 		st.kittensForGiveaway.erase(r.kittenId);
