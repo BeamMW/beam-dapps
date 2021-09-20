@@ -45,22 +45,16 @@ export default class Header extends BaseComponent {
     this.rewardBlock.element.innerHTML = `
     ${SVG.funt} <span> ${reward} FUNT</span>
     `;
-    this.rewardBlock.style.cursor = 'default';
     this.headerTop.append(this.rewardBlock);
     this.append(this.headerTop, this.greeting);
   };
 
   appInform = ({ reward }: IAppState): void => {
-    if (reward > 0) {
+    if (reward !== 0) {
       this.rewardBlock.element.innerHTML = `
       ${SVG.funt} <span> CLAIM ${reward} FUNT</span>
       `;
-      this.rewardBlock.style.cursor = 'pointer';
-    } else {
-      this.rewardBlock.element.innerHTML = `
-      ${SVG.funt} <span> ${reward} FUNT</span>
-      `;
-      this.rewardBlock.style.cursor = 'default';
+      this.rewardBlock.classList.add('active');
     }
   };
 }
