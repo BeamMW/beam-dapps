@@ -217,18 +217,17 @@ void On_action_view_tops(const ContractID& cid)
 		Env::VarReader::Read_T(k1, table[i - 1]);
 	}
 
-	Env::DocGroup root("");
-	{
-		for (size_t i = 0; i < table.size(); ++i) {
-			Env::DocGroup cur("");
-			{
-				Env::DocAddBlob_T("Account", table[i].player);
-				Env::DocAddNum64("time", table[i].time);
-				Env::DocAddNum32("moves", table[i].moves_num);
-				Env::DocAddNum64("permutation", table[i].permutation_num);
-			}
+	Env::DocAddArray("");
+	for (size_t i = 0; i < table.size(); ++i) {
+		Env::DocGroup cur("");
+		{
+			Env::DocAddBlob_T("Account", table[i].player);
+			Env::DocAddNum64("time", table[i].time);
+			Env::DocAddNum32("moves", table[i].moves_num);
+			Env::DocAddNum64("permutation", table[i].permutation_num);
 		}
 	}
+	Env::DocCloseArray();
 }
 
 void On_action_get_my_info(const ContractID& cid)
