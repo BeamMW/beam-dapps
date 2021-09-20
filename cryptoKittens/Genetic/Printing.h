@@ -33,7 +33,7 @@ void printGeneralSignProbability(const ICharacter& character) noexcept
 		std::cout << signIt->first << "\n";
 		for (auto signProbabilityIt = signIt->second.cbegin(); signProbabilityIt != signIt->second.cend(); ++signProbabilityIt)
 		{
-			std::cout << signProbabilityIt->first << " - " << signProbabilityIt->second << '\n';
+			std::cout << signProbabilityIt->first << " - " << static_cast<float>(signProbabilityIt->second) / 10000 << '\n';
 		}
 		std::cout << "\n";
 	}
@@ -48,7 +48,7 @@ void printChildSignProbability(const ICharacter& firstParent, const ICharacter& 
 		std::cout << signIt->first << "\n";
 		for (auto signProbabilityIt = signIt->second.cbegin(); signProbabilityIt != signIt->second.cend(); ++signProbabilityIt)
 		{
-			std::cout << signProbabilityIt->first << " - " << signProbabilityIt->second << '\n';
+			std::cout << signProbabilityIt->first << " - " << static_cast<float>(signProbabilityIt->second) / 10000 << '\n';
 		}
 		std::cout << "\n";
 	}

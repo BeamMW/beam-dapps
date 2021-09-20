@@ -51,17 +51,17 @@ public:
 							ChromosomeMask::DependentSignsAndConditionOfExpression
 								(GeneState::Dominant, BaseGenePresence::Presence,
 									{
-										ChromosomeMask("availability of color point on front right paw:", "yes", "no"),
-										ChromosomeMask("availability of color point on back right paw:", "yes", "no"),
-										ChromosomeMask("availability of color point on front left paw:", "yes", "no"),
-										ChromosomeMask("availability of color point on back left paw:", "yes", "no"),
+										ChromosomeMask("availability of color point on front right paw", "yes", "no"),
+										ChromosomeMask("availability of color point on back right paw", "yes", "no"),
+										ChromosomeMask("availability of color point on front left paw", "yes", "no"),
+										ChromosomeMask("availability of color point on back left paw", "yes", "no"),
 
-										ChromosomeMask("availability of color point on right ear:", "yes", "no"),
-										ChromosomeMask("availability of color point on left ear:", "yes", "no"),
+										ChromosomeMask("availability of color point on right ear", "yes", "no"),
+										ChromosomeMask("availability of color point on left ear", "yes", "no"),
 
-										ChromosomeMask("availability of color point on tail:", "yes", "no"),
+										ChromosomeMask("availability of color point on tail", "yes", "no"),
 
-										ChromosomeMask("availability of color point on body:", "yes", "no")
+										ChromosomeMask("availability of color point on body", "yes", "no")
 									}
 								)
 						)

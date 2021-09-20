@@ -1,34 +1,59 @@
+$time:150ms;
 .field{
-    display: grid;
-    grid-template-columns: 80px 80px 80px 80px;
-    grid-template-rows: 80px 80px 80px 80px;
-    border: 3px dotted cornflowerblue;
-    justify-items: center;
-    align-items: center;
-    border-radius: 15px;
-    user-select: none;
-    
-    & button {
-      width: 80px;
-      height: 80px;
-      background-color: rgba(62, 102, 251, .8);
+    padding: 10px;
+    border-radius: 20px;
+    border: solid 2px #dffd94;
+    background-color: rgba(0, 255, 100, 0.2);
+    margin-bottom: 10px;
+    .field-inner{
+      position: relative;
+    .cell:before, .cell-inner:before {
+      display: inline-block;
+      height: 100%;
+      vertical-align: middle;
+      content: "";
+    } 
+    .cell {
+      display: inline-block;
+      will-change: transform; 
+      outline: none;
+      width: 100px;
+      height: 100px;   
       background-repeat: no-repeat;
-      background-size: auto auto;
-      border: 2px solid rgb(101, 186, 250, .5);
-      border-radius: 10px;
-      box-sizing: border-box;
-      font-size: 40px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: all 0.3s;
-      cursor: pointer;
+      background-size: auto auto; 
+      transition: transform $time;
+      text-align: center;
       opacity: 1;
-    }
-    .empty{
-      border: none;
-      opacity: 0;
-      transition: all 0.3s;
-      cursor: default
+      .cell-inner {
+        display: inline-block;
+        vertical-align: middle;
+        width: 80px;
+        height: 80px;
+        margin: 0 auto;
+        background-color: #dffd94;
+        text-align: center;
+        border-radius: 10px;
+        cursor: pointer;
+        .oval{
+          display: inline-block;
+          vertical-align: middle;
+          user-select: none;
+          width: 66px;
+          height: 66px;
+          color: #081d11;
+          margin: 0 auto;
+          text-align: center;
+          font-size: 40px;
+          line-height: 66px;
+          border-radius: 50%;
+          background: linear-gradient(
+            143deg, 
+            rgba(176, 198, 120, 0.75) 15%, 
+            #dffd94 80%, 
+            rgba(255, 255, 255, 0.5) 85%);
+        }
       }
+    }
+    }
+
 }

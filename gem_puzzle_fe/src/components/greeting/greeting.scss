@@ -1,0 +1,22 @@
+.description{
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    .title{
+        width: 100%;
+        font-family: Ubuntu;
+        font-size: 30px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.33;
+        letter-spacing: normal;
+        text-align: center;
+        color: #dffd94;
+    }
+    .backBtn{
+        border: none;
+        background: none;
+        color: #fff
+    }
+}

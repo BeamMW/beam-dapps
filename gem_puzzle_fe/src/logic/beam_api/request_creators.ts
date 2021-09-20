@@ -83,7 +83,7 @@ export const viewContracts = (): void => {
   });
 };
 
-export const txStatus = (txId: string): void => {
+export const viewTxStatus = (txId: string): void => {
   setTimeout(() => {
     ApiHandler.callApi(ReqID.TX_STATUS, ReqMethods.TX_STATUS, {
       txId
@@ -140,15 +140,7 @@ export const viewCheckResult = (): void => {
   });
 };
 
-export const checkSolutionTx = (txId: string): void => {
-  setTimeout(() => {
-    ApiHandler.callApi(ReqID.TX_CHECK_SOLUTION, ReqMethods.TX_STATUS, {
-      txId
-    });
-  }, AppSpecs.TX_CHECK_INTERVAL);
-};
-
-export const getPlayerKey = (): void => {
+export const viewPlayerKey = (): void => {
   const args = argsParser({
     role: ReqRoles.PLAYER,
     action: ReqActions.GET_MY_PKEY,
@@ -183,27 +175,21 @@ export const takePendingRewards = (): void => {
   });
 };
 
-export const pendingRewardsTx = (txId: string): void => {
-  setTimeout(() => {
-    ApiHandler.callApi(ReqID.TX_PENDING_REWARDS, ReqMethods.TX_STATUS, {
-      txId
-    });
-  }, AppSpecs.TX_CHECK_INTERVAL);
-};
-
 export const viewMyPendingRewards = (): void => {
   const args = argsParser({
     role: ReqRoles.PLAYER,
     action: ReqActions.VIEW_MY_PENDING_REWARDS,
     cid: AppSpecs.CID
   });
-  ApiHandler.callApi(ReqID.VIEW_MY_PENDING_REWARDS, ReqMethods.INVOKE_CONTRACT, {
-    create_tx: false,
-    args
-  });
+  ApiHandler.callApi(
+    ReqID.VIEW_MY_PENDING_REWARDS, ReqMethods.INVOKE_CONTRACT, {
+      create_tx: false,
+      args
+    }
+  );
 };
 
-export const checkActiveGame = (): void => {
+export const viewActiveGame = (): void => {
   const args = argsParser({
     role: ReqRoles.PLAYER,
     action: ReqActions.HAS_ACTIVE_GAME,

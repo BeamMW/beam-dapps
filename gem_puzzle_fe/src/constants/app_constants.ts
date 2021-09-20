@@ -8,7 +8,12 @@ export enum AppStateActions {
   SET_PIC_OPT = 'SET_PIC_OPT',
   SET_ACTIVE = 'SET_ACTIVE',
   SET_AUTOPLAY = 'SET_AUTOPLAY',
-  SET_REWARD = 'SET_REWARD'
+  SET_REWARD = 'SET_REWARD',
+  SET_TX = 'SET_TX'
+}
+
+export enum PuzzleReducerActions {
+  SET_GRID = 'SET_GRID'
 }
 
 export enum BeamAmmount {
@@ -31,7 +36,7 @@ export enum MenuBtn {
   DESTROY_CONTRACT = 'DESTROY_CONTRACT',
   RETURN = 'RETURN',
   BEST = 'BEST',
-  TAKE_REWARD = 'TAKE_REWARD'
+  CLAIM_REWARD = 'CLAIM_REWARD'
 }
 
 export enum RouterMode {
@@ -43,5 +48,6 @@ export enum Routes {
   OPTIONS = 'options',
   RETURN = 'return',
   MAIN = '/',
-  BEST = 'best'
+  BEST = 'best',
+  PLAY = 'play'
 }

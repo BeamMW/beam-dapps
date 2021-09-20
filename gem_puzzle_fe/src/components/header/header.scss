@@ -1,22 +1,86 @@
-.header{
-  padding: 10px 5px;
-  width: 100%;
+.header {
+  // width: 1023px;
+  // height: 230px;
+  // margin: 0 10px 0 9px;
+  width: 872px;
+  padding: 0 10px 32px 10px;
+  margin: 0 auto;
+  border-radius: 37.5px;
   display: flex;
+  flex-direction: column;
   justify-content: flex-start;
-  background-color: rgba($color: #3e66fb, $alpha: 0.3);
+  align-items: center;
+  &__top{
+    display: flex;
+    width: 100%;
+  }
   div + div{
-    margin-left: 20px;
+    margin-left: 23px;
+  }
+  div:last-child{
+    margin-right: 23px;
   }
   div:first-child{
+    margin-left: 23px;
     margin-right: auto;
+  };
+  
+  .infoblock {
+    width: 314px;
+    height: 60px;
+    display: flex;
+    user-select: none;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 493px 3px 14px;
+    background-image: url('../../assets/icon/button-0-funt.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    &.active{
+      cursor: pointer;
+      background-image: url('../../assets/icon/button-new-game.svg');
+    }
+    span{
+      color:rgba($color: #fff, $alpha: 1);
+      font-size: 20px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.42;
+      letter-spacing: normal;
+      color: #fff;
+    }
+    .title{
+      margin: 0 16px 0 0;
+    }
+    .before{
+      margin: 0 0 0 0 ;
+    }
+    .value{
+      margin: 0 5px 0 5px;
+    }
   }
-  .title{
-    color: #7400b8;
-  }
-  .value{
-    color: #80ffdb;  
-  }
-  .after{
-    color: #7400b8;
+  .infoblock:first-child {
+    margin-bottom: 70px;
+    width: 285px;
+    height: 75px;
+    padding: 17px 25px 18px;
+    border-radius: 37.5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    cursor: default;
+    background-image: none;
+    .after{
+      padding: 0 0 0 0 ;
+    }
+    span{
+      color:rgba($color: #fff, $alpha: 1);
+      font-size: 24px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.42;
+      letter-spacing: normal;
+      color: #fff;
+    }
   }
 }

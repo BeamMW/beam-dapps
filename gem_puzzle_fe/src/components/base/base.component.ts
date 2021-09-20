@@ -28,6 +28,8 @@ export default class BaseComponent {
 
   public get style():CSSStyleDeclaration { return this.element.style; }
 
+  public get dataset():DOMStringMap { return this.element.dataset; }
+
   append = (...args: BaseComponent[]):void => {
     const nodes = args.map(
       (component) => component.element
@@ -39,6 +41,16 @@ export default class BaseComponent {
     while (this.element.firstChild) {
       this.element.removeChild(this.element.firstChild);
     }
+  };
+
+  remove = (...args: BaseComponent[]):void => {
+    args.forEach(
+      (component) => this.element.removeChild(component.element)
+    );
+  };
+
+  replace = (component:BaseComponent):void => {
+    this.element.replaceWith(component.element);
   };
 
   setAttributes = (obj:HTMLAttributes):void => {

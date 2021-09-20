@@ -1,7 +1,8 @@
+import { SVG } from './svg.icons';
 import {
-  takePendingRewards,
   cancelGame,
-  startGame, viewBoard
+  startGame,
+  takePendingRewards
 } from '../logic/beam_api/request_creators';
 import { MenuBtn, Routes } from './app_constants';
 
@@ -9,25 +10,30 @@ export const menuProps = [
   {
     key: MenuBtn.CONTINUE,
     title: 'CONTINUE',
-    handler: viewBoard
+    handler: ():void => {
+      window.history.pushState({}, '', `/${Routes.PLAY}`);
+    }
   },
   {
     key: MenuBtn.NEW,
+    icon: `${SVG.newGameIcon}`,
     title: 'NEW GAME',
     handler: startGame
   },
   {
-    key: MenuBtn.OPTIONS,
-    title: 'OPTIONS',
+    key: MenuBtn.BEST,
+    icon: `${SVG.leaderboardIcon}`,
+    title: 'LEADERBOARD',
     handler: ():void => {
-      window.history.pushState({}, '', `/${Routes.OPTIONS}`);
+      window.history.pushState({}, '', `/${Routes.BEST}`);
     }
   },
   {
-    key: MenuBtn.BEST,
-    title: 'VIEW BEST',
+    key: MenuBtn.OPTIONS,
+    icon: `${SVG.settingIcon}`,
+    title: 'SETTING',
     handler: ():void => {
-      window.history.pushState({}, '', `/${Routes.BEST}`);
+      window.history.pushState({}, '', `/${Routes.OPTIONS}`);
     }
   },
   {
@@ -41,10 +47,14 @@ export const menuProps = [
     key: MenuBtn.CANCEL,
     title: 'CANCEL GAME',
     handler: cancelGame
-  },
+  }
+];
+
+export const claimBtn = [
   {
-    key: MenuBtn.TAKE_REWARD,
-    title: 'TAKE REWARD',
+    key: MenuBtn.CLAIM_REWARD,
+    title: 'CLAIM REWARD',
+    icon: SVG.buttonIcon,
     handler: takePendingRewards
   }
 ];

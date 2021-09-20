@@ -2,8 +2,8 @@
     margin: 10px auto;
     width: 500px;
     height: 350px;
-    background-color: palevioletred;
-    border: 3px dotted cornflowerblue;
+    background-color: rgba(0, 255, 100, 0.2);
+    border: 2px solid #dffd94;;
     opacity: .8;
     border-radius: 20px;
     display: flex;
@@ -12,14 +12,14 @@
     justify-content: space-evenly;
     & h1 {
         font-size: 35px;
-        color: #80ffdb;
+        color: #dffd94;
     }
     div{
         span:first-child{
-            color: #7400b8;
+            color: #dffd94;
         }
         span:last-child{
-            color: #80ffdb;
+            color: #fff;;  
         }
     }
 }

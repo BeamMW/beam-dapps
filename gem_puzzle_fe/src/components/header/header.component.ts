@@ -1,64 +1,60 @@
+import { IAppState } from 'AppStateProps';
 import { AppStateHandler } from '../../logic/app_state/state_handler';
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
 import './header.scss';
-import { boardSchemeMaker } from '../../utils/string_handlers';
 import InfoBLock from './infoblock.component';
+import { takePendingRewards } from '../../logic/beam_api/request_creators';
+import { SVG } from '../../constants/svg.icons';
+import Greeting from '../greeting/greeting.component';
+import { GrState } from '../greeting/greeting_state';
 
 export default class Header extends BaseComponent {
+  greeting: Greeting;
+
+  private readonly rewardBlock: BaseComponent;
+
+  private readonly headerTop: BaseComponent;
+
   constructor() {
     super(Tags.DIV, ['header']);
-    const {
-      rate, mode, picOpt, activeGame, autoPlay, reward
-    } = AppStateHandler.getState();
-    const rateBlock = new InfoBLock({
-      key: 'rate',
-      title: 'RATE',
-      value: rate,
-      after: 'BEAM'
+    AppStateHandler.addObservers(this);
+    this.greeting = new Greeting(GrState.MainTitle);
+    this.headerTop = new BaseComponent(Tags.DIV, ['header__top']);
+    this.rewardBlock = new BaseComponent(Tags.DIV, ['infoblock']);
+    this.rewardBlock.element.addEventListener('click', () => {
+      const { reward } = AppStateHandler.getState();
+      console.log(reward);
+      if (reward > 0) {
+        takePendingRewards();
+      }
     });
-    const viewBlock = new InfoBLock({
-      key: 'picOpt',
-      title: 'VIEW',
-      value: picOpt,
-      after: ''
-    });
-    const modeBlock = new InfoBLock({
-      key: 'mode',
-      title: 'MODE',
-      value: boardSchemeMaker(mode),
-      after: '',
-      callback: boardSchemeMaker
-    });
-
-    const autoPlayBlock = new InfoBLock({
-      key: 'autoPlay',
-      title: 'AUTOPLAY',
-      value: `${autoPlay}`.toUpperCase(),
-      after: '',
-      callback: (str:boolean):string => `${str}`.toUpperCase()
-    });
-
-    const isActiveBlock = new InfoBLock({
-      key: 'activeGame',
-      title: 'ACTIVE GAME',
-      value: `${activeGame}`.toUpperCase(),
-      after: '',
-      callback: (str:boolean):string => `${str}`.toUpperCase()
-    });
-    const rewardBlock = new InfoBLock({
-      key: 'reward',
-      title: 'REWARD',
-      value: reward,
-      after: 'BEAM'
-    });
-    this.append(
-      isActiveBlock,
-      rateBlock,
-      rewardBlock,
-      viewBlock,
-      modeBlock,
-      autoPlayBlock
-    );
+    this.initHeader();
   }
+
+  initHeader = (): void => {
+    const { reward } = AppStateHandler.getState();
+    const logoBlock = new InfoBLock({
+      key: 'logo',
+      title: SVG.logoGemPuzzleBig,
+      value: '',
+      after: 'GEM-PUZZLE',
+      before: ' '
+    });
+    this.headerTop.append(logoBlock);
+    this.rewardBlock.element.innerHTML = `
+    ${SVG.funt} <span> ${reward} FUNT</span>
+    `;
+    this.headerTop.append(this.rewardBlock);
+    this.append(this.headerTop, this.greeting);
+  };
+
+  appInform = ({ reward }: IAppState): void => {
+    if (reward !== 0) {
+      this.rewardBlock.element.innerHTML = `
+      ${SVG.funt} <span> CLAIM ${reward} FUNT</span>
+      `;
+      this.rewardBlock.classList.add('active');
+    }
+  };
 }

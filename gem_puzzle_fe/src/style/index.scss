@@ -1,25 +1,63 @@
 @import 'fonts';
 
-*{
-  font-family: 'SFProDisplay';
+* {
+  font-family: 'Ubuntu';
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   font-weight: 600;
 }
-html {
-    height: 100%;
 
-  }
-body{
-    height: 100%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    margin: 0 auto;
-    background-image: url('../assets/bg.png');
+html {
+  height: 100%;
+  overflow-x: hidden;
 }
 
-.footer{
+body {
+  height: 100%;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  background-color: #081d11;
+  background-image: url('../assets/bg.svg');
+  background-size: 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+}
+
+::-webkit-scrollbar {
+  width: 11px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .5);
+  border: 3px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+.footer {
   margin-top: auto;
+  // position: fixed;
+  // z-index: -1;
+  // left: 0;
+  // bottom: 0;
 }
