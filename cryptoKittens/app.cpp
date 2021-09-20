@@ -1,6 +1,7 @@
 #include "../common.h"
 #include "../app_common_impl.h"
 #include "contract.h"
+#include "shader_lib.cpp"
 
 void On_error(const char* msg)
 {

@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 
+#pragma pack (push, 1)
 /*
 * Gene may have 2 states: Recessive or Dominant.
 */
@@ -60,19 +61,18 @@ public:
 		BaseGenePresence baseGenePresence; // presence or absence of baseGene
 		std::vector<ChromosomeMask> signs; // set of signs, which expression depends on presence of base gene
 
-		DependentSignsAndConditionOfExpression() noexcept
-			: baseGene(GeneState::Dominant), baseGenePresence(BaseGenePresence::Presence), signs({}) {}
+		DependentSignsAndConditionOfExpression() noexcept;
 
-		DependentSignsAndConditionOfExpression(const GeneState baseGene, const BaseGenePresence baseGenePresence, const std::vector<ChromosomeMask>&& signs) noexcept
-			: baseGene(baseGene), baseGenePresence(baseGenePresence), signs(signs)
-		{}
+		DependentSignsAndConditionOfExpression(const GeneState baseGene, const BaseGenePresence baseGenePresence, 
+			const std::vector<ChromosomeMask>&& signs) noexcept;
+
+		DependentSignsAndConditionOfExpression(const DependentSignsAndConditionOfExpression& cp);
 
 		~DependentSignsAndConditionOfExpression() noexcept = default;
 	};
 
 	// set of signs and gene, on the presence of which in this chromosome the expression of signs depends 
 	DependentSignsAndConditionOfExpression dependentSigns;
-
 
 	ChromosomeMask() noexcept = default;
 	~ChromosomeMask() noexcept = default;
@@ -81,41 +81,20 @@ public:
 	ChromosomeMask(const std::string signName,
 		const std::string dominantGeneticExpression,
 		const std::string recessiveGeneticExpression,
-		const DependentSignsAndConditionOfExpression& dependentSigns = {}) noexcept
-		: signName(signName),
-		dominantGeneticExpression(dominantGeneticExpression),
-		interveningGeneticExpression(""),
-		recessiveGeneticExpression(recessiveGeneticExpression),
-		typeOfDominance(TypeOfDominance::Complete),
-		dependentSigns(dependentSigns)
-	{}
+		const DependentSignsAndConditionOfExpression& dependentSigns = {}) noexcept;
 
 	//Ctor of chromosome with incomplete type of dominance
 	ChromosomeMask(const std::string signName,
 		const std::string dominantGeneticExpression,
 		const std::string interveningGeneticExpression,
 		const std::string recessiveGeneticExpression,
-		const DependentSignsAndConditionOfExpression& dependentSigns = {}) noexcept
-		: signName(signName),
-		dominantGeneticExpression(dominantGeneticExpression),
-		interveningGeneticExpression(interveningGeneticExpression),
-		recessiveGeneticExpression(recessiveGeneticExpression),
-		typeOfDominance(TypeOfDominance::Incomplete),
-		dependentSigns(dependentSigns)
-	{}
+		const DependentSignsAndConditionOfExpression& dependentSigns = {}) noexcept;
+
+	ChromosomeMask(const ChromosomeMask& cp);
+
+	friend bool operator==(const ChromosomeMask::DependentSignsAndConditionOfExpression& lhs, const ChromosomeMask::DependentSignsAndConditionOfExpression& rhs);
+
+	friend bool operator==(const ChromosomeMask& lhs, const ChromosomeMask& rhs);
 };
 
-bool operator==(const ChromosomeMask::DependentSignsAndConditionOfExpression& lhs, const ChromosomeMask::DependentSignsAndConditionOfExpression& rhs) {
-	return lhs.baseGene == rhs.baseGene &&
-		lhs.baseGenePresence == rhs.baseGenePresence &&
-		lhs.signs == rhs.signs;
-}
-
-bool operator==(const ChromosomeMask& lhs, const ChromosomeMask& rhs) {
-	return lhs.signName == rhs.signName &&
-		lhs.typeOfDominance == rhs.typeOfDominance &&
-		lhs.dominantGeneticExpression == rhs.dominantGeneticExpression &&
-		lhs.interveningGeneticExpression == rhs.interveningGeneticExpression &&
-		lhs.recessiveGeneticExpression == rhs.recessiveGeneticExpression &&
-		lhs.dependentSigns == rhs.dependentSigns;
-}
+#pragma pack (pop)

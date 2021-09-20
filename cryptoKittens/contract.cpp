@@ -2,24 +2,27 @@
 #include "../Math.h"
 #include "contract.h"
 #include <utility>
+#include <string>
+
 BEAM_EXPORT void Ctor(CryptoKittens::StartGameParams& params)
 {
-	CryptoKittens::CurrentGameState st;
+	std::string str("Hello");
+	str.resize(23);
 
 	st.heightOfNextGiveaway = Env::get_Height() + params.periodOfGiveaway;
-	st.kittensAndOwners = {};
+	//st.kittensAndOwners = {};
 
 	// generating Zero kittens
 	for (size_t i = 0; i < params.numberOfAllKittens; ++i)
 	{
-		st.allKittens.push(Kitten());
+		//st.allKittens.push(Kitten());
 	}
 
-	// generating kittens for giveaway
+	//// generating kittens for giveaway
 	for (size_t i = 0; i < params.numberOfKittensForGiveAway || !st.allKittens.empty(); ++i)
 	{
-		st.kittensForGiveaway.insert(std::make_pair(st.allKittens.front().id, st.allKittens.front()));
-		st.allKittens.pop();
+	//	st.kittensForGiveaway.insert(std::make_pair(st.allKittens.front().id, st.allKittens.front()));
+	//	st.allKittens.pop();
 	}
 
 	Env::SaveVar_T("StartGameParams", params);
@@ -50,7 +53,7 @@ BEAM_EXPORT void Method_2(const CryptoKittens::WithdrawKitten& r)
 		Env::Halt_if(kittenIt == st.kittensForGiveaway.end());
 
 		// giving the kitten for player
-		st.kittensAndOwners[1/*r.m_Account*/].push_back(st.kittensForGiveaway[r.kittenId]); 
+		//st.kittensAndOwners[1/*r.m_Account*/].push_back(st.kittensForGiveaway[r.kittenId]); 
 		
 		//deleting the kitten from kittens for giveaway
 		st.kittensForGiveaway.erase(r.kittenId);
@@ -67,8 +70,8 @@ BEAM_EXPORT void Method_2(const CryptoKittens::WithdrawKitten& r)
 		
 		for (size_t i = 0; i < params.numberOfKittensForGiveAway || !st.allKittens.empty(); ++i)
 		{
-			st.kittensForGiveaway.insert(std::make_pair(st.allKittens.front().id, st.allKittens.front()));
-			st.allKittens.pop();
+	//		st.kittensForGiveaway.insert(std::make_pair(st.allKittens.front().id, st.allKittens.front()));
+	//		st.allKittens.pop();
 		}
 	}
 

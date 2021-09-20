@@ -3,6 +3,7 @@
 
 using PhenotypeMask = std::vector<ChromosomeMask>;
 
+#pragma pack (push, 1)
 /*
 * Mask contatins set of general characteristics of one class of characters
 */
@@ -12,29 +13,15 @@ public:
 	PhenotypeMask phenotypeMask; // set of general characteristics of each chromosome 
 	uint16_t size; // size of phenotypeMask = number of all chromosomes
 
-	Mask() noexcept : size(0) {}
+	Mask() noexcept;
 	~Mask() noexcept = default;
 
-	uint16_t getSize() noexcept
-	{
-		setSize(phenotypeMask);
-		return size;
-	}
+	uint16_t getSize() noexcept;
 
 	friend bool operator==(const Mask& lhs, const Mask& rhs);
 
 private:
-	void setSize(const PhenotypeMask& mask) noexcept
-	{
-		for (auto maskIt = mask.cbegin(); maskIt != mask.cend(); ++maskIt)
-		{
-			++size;
-			if (!(maskIt->dependentSigns.signs.empty()))
-				setSize(maskIt->dependentSigns.signs);
-		}
-	}
+	void setSize(const PhenotypeMask& mask) noexcept;
 };
 
-bool operator==(const Mask& lhs, const Mask& rhs) {
-	return lhs.phenotypeMask == rhs.phenotypeMask;
-}
+#pragma pack (pop)
