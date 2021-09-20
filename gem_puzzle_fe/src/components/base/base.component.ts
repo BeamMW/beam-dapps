@@ -30,9 +30,12 @@ export default class BaseComponent {
 
   public get dataset():DOMStringMap { return this.element.dataset; }
 
-  append = (...args: BaseComponent[]):void => {
+  append = (...args: (BaseComponent | HTMLElement)[]):void => {
     const nodes = args.map(
-      (component) => component.element
+      (component) => {
+        if (component instanceof BaseComponent) return component.element;
+        return component;
+      }
     );
     this.element.append(...nodes);
   };

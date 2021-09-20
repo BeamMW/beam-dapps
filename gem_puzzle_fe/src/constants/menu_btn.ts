@@ -1,3 +1,4 @@
+import { MenuButtonType } from 'ComponentProps';
 import { SVG } from './svg.icons';
 import {
   cancelGame,
@@ -6,7 +7,7 @@ import {
 } from '../logic/beam_api/request_creators';
 import { MenuBtn, Routes } from './app_constants';
 
-export const menuProps = [
+export const menuProps: MenuButtonType[] = [
   {
     key: MenuBtn.CONTINUE,
     title: 'CONTINUE',

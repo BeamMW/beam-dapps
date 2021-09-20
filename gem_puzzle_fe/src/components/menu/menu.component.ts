@@ -1,9 +1,8 @@
 import { IAppState } from 'AppStateProps';
 import { APIResponse } from 'beamApiProps';
-import { ApiHandler } from '../../logic/beam_api/api_handler';
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
-import Button from '../button/button.component';
+import Button from '../shared/button/button.component';
 import './menu.scss';
 import { MenuBtn } from '../../constants/app_constants';
 import { menuProps } from '../../constants/menu_btn';
@@ -16,30 +15,19 @@ export default class Menu extends BaseComponent {
 
   constructor() {
     super(Tags.DIV, ['menu']);
-    ApiHandler.addObservers(this);
     AppStateHandler.addObservers(this);
     this.desc = new BaseComponent(Tags.SPAN, ['desc']);
+    this.desc.innerHTML = 'Play and earn!';
     this.buttons = new Map();
     menuProps.forEach((btn) => {
       this.buttons.set(btn.key, this.buttonBuilder(btn));
     });
     const values = this.buttons.values();
-    this.append(...values);
+    this.append(this.desc, ...values);
   }
 
   buttonBuilder = (btn: typeof menuProps[number]):Button => {
-    const btnKey = new Button();
-    btnKey.element.classList.add(`btn_${btn.key}`);
-    if (!btn.icon) {
-      btnKey.element.innerHTML = ` <span>
-      
-    ${btn.title}</span>`;
-    } else {
-      btnKey.element.innerHTML = `${btn.icon} <span>${btn.title}</span>`;
-    }
-    btnKey.element.addEventListener('click', () => {
-      btn.handler();
-    });
+    const btnKey = new Button(btn);
     return btnKey;
   };
 
@@ -50,6 +38,7 @@ export default class Menu extends BaseComponent {
     this.buttons.forEach((value) => {
       value.setDisplay = false;
     });
+    this.desc.style.display = 'block';
   };
 
   addActive = (): void => {
@@ -57,16 +46,11 @@ export default class Menu extends BaseComponent {
     this.buttons.forEach((value, key) => {
       value.setDisplay = key === MenuBtn.RETURN;
     });
+    this.desc.style.display = 'none';
   };
 
   inform = (res:APIResponse):void => {
     switch (res.id) {
-      // case ReqID.START_GAME:
-      // case ReqID.CANCEL_GAME:
-      // case ReqID.CHECK_SOLUTION:
-      // case ReqID.TAKE_PENDING_REWARDS:
-      //   this.removeActive();
-      //   break;
       default:
         break;
     }
@@ -74,7 +58,6 @@ export default class Menu extends BaseComponent {
 
   appInform = ({ activeGame, isTx }: IAppState): void => {
     if (!this.classList.contains('active')) {
-      this.desc.innerHTML = activeGame ? 'Play and earn!' : '';
       if (isTx) {
         this.getBtn(MenuBtn.NEW).setDisplay = false;
         this.getBtn(MenuBtn.CANCEL).setDisplay = false;

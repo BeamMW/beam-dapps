@@ -10,8 +10,6 @@ export default class Footer extends BaseComponent {
 
   errorBlock: BaseComponent;
 
-  // loaderBlock: BaseComponent;
-
   constructor() {
     super(Tags.DIV, ['footer']);
     this.timeoutId = null;

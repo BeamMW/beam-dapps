@@ -1,15 +1,9 @@
 .button {
-    will-change: background-image; 
     position: relative;
     width: 314px;
     height: 60px;
     margin: 0 0 10px;
-    // padding: 13px 86px;
-    background-image: url('../../assets/icon/button-settings.svg');
-    background-repeat: no-repeat;
     display: none;
-    align-items: center;
-    justify-content: center;
     margin: 0 0 0 11px;
     font-family: Ubuntu;
     font-size: 20px;
@@ -21,12 +15,24 @@
     color: #fff;
     user-select: none;
 
-    &:hover {
+    &:hover .svgBG{
         cursor: pointer;
-        transition: background-image .2s ease-in;
-        background-image: url('../../assets/icon/button-new-game.svg');
+        fill: #00FF64;
     }
 
+    .titleDOM {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .bgSvg {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: -1;
+    }
 
 }
 

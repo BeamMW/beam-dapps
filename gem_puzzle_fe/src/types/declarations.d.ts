@@ -126,6 +126,13 @@ declare module 'ComponentProps' {
     ['time (min)']: number;
   };
 
+  export type MenuButtonType = {
+    key: MenuBtn,
+    title: string,
+    icon?: string,
+    handler: () => void;
+  };
+
   export type CellToRender = {
     index: number,
     x: number,

@@ -1,8 +1,6 @@
 import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-// import ESLintPlugin from 'eslint-webpack-plugin';
-// import HtmlWebpackTagsPlugin from 'html-webpack-tags-plugin';
 
 export default {
   devtool: 'eval-source-map',
@@ -48,18 +46,11 @@ export default {
     extensions: ['.ts', '.js']
   },
   plugins: [
-    // new ESLintPlugin({
-    //   files: 'src/**/*.ts'
-    // }),
     new HtmlWebpackPlugin({
       inject: true,
       title: 'beamer',
       template: './src/index.html'
     }),
-    // new HtmlWebpackTagsPlugin({
-    //   append: false,
-    //   tags: ['qrc:///qtwebchannel/qwebchannel.js']
-    // }),
     new MiniCssExtractPlugin({
       filename: 'styles/[name].[contenthash].css'
     })

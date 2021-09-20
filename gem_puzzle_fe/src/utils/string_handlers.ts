@@ -4,6 +4,9 @@ export const boardSchemeMaker = (
   length: number
 ): string => `${length}x${length}`;
 
+export const toDOMParser = (str: string):HTMLElement => new DOMParser()
+  .parseFromString(str, 'application/xml').documentElement;
+
 export const handleString = (next:string):boolean => {
   let result = true;
   const regex = new RegExp(/^-?\d+(\.\d*)?$/g);

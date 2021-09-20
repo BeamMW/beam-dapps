@@ -131,6 +131,7 @@ export default class Main extends BaseComponent {
         break;
 
       case ReqID.VIEW_TOPS:
+        console.log(`[${res.result.output.slice(1, -1)}]`);
         this.bestField(JSON.parse(`[${res.result.output.slice(1, -1)}]`));
         break;
 

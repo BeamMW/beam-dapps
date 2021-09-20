@@ -12,6 +12,7 @@ import {
   invokeData,
   viewActiveGame,
   viewCheckResult,
+  viewMyPendingRewards,
   viewTxStatus
 } from '../../logic/beam_api/request_creators';
 import BaseComponent from '../base/base.component';
@@ -68,9 +69,11 @@ export default class Widget extends BaseComponent {
       switch (result.comment) {
         case ResTXComment.CHECKIN_SOLUTION:
           viewCheckResult();
+          viewMyPendingRewards();
           break;
         default:
           viewActiveGame();
+          viewMyPendingRewards();
           break;
       }
     }
