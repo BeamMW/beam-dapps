@@ -83,7 +83,7 @@ export const viewContracts = (): void => {
   });
 };
 
-export const txStatus = (txId: string): void => {
+export const viewTxStatus = (txId: string): void => {
   setTimeout(() => {
     ApiHandler.callApi(ReqID.TX_STATUS, ReqMethods.TX_STATUS, {
       txId
@@ -140,7 +140,7 @@ export const viewCheckResult = (): void => {
   });
 };
 
-export const getPlayerKey = (): void => {
+export const viewPlayerKey = (): void => {
   const args = argsParser({
     role: ReqRoles.PLAYER,
     action: ReqActions.GET_MY_PKEY,
@@ -189,7 +189,7 @@ export const viewMyPendingRewards = (): void => {
   );
 };
 
-export const checkActiveGame = (): void => {
+export const viewActiveGame = (): void => {
   const args = argsParser({
     role: ReqRoles.PLAYER,
     action: ReqActions.HAS_ACTIVE_GAME,

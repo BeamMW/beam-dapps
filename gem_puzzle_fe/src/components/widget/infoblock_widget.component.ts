@@ -27,9 +27,9 @@ export default class WidgetProps extends BaseComponent {
   }
 
   inform = (res: APIResponse): void => {
-    if (res.id === ReqID.INVOKE_DATA){
-      if (this.key === 'txId'){
-        this.value.innerHTML = window.localStorage.getItem('txId') || '...'
+    if (res.id === ReqID.INVOKE_DATA) {
+      if (this.key === 'txId') {
+        this.value.innerHTML = window.localStorage.getItem('txId') || '...';
       }
     }
     if (res.id === ReqID.TX_STATUS) {

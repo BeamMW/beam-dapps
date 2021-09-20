@@ -63,7 +63,6 @@ export class Best extends BaseComponent {
             tr.append(td);
           }
           this.append(tr);
-          // this.append(best);
         });
       });
 
@@ -127,7 +126,6 @@ export class Best extends BaseComponent {
             tr.append(td);
           }
           this.append(tr);
-          // this.append(best);
         });
       });
 
