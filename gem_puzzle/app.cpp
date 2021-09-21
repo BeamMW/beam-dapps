@@ -217,27 +217,32 @@ void On_action_view_tops(const ContractID& cid)
 		Env::VarReader::Read_T(k1, table[i - 1]);
 	}
 
-	Env::DocGroup root("");
-	{
-		for (size_t i = 0; i < table.size(); ++i) {
-			Env::DocGroup cur("");
-			{
-				Env::DocAddBlob_T("Account", table[i].player);
-				Env::DocAddNum64("time", table[i].time);
-				Env::DocAddNum32("moves", table[i].moves_num);
-				Env::DocAddNum64("permutation", table[i].permutation_num);
-			}
+	Env::DocAddArray("");
+	for (size_t i = 0; i < table.size(); ++i) {
+		Env::DocGroup cur("");
+		{
+			Env::DocAddBlob_T("Account", table[i].player);
+			Env::DocAddNum64("time", table[i].time);
+			Env::DocAddNum32("moves", table[i].moves_num);
+			Env::DocAddNum64("permutation", table[i].permutation_num);
 		}
 	}
+	Env::DocCloseArray();
 }
 
-void On_action_get_my_pkey(const ContractID& cid)
+void On_action_get_my_info(const ContractID& cid)
 {
-	PubKey my_key;
-	Env::DerivePk(my_key, &cid, sizeof(cid));
+	GemPuzzle::AccountInfo acc_info;
+	bool is_read = read_my_account_info(cid, acc_info);
+	if (!is_read) {
+		acc_info.pending_rewards = 0;
+	}
+
 	Env::DocGroup root("");
 	{
-		Env::DocAddBlob_T("My public key", my_key);
+		Env::DocAddBlob_T("My public key", acc_info.game_info.ngparams.player);
+		Env::DocAddNum32("has_active_game", is_read && acc_info.has_active_game);
+		Env::DocAddNum64("pending_rewards", acc_info.pending_rewards);
 	}
 }
 
@@ -256,32 +261,6 @@ void On_action_view_contract_params(const ContractID& cid)
 	Env::DocAddNum64("multiplier", params.multiplier);
 	Env::DocAddNum64("free_time", params.free_time);
 	Env::DocAddNum32("game_speed", params.game_speed);
-}
-
-void On_action_has_active_game(const ContractID& cid)
-{
-	GemPuzzle::AccountInfo acc_info;
-	bool is_read = read_my_account_info(cid, acc_info);
-
-	Env::DocGroup root("");
-	{
-		Env::DocAddNum32("has_active_game", is_read && acc_info.has_active_game);
-	}
-}
-
-void On_action_view_my_pending_rewards(const ContractID& cid)
-{
-	GemPuzzle::AccountInfo acc_info;
-	bool is_read = read_my_account_info(cid, acc_info);
-
-	if (!is_read) {
-		acc_info.pending_rewards = 0;
-	}
-
-	Env::DocGroup root("");
-	{
-		Env::DocAddNum64("pending_rewards", acc_info.pending_rewards);
-	}
 }
 
 template <typename T>
@@ -342,10 +321,6 @@ BEAM_EXPORT void Method_0()
                 Env::DocAddText("cid", "ContractID");
             }
 			{
-				Env::DocGroup grMethod("get_my_pkey");
-				Env::DocAddText("cid", "ContractID");
-			}
-			{
 				Env::DocGroup grMethod("view_tops");
 				Env::DocAddText("cid", "ContractID");
 			}
@@ -354,11 +329,7 @@ BEAM_EXPORT void Method_0()
 				Env::DocAddText("cid", "ContractID");
 			}
 			{
-				Env::DocGroup grMethod("has_active_game");
-				Env::DocAddText("cid", "ContractID");
-			}
-			{
-				Env::DocGroup grMethod("view_my_pending_rewards");
+				Env::DocGroup grMethod("get_my_info");
 				Env::DocAddText("cid", "ContractID");
 			}
         }
@@ -374,10 +345,8 @@ BEAM_EXPORT void Method_1()
 		{"view_check_result", On_action_view_check_result},
 		{"end_current_game", On_action_end_current_game},
 		{"take_pending_rewards", On_action_take_pending_rewards},
-		{"get_my_pkey", On_action_get_my_pkey},
 		{"view_tops", On_action_view_tops},
-		{"has_active_game", On_action_has_active_game},
-		{"view_my_pending_rewards", On_action_view_my_pending_rewards},
+		{"get_my_info", On_action_get_my_info},
 	};
 
 	const std::vector<std::pair<const char *, Action_func_t>> VALID_MANAGER_ACTIONS = {

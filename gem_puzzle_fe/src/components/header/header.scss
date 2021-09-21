@@ -36,6 +36,10 @@
     background-image: url('../../assets/icon/button-0-funt.svg');
     background-repeat: no-repeat;
     background-size: cover;
+    &.active{
+      cursor: pointer;
+      background-image: url('../../assets/icon/button-new-game.svg');
+    }
     span{
       color:rgba($color: #fff, $alpha: 1);
       font-size: 20px;
@@ -56,11 +60,8 @@
       margin: 0 5px 0 5px;
     }
   }
-  .infoblock:hover{
-    background-image: url('../../assets/icon/button-new-game.svg');
-  }
   .infoblock:first-child {
-    margin-bottom: 10px;
+    margin-bottom: 70px;
     width: 285px;
     height: 75px;
     padding: 17px 25px 18px;

@@ -86,9 +86,12 @@ export default class Widget extends BaseComponent {
         break;
       case ReqID.START_GAME:
       case ReqID.CANCEL_GAME:
-      case ReqID.TAKE_PENDING_REWARDS:
       case ReqID.CHECK_SOLUTION:
         invokeData(res.result.raw_data);
+        break;
+      case ReqID.TAKE_PENDING_REWARDS:
+        invokeData(res.result.raw_data);
+        viewMyPendingRewards();
         break;
       case ReqID.INVOKE_DATA:
         if (res.result?.txid) {
