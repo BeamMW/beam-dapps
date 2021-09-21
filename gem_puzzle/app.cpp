@@ -199,37 +199,6 @@ void On_action_take_pending_rewards(const ContractID& cid)
 	Env::GenerateKernel(&cid, GemPuzzle::TakePendingRewards::METHOD, &params, sizeof(params), &fc, 1, nullptr, 0, "Taking pending rewards", 0);
 }
 
-void On_action_view_tops(const ContractID& cid)
-{
-	Env::Key_T<int> k;
-	k.m_Prefix.m_Cid = cid;
-	k.m_KeyInContract = 0;
-
-	GemPuzzle::InitialParams params;
-	if (!Env::VarReader::Read_T(k, params))
-		return On_error("Failed to read contract's initial params");
-	
-	std::vector<GemPuzzle::GameResult> table(params.last_used_game_id);
-	Env::Key_T<uint64_t> k1;
-	k1.m_Prefix.m_Cid = cid;
-	for (uint64_t i = 1; i <= params.last_used_game_id; ++i) {
-		k1.m_KeyInContract = i;
-		Env::VarReader::Read_T(k1, table[i - 1]);
-	}
-
-	Env::DocAddArray("");
-	for (size_t i = 0; i < table.size(); ++i) {
-		Env::DocGroup cur("");
-		{
-			Env::DocAddBlob_T("Account", table[i].player);
-			Env::DocAddNum64("time", table[i].time);
-			Env::DocAddNum32("moves", table[i].moves_num);
-			Env::DocAddNum64("permutation", table[i].permutation_num);
-		}
-	}
-	Env::DocCloseArray();
-}
-
 void On_action_get_my_info(const ContractID& cid)
 {
 	GemPuzzle::AccountInfo acc_info;
@@ -321,10 +290,6 @@ BEAM_EXPORT void Method_0()
                 Env::DocAddText("cid", "ContractID");
             }
 			{
-				Env::DocGroup grMethod("view_tops");
-				Env::DocAddText("cid", "ContractID");
-			}
-			{
 				Env::DocGroup grMethod("take_pending_rewards");
 				Env::DocAddText("cid", "ContractID");
 			}
@@ -345,7 +310,6 @@ BEAM_EXPORT void Method_1()
 		{"view_check_result", On_action_view_check_result},
 		{"end_current_game", On_action_end_current_game},
 		{"take_pending_rewards", On_action_take_pending_rewards},
-		{"view_tops", On_action_view_tops},
 		{"get_my_info", On_action_get_my_info},
 	};
 
