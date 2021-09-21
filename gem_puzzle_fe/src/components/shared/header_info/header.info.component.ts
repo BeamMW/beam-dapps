@@ -1,7 +1,7 @@
 import { IAppState } from 'AppStateProps';
-import { Store } from '../../logic/app_state/state_handler';
-import { Tags } from '../../constants/html_tags';
-import BaseComponent from '../base/base.component';
+import { Store } from '../../../logic/store/state_handler';
+import { Tags } from '../../../constants/html_tags';
+import BaseComponent from '../../base/base.component';
 
 export default class InfoBLock extends BaseComponent {
   key: string;

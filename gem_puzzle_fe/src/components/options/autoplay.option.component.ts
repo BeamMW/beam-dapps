@@ -1,7 +1,7 @@
 import { IAppState } from 'AppStateProps';
-import { AC } from '../../logic/app_state/app_action_creators';
+import { AC } from '../../logic/store/app_action_creators';
 import { Tags } from '../../constants/html_tags';
-import { Store } from '../../logic/app_state/state_handler';
+import { Store } from '../../logic/store/state_handler';
 import BaseComponent from '../base/base.component';
 
 const options: ['OFF', 'ON'] = ['OFF', 'ON'];

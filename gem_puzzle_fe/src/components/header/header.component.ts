@@ -1,14 +1,14 @@
 import { IAppState } from 'AppStateProps';
-import { Store } from '../../logic/app_state/state_handler';
+import { Store } from '../../logic/store/state_handler';
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
 import './header.scss';
-import InfoBLock from './infoblock.component';
-import { RC } from '../../logic/beam_api/request_creators';
+import InfoBLock from '../shared/header_info/header.info.component';
+import { RC } from '../../logic/beam/request_creators';
 import { SVG } from '../../constants/svg.icons';
 import Greeting from '../greeting/greeting.component';
 import { GrState } from '../greeting/greeting_state';
-import { Beam } from '../../logic/beam_api/api_handler';
+import { Beam } from '../../logic/beam/api_handler';
 
 export default class Header extends BaseComponent {
   greeting: Greeting;

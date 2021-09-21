@@ -1,6 +1,6 @@
 import { IAppState } from 'AppStateProps';
-import { AC } from '../../logic/app_state/app_action_creators';
-import { Store } from '../../logic/app_state/state_handler';
+import { AC } from '../../logic/store/app_action_creators';
+import { Store } from '../../logic/store/state_handler';
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
 import { handleString, parseToGroth } from '../../utils/string_handlers';

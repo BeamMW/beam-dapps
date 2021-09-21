@@ -5,40 +5,40 @@ export const AC = {
   setTime: (payload:number) => ({
     action: AppStateActions.SET_TIME,
     payload
-  } as const),
+  }) as const,
   setMove: (payload:string) => ({
     action: AppStateActions.SET_MOVE,
     payload
-  } as const),
+  }) as const,
   setMode: (
     payload: BoardLengthType
-  ) => ({ action: AppStateActions.SET_MODE, payload } as const),
+  ) => ({ action: AppStateActions.SET_MODE, payload }) as const,
   setRate: (payload: number) => ({
     action: AppStateActions.SET_RATE,
     payload
-  } as const),
+  }) as const,
   setPKey: (payload: string) => ({
     action: AppStateActions.SET_PKEY,
     payload
-  } as const),
+  }) as const,
   setActiveGame: (payload: boolean) => ({
     action: AppStateActions.SET_ACTIVE,
     payload
-  } as const),
+  }) as const,
   setAutoplay: (payload: boolean) => ({
     action: AppStateActions.SET_AUTOPLAY,
     payload
-  } as const),
+  }) as const,
   setMyPendingReward: (payload:number) => ({
     action: AppStateActions.SET_REWARD,
     payload
-  } as const),
+  }) as const,
   setIsTx: (payload: boolean) => ({
     action: AppStateActions.SET_TX,
     payload
-  } as const),
+  }) as const,
   setMyInfo: (payload:PlayerInfoType) => ({
     action: AppStateActions.SET_MY_INFO,
     payload
-  } as const)
+  }) as const
 };

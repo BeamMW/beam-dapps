@@ -1,8 +1,8 @@
 import { APIResponse, PlayerInfoType } from 'beamApiProps';
 import { WinArgsType } from 'ComponentProps';
 import { Win } from '../win/win.components';
-import { Store } from '../../logic/app_state/state_handler';
-import { Beam } from '../../logic/beam_api/api_handler';
+import { Store } from '../../logic/store/state_handler';
+import { Beam } from '../../logic/beam/api_handler';
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
 import Menu from '../menu/menu.component';
@@ -12,7 +12,7 @@ import {
 } from '../../constants/api_constants';
 import {
   RC
-} from '../../logic/beam_api/request_creators';
+} from '../../logic/beam/request_creators';
 import './main.scss';
 import Router from '../../logic/router/router';
 import Options from '../options/options.component';
@@ -21,7 +21,7 @@ import {
   Routes
 } from '../../constants/app_constants';
 import { Best } from '../best/best.component';
-import { AC } from '../../logic/app_state/app_action_creators';
+import { AC } from '../../logic/store/app_action_creators';
 
 export default class Main extends BaseComponent {
   private readonly menu: Menu;

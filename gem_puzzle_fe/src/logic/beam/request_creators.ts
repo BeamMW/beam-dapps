@@ -7,7 +7,7 @@ import {
   AppSpecs
 } from '../../constants/api_constants';
 import { parseToGroth } from '../../utils/string_handlers';
-import { Store } from '../app_state/state_handler';
+import { Store } from '../store/state_handler';
 
 export type ReqArgsType = {
   action: ReqActions;
@@ -98,7 +98,7 @@ export const RC = {
       action: ReqActions.CHECK_SOLUTION,
       solution: sol,
       cid: AppSpecs.CID
-    } as const);
+    });
     return ({
       callID: ReqID.CHECK_SOLUTION,
       method: ReqMethods.INVOKE_CONTRACT,
@@ -106,7 +106,7 @@ export const RC = {
         create_tx: false,
         args
       }
-    } as const);
+    }) as const;
   },
 
   viewCheckResult: (): ApiArgs => {
@@ -122,7 +122,7 @@ export const RC = {
         create_tx: false,
         args
       }
-    } as const);
+    }) as const;
   },
 
   viewTops: (): ApiArgs => {
@@ -138,7 +138,7 @@ export const RC = {
         create_tx: false,
         args
       }
-    } as const);
+    });
   },
 
   takePendingRewards: (): ApiArgs => {
@@ -154,7 +154,7 @@ export const RC = {
         create_tx: false,
         args
       }
-    } as const);
+    });
   },
 
   viewMyInfo: (): ApiArgs => {
@@ -170,6 +170,6 @@ export const RC = {
         create_tx: false,
         args
       }
-    } as const);
+    }) as const;
   }
 };

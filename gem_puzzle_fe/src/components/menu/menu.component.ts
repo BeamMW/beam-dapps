@@ -6,7 +6,7 @@ import Button from '../shared/button/button.component';
 import './menu.scss';
 import { MenuBtn } from '../../constants/app_constants';
 import { menuProps } from '../../constants/menu_btn';
-import { Store } from '../../logic/app_state/state_handler';
+import { Store } from '../../logic/store/state_handler';
 
 export default class Menu extends BaseComponent {
   desc: BaseComponent;

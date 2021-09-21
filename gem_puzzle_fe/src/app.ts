@@ -1,10 +1,10 @@
-import { Store } from './logic/app_state/state_handler';
+import { Store } from './logic/store/state_handler';
 import Loader from './components/loader/loader.component';
-import { BeamAPI } from './logic/beam_api/beamAPI';
-import { Beam } from './logic/beam_api/api_handler';
+import { BeamAPI } from './logic/beam/beamAPI';
+import { Beam } from './logic/beam/api_handler';
 import Main from './components/main/main.component';
 import './style/index.scss';
-import AppState from './logic/app_state/reducer';
+import AppState from './logic/store/reducer';
 import Header from './components/header/header.component';
 import Footer from './components/footer/footer.components';
 import Widget from './components/widget/widget.component';

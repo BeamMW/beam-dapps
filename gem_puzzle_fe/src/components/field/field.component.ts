@@ -1,10 +1,10 @@
 import { APIResponse, BoardType } from 'beamApiProps';
 import { CellToRender } from 'ComponentProps';
 import { Cell } from './cell.component';
-import { Beam } from '../../logic/beam_api/api_handler';
+import { Beam } from '../../logic/beam/api_handler';
 import {
   RC
-} from '../../logic/beam_api/request_creators';
+} from '../../logic/beam/request_creators';
 import { HtmlProps, Tags } from '../../constants/html_tags';
 import {
   Box, isSolved, solution, swapBoxes
@@ -13,7 +13,7 @@ import './field.scss';
 import { State } from './state';
 import BaseComponent from '../base/base.component';
 import NPuzzleSolver from '../../logic/solver/solvers';
-import { Store } from '../../logic/app_state/state_handler';
+import { Store } from '../../logic/store/state_handler';
 import { ReqID } from '../../constants/api_constants';
 
 type PuzzleSolveType = {

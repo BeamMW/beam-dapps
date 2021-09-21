@@ -1,5 +1,5 @@
 import { Tags } from '../../constants/html_tags';
-import { Store } from '../../logic/app_state/state_handler';
+import { Store } from '../../logic/store/state_handler';
 import BaseComponent from '../base/base.component';
 import Loader from '../loader/loader.component';
 import './best.scss';

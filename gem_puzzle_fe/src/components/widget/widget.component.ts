@@ -1,5 +1,5 @@
 import { APIResponse } from 'beamApiProps';
-import { Store } from '../../logic/app_state/state_handler';
+import { Store } from '../../logic/store/state_handler';
 import {
   AppSpecs,
   ReqID,
@@ -7,13 +7,13 @@ import {
   ResTXStatus
 } from '../../constants/api_constants';
 import { Tags } from '../../constants/html_tags';
-import { Beam } from '../../logic/beam_api/api_handler';
+import { Beam } from '../../logic/beam/api_handler';
 import BaseComponent from '../base/base.component';
 import Loader from '../loader/loader.component';
-import WidgetProps from '../shared/widget/widget.info.component';
+import WidgetProps from '../shared/widget_info/widget.info.component';
 import './widget.scss';
-import { AC } from '../../logic/app_state/app_action_creators';
-import { RC } from '../../logic/beam_api/request_creators';
+import { AC } from '../../logic/store/app_action_creators';
+import { RC } from '../../logic/beam/request_creators';
 
 export default class Widget extends BaseComponent {
   constructor() {
