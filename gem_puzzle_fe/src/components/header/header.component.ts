@@ -1,13 +1,14 @@
 import { IAppState } from 'AppStateProps';
-import { AppStateHandler } from '../../logic/app_state/state_handler';
+import { Store } from '../../logic/app_state/state_handler';
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
 import './header.scss';
 import InfoBLock from './infoblock.component';
-import { takePendingRewards } from '../../logic/beam_api/request_creators';
+import { RC } from '../../logic/beam_api/request_creators';
 import { SVG } from '../../constants/svg.icons';
 import Greeting from '../greeting/greeting.component';
 import { GrState } from '../greeting/greeting_state';
+import { Beam } from '../../logic/beam_api/api_handler';
 
 export default class Header extends BaseComponent {
   greeting: Greeting;
@@ -18,22 +19,22 @@ export default class Header extends BaseComponent {
 
   constructor() {
     super(Tags.DIV, ['header']);
-    AppStateHandler.addObservers(this);
+    Store.addObservers(this);
     this.greeting = new Greeting(GrState.MainTitle);
     this.headerTop = new BaseComponent(Tags.DIV, ['header__top']);
     this.rewardBlock = new BaseComponent(Tags.DIV, ['infoblock']);
     this.rewardBlock.element.addEventListener('click', () => {
-      const { reward } = AppStateHandler.getState();
+      const { reward } = Store.getState();
       console.log(reward);
       if (reward > 0) {
-        takePendingRewards();
+        Beam.callApi(RC.takePendingRewards());
       }
     });
     this.initHeader();
   }
 
   initHeader = (): void => {
-    const { reward } = AppStateHandler.getState();
+    const { reward } = Store.getState();
     const logoBlock = new InfoBLock({
       key: 'logo',
       title: SVG.logoGemPuzzleBig,

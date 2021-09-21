@@ -1,5 +1,5 @@
 import { MenuButtonType } from 'ComponentProps';
-import { SVG } from '../../../constants/svg.icons';
+import { buttonFromMenu } from '../../../constants/svg.icons';
 import { Tags } from '../../../constants/html_tags';
 import BaseComponent from '../../base/base.component';
 import './button.scss';
@@ -10,7 +10,7 @@ export default class Button extends BaseComponent {
     key, title, icon, handler
   }:MenuButtonType) {
     super(Tags.DIV, ['button', `btn_${key}`]);
-    const bgSVG = toDOMParser(SVG.buttonBackground);
+    const bgSVG = toDOMParser(buttonFromMenu(key));
     bgSVG.classList.add('bgSvg');
     const titleDOM = new BaseComponent(Tags.DIV, ['titleDOM']);
     const titleDOMText = new BaseComponent(Tags.SPAN);

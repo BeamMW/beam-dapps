@@ -1,11 +1,10 @@
 import { MenuButtonType } from 'ComponentProps';
 import { SVG } from './svg.icons';
 import {
-  cancelGame,
-  startGame,
-  takePendingRewards
+  RC
 } from '../logic/beam_api/request_creators';
 import { MenuBtn, Routes } from './app_constants';
+import { Beam } from '../logic/beam_api/api_handler';
 
 export const menuProps: MenuButtonType[] = [
   {
@@ -19,7 +18,7 @@ export const menuProps: MenuButtonType[] = [
     key: MenuBtn.NEW,
     icon: `${SVG.newGameIcon}`,
     title: 'NEW GAME',
-    handler: startGame
+    handler: () => Beam.callApi(RC.startGame())
   },
   {
     key: MenuBtn.BEST,
@@ -47,7 +46,7 @@ export const menuProps: MenuButtonType[] = [
   {
     key: MenuBtn.CANCEL,
     title: 'CANCEL GAME',
-    handler: cancelGame
+    handler: () => Beam.callApi(RC.cancelGame())
   }
 ];
 
@@ -56,6 +55,6 @@ export const claimBtn = [
     key: MenuBtn.CLAIM_REWARD,
     title: 'CLAIM REWARD',
     icon: SVG.buttonIcon,
-    handler: takePendingRewards
+    handler: ():void => Beam.callApi(RC.takePendingRewards())
   }
 ];

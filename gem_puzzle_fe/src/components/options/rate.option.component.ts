@@ -1,6 +1,6 @@
 import { IAppState } from 'AppStateProps';
-import { setRateAC } from '../../logic/app_state/app_action_creators';
-import { AppStateHandler } from '../../logic/app_state/state_handler';
+import { AC } from '../../logic/app_state/app_action_creators';
+import { Store } from '../../logic/app_state/state_handler';
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
 import { handleString, parseToGroth } from '../../utils/string_handlers';
@@ -10,8 +10,8 @@ export default class Rate extends BaseComponent {
 
   constructor() {
     super(Tags.DIV, ['form', 'rate']);
-    AppStateHandler.addObservers(this);
-    const { rate } = AppStateHandler.getState();
+    Store.addObservers(this);
+    const { rate } = Store.getState();
     const rateLabel = new BaseComponent(Tags.LABEL);
     rateLabel.setAttributes({
       for: 'rate'
@@ -27,9 +27,9 @@ export default class Rate extends BaseComponent {
     this.rateInput.element.addEventListener('input', (e:Event) => {
       const target = e.target as HTMLInputElement;
       if (handleString(target.value)) {
-        AppStateHandler.dispatch(setRateAC(+target.value));
+        Store.dispatch(AC.setRate(+target.value));
       } else {
-        target.value = String(AppStateHandler.getState().rate);
+        target.value = String(Store.getState().rate);
       }
     });
     this.append(this.rateInput, rateLabel);

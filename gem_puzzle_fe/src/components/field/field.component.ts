@@ -1,10 +1,9 @@
-import { APIResponse, BoardLengthType, BoardType } from 'beamApiProps';
+import { APIResponse, BoardType } from 'beamApiProps';
 import { CellToRender } from 'ComponentProps';
 import { Cell } from './cell.component';
-import { ApiHandler } from '../../logic/beam_api/api_handler';
+import { Beam } from '../../logic/beam_api/api_handler';
 import {
-  viewBoard,
-  checkSolution
+  RC
 } from '../../logic/beam_api/request_creators';
 import { HtmlProps, Tags } from '../../constants/html_tags';
 import {
@@ -14,9 +13,8 @@ import './field.scss';
 import { State } from './state';
 import BaseComponent from '../base/base.component';
 import NPuzzleSolver from '../../logic/solver/solvers';
-import { AppStateHandler } from '../../logic/app_state/state_handler';
+import { Store } from '../../logic/app_state/state_handler';
 import { ReqID } from '../../constants/api_constants';
-import { setModeAC } from '../../logic/app_state/app_action_creators';
 
 type PuzzleSolveType = {
   piece: {
@@ -43,14 +41,14 @@ export class Field extends BaseComponent {
 
   constructor() {
     super(Tags.DIV, ['field']);
-    ApiHandler.addObservers(this);
+    Beam.addObservers(this);
+    Beam.callApi(RC.viewBoard());
     this.innerField = new BaseComponent(Tags.DIV, ['field-inner']);
     this.timeOutId = null;
     this.solveList = [];
     this.nodeList = [];
     solution.length = 0;
     this.state = null;
-    viewBoard();
     this.element.addEventListener('DOMNodeRemovedFromDocument',
       () => {
         if (this.timeOutId) {
@@ -71,20 +69,19 @@ export class Field extends BaseComponent {
   };
 
   listener = (e: Event):void => {
-    const target = e.target as HTMLDivElement;
-    const inner = target.closest('.cell-inner') as HTMLElement;
-    if (inner?.dataset?.number) {
-      const number = +inner.dataset.number;
-      const { x, y } = this.nodeList[number] as Cell;
-      this.handleClickBox(new Box(x, y));
+    if (this.state?.status === 'playing') {
+      const target = e.target as HTMLDivElement;
+      const inner = target.closest('.cell-inner') as HTMLElement;
+      if (inner?.dataset?.number) {
+        const number = +inner.dataset.number;
+        const { x, y } = this.nodeList[number] as Cell;
+        this.handleClickBox(new Box(x, y));
+      }
     }
   };
 
   startGame = (board: BoardType):void => {
-    const { autoPlay, mode } = AppStateHandler.getState();
-    if (mode !== board.length) {
-      AppStateHandler.dispatch(setModeAC(board.length as BoardLengthType));
-    }
+    const { autoPlay } = Store.getState();
     this.state = new State(board, 0, 0, 'playing');
     this.init(board);
     if (autoPlay) {
@@ -104,7 +101,7 @@ export class Field extends BaseComponent {
   };
 
   handleClickBox = (box: Box):void => {
-    const { autoPlay } = AppStateHandler.getState();
+    const { autoPlay } = Store.getState();
     const nextdoorBoxes = box.getNextdoorBoxes();
     const blankBox = nextdoorBoxes.find(
       (nextdoorBox) => this.state?.grid[nextdoorBox.y]?.[nextdoorBox.x] === 0
@@ -120,7 +117,7 @@ export class Field extends BaseComponent {
         });
         this.timeOutId = setTimeout(() => {
           this.removeAll();
-          checkSolution(solution.join(''));
+          Beam.callApi(RC.checkSolution(solution.join('')));
           solution.length = 0;
         }, 3000);
       } else {
@@ -146,13 +143,13 @@ export class Field extends BaseComponent {
   };
 
   init = (grid: BoardType):void => {
-    const { mode } = AppStateHandler.getState();
     const status = this.state?.status;
-    this.innerField.style.width = `${HtmlProps.PuzzleSize * mode}px`;
-    this.innerField.style.height = `${HtmlProps.PuzzleSize * mode}px`;
+    const len = grid.length;
+    this.innerField.style.width = `${HtmlProps.PuzzleSize * len}px`;
+    this.innerField.style.height = `${HtmlProps.PuzzleSize * len}px`;
     this.append(this.innerField);
-    for (let y = 0; y < mode; y++) {
-      for (let x = 0; x < mode; x++) {
+    for (let y = 0; y < len; y++) {
+      for (let x = 0; x < len; x++) {
         if (grid[y]?.[x] && status === 'playing') {
           const value = grid[y]?.[x] as number;
           const button = new Cell({

@@ -1,9 +1,7 @@
 import { IAppState } from 'AppStateProps';
-import {
-  setAutoplayAC
-} from '../../logic/app_state/app_action_creators';
+import { AC } from '../../logic/app_state/app_action_creators';
 import { Tags } from '../../constants/html_tags';
-import { AppStateHandler } from '../../logic/app_state/state_handler';
+import { Store } from '../../logic/app_state/state_handler';
 import BaseComponent from '../base/base.component';
 
 const options: ['OFF', 'ON'] = ['OFF', 'ON'];
@@ -15,8 +13,8 @@ export default class AutoPlayOpt extends BaseComponent {
 
   constructor() {
     super(Tags.DIV, ['mode']);
-    AppStateHandler.addObservers(this);
-    const { picOpt } = AppStateHandler.getState();
+    Store.addObservers(this);
+    const { autoPlay } = Store.getState();
     this.modeLabel = new BaseComponent(Tags.LABEL, ['title']);
     this.modeLabel.innerHTML = 'autoplay';
     this.modeLabel.setAttributes({
@@ -30,13 +28,13 @@ export default class AutoPlayOpt extends BaseComponent {
         type: 'radio',
         'data-value': String(i)
       });
-      radio.checked = value === picOpt;
-      label.style.color = value === picOpt
+      radio.checked = !!i === autoPlay;
+      label.style.color = !!i === autoPlay
         ? '#80ffdb'
         : '';
 
       radio.element.addEventListener('input', () => {
-        AppStateHandler.dispatch(setAutoplayAC(!!i));
+        Store.dispatch(AC.setAutoplay(!!i));
       });
       label.append(radio);
       return label;

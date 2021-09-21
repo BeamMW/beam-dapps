@@ -6,7 +6,7 @@ import Button from '../shared/button/button.component';
 import './menu.scss';
 import { MenuBtn } from '../../constants/app_constants';
 import { menuProps } from '../../constants/menu_btn';
-import { AppStateHandler } from '../../logic/app_state/state_handler';
+import { Store } from '../../logic/app_state/state_handler';
 
 export default class Menu extends BaseComponent {
   desc: BaseComponent;
@@ -15,7 +15,7 @@ export default class Menu extends BaseComponent {
 
   constructor() {
     super(Tags.DIV, ['menu']);
-    AppStateHandler.addObservers(this);
+    Store.addObservers(this);
     this.desc = new BaseComponent(Tags.SPAN, ['desc']);
     this.desc.innerHTML = 'Play and earn!';
     this.buttons = new Map();

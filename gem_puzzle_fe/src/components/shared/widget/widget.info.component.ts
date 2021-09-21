@@ -1,8 +1,8 @@
 import { APIResponse } from 'beamApiProps';
-import { Tags } from '../../constants/html_tags';
-import { ApiHandler } from '../../logic/beam_api/api_handler';
-import BaseComponent from '../base/base.component';
-import { ReqID, ResTXStatus } from '../../constants/api_constants';
+import { Tags } from '../../../constants/html_tags';
+import { Beam } from '../../../logic/beam_api/api_handler';
+import BaseComponent from '../../base/base.component';
+import { ReqID, ResTXStatus } from '../../../constants/api_constants';
 
 type WidgetPropsType = {
   value: string,
@@ -17,7 +17,7 @@ export default class WidgetProps extends BaseComponent {
 
   constructor({ value, key, title }:WidgetPropsType) {
     super(Tags.DIV, ['tx-infoblock']);
-    ApiHandler.addObservers(this);
+    Beam.addObservers(this);
     const titleSpan = new BaseComponent(Tags.SPAN, ['title']);
     titleSpan.innerHTML = title;
     this.value = new BaseComponent(Tags.SPAN, ['value']);

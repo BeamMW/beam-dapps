@@ -136,3 +136,21 @@ buttonBackground: `
 </g>
 </svg>`
 };
+
+
+export const buttonFromMenu = (id: string) => `
+    <svg width="314" height="60" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <filter x="0%" y="-3.3%" width="100.1%" height="106.7%" filterUnits="objectBoundingBox" id="bm${id}">
+    
+            <feOffset dx="-3" dy="-4" in="SourceAlpha" result="shadowOffsetInner1"/>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"/>
+            <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0" in="shadowInnerInner1"/>
+        </filter>
+        <path d="M29.18 0h257.14a12 12 0 0 1 9.476 4.638l16.368 21.067a7 7 0 0 1 0 8.59l-16.368 21.067A12 12 0 0 1 286.32 60H29.18a12 12 0 0 1-9.476-4.638L3.336 34.295a7 7 0 0 1 0-8.59L19.704 4.638A12 12 0 0 1 29.18 0z" id="am${id}"/>
+    </defs>
+    <g transform="translate(-2)" fill="none" fill-rule="evenodd" opacity=".5">
+        <use class="svgBG" xlink:href="#am${id}"/>
+        <use fill="#000" filter="url(#bm${id})" xlink:href="#am${id}"/>
+    </g>
+    </svg>`;

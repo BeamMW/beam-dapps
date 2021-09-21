@@ -14,16 +14,13 @@ export enum ReqID {
   TX_STATUS = 'TX_STATUS',
   VIEW_CONTRACTS = 'VIEW_CONTRACTS',
   DESTROY = 'DESTROY',
-  INVOKE_DATA_SOLUTION = 'INVOKE_DATA_SOLUTION',
-  TX_CHECK_SOLUTION = 'TX_CHECK_SOLUTION',
   VIEW_CHECK_RESULT = 'VIEW_CHECK_RESULT',
   GET_PKEY = 'GET_PKEY',
   VIEW_TOPS = 'VIEW_TOPS',
   TAKE_PENDING_REWARDS = 'TAKE_PENDING_REWARDS',
   VIEW_MY_PENDING_REWARDS = 'VIEW_MY_PENDING_REWARDS',
-  INVOKE_DATA_PENDING_REWARDS = 'INVOKE_DATA_PENDING_REWARDS',
-  TX_PENDING_REWARDS = 'TX_PENDING_REWARDS',
-  HAS_ACTIVE_GAME = 'HAS_ACTIVE_GAME'
+  HAS_ACTIVE_GAME = 'HAS_ACTIVE_GAME',
+  VIEW_MY_INFO = 'VIEW_MY_INFO'
 }
 
 export enum ReqRoles {
@@ -46,11 +43,9 @@ export enum ReqActions {
   END_CURRENT_GAME = 'end_current_game',
   DESTROY_CONTRACT = 'destroy_contract',
   VIEW_CHECK_RESULT = 'view_check_result',
-  GET_MY_PKEY = 'get_my_pkey',
   VIEW_TOPS = 'view_tops',
   TAKE_PENDING_REWARDS = 'take_pending_rewards',
-  VIEW_MY_PENDING_REWARDS = 'view_my_pending_rewards',
-  HAS_ACTIVE_GAME = 'has_active_game'
+  GET_MY_INFO = 'get_my_info'
 }
 
 export enum ResTXStatus {

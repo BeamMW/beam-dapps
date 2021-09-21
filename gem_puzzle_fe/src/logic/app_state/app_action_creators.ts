@@ -1,71 +1,44 @@
-import { BoardLengthType } from 'beamApiProps';
-import { AppStateActions, BoardView } from '../../constants/app_constants';
+import { BoardLengthType, PlayerInfoType } from 'beamApiProps';
+import { AppStateActions } from '../../constants/app_constants';
 
-type ActionCreatorType<T> = (payloaad: T) => {
-  action: AppStateActions, payload: T
+export const AC = {
+  setTime: (payload:number) => ({
+    action: AppStateActions.SET_TIME,
+    payload
+  } as const),
+  setMove: (payload:string) => ({
+    action: AppStateActions.SET_MOVE,
+    payload
+  } as const),
+  setMode: (
+    payload: BoardLengthType
+  ) => ({ action: AppStateActions.SET_MODE, payload } as const),
+  setRate: (payload: number) => ({
+    action: AppStateActions.SET_RATE,
+    payload
+  } as const),
+  setPKey: (payload: string) => ({
+    action: AppStateActions.SET_PKEY,
+    payload
+  } as const),
+  setActiveGame: (payload: boolean) => ({
+    action: AppStateActions.SET_ACTIVE,
+    payload
+  } as const),
+  setAutoplay: (payload: boolean) => ({
+    action: AppStateActions.SET_AUTOPLAY,
+    payload
+  } as const),
+  setMyPendingReward: (payload:number) => ({
+    action: AppStateActions.SET_REWARD,
+    payload
+  } as const),
+  setIsTx: (payload: boolean) => ({
+    action: AppStateActions.SET_TX,
+    payload
+  } as const),
+  setMyInfo: (payload:PlayerInfoType) => ({
+    action: AppStateActions.SET_MY_INFO,
+    payload
+  } as const)
 };
-
-export const setTimeAC:ActionCreatorType<number> = (payload) => ({
-  action: AppStateActions.SET_TIME,
-  payload
-});
-
-export const setMoveAC:ActionCreatorType<string> = (payload) => ({
-  action: AppStateActions.SET_MOVE,
-  payload
-});
-
-export const setModeAC:ActionCreatorType<BoardLengthType> = (
-  payload
-) => ({
-  action: AppStateActions.SET_MODE,
-  payload
-});
-
-export const setRateAC:ActionCreatorType<number> = (payload) => ({
-  action: AppStateActions.SET_RATE,
-  payload
-});
-
-export const setPKeyAC:ActionCreatorType<string> = (payload) => ({
-  action: AppStateActions.SET_PKEY,
-  payload
-});
-
-export const setPicOptAC:ActionCreatorType<BoardView> = (payload) => ({
-  action: AppStateActions.SET_PIC_OPT,
-  payload
-});
-
-export const setActiveGameAC:ActionCreatorType<boolean> = (payload) => ({
-  action: AppStateActions.SET_ACTIVE,
-  payload
-});
-
-export const setAutoplayAC:ActionCreatorType<boolean> = (payload) => ({
-  action: AppStateActions.SET_AUTOPLAY,
-  payload
-});
-
-export const setMyPendingRewardAC:ActionCreatorType<number> = (payload) => ({
-  action: AppStateActions.SET_REWARD,
-  payload
-});
-
-export const setIsTxAC:ActionCreatorType<boolean> = (payload) => ({
-  action: AppStateActions.SET_TX,
-  payload
-});
-
-export type ActionTypes = ReturnType<
-typeof setTimeAC
-| typeof setMoveAC
-| typeof setRateAC
-| typeof setModeAC
-| typeof setPKeyAC
-| typeof setPicOptAC
-| typeof setActiveGameAC
-| typeof setAutoplayAC
-| typeof setMyPendingRewardAC
-| typeof setIsTxAC
->;

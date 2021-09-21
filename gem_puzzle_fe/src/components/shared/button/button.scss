@@ -14,12 +14,19 @@
     letter-spacing: normal;
     color: #fff;
     user-select: none;
+    cursor: pointer;
+    // background: url('../../../assets/icon/button-settings.svg');
 
     &:hover .svgBG{
-        cursor: pointer;
-        fill: #00FF64;
+        fill: #00FF64 !important;
     }
 
+    &.btn_NEW {
+        .svgBG{
+            fill: #00FF64 !important;
+        }
+    }
+ 
     .titleDOM {
         height: 100%;
         display: flex;
@@ -28,13 +35,18 @@
     }
 
     .bgSvg {
+        fill: #20866F;
         position: absolute;
         left: 0;
         top: 0;
-        z-index: -1;
+        z-index: -1; 
+        .svgBG{
+            fill: #20866F;
+        }
     }
 
 }
+
 
 span {
     margin-left: 11px;

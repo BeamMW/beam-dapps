@@ -1,16 +1,14 @@
-import { IAppState } from 'AppStateProps';
-import { AddObserversType } from 'beamApiProps';
+import { IAppState, PropertiesType } from 'AppStateProps';
+import { AddObserversType, PlayerInfoType } from 'beamApiProps';
 import BaseComponent from '../../components/base/base.component';
-import { AppStateActions, BoardView } from '../../constants/app_constants';
-import { ActionTypes } from './app_action_creators';
+import { AppStateActions } from '../../constants/app_constants';
+import { AC } from './app_action_creators';
 
 const initialState:IAppState = {
   activeGame: false,
-  mode: 4,
   move: '',
   time: 0,
   pKey: '...',
-  picOpt: BoardView.NUMBERS,
   rate: 0.01,
   autoPlay: false,
   reward: 0,
@@ -29,7 +27,9 @@ export default class AppState {
 
   readonly getState = ():IAppState => this.state;
 
-  readonly dispatch = (action: ActionTypes): void => {
+  readonly dispatch = (action: ReturnType<
+  PropertiesType<typeof AC>
+  >): void => {
     this.reducer(action);
   };
 
@@ -59,7 +59,9 @@ export default class AppState {
     this.observers.delete(component);
   };
 
-  private readonly reducer = (obj: ActionTypes): void => {
+  private readonly reducer = (obj: ReturnType<
+  PropertiesType<typeof AC>
+  >): void => {
     const { action, payload } = obj;
     switch (action) {
       case AppStateActions.SET_TIME:
@@ -68,20 +70,17 @@ export default class AppState {
       case AppStateActions.SET_MOVE:
         this.setState({ move: payload as string });
         break;
-      case AppStateActions.SET_MODE:
-        this.setState({ mode: payload as 3 | 4 | 5 });
-        break;
       case AppStateActions.SET_RATE:
         this.setState({ rate: payload as number });
         break;
-      case AppStateActions.SET_PKEY:
-        this.setState({ pKey: payload as string });
-        break;
-      case AppStateActions.SET_PIC_OPT:
-        this.setState({ picOpt: payload as BoardView });
-        break;
-      case AppStateActions.SET_ACTIVE:
-        this.setState({ activeGame: payload as boolean });
+      case AppStateActions.SET_MY_INFO:
+        this.setState(
+          {
+            pKey: (<PlayerInfoType>payload)['My public key'],
+            activeGame: (<PlayerInfoType>payload).has_active_game,
+            reward: (<PlayerInfoType>payload).pending_rewards
+          }
+        );
         break;
       case AppStateActions.SET_AUTOPLAY:
         this.setState({ autoPlay: payload as boolean });

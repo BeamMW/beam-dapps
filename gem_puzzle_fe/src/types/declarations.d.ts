@@ -55,19 +55,20 @@ declare module 'qwebchannel' {
 
 declare module 'AppStateProps' {
 
-  interface IAppState {
+  export interface IAppState {
     [key:string];
     activeGame: boolean;
-    mode: 3 | 4 | 5;
     move: string;
     time: number;
     rate: number;
     pKey: string;
-    picOpt: BoardView;
     autoPlay: boolean;
     reward: number;
     isTx: boolean
   }
+
+  export type PropertiesType<T> = T extends { [key: string]: infer U }
+    ? U : never;
 }
 
 declare module 'beamApiProps' {
@@ -75,6 +76,17 @@ declare module 'beamApiProps' {
   type BaseComponent = import('../components/base/base.component').default;
   type ResTXComment = import('../constants/api_constants').ResTXComment;
   type ResTXStatus = import('../constants/api_constants').ResTXStatus;
+  type ReqID = import('../constants/api_constants').ReqID;
+  type ReqMethods = import('../constants/api_constants').ReqMethods;
+
+  export type PropertiesType<T> = T extends { [key: string]: infer U }
+    ? U : never;
+
+  export type PlayerInfoType = {
+    ['My public key']: string;
+    has_active_game: boolean;
+    pending_rewards: number;
+  };
 
   export type APIResponse = {
     id: ReqIds;
@@ -96,8 +108,14 @@ declare module 'beamApiProps' {
     }
   };
 
+  export type ApiArgs = {
+    callID: ReqID,
+    method: ReqMethods,
+    params: BeamApiParams
+  };
+
   export type CallApiType =
-  (callid: string, method: string, params: BeamApiParams) => void;
+  (obj:ApiArgs) => void;
 
   export type AddObserversType = (component: BaseComponent) => void;
 
@@ -130,7 +148,7 @@ declare module 'ComponentProps' {
     key: MenuBtn,
     title: string,
     icon?: string,
-    handler: () => void;
+    handler: (arg?) => void;
   };
 
   export type CellToRender = {

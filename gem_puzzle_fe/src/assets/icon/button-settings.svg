@@ -8,7 +8,8 @@
         <path d="M29.18 0h257.14a12 12 0 0 1 9.476 4.638l16.368 21.067a7 7 0 0 1 0 8.59l-16.368 21.067A12 12 0 0 1 286.32 60H29.18a12 12 0 0 1-9.476-4.638L3.336 34.295a7 7 0 0 1 0-8.59L19.704 4.638A12 12 0 0 1 29.18 0z" id="a"/>
     </defs>
     <g transform="translate(-2)" fill="none" fill-rule="evenodd" opacity=".5">
-        <use fill="#20866F" xlink:href="#a"/>
+        <use class="bgsvg" fill="#20866F" xlink:href="#a"/>
         <use fill="#000" filter="url(#b)" xlink:href="#a"/>
     </g>
+
 </svg>

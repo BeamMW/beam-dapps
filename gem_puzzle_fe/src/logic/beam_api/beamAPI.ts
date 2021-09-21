@@ -1,5 +1,6 @@
-import { BeamApiParams } from 'beamApiProps';
+import { PropertiesType } from 'beamApiProps';
 import { QWebChannel, QWebChannelTransport, QObject } from 'qwebchannel';
+import { RC } from './request_creators';
 import shader from './app.wasm';
 import BaseComponent from '../../components/base/base.component';
 import { ReqID, ReqMethods, AppSpecs } from '../../constants/api_constants';
@@ -67,9 +68,13 @@ export class BeamAPI {
       .then((response) => response.arrayBuffer());
     if (this.contract) {
       this.initShader();
-      this.callApi(ReqID.CHECK, ReqMethods.INVOKE_CONTRACT, {
-        contract: Array.from(new Uint8Array(this.contract)),
-        create_tx: false
+      this.callApi({
+        callID: ReqID.CHECK,
+        method: ReqMethods.INVOKE_CONTRACT,
+        params: {
+          contract: Array.from(new Uint8Array(this.contract)),
+          create_tx: false
+        }
       });
     }
   };
@@ -81,19 +86,21 @@ export class BeamAPI {
   };
 
   readonly callApi = (
-    callid: string, method: string, params: BeamApiParams
+    { callID, method, params } : ReturnType<
+    PropertiesType<typeof RC>
+    >
   ): void => {
     if (this.contract) {
       const contract = Array.from(new Uint8Array(this.contract));
       const request = {
         jsonrpc: '2.0',
-        id: callid,
+        id: callID,
         method,
         params: { ...params, contract }
       };
       console.log('request: ', request);
       if (window.beam) {
-        window.beam.callApi(callid, method, { ...params, contract });
+        window.beam.callApi(callID, method, { ...params, contract });
       } else {
         this.API?.callWalletApi(JSON.stringify(request));
       }

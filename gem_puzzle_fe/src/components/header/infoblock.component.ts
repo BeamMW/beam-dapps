@@ -1,5 +1,5 @@
 import { IAppState } from 'AppStateProps';
-import { AppStateHandler } from '../../logic/app_state/state_handler';
+import { Store } from '../../logic/app_state/state_handler';
 import { Tags } from '../../constants/html_tags';
 import BaseComponent from '../base/base.component';
 
@@ -40,7 +40,7 @@ export default class InfoBLock extends BaseComponent {
     callback?: ((numb:number) => string) | ((str:boolean) => string);
   }) {
     super(Tags.DIV, ['infoblock']);
-    AppStateHandler.addObservers(this);
+    Store.addObservers(this);
     this.key = key;
     this.title = title;
     this.value = value;
