@@ -9,11 +9,10 @@
 
 constexpr Height DAY_IN_BLOCKS = 24 * 60;
 
-GemPuzzle::Verdict check_solution(uint64_t permutation_num, const char* solution, uint32_t& moves_num)
+GemPuzzle::Verdict check_solution(uint64_t permutation_num, const char* solution)
 {
 	GemPuzzle::Board board(permutation_num);
 
-	moves_num = 0;
 	for (auto i = 0; solution[i] != '\0'; ++i) {
 		GemPuzzle::Board::Moves cur_move;
 		switch (toupper(solution[i])) {
@@ -35,7 +34,6 @@ GemPuzzle::Verdict check_solution(uint64_t permutation_num, const char* solution
 		if (!board.move(cur_move)) {
 			return GemPuzzle::Verdict::ERROR;
 		}
-		++moves_num;
 	}
 	return board.is_solved() ? GemPuzzle::Verdict::WIN : GemPuzzle::Verdict::LOSE;
 }
@@ -87,7 +85,7 @@ BEAM_EXPORT void Method_3(const GemPuzzle::CheckSolutionParams& params)
 			Env::Halt();
 		} else {
 			Height cur_height = Env::get_Height();
-			acc_info.game_result.verdict = check_solution(params.permutation_num, params.solution, acc_info.game_result.moves_num);
+			acc_info.game_result.verdict = check_solution(params.permutation_num, params.solution);
 			acc_info.game_result.time = cur_height - acc_info.game_info.height;
 
 			if (acc_info.game_result.verdict == GemPuzzle::Verdict::WIN) {
@@ -116,7 +114,7 @@ BEAM_EXPORT void Method_3(const GemPuzzle::CheckSolutionParams& params)
 		}
 	} else {
 		Height cur_height = Env::get_Height();
-		acc_info.game_result.verdict = check_solution(params.permutation_num, params.solution, acc_info.game_result.moves_num);
+		acc_info.game_result.verdict = check_solution(params.permutation_num, params.solution);
 		acc_info.game_result.time = cur_height - acc_info.game_info.height;
 		if (acc_info.game_result.verdict == GemPuzzle::Verdict::WIN) {
 			// Protection from cheaters
