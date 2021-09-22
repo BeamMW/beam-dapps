@@ -38,6 +38,27 @@ void On_error(const char* msg)
 }
 
 #ifndef ENABLE_UNIT_TESTS_
+bool read_my_account_info(const ContractID& cid, GemPuzzle::AccountInfo& acc_info)
+{
+	PubKey player;
+	Env::DerivePk(player, &cid, sizeof(cid));
+
+	Env::Key_T<PubKey> k;
+	k.m_Prefix.m_Cid = cid;
+	k.m_KeyInContract = player;
+
+	return Env::VarReader::Read_T(k, acc_info);
+}
+
+bool read_contract_initials(const ContractID& cid, GemPuzzle::InitialParams& initial_params)
+{
+	Env::Key_T<int> k;
+	k.m_Prefix.m_Cid = cid;
+	k.m_KeyInContract = 0;
+
+	return Env::VarReader::Read_T(k, initial_params);
+}
+
 void On_action_new_game(const ContractID& cid)
 {
 	BlockHeader::Info hdr;
@@ -55,12 +76,8 @@ void On_action_new_game(const ContractID& cid)
 		permutation_num = distrib(gen);
 	} while (!GemPuzzle::Board(permutation_num).is_solvable());
 
-	Env::Key_T<int> k;
-	k.m_Prefix.m_Cid = cid;
-	k.m_KeyInContract = 0;
-
 	GemPuzzle::InitialParams initial_params;
-	if (!Env::VarReader::Read_T(k, initial_params))
+	if (!read_contract_initials(cid, initial_params))
 		return On_error("Failed to read contract's initial params");
 
 	uint32_t just_regenerate;
@@ -110,18 +127,6 @@ void On_action_new_game(const ContractID& cid)
 	}
 }
 
-bool read_my_account_info(const ContractID& cid, GemPuzzle::AccountInfo& acc_info)
-{
-	PubKey player;
-	Env::DerivePk(player, &cid, sizeof(cid));
-
-	Env::Key_T<PubKey> k;
-	k.m_Prefix.m_Cid = cid;
-	k.m_KeyInContract = player;
-
-	return Env::VarReader::Read_T(k, acc_info);
-}
-
 void On_action_check_solution(const ContractID& cid)
 {
 	GemPuzzle::CheckSolutionParams params;
@@ -158,6 +163,14 @@ void On_action_create_contract(const ContractID& unused)
 	if (!Env::DocGetNum64("multiplier", &params.multiplier)) {
 		params.multiplier = 0;
 	}
+	if (!Env::DocGetNum64("initial_prize_fund", &params.prize_fund)) {
+		params.prize_fund = 0;
+	}
+
+	FundsChange fc;
+	fc.m_Amount = params.prize_fund;
+	fc.m_Aid = params.prize_aid;
+	fc.m_Consume = 1;
 
 	Env::GenerateKernel(nullptr, GemPuzzle::InitialParams::METHOD, &params, sizeof(params), nullptr, 0, nullptr, 0, "Creating GemPuzzle contract...", 0);
 }
@@ -213,12 +226,8 @@ void On_action_take_pending_rewards(const ContractID& cid)
 		return On_error("You don't have any rewards.");
 	}
 
-	Env::Key_T<int> k;
-	k.m_Prefix.m_Cid = cid;
-	k.m_KeyInContract = 0;
-
 	GemPuzzle::InitialParams initial_params;
-	if (!Env::VarReader::Read_T(k, initial_params))
+	if (!read_contract_initials(cid, initial_params))
 		return On_error("Failed to read contract's initial params");
 
 	FundsChange fc;
@@ -244,6 +253,28 @@ void On_action_get_my_info(const ContractID& cid)
 	}
 }
 
+void On_action_donate(const ContractID& cid)
+{
+	GemPuzzle::InitialParams initial_params;
+	if (!read_contract_initials(cid, initial_params))
+		return On_error("Failed to read contract's initial params");
+
+	GemPuzzle::DonateParams params;
+	Env::DocGetNum64("amount", &params.amount);
+	Env::DerivePk(params.user, &cid, sizeof(cid));
+
+	SigRequest sig;
+	sig.m_pID = &cid;
+	sig.m_nID = sizeof(cid);
+
+	FundsChange fc;
+	fc.m_Amount = params.amount;
+	fc.m_Aid = initial_params.prize_aid;
+	fc.m_Consume = 1;
+
+	Env::GenerateKernel(&cid, GemPuzzle::DonateParams::METHOD, &params, sizeof(params), &fc, 1, &sig, 1, "Donating...", 0);
+}
+
 void On_action_view_contract_params(const ContractID& cid)
 {
 	Env::Key_T<int> k;
@@ -254,13 +285,29 @@ void On_action_view_contract_params(const ContractID& cid)
 	if (!Env::VarReader::Read_T(k, params))
 		return On_error("Failed to read contract's initial params");
 
-	Env::DocGroup gr("params");
-	Env::DocAddNum64("max_bet", params.max_bet);
-	Env::DocAddNum64("prize_aid", params.prize_aid);
-	Env::DocAddNum64("prize_amount", params.prize_amount);
-	Env::DocAddNum64("multiplier", params.multiplier);
-	Env::DocAddNum64("free_time", params.free_time);
-	Env::DocAddNum32("game_speed", params.game_speed);
+	Env::DocGroup root("");
+	{
+		Env::DocAddNum64("max_bet", params.max_bet);
+		Env::DocAddNum64("prize_aid", params.prize_aid);
+		Env::DocAddNum64("prize_amount", params.prize_amount);
+		Env::DocAddNum64("multiplier", params.multiplier);
+		Env::DocAddNum64("free_time", params.free_time);
+		Env::DocAddNum32("game_speed", params.game_speed);
+	}
+}
+
+void On_action_view_prize_fund(const ContractID& cid)
+{
+	Env::Key_T<int> k;
+	k.m_Prefix.m_Cid = cid;
+	k.m_KeyInContract = 0;
+
+	GemPuzzle::InitialParams params;
+	if (!Env::VarReader::Read_T(k, params))
+		return On_error("Failed to read contract's initial params");
+
+	Env::DocGroup root("");
+	Env::DocAddNum64("prize_fund", params.prize_fund);
 }
 
 template <typename T>
@@ -285,6 +332,7 @@ BEAM_EXPORT void Method_0()
                 Env::DocAddText("multiplier", "Amount");
                 Env::DocAddText("free_time", "Height");
 				Env::DocAddText("game_speed", "uint32");
+				Env::DocAddText("initial_prize_fund", "Amount");
             }
             {
                 Env::DocGroup grMethod("destroy_contract");
@@ -324,6 +372,15 @@ BEAM_EXPORT void Method_0()
 				Env::DocGroup grMethod("get_my_info");
 				Env::DocAddText("cid", "ContractID");
 			}
+			{
+				Env::DocGroup grMethod("donate");
+				Env::DocAddText("cid", "ContractID");
+				Env::DocAddText("amount", "Amount");
+			}
+			{
+				Env::DocGroup grMethod("view_prize_fund");
+				Env::DocAddText("cid", "ContractID");
+			}
         }
     }
 }
@@ -336,6 +393,8 @@ BEAM_EXPORT void Method_1()
 		{"view_check_result", On_action_view_check_result},
 		{"take_pending_rewards", On_action_take_pending_rewards},
 		{"get_my_info", On_action_get_my_info},
+		{"donate", On_action_donate},
+		{"view_prize_fund", On_action_view_prize_fund},
 	};
 
 	const std::vector<std::pair<const char *, Action_func_t>> VALID_MANAGER_ACTIONS = {

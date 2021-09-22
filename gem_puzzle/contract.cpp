@@ -40,6 +40,7 @@ GemPuzzle::Verdict check_solution(uint64_t permutation_num, const char* solution
 
 BEAM_EXPORT void Ctor(GemPuzzle::InitialParams& params)
 {
+	Env::FundsLock(params.prize_aid, params.prize_fund);
 	Env::SaveVar_T(0, params);
 }
 
@@ -107,6 +108,7 @@ BEAM_EXPORT void Method_3(const GemPuzzle::CheckSolutionParams& params)
 						}
 					}
 					Strict::Add(acc_info.pending_rewards, reward);
+					Strict::Sub(initial_params.prize_fund, reward);
 					acc_info.has_active_game = false;
 				}
 				Env::SaveVar_T(std::make_pair(params.player, params.permutation_num), cur_height);
@@ -122,6 +124,7 @@ BEAM_EXPORT void Method_3(const GemPuzzle::CheckSolutionParams& params)
 			Env::LoadVar_T(std::make_pair(params.player, params.permutation_num), permutation_height);
 			if (cur_height - permutation_height > DAY_IN_BLOCKS) {
 				Strict::Add(acc_info.pending_rewards, initial_params.prize_amount);
+				Strict::Sub(initial_params.prize_fund, initial_params.prize_amount);
 			}
 			Env::SaveVar_T(std::make_pair(params.player, params.permutation_num), cur_height);
 		}
@@ -142,4 +145,16 @@ BEAM_EXPORT void Method_4(const GemPuzzle::TakePendingRewards& params)
 		acc_info.pending_rewards = 0;
 		Env::SaveVar_T(params.player, acc_info);
 	}
+}
+
+BEAM_EXPORT void Method_5(const GemPuzzle::DonateParams& params)
+{
+	GemPuzzle::InitialParams initial_params;
+	Env::LoadVar_T(0, initial_params);
+
+	Strict::Add(initial_params.prize_fund, params.amount);
+	Env::FundsLock(initial_params.prize_aid, params.amount);
+	Env::AddSig(params.user);
+
+	Env::SaveVar_T(0, initial_params);
 }
