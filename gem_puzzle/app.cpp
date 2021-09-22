@@ -172,7 +172,7 @@ void On_action_create_contract(const ContractID& unused)
 	fc.m_Aid = params.prize_aid;
 	fc.m_Consume = 1;
 
-	Env::GenerateKernel(nullptr, GemPuzzle::InitialParams::METHOD, &params, sizeof(params), nullptr, 0, nullptr, 0, "Creating GemPuzzle contract...", 0);
+	Env::GenerateKernel(nullptr, GemPuzzle::InitialParams::METHOD, &params, sizeof(params), &fc, 1, nullptr, 0, "Creating GemPuzzle contract...", 0);
 }
 
 void On_action_destroy_contract(const ContractID& cid)
@@ -290,6 +290,7 @@ void On_action_view_contract_params(const ContractID& cid)
 		Env::DocAddNum64("max_bet", params.max_bet);
 		Env::DocAddNum64("prize_aid", params.prize_aid);
 		Env::DocAddNum64("prize_amount", params.prize_amount);
+		Env::DocAddNum64("prize_fund", params.prize_fund);
 		Env::DocAddNum64("multiplier", params.multiplier);
 		Env::DocAddNum64("free_time", params.free_time);
 		Env::DocAddNum32("game_speed", params.game_speed);
