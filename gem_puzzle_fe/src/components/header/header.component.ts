@@ -11,8 +11,6 @@ import { GrState } from '../greeting/greeting_state';
 import { Beam } from '../../logic/beam_api/api_handler';
 
 export default class Header extends BaseComponent {
-  greeting: Greeting;
-
   private readonly rewardBlock: BaseComponent;
 
   private readonly headerTop: BaseComponent;
@@ -20,7 +18,6 @@ export default class Header extends BaseComponent {
   constructor() {
     super(Tags.DIV, ['header']);
     Store.addObservers(this);
-    this.greeting = new Greeting(GrState.MainTitle);
     this.headerTop = new BaseComponent(Tags.DIV, ['header__top']);
     this.rewardBlock = new BaseComponent(Tags.DIV, ['infoblock']);
     this.rewardBlock.element.addEventListener('click', () => {
@@ -47,7 +44,7 @@ export default class Header extends BaseComponent {
     ${SVG.funt} <span> ${reward} FUNT</span>
     `;
     this.headerTop.append(this.rewardBlock);
-    this.append(this.headerTop, this.greeting);
+    this.append(this.headerTop);
   };
 
   appInform = ({ reward }: IAppState): void => {
