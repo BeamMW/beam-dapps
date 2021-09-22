@@ -5,13 +5,14 @@
 
 #include "board.h"
 
-#include <random>
+#include <utility>
 
-GemPuzzle::Verdict check_solution(uint64_t permutation_num, const char* solution, uint32_t& moves_num)
+constexpr Height DAY_IN_BLOCKS = 24 * 60;
+
+GemPuzzle::Verdict check_solution(uint64_t permutation_num, const char* solution)
 {
 	GemPuzzle::Board board(permutation_num);
 
-	moves_num = 0;
 	for (auto i = 0; solution[i] != '\0'; ++i) {
 		GemPuzzle::Board::Moves cur_move;
 		switch (toupper(solution[i])) {
@@ -33,119 +34,127 @@ GemPuzzle::Verdict check_solution(uint64_t permutation_num, const char* solution
 		if (!board.move(cur_move)) {
 			return GemPuzzle::Verdict::ERROR;
 		}
-		++moves_num;
 	}
 	return board.is_solved() ? GemPuzzle::Verdict::WIN : GemPuzzle::Verdict::LOSE;
 }
 
 BEAM_EXPORT void Ctor(GemPuzzle::InitialParams& params)
 {
-	params.last_used_game_id = 0;
+	Env::FundsLock(params.prize_aid, params.prize_fund);
 	Env::SaveVar_T(0, params);
 }
 
-BEAM_EXPORT void Dtor(void* a)
+BEAM_EXPORT void Dtor(void*)
 {
 	Env::DelVar_T(0);
 }
 
-BEAM_EXPORT void Method_2(GemPuzzle::NewGameParams& params)
+BEAM_EXPORT void Method_2(const GemPuzzle::NewGameParams& params)
 {
-	BlockHeader::Info hdr;
-	hdr.m_Height = Env::get_Height();
-	Env::get_HdrInfo(hdr);
-
-	uint64_t seed = 0;
-	Env::Memcpy(&seed, &hdr.m_Hash.m_p, 32);
-	
-	std::mt19937_64 gen(seed);
-	std::uniform_int_distribution<uint64_t> distrib(1, factorial(GemPuzzle::Board::PERMUTATION_LEN) - 1);
-
-	uint64_t permutation_num;
-	do {
-		permutation_num = distrib(gen);
-	} while (!GemPuzzle::Board(permutation_num).is_solvable());
-
-	params.height = hdr.m_Height;
-	params.permutation_num = permutation_num;
+	GemPuzzle::InitialParams initial_params;
+	Env::LoadVar_T(0, initial_params);
 
 	GemPuzzle::AccountInfo acc_info;
 	bool is_loaded = Env::LoadVar_T(params.player, acc_info);
 
 	if (!is_loaded) {
 		acc_info.pending_rewards = 0;
-	} else {
-		if (acc_info.has_active_game) {
-			Env::Halt();
-		}
 	}
 
-	acc_info.game_info.ngparams = params;
+	acc_info.game_info = params;
 	acc_info.has_active_game = true;
 	Env::SaveVar_T(params.player, acc_info);
-	if (params.bet != 0) {
-		Env::FundsLock(0, params.bet);
-	}
+
+	Env::FundsLock(initial_params.prize_aid, params.bet);
 	Env::AddSig(params.player);
 }
 
 BEAM_EXPORT void Method_3(const GemPuzzle::CheckSolutionParams& params)
 {
+	GemPuzzle::InitialParams initial_params;
+	Env::LoadVar_T(0, initial_params);
+
 	GemPuzzle::AccountInfo acc_info;
 	bool is_loaded = Env::LoadVar_T(params.player, acc_info);
 
-	if (!is_loaded || !acc_info.has_active_game) {
-		Env::Halt();
+	if (!is_loaded) {
+		acc_info.pending_rewards = 0;
+	}
+
+	if (initial_params.max_bet) {
+		if (!is_loaded || !acc_info.has_active_game) {
+			Env::Halt();
+		} else {
+			Height cur_height = Env::get_Height();
+			acc_info.game_result.verdict = check_solution(params.permutation_num, params.solution);
+			acc_info.game_result.time = cur_height - acc_info.game_info.height;
+
+			if (acc_info.game_result.verdict == GemPuzzle::Verdict::WIN) {
+				// Protection from cheaters
+				Height permutation_height;
+				Env::LoadVar_T(std::make_pair(params.player, params.permutation_num), permutation_height);
+				if (cur_height - permutation_height > DAY_IN_BLOCKS) {
+					GemPuzzle::InitialParams initial_params;
+					Env::LoadVar_T(0, initial_params);
+
+					Amount reward = 0;
+					if (acc_info.game_result.time <= initial_params.free_time) {
+						reward = initial_params.multiplier * acc_info.game_info.bet;
+					} else {
+						Amount lost = (acc_info.game_result.time - initial_params.free_time) * initial_params.game_speed * acc_info.game_info.bet / 100;
+						Amount max_earn = initial_params.multiplier * acc_info.game_info.bet;
+						if (lost < max_earn) {
+							reward = max_earn - lost;
+						}
+					}
+					Strict::Add(acc_info.pending_rewards, reward);
+					Strict::Sub(initial_params.prize_fund, reward);
+					acc_info.has_active_game = false;
+				}
+				Env::SaveVar_T(std::make_pair(params.player, params.permutation_num), cur_height);
+			}
+		}
 	} else {
 		Height cur_height = Env::get_Height();
-		acc_info.game_result.verdict = check_solution(acc_info.game_info.ngparams.permutation_num, params.solution, acc_info.game_result.moves_num);
-		acc_info.game_result.time = cur_height - acc_info.game_info.ngparams.height;
-		acc_info.game_result.permutation_num = acc_info.game_info.ngparams.permutation_num;
-		acc_info.game_result.player = acc_info.game_info.ngparams.player;
-
+		acc_info.game_result.verdict = check_solution(params.permutation_num, params.solution);
+		acc_info.game_result.time = cur_height - acc_info.game_info.height;
 		if (acc_info.game_result.verdict == GemPuzzle::Verdict::WIN) {
-			GemPuzzle::InitialParams initial_params;
-			Env::LoadVar_T(0, initial_params);
-
-			Amount reward = 0;
-			if (acc_info.game_result.time <= initial_params.free_time) {
-				reward = initial_params.multiplier * acc_info.game_info.ngparams.bet;
-			} else {
-				Amount lost = (acc_info.game_result.time - initial_params.free_time) * initial_params.game_speed * acc_info.game_info.ngparams.bet / 100;
-				Amount max_earn = initial_params.multiplier * acc_info.game_info.ngparams.bet;
-				if (lost < max_earn) {
-					reward = max_earn - lost;
-				}
+			// Protection from cheaters
+			Height permutation_height;
+			Env::LoadVar_T(std::make_pair(params.player, params.permutation_num), permutation_height);
+			if (cur_height - permutation_height > DAY_IN_BLOCKS) {
+				Strict::Add(acc_info.pending_rewards, initial_params.prize_amount);
+				Strict::Sub(initial_params.prize_fund, initial_params.prize_amount);
 			}
-			Strict::Add(acc_info.pending_rewards, reward);
-			acc_info.has_active_game = false;
-			
-			Env::SaveVar_T(++initial_params.last_used_game_id, acc_info.game_result);
-			Env::SaveVar_T(0, initial_params);
+			Env::SaveVar_T(std::make_pair(params.player, params.permutation_num), cur_height);
 		}
-
-		Env::SaveVar_T(params.player, acc_info);
 	}
+	Env::SaveVar_T(params.player, acc_info);
 }
 
-BEAM_EXPORT void Method_4(const GemPuzzle::EndGameParams& params)
+BEAM_EXPORT void Method_4(const GemPuzzle::TakePendingRewards& params)
 {
+	GemPuzzle::InitialParams initial_params;
+	Env::LoadVar_T(0, initial_params);
+
 	GemPuzzle::AccountInfo acc_info;
 	bool is_loaded = Env::LoadVar_T(params.player, acc_info);
 
-	if (is_loaded && acc_info.has_active_game) {
-		acc_info.has_active_game = false;
-		Env::SaveVar_T(params.player, acc_info);
-	}
-}
-
-BEAM_EXPORT void Method_5(const GemPuzzle::TakePendingRewards& params)
-{
-	GemPuzzle::AccountInfo acc_info;
-	bool is_loaded = Env::LoadVar_T(params.player, acc_info);
 	if (is_loaded && acc_info.pending_rewards) {
-		Env::FundsUnlock(0, acc_info.pending_rewards);
+		Env::FundsUnlock(initial_params.prize_aid, acc_info.pending_rewards);
 		acc_info.pending_rewards = 0;
 		Env::SaveVar_T(params.player, acc_info);
 	}
+}
+
+BEAM_EXPORT void Method_5(const GemPuzzle::DonateParams& params)
+{
+	GemPuzzle::InitialParams initial_params;
+	Env::LoadVar_T(0, initial_params);
+
+	Strict::Add(initial_params.prize_fund, params.amount);
+	Env::FundsLock(initial_params.prize_aid, params.amount);
+	Env::AddSig(params.user);
+
+	Env::SaveVar_T(0, initial_params);
 }
