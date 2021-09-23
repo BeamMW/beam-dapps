@@ -2,6 +2,7 @@
   // width: 1023px;
   // height: 230px;
   // margin: 0 10px 0 9px;
+
   width: 872px;
   padding: 0 10px 32px 10px;
   margin: 0 auto;
@@ -13,6 +14,8 @@
   &__top{
     display: flex;
     width: 100%;
+    align-items:center;
+    margin-bottom: 70px;
   }
   div + div{
     margin-left: 23px;
@@ -61,7 +64,6 @@
     }
   }
   .infoblock:first-child {
-    margin-bottom: 70px;
     width: 285px;
     height: 75px;
     padding: 17px 25px 18px;

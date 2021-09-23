@@ -55,6 +55,8 @@ declare module 'qwebchannel' {
 
 declare module 'AppStateProps' {
 
+  type BoardType = import('beamApiProps').BoardType;
+
   export interface IAppState {
     [key:string];
     activeGame: boolean;
@@ -67,6 +69,19 @@ declare module 'AppStateProps' {
     isTx: boolean
   }
 
+  export interface IState{
+    grid:IGridState;
+    info:IAppState
+
+  }
+
+  export interface IGridState {
+    board: BoardType | null;
+    solution: ('u' | 'd' | 'r' | 'l')[];
+    time: number;
+    status: 'ready' | 'playing' | 'won';
+  }
+
   export type PropertiesType<T> = T extends { [key: string]: infer U }
     ? U : never;
 }
@@ -74,10 +89,10 @@ declare module 'AppStateProps' {
 declare module 'beamApiProps' {
 
   type BaseComponent = import('../components/base/base.component').default;
-  type ResTXComment = import('../constants/api_constants').ResTXComment;
-  type ResTXStatus = import('../constants/api_constants').ResTXStatus;
-  type ReqID = import('../constants/api_constants').ReqID;
-  type ReqMethods = import('../constants/api_constants').ReqMethods;
+  type ResTXComment = import('../constants/api').ResTXComment;
+  type ResTXStatus = import('../constants/api').ResTXStatus;
+  type ReqID = import('../constants/api').ReqID;
+  type ReqMethods = import('../constants/api').ReqMethods;
 
   export type PropertiesType<T> = T extends { [key: string]: infer U }
     ? U : never;
@@ -154,6 +169,7 @@ declare module 'ComponentProps' {
   export type CellToRender = {
     index: number,
     x: number,
-    y: number
+    y: number,
+    solution: 'u' | 'd' | 'r' | 'l'
   };
 }

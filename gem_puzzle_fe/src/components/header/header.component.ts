@@ -1,14 +1,15 @@
-import { IAppState } from 'AppStateProps';
+import { IState } from 'AppStateProps';
 import { Store } from '../../logic/store/state_handler';
-import { Tags } from '../../constants/html_tags';
+import { Tags } from '../../constants/tags';
 import BaseComponent from '../base/base.component';
 import './header.scss';
 import InfoBLock from '../shared/header_info/header.info.component';
 import { RC } from '../../logic/beam/request_creators';
-import { SVG } from '../../constants/svg.icons';
 import Greeting from '../greeting/greeting.component';
 import { GrState } from '../greeting/greeting_state';
 import { Beam } from '../../logic/beam/api_handler';
+import { parseToBeam } from '../../utils/string_handlers';
+import { SVG } from '../../constants/svg.icons';
 
 export default class Header extends BaseComponent {
   greeting: Greeting;
@@ -24,8 +25,7 @@ export default class Header extends BaseComponent {
     this.headerTop = new BaseComponent(Tags.DIV, ['header__top']);
     this.rewardBlock = new BaseComponent(Tags.DIV, ['infoblock']);
     this.rewardBlock.element.addEventListener('click', () => {
-      const { reward } = Store.getState();
-      console.log(reward);
+      const { reward } = Store.getState().info;
       if (reward > 0) {
         Beam.callApi(RC.takePendingRewards());
       }
@@ -34,7 +34,7 @@ export default class Header extends BaseComponent {
   }
 
   initHeader = (): void => {
-    const { reward } = Store.getState();
+    const { reward } = Store.getState().info;
     const logoBlock = new InfoBLock({
       key: 'logo',
       title: SVG.logoGemPuzzleBig,
@@ -50,10 +50,11 @@ export default class Header extends BaseComponent {
     this.append(this.headerTop, this.greeting);
   };
 
-  appInform = ({ reward }: IAppState): void => {
+  appInform = (state: IState): void => {
+    const { reward } = state.info;
     if (reward !== 0) {
       this.rewardBlock.element.innerHTML = `
-      ${SVG.funt} <span> CLAIM ${reward} FUNT</span>
+      ${SVG.funt} <span> CLAIM ${parseToBeam(reward)} FUNT</span>
       `;
       this.rewardBlock.classList.add('active');
     }

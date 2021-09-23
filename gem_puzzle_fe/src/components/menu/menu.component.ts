@@ -1,11 +1,11 @@
-import { IAppState } from 'AppStateProps';
+import { IState } from 'AppStateProps';
 import { APIResponse } from 'beamApiProps';
-import { Tags } from '../../constants/html_tags';
+import { Tags } from '../../constants/tags';
 import BaseComponent from '../base/base.component';
 import Button from '../shared/button/button.component';
 import './menu.scss';
-import { MenuBtn } from '../../constants/app_constants';
-import { menuProps } from '../../constants/menu_btn';
+import { MenuBtn } from '../../constants/app';
+import { menuProps } from '../../constants/buttons';
 import { Store } from '../../logic/store/state_handler';
 
 export default class Menu extends BaseComponent {
@@ -56,7 +56,8 @@ export default class Menu extends BaseComponent {
     }
   };
 
-  appInform = ({ activeGame, isTx }: IAppState): void => {
+  appInform = (state: IState): void => {
+    const { activeGame, isTx } = state.info;
     if (!this.classList.contains('active')) {
       if (isTx) {
         this.getBtn(MenuBtn.NEW).setDisplay = false;

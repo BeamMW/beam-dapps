@@ -1,31 +1,32 @@
-import { IAppState, PropertiesType } from 'AppStateProps';
-import { AddObserversType, PlayerInfoType } from 'beamApiProps';
+import { AddObserversType } from 'beamApiProps';
+import { PropertiesType, IState } from 'AppStateProps';
+import { InfoState } from './reducers/info.reducer';
+import { GridState } from './reducers/grid.reducer';
 import BaseComponent from '../../components/base/base.component';
-import { AppStateActions } from '../../constants/app_constants';
 import { AC } from './app_action_creators';
 
-const initialState:IAppState = {
-  activeGame: false,
-  move: '',
-  time: 0,
-  pKey: '...',
-  rate: 0.01,
-  autoPlay: false,
-  reward: 0,
-  isTx: false
-};
-
 export default class AppState {
-  private state: IAppState;
+  private state: IState;
+
+  private reducers: ((obj:ReturnType<PropertiesType<typeof AC>>) => void)[];
 
   private readonly observers: Set<BaseComponent>;
 
   constructor() {
-    this.state = initialState;
+    const reducersInst = {
+      grid: new GridState(),
+      info: new InfoState()
+    };
+    this.state = {
+      grid: reducersInst.grid.state,
+      info: reducersInst.info.state
+    };
+    this.reducers = [
+      reducersInst.grid.reducer,
+      reducersInst.info.reducer
+    ];
     this.observers = new Set();
   }
-
-  readonly getState = ():IAppState => this.state;
 
   readonly dispatch = (action: ReturnType<
   PropertiesType<typeof AC>
@@ -33,9 +34,12 @@ export default class AppState {
     this.reducer(action);
   };
 
+  readonly getState = ():IState => this.state;
+
   private readonly notifyAll = (): void => this.observers.forEach((subs) => {
+    const stateCopy = JSON.parse(JSON.stringify(this.state));
     if (subs.appInform) {
-      subs.appInform(this.state);
+      subs.appInform(stateCopy as IState);
     }
   });
 
@@ -49,10 +53,6 @@ export default class AppState {
     });
   };
 
-  private readonly setState = (newState: Partial<IAppState>):void => {
-    this.state = { ...this.state, ...newState };
-  };
-
   private readonly deleteObserver:(
     component: BaseComponent
   ) => void = (component: BaseComponent) => {
@@ -62,38 +62,8 @@ export default class AppState {
   private readonly reducer = (obj: ReturnType<
   PropertiesType<typeof AC>
   >): void => {
-    const { action, payload } = obj;
-    switch (action) {
-      case AppStateActions.SET_TIME:
-        this.setState({ time: payload as number });
-        break;
-      case AppStateActions.SET_MOVE:
-        this.setState({ move: payload as string });
-        break;
-      case AppStateActions.SET_RATE:
-        this.setState({ rate: payload as number });
-        break;
-      case AppStateActions.SET_MY_INFO:
-        this.setState(
-          {
-            pKey: (<PlayerInfoType>payload)['My public key'],
-            activeGame: (<PlayerInfoType>payload).has_active_game,
-            reward: (<PlayerInfoType>payload).pending_rewards
-          }
-        );
-        break;
-      case AppStateActions.SET_AUTOPLAY:
-        this.setState({ autoPlay: payload as boolean });
-        break;
-      case AppStateActions.SET_REWARD:
-        this.setState({ reward: payload as number });
-        break;
-      case AppStateActions.SET_TX:
-        this.setState({ isTx: payload as boolean });
-        break;
-      default:
-        break;
-    }
+    this.reducers.forEach((reducer) => reducer(obj));
+    console.log('inform', this.state);
     this.notifyAll();
   };
 }

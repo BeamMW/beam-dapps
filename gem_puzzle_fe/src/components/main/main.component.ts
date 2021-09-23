@@ -1,15 +1,16 @@
 import { APIResponse, PlayerInfoType } from 'beamApiProps';
 import { WinArgsType } from 'ComponentProps';
+import { BoardType } from 'AppStateProps';
 import { Win } from '../win/win.components';
 import { Store } from '../../logic/store/state_handler';
 import { Beam } from '../../logic/beam/api_handler';
-import { Tags } from '../../constants/html_tags';
+import { Tags } from '../../constants/tags';
 import BaseComponent from '../base/base.component';
 import Menu from '../menu/menu.component';
 import { Field } from '../field/field.component';
 import {
   ReqID
-} from '../../constants/api_constants';
+} from '../../constants/api';
 import {
   RC
 } from '../../logic/beam/request_creators';
@@ -19,7 +20,7 @@ import Options from '../options/options.component';
 import {
   RouterMode,
   Routes
-} from '../../constants/app_constants';
+} from '../../constants/app';
 import { Best } from '../best/best.component';
 import { AC } from '../../logic/store/app_action_creators';
 
@@ -106,6 +107,16 @@ export default class Main extends BaseComponent {
         if (this.router.current?.length) {
           this.cancelGame();
         }
+        break;
+
+      case ReqID.VIEW_BOARD:
+        Store.dispatch(
+          (AC.setGame({
+            board: JSON.parse(res.result.output).board as BoardType,
+            status: 'ready',
+            solution: []
+          }))
+        );
         break;
 
       case ReqID.VIEW_MY_INFO:

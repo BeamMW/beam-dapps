@@ -3,7 +3,7 @@ import { SVG } from './svg.icons';
 import {
   RC
 } from '../logic/beam/request_creators';
-import { MenuBtn, Routes } from './app_constants';
+import { MenuBtn, Routes } from './app';
 import { Beam } from '../logic/beam/api_handler';
 
 export const menuProps: MenuButtonType[] = [

@@ -86,9 +86,9 @@ export function swapBoxes(
       toRender.push({
         index: <number>eBox[x] - 1,
         x,
-        y
+        y,
+        solution: k > 0 ? 'r' : 'l'
       });
-      solution.push(k > 0 ? 'r' : 'l');
       x += k;
     }
   }
@@ -102,9 +102,9 @@ export function swapBoxes(
       toRender.push({
         index: <number>eBox[x] - 1,
         x,
-        y
+        y,
+        solution: k > 0 ? 'd' : 'u'
       });
-      solution.push(k > 0 ? 'd' : 'u');
       y += k;
     }
   }

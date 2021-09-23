@@ -1,4 +1,4 @@
-import { Tags } from '../../constants/html_tags';
+import { Tags } from '../../constants/tags';
 import { Store } from '../../logic/store/state_handler';
 import BaseComponent from '../base/base.component';
 import Loader from '../loader/loader.component';
@@ -13,7 +13,7 @@ export class Best extends BaseComponent {
 
   initTableTime = (top: any []):void => {
     this.removeAll();
-    const { pKey } = Store.getState();
+    const { pKey } = Store.getState().info;
     const trHeader = new BaseComponent(Tags.TR);
     const thPos = new BaseComponent(Tags.TH);
     const thAcc = new BaseComponent(Tags.TH);
@@ -76,7 +76,7 @@ export class Best extends BaseComponent {
 
   initTableMove = (top: any):void => {
     this.removeAll();
-    const { pKey } = Store.getState();
+    const { pKey } = Store.getState().info;
     const trHeader = new BaseComponent(Tags.TR);
     const thPos = new BaseComponent(Tags.TH);
     const thAcc = new BaseComponent(Tags.TH);

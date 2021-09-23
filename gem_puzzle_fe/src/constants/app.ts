@@ -1,4 +1,4 @@
-export enum AppStateActions {
+export enum StoreActions {
   SET_TIME = 'SET_TIME',
   SET_MODE = 'SET_MODE',
   SET_MOVE = 'SET_MOVE',
@@ -11,6 +11,13 @@ export enum AppStateActions {
   SET_REWARD = 'SET_REWARD',
   SET_TX = 'SET_TX',
   SET_MY_INFO = 'SET_MY_INFO'
+}
+
+export enum GridActions {
+  SET_GRID = 'SET_GRID',
+  SET_STATUS = 'SET_STATUS',
+  SET_SOLUTION = 'SET_SOLUTION',
+  SET_GAME = 'SET_GAME'
 }
 
 export enum PuzzleReducerActions {

@@ -1,6 +1,6 @@
-import { IAppState } from 'AppStateProps';
+import { IState } from 'AppStateProps';
 import { AC } from '../../logic/store/app_action_creators';
-import { Tags } from '../../constants/html_tags';
+import { Tags } from '../../constants/tags';
 import { Store } from '../../logic/store/state_handler';
 import BaseComponent from '../base/base.component';
 
@@ -14,7 +14,7 @@ export default class AutoPlayOpt extends BaseComponent {
   constructor() {
     super(Tags.DIV, ['mode']);
     Store.addObservers(this);
-    const { autoPlay } = Store.getState();
+    const { autoPlay } = Store.getState().info;
     this.modeLabel = new BaseComponent(Tags.LABEL, ['title']);
     this.modeLabel.innerHTML = 'autoplay';
     this.modeLabel.setAttributes({
@@ -43,13 +43,13 @@ export default class AutoPlayOpt extends BaseComponent {
     this.append(...this.radioButton, this.modeLabel);
   }
 
-  appInform = ({ autoPlay }: IAppState): void => {
+  appInform = (state: IState): void => {
     this.radioButton.forEach((label) => {
       const radio = label.element.children[0] as HTMLInputElement;
       const { value } = radio.dataset;
       if (value) {
-        radio.checked = +value === +autoPlay;
-        label.style.color = +value === +autoPlay
+        radio.checked = +value === +state.info.autoPlay;
+        label.style.color = +value === +state.info.autoPlay
           ? '#80ffdb'
           : '';
       }

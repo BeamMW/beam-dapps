@@ -1,13 +1,13 @@
 import { APIResponse } from 'beamApiProps';
+import { Beam } from '../../logic/beam/api_handler';
 import { Store } from '../../logic/store/state_handler';
 import {
   AppSpecs,
   ReqID,
   ResTXComment,
   ResTXStatus
-} from '../../constants/api_constants';
-import { Tags } from '../../constants/html_tags';
-import { Beam } from '../../logic/beam/api_handler';
+} from '../../constants/api';
+import { Tags } from '../../constants/tags';
 import BaseComponent from '../base/base.component';
 import Loader from '../loader/loader.component';
 import WidgetProps from '../shared/widget_info/widget.info.component';
@@ -63,14 +63,19 @@ export default class Widget extends BaseComponent {
       window.localStorage.removeItem('txId');
       Store.dispatch(AC.setIsTx(false));
       switch (result.comment) {
+        case ResTXComment.CREATE_NEW_GAME:
+          Beam.callApi(RC.viewBoard());
+          break;
         case ResTXComment.CHECKIN_SOLUTION:
           Beam.callApi(RC.viewCheckResult());
-          Beam.callApi(RC.viewMyInfo());
+          break;
+        case ResTXComment.ENDING_EXISTING_GAME:
+          window.localStorage.removeItem('state');
           break;
         default:
-          Beam.callApi(RC.viewMyInfo());
           break;
       }
+      Beam.callApi(RC.viewMyInfo());
     }
   };
 
@@ -79,15 +84,18 @@ export default class Widget extends BaseComponent {
       case ReqID.CHECK:
         console.log(JSON.parse(res.result.output));
         break;
+
       case ReqID.START_GAME:
       case ReqID.CANCEL_GAME:
       case ReqID.CHECK_SOLUTION:
         Beam.callApi(RC.invokeData(res.result.raw_data));
         break;
+
       case ReqID.TAKE_PENDING_REWARDS:
         Beam.callApi(RC.invokeData(res.result.raw_data));
         Beam.callApi(RC.viewMyInfo());
         break;
+
       case ReqID.INVOKE_DATA:
         if (res.result?.txid) {
           window.localStorage.setItem('txId', res.result.txid);
@@ -97,6 +105,7 @@ export default class Widget extends BaseComponent {
             AppSpecs.TX_CHECK_INTERVAL);
         }
         break;
+
       case ReqID.TX_STATUS:
         this.transactionHandler(res.result);
         break;

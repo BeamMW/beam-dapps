@@ -5,7 +5,7 @@ import {
   ReqActions,
   ReqID,
   AppSpecs
-} from '../../constants/api_constants';
+} from '../../constants/api';
 import { parseToGroth } from '../../utils/string_handlers';
 import { Store } from '../store/state_handler';
 
@@ -25,7 +25,7 @@ const argsParser = (args: ReqArgsType) => Object.entries(args)
 export const RC = {
 
   startGame: (): ApiArgs => {
-    const { rate } = Store.getState();
+    const { rate } = Store.getState().info;
     const args = argsParser({
       role: ReqRoles.PLAYER,
       action: ReqActions.NEW_GAME,

@@ -1,9 +1,9 @@
 import { MenuButtonType } from 'ComponentProps';
-import { buttonFromMenu } from '../../../constants/svg.icons';
-import { Tags } from '../../../constants/html_tags';
+import { Tags } from '../../../constants/tags';
 import BaseComponent from '../../base/base.component';
 import './button.scss';
 import { toDOMParser } from '../../../utils/string_handlers';
+import { buttonFromMenu } from '../../../constants/svg.icons';
 
 export default class Button extends BaseComponent {
   constructor({

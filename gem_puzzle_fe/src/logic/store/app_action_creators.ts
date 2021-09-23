@@ -1,44 +1,61 @@
-import { BoardLengthType, PlayerInfoType } from 'beamApiProps';
-import { AppStateActions } from '../../constants/app_constants';
+import { IGridState } from 'AppStateProps';
+import { BoardLengthType, BoardType, PlayerInfoType } from 'beamApiProps';
+import { GridActions, StoreActions } from '../../constants/app';
 
 export const AC = {
   setTime: (payload:number) => ({
-    action: AppStateActions.SET_TIME,
+    action: StoreActions.SET_TIME,
     payload
-  }) as const,
+  } as const),
   setMove: (payload:string) => ({
-    action: AppStateActions.SET_MOVE,
+    action: StoreActions.SET_MOVE,
     payload
-  }) as const,
+  } as const),
   setMode: (
     payload: BoardLengthType
-  ) => ({ action: AppStateActions.SET_MODE, payload }) as const,
+  ) => ({ action: StoreActions.SET_MODE, payload } as const),
   setRate: (payload: number) => ({
-    action: AppStateActions.SET_RATE,
+    action: StoreActions.SET_RATE,
     payload
-  }) as const,
+  } as const),
   setPKey: (payload: string) => ({
-    action: AppStateActions.SET_PKEY,
+    action: StoreActions.SET_PKEY,
     payload
-  }) as const,
+  } as const),
   setActiveGame: (payload: boolean) => ({
-    action: AppStateActions.SET_ACTIVE,
+    action: StoreActions.SET_ACTIVE,
     payload
-  }) as const,
+  } as const),
   setAutoplay: (payload: boolean) => ({
-    action: AppStateActions.SET_AUTOPLAY,
+    action: StoreActions.SET_AUTOPLAY,
     payload
-  }) as const,
+  } as const),
   setMyPendingReward: (payload:number) => ({
-    action: AppStateActions.SET_REWARD,
+    action: StoreActions.SET_REWARD,
     payload
-  }) as const,
+  } as const),
   setIsTx: (payload: boolean) => ({
-    action: AppStateActions.SET_TX,
+    action: StoreActions.SET_TX,
     payload
-  }) as const,
+  } as const),
   setMyInfo: (payload:PlayerInfoType) => ({
-    action: AppStateActions.SET_MY_INFO,
+    action: StoreActions.SET_MY_INFO,
     payload
-  }) as const
+  } as const),
+  setGrid: (payload: BoardType) => ({
+    action: GridActions.SET_GRID,
+    payload
+  } as const),
+  setSolution: (payload: ('u' | 'd' | 'r' | 'l')[]) => ({
+    action: GridActions.SET_SOLUTION,
+    payload
+  } as const),
+  setStatus: (payload:'ready' | 'playing' | 'won') => ({
+    action: GridActions.SET_STATUS,
+    payload
+  } as const),
+  setGame: (payload: Omit<IGridState, 'time'>) => ({
+    action: GridActions.SET_GAME,
+    payload
+  } as const)
 };
