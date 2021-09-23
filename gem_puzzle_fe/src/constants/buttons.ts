@@ -2,9 +2,9 @@ import { MenuButtonType } from 'ComponentProps';
 import { SVG } from './svg.icons';
 import {
   RC
-} from '../logic/beam_api/request_creators';
-import { MenuBtn, Routes } from './app_constants';
-import { Beam } from '../logic/beam_api/api_handler';
+} from '../logic/beam/request_creators';
+import { MenuBtn, Routes } from './app';
+import { Beam } from '../logic/beam/api_handler';
 
 export const menuProps: MenuButtonType[] = [
   {

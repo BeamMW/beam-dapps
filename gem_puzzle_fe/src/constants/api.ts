@@ -1,6 +1,6 @@
 export enum AppSpecs {
   CID = '3fee46f54e3713c05eb1a2916c0476f8ff557167cc4299b751a1cad6f665ae97',
-  TITLE = 'PYATNASHKI',
+  TITLE = 'GEM-PUZZLE',
   TX_CHECK_INTERVAL = 3000
 }
 

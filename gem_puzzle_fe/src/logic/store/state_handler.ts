@@ -1,4 +1,4 @@
-import { IAppState, PropertiesType } from 'AppStateProps';
+import { IState, PropertiesType } from 'AppStateProps';
 import { AddObserversType } from 'beamApiProps';
 import { AC } from './app_action_creators';
 
@@ -9,14 +9,14 @@ export class Store {
   PropertiesType<typeof AC>
   >) => void;
 
-  static getState: () => IAppState;
+  static getState: () => IState;
 
   static setAppHandlers = (obj: {
     addObservers: AddObserversType,
     dispatch: (action: ReturnType<
     PropertiesType<typeof AC>
     >) => void,
-    getState: () => IAppState
+    getState: () => IState
   }): void => {
     Store.addObservers = obj.addObservers;
     Store.dispatch = obj.dispatch;

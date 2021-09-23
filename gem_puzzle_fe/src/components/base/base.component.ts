@@ -1,6 +1,6 @@
-import { IAppState } from 'AppStateProps';
+import { IState } from 'AppStateProps';
 import { APIResponse } from 'beamApiProps';
-import { Tags } from '../../constants/html_tags';
+import { Tags } from '../../constants/tags';
 
 type HTMLAttributes = {
   [key:string]: string;
@@ -11,7 +11,7 @@ export default class BaseComponent {
 
   inform?: (res:APIResponse) => void;
 
-  appInform?:(state: IAppState) => void;
+  appInform?:(state: IState) => void;
 
   constructor(tag:Tags, styles: string[] = []) {
     this.element = document.createElement(tag);

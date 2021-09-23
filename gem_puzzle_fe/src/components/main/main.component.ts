@@ -1,27 +1,22 @@
 import { APIResponse, PlayerInfoType } from 'beamApiProps';
 import { WinArgsType } from 'ComponentProps';
+import { BoardType } from 'AppStateProps';
 import { Win } from '../win/win.components';
-import { Store } from '../../logic/app_state/state_handler';
-import { Beam } from '../../logic/beam_api/api_handler';
-import { Tags } from '../../constants/html_tags';
+import { Store } from '../../logic/store/state_handler';
+import { Beam } from '../../logic/beam/api_handler';
+import { Tags } from '../../constants/tags';
 import BaseComponent from '../base/base.component';
 import Menu from '../menu/menu.component';
 import { Field } from '../field/field.component';
-import {
-  ReqID
-} from '../../constants/api_constants';
-import {
-  RC
-} from '../../logic/beam_api/request_creators';
+import { ReqID } from '../../constants/api';
+import { RC } from '../../logic/beam/request_creators';
 import './main.scss';
 import Router from '../../logic/router/router';
 import Options from '../options/options.component';
-import {
-  RouterMode,
-  Routes
-} from '../../constants/app_constants';
+import { RouterMode, Routes } from '../../constants/app';
 import { Best } from '../best/best.component';
-import { AC } from '../../logic/app_state/app_action_creators';
+import { AC } from '../../logic/store/app_action_creators';
+import Popup from '../popup/popup.component';
 
 export default class Main extends BaseComponent {
   private readonly menu: Menu;
@@ -30,11 +25,14 @@ export default class Main extends BaseComponent {
 
   private child: Field | Win | Options | Best | null;
 
+  private readonly popupWon: Popup;
+
   constructor() {
     super(Tags.DIV, ['main']);
     Beam.addObservers(this);
     Beam.callApi(RC.viewMyInfo());
     this.menu = new Menu();
+    this.popupWon = new Popup({ key: 'win' });
     this.router = new Router({
       mode: RouterMode.HISTORY,
       root: Routes.MAIN
@@ -45,10 +43,10 @@ export default class Main extends BaseComponent {
     this.router.add(Routes.BEST, this.bestField);
     this.router.add(Routes.PLAY, this.initGameField);
     this.router.add('', this.initMainMenu);
-    this.append(this.menu);
+    this.append(this.menu, this.popupWon);
   }
 
-  initMainMenu = ():void => {
+  initMainMenu = (): void => {
     this.child = null;
   };
 
@@ -59,7 +57,7 @@ export default class Main extends BaseComponent {
     window.history.pushState({}, '', Routes.MAIN);
   };
 
-  bestField = (top:any): void => {
+  bestField = (top: any): void => {
     if (this.child) this.remove(this.child);
     Beam.callApi(RC.viewMyInfo());
     if (!top) Beam.callApi(RC.viewTops());
@@ -88,12 +86,12 @@ export default class Main extends BaseComponent {
     Store.addObservers(this.menu);
   };
 
-  winner = (res:WinArgsType): void => {
-    if (this.child) this.remove(this.child);
+  winner = (res: WinArgsType): void => {
+    // if (this.child) this.remove(this.child);
     Beam.callApi(RC.viewMyInfo());
-    this.menu.addActive();
-    this.child = new Win(res);
-    this.append(this.child);
+    // this.append(this.child);
+    this.append(this.popupWon);
+    this.popupWon.addActive();
   };
 
   inform = (res: APIResponse): void => {
@@ -108,11 +106,19 @@ export default class Main extends BaseComponent {
         }
         break;
 
+      case ReqID.VIEW_BOARD:
+        Store.dispatch(
+          AC.setGame({
+            board: JSON.parse(res.result.output).board as BoardType,
+            status: 'ready',
+            solution: []
+          })
+        );
+        break;
+
       case ReqID.VIEW_MY_INFO:
         Store.dispatch(
-          (AC.setMyInfo(
-            JSON.parse(res.result.output) as PlayerInfoType
-          ))
+          AC.setMyInfo(JSON.parse(res.result.output) as PlayerInfoType)
         );
         break;
 

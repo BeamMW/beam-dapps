@@ -1,0 +1,151 @@
+.popup__won {
+        width: 674px;
+        height: 380px;
+        background: #dffd94;
+        border-radius: 56px;
+        position: absolute;
+    top: 177px;
+    z-index: 1;
+    transform: translate(0, -800px);
+    transition: transform 200ms ease-in-out;
+
+        &_icon {
+            left: 235.5px;
+            top: -120px;
+            /* right: 128px; */
+            position: absolute;
+        }
+
+        &_text {
+            position: absolute;
+            top: 132px;
+            left: 267px;
+            width: 151px;
+            height: 22px;
+            margin: 0 0 30px;
+            font-family: Ubuntu;
+            font-size: 30px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 0.73;
+            letter-spacing: normal;
+            text-align: center;
+            color: #081d11;
+        }
+
+        &_amount {
+            position: absolute;
+            top: 190px;
+            left: 274px;
+            width: 127px;
+            height: 35px;
+            font-weight: bold;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: normal;
+            color: #081d11;
+            letter-spacing: normal;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+
+        &_stat {
+            position: absolute;
+            top: 240px;
+            width: 100%;
+            height: 80px;
+            background: #20866f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+
+            &_move {
+                color: #dffd94;
+
+                span:first-child {
+                    color: #fff
+                }
+            }
+        }
+
+        &_back {
+            width: 314px;
+            height: 60px;
+            display: flex;
+            user-select: none;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 493px 3px 14px;
+            background-image: url('../../assets/icon/button-backmainmenu.svg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: absolute;
+            top: 312px;
+            left: 165px;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+    .popup__lose {
+        width: 674px;
+        height: 380px;
+        background: #dffd94;
+        border-radius: 56px;
+        position: absolute;
+        top: 177px;
+        z-index: 1;
+        transform: translate(0, -800px);
+        transition: transform 200ms ease-in-out;
+        &_icon {
+            left: 253px;
+            top: -120px;
+            /* right: 128px; */
+            position: absolute;
+        }
+        &_text {
+            position: absolute;
+            top: 170px;
+            width: 100%;
+            text-align: center;
+            height: 22px;
+            margin: 0 0 30px;
+            font-family: Ubuntu;
+            font-size: 30px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 0.73;
+            letter-spacing: normal;
+            text-align: center;
+            color: #081d11;
+        }
+        &_back {
+            width: 314px;
+            height: 60px;
+            display: flex;
+            user-select: none;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 493px 3px 14px;
+            background-image: url('../../assets/icon/button-backmainmenu.svg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: absolute;
+            top: 312px;
+            left: 165px;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+    
+
+.popup__won.active, .popup__lose.active {
+    transform: none;
+}

@@ -1,20 +1,20 @@
-import { Tags } from '../../constants/html_tags';
+import { Tags } from '../../constants/tags';
 import BaseComponent from '../base/base.component';
 import './greeting.scss';
+import { GrState } from './greeting_state';
 
 export default class Greeting extends BaseComponent {
-  title: string;
-
-  constructor(title: string) {
+  constructor() {
     super(Tags.DIV, ['description']);
-    this.title = title;
     const titleDom = new BaseComponent(Tags.SPAN, ['title']);
+    titleDom.element.textContent = GrState.MainTitle;
+    const descDom = new BaseComponent(Tags.SPAN, ['desc']);
+    descDom.element.textContent = GrState.MainDesc;
     // const back = new BaseComponent(Tags.BUTTON, ['backBtn']);
-    titleDom.element.textContent = title;
     // back.element.textContent = ' back to mane menu';
     // back.element.addEventListener('click', () => {
     //   window.history.pushState({}, '', `/${Routes.RETURN}`);
     // });
-    this.append(titleDom);
+    this.append(titleDom, descDom);
   }
 }

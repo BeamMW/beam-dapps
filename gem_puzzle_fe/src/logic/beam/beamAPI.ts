@@ -3,7 +3,7 @@ import { QWebChannel, QWebChannelTransport, QObject } from 'qwebchannel';
 import { RC } from './request_creators';
 import shader from './app.wasm';
 import BaseComponent from '../../components/base/base.component';
-import { ReqID, ReqMethods, AppSpecs } from '../../constants/api_constants';
+import { ReqID, ReqMethods, AppSpecs } from '../../constants/api';
 
 declare global {
   interface Window {

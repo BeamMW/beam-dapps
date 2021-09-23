@@ -1,4 +1,4 @@
-import { BeamAmmount } from '../constants/app_constants';
+import { BeamAmmount } from '../constants/app';
 
 export const boardSchemeMaker = (
   length: number
@@ -34,6 +34,11 @@ export const handleString = (next:string):boolean => {
 
 export const parseToGroth = (beams: number):string => {
   const numb = Math.ceil(beams * BeamAmmount.GROTHS_IN_BEAM);
+  return String(numb);
+};
+
+export const parseToBeam = (groth: number):string => {
+  const numb = groth / BeamAmmount.GROTHS_IN_BEAM;
   return String(numb);
 };
 
