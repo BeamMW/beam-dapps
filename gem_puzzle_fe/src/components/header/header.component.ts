@@ -5,15 +5,11 @@ import BaseComponent from '../base/base.component';
 import './header.scss';
 import InfoBLock from '../shared/header_info/header.info.component';
 import { RC } from '../../logic/beam/request_creators';
-import Greeting from '../greeting/greeting.component';
-import { GrState } from '../greeting/greeting_state';
 import { Beam } from '../../logic/beam/api_handler';
 import { parseToBeam } from '../../utils/string_handlers';
 import { SVG } from '../../constants/svg.icons';
 
 export default class Header extends BaseComponent {
-  greeting: Greeting;
-
   private readonly rewardBlock: BaseComponent;
 
   private readonly headerTop: BaseComponent;
@@ -21,7 +17,6 @@ export default class Header extends BaseComponent {
   constructor() {
     super(Tags.DIV, ['header']);
     Store.addObservers(this);
-    this.greeting = new Greeting(GrState.MainTitle);
     this.headerTop = new BaseComponent(Tags.DIV, ['header__top']);
     this.rewardBlock = new BaseComponent(Tags.DIV, ['infoblock']);
     this.rewardBlock.element.addEventListener('click', () => {
@@ -47,7 +42,7 @@ export default class Header extends BaseComponent {
     ${SVG.funt} <span> ${reward} FUNT</span>
     `;
     this.headerTop.append(this.rewardBlock);
-    this.append(this.headerTop, this.greeting);
+    this.append(this.headerTop);
   };
 
   appInform = (state: IState): void => {

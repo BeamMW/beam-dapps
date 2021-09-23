@@ -23,6 +23,7 @@ import {
 } from '../../constants/app';
 import { Best } from '../best/best.component';
 import { AC } from '../../logic/store/app_action_creators';
+import Popup from '../popup/popup.component';
 
 export default class Main extends BaseComponent {
   private readonly menu: Menu;
@@ -31,11 +32,14 @@ export default class Main extends BaseComponent {
 
   private child: Field | Win | Options | Best | null;
 
+  private readonly popup: Popup;
+
   constructor() {
     super(Tags.DIV, ['main']);
     Beam.addObservers(this);
     Beam.callApi(RC.viewMyInfo());
     this.menu = new Menu();
+    this.popup = new Popup();
     this.router = new Router({
       mode: RouterMode.HISTORY,
       root: Routes.MAIN
@@ -76,7 +80,7 @@ export default class Main extends BaseComponent {
     this.child = new Field();
     this.menu.replace(this.child);
     this.menu.addActive();
-    this.append(this.menu);
+    this.append(this.menu, this.popup);
     Store.addObservers(this.menu);
   };
 
@@ -92,9 +96,10 @@ export default class Main extends BaseComponent {
   winner = (res:WinArgsType): void => {
     if (this.child) this.remove(this.child);
     Beam.callApi(RC.viewMyInfo());
-    this.menu.addActive();
-    this.child = new Win(res);
-    this.append(this.child);
+    console.log(res);
+    // this.child = new Popup();
+    // this.append(this.child);
+    this.popup.addActive();
   };
 
   inform = (res: APIResponse): void => {
