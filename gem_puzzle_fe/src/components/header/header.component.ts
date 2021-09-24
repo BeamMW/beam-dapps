@@ -20,8 +20,9 @@ export default class Header extends BaseComponent {
     this.headerTop = new BaseComponent(Tags.DIV, ['header__top']);
     this.rewardBlock = new BaseComponent(Tags.DIV, ['infoblock']);
     this.rewardBlock.element.addEventListener('click', () => {
-      const { reward } = Store.getState().info;
-      if (reward > 0) {
+      const { isTx } = Store.getState().info;
+      const reward = Store.getState().info.pending_rewards;
+      if (!isTx && reward > 0) {
         Beam.callApi(RC.takePendingRewards());
       }
     });
@@ -29,7 +30,7 @@ export default class Header extends BaseComponent {
   }
 
   initHeader = (): void => {
-    const { reward } = Store.getState().info;
+    const reward = Store.getState().info.pending_rewards;
     const logoBlock = new InfoBLock({
       key: 'logo',
       title: SVG.logoGemPuzzleBig,
@@ -46,12 +47,13 @@ export default class Header extends BaseComponent {
   };
 
   appInform = (state: IState): void => {
-    const { reward } = state.info;
-    if (reward !== 0) {
-      this.rewardBlock.element.innerHTML = `
-      ${SVG.funt} <span> CLAIM ${parseToBeam(reward)} FUNT</span>
-      `;
+    const reward = state.info.pending_rewards;
+    const num = Number(parseToBeam(reward)).toFixed(8)
+      .replace(/\.?0+$/, '');
+    this.rewardBlock.element.innerHTML = `
+      ${SVG.funt} <span> CLAIM ${num} FUNT</span>`;
+    if (reward) {
       this.rewardBlock.classList.add('active');
-    }
+    } else this.rewardBlock.classList.remove('active');
   };
 }

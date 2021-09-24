@@ -1,6 +1,5 @@
-import { APIResponse, PlayerInfoType } from 'beamApiProps';
+import { APIResponse, ResOutput } from 'beamApiProps';
 import { WinArgsType } from 'ComponentProps';
-import { BoardType } from 'AppStateProps';
 import { Win } from '../win/win.components';
 import { Store } from '../../logic/store/state_handler';
 import { Beam } from '../../logic/beam/api_handler';
@@ -21,11 +20,11 @@ import Popup from '../popup/popup.component';
 export default class Main extends BaseComponent {
   private readonly menu: Menu;
 
+  private readonly popupWon: Popup;
+
   private readonly router: Router;
 
   private child: Field | Win | Options | Best | null;
-
-  private readonly popupWon: Popup;
 
   constructor() {
     super(Tags.DIV, ['main']);
@@ -84,13 +83,31 @@ export default class Main extends BaseComponent {
   };
 
   inform = (res: APIResponse): void => {
+    let output;
+    if (res.result?.output) {
+      output = JSON.parse(res.result.output) as ResOutput;
+    }
     switch (res.id) {
       case ReqID.VIEW_CONTRACT_PARAMS:
-        Store.dispatch(
-          AC.setCidParams({
-            bet: JSON.parse(res.result.output).bet as number
-          })
-        );
+        if (output) {
+          Store.dispatch(
+            AC.setCidParams({
+              max_bet: output.max_bet,
+              multiplier: output.multiplier,
+              free_time: output.free_time,
+              game_speed: output.game_speed,
+              prize_aid: output.prize_aid,
+              prize_amount: output.prize_amount,
+              prize_fund: output.prize_fund
+            })
+          );
+          if (output.prize_aid) {
+            Beam.callApi(RC.viewAssetInfo(output.prize_aid));
+          }
+        }
+        break;
+      case ReqID.VIEW_ASSET_INFO:
+        console.log(res);
         break;
 
       case ReqID.CHECK_SOLUTION:
@@ -100,24 +117,35 @@ export default class Main extends BaseComponent {
         break;
 
       case ReqID.VIEW_BOARD:
-        Store.dispatch(
-          AC.setGame({
-            board: JSON.parse(res.result.output).board as BoardType,
-            status: 'ready',
-            solution: [],
-            permutation: JSON.parse(res.result.output).permutation as number
-          })
-        );
+        if (output) {
+          Store.dispatch(
+            AC.setGame({
+              board: output.board,
+              status: 'ready',
+              solution: [],
+              permutation: output.permutation
+            })
+          );
+        }
         break;
-
       case ReqID.VIEW_MY_INFO:
-        Store.dispatch(
-          AC.setMyInfo(JSON.parse(res.result.output) as PlayerInfoType)
-        );
+        if (output) {
+          Store.dispatch(
+            AC.setMyInfo({
+              has_active_game: output.has_active_game,
+              pending_rewards: output.pending_rewards
+            })
+          );
+        }
         break;
 
       case ReqID.VIEW_CHECK_RESULT:
-        this.winner(JSON.parse(res.result.output));
+        if (output) {
+          this.winner({
+            verdict: output.verdict,
+            'time (min)': output['time (min)']
+          });
+        }
         break;
 
       default:

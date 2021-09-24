@@ -1,4 +1,4 @@
-import { BoardType } from 'beamApiProps';
+import { BoardType } from 'AppStateProps';
 import { CellToRender } from 'ComponentProps';
 import { BOARD_EXAMPLE } from '../../constants/app';
 
@@ -66,8 +66,6 @@ export class Box {
     );
   };
 }
-
-export const solution: ('u' | 'd' | 'r' | 'l')[] = [];
 
 export function swapBoxes(
   grid: BoardType,

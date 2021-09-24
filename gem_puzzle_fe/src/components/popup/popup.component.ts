@@ -55,7 +55,6 @@ export default class Popup extends BaseComponent {
 
   appInform = (state: IState): void => {
     const { solution } = state.grid;
-    console.log(solution);
     if (solution.length > 0) {
       this.statMove.element.innerHTML = `<span>Move:</span> ${solution.length}`;
     }

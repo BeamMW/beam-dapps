@@ -1,17 +1,15 @@
-import { PlayerInfoType, PropertiesType } from 'beamApiProps';
+import { PropertiesType } from 'beamApiProps';
 import { IAppState } from 'AppStateProps';
 import { BaseReducer } from './base.reducer';
 import { AC } from '../app_action_creators';
 import { StoreActions } from '../../../constants/app';
 
 const initialState: IAppState = {
-  activeGame: false,
+  has_active_game: false,
   time: 0,
   autoPlay: false,
-  reward: 0,
-  isTx: false,
-  bet: 0,
-  permutation: null
+  pending_rewards: 0,
+  isTx: false
 };
 
 export class InfoState implements BaseReducer<IAppState> {
@@ -26,21 +24,12 @@ export class InfoState implements BaseReducer<IAppState> {
   reducer = (obj: ReturnType<PropertiesType<typeof AC>>): void => {
     const { action, payload } = obj;
     switch (action) {
-      case StoreActions.SET_CID_PARAMS:
-        this.state.bet = (payload as { bet:number }).bet;
-        break;
-      case StoreActions.SET_RATE:
-        this.state.rate = payload as number;
-        break;
       case StoreActions.SET_MY_INFO:
-        this.state.activeGame = (<PlayerInfoType>payload).has_active_game;
-        this.state.reward = (<PlayerInfoType>payload).pending_rewards;
+        this.state.has_active_game = (<IAppState>payload).has_active_game;
+        this.state.pending_rewards = (<IAppState>payload).pending_rewards;
         break;
       case StoreActions.SET_AUTOPLAY:
         this.state.autoPlay = payload as boolean;
-        break;
-      case StoreActions.SET_REWARD:
-        this.state.reward = payload as number;
         break;
       case StoreActions.SET_TX:
         this.state.isTx = payload as boolean;

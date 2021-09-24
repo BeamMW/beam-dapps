@@ -11,13 +11,22 @@ import { Store } from '../store/state_handler';
 
 export const RC = {
 
+  viewAssetInfo: (aid: number): ApiArgs => ({
+    callID: ReqID.VIEW_ASSET_INFO,
+    method: ReqMethods.GET_ASSET_INFO,
+    params: {
+      create_tx: false,
+      asset_id: aid
+    }
+  } as const),
+
   startGame: (): ApiArgs => {
-    const { bet } = Store.getState().info;
+    const bet = Store.getState().cid.max_bet;
     const args = argsParser({
       role: ReqRoles.PLAYER,
       action: ReqActions.NEW_GAME,
       cid: AppSpecs.CID,
-      just_generate: 0,
+      just_generate: 1,
       bet
     });
     return ({
@@ -31,7 +40,7 @@ export const RC = {
   },
 
   viewBoard: (): ApiArgs => {
-    const { bet } = Store.getState().info;
+    const bet = Store.getState().cid.max_bet;
     const args = argsParser({
       role: ReqRoles.PLAYER,
       action: ReqActions.NEW_GAME,
@@ -82,22 +91,6 @@ export const RC = {
       }
     } as const
   ),
-
-  cancelGame: (): ApiArgs => {
-    const args = argsParser({
-      role: ReqRoles.PLAYER,
-      action: ReqActions.END_CURRENT_GAME,
-      cid: AppSpecs.CID
-    });
-    return ({
-      callID: ReqID.CANCEL_GAME,
-      method: ReqMethods.INVOKE_CONTRACT,
-      params: {
-        create_tx: false,
-        args
-      }
-    } as const);
-  },
 
   checkSolution: (sol: string, permutation: number): ApiArgs => {
     const args = argsParser({

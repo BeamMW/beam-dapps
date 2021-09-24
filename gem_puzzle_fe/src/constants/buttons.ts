@@ -34,11 +34,6 @@ export const menuProps: MenuButtonType[] = [
     handler: ():void => {
       window.history.pushState({}, '', `/${Routes.RETURN}`);
     }
-  },
-  {
-    key: MenuBtn.CANCEL,
-    title: 'CANCEL GAME',
-    handler: () => Beam.callApi(RC.cancelGame())
   }
 ];
 

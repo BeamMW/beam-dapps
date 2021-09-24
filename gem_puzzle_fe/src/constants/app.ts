@@ -11,6 +11,9 @@ export enum StoreActions {
   SET_REWARD = 'SET_REWARD',
   SET_TX = 'SET_TX',
   SET_MY_INFO = 'SET_MY_INFO',
+}
+
+export enum CidActions {
   SET_CID_PARAMS = 'SET_CID_PARAMS'
 }
 

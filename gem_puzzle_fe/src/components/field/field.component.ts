@@ -1,6 +1,5 @@
-import { BoardType } from 'beamApiProps';
 import { CellToRender } from 'ComponentProps';
-import { IState } from 'AppStateProps';
+import { BoardType, IState } from 'AppStateProps';
 import { AC } from '../../logic/store/app_action_creators';
 import { Cell } from './cell.component';
 import { Beam } from '../../logic/beam/api_handler';
@@ -31,6 +30,8 @@ type PuzzleSolveType = {
 export class Field extends BaseComponent {
   private solveList: PuzzleSolveType [] | null;
 
+  private readonly bet: boolean;
+
   private readonly nodeList: Cell[];
 
   private readonly innerField: BaseComponent;
@@ -42,6 +43,7 @@ export class Field extends BaseComponent {
     Beam.addObservers(this);
     Store.addObservers(this);
     const { board } = Store.getState().grid;
+    this.bet = !!Store.getState().cid.max_bet;
     this.innerField = new BaseComponent(Tags.DIV, ['field-inner']);
     this.timeOutId = null;
     this.solveList = [];
@@ -53,7 +55,7 @@ export class Field extends BaseComponent {
           this.timeOutId = null;
         }
       });
-    if (board) this.startGame(board);
+    if (board && this.bet) this.startGame(board);
     else this.rebootHandler();
   }
 
@@ -65,7 +67,7 @@ export class Field extends BaseComponent {
         solution: ('u' | 'd' | 'r' | 'l')[],
         permutation: number | null
       };
-      if (parsed.board && parsed.permutation) {
+      if (parsed.board && parsed.permutation && this.bet) {
         Store.dispatch(AC.setGame({
           ...parsed,
           status: 'ready'
@@ -97,7 +99,6 @@ export class Field extends BaseComponent {
     }
 
     if (status === 'won' && board) {
-      console.log(status);
       Store.dispatch(AC.setGame({
         status: 'won',
         board: null,
@@ -143,7 +144,8 @@ export class Field extends BaseComponent {
   };
 
   handleClickBox = (box: Box):void => {
-    const { board, status } = Store.getState().grid;
+    const { grid } = Store.getState();
+    const { board, status } = grid;
     const nextdoorBoxes = box.getNextdoorBoxes();
     const blankBox = nextdoorBoxes.find(
       (nextdoorBox) => board?.[nextdoorBox.y]?.[nextdoorBox.x] === 0
@@ -162,6 +164,9 @@ export class Field extends BaseComponent {
           board: newGrid,
           solution: swapped.map((move) => move.solution)
         }));
+        if (this.bet) {
+          window.localStorage.setItem('state', JSON.stringify(grid));
+        }
       }
       this.rerender(swapped);
     }

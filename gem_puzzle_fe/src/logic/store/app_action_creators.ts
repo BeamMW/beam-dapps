@@ -1,12 +1,9 @@
-import { IGridState } from 'AppStateProps';
-import { PlayerInfoType } from 'beamApiProps';
-import { GridActions, StoreActions } from '../../constants/app';
+import { IGridState, ICidState, IAppState } from 'AppStateProps';
+import { CidActions, GridActions, StoreActions } from '../../constants/app';
 
 export const AC = {
-  setCidParams: (payload: {
-    bet: number
-  }) => ({
-    action: StoreActions.SET_CID_PARAMS,
+  setCidParams: (payload: ICidState) => ({
+    action: CidActions.SET_CID_PARAMS,
     payload
   } as const),
   setRate: (payload: number) => ({
@@ -29,7 +26,7 @@ export const AC = {
     action: StoreActions.SET_TX,
     payload
   } as const),
-  setMyInfo: (payload:PlayerInfoType) => ({
+  setMyInfo: (payload:Partial<IAppState>) => ({
     action: StoreActions.SET_MY_INFO,
     payload
   } as const),

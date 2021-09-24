@@ -4,6 +4,7 @@ import { InfoState } from './reducers/info.reducer';
 import { GridState } from './reducers/grid.reducer';
 import BaseComponent from '../../components/base/base.component';
 import { AC } from './app_action_creators';
+import { CidState } from './reducers/cid.reducer';
 
 export default class AppState {
   private state: IState;
@@ -15,15 +16,18 @@ export default class AppState {
   constructor() {
     const reducersInst = {
       grid: new GridState(),
-      info: new InfoState()
+      info: new InfoState(),
+      cid: new CidState()
     };
     this.state = {
       grid: reducersInst.grid.state,
-      info: reducersInst.info.state
+      info: reducersInst.info.state,
+      cid: reducersInst.cid.state
     };
     this.reducers = [
       reducersInst.grid.reducer,
-      reducersInst.info.reducer
+      reducersInst.info.reducer,
+      reducersInst.cid.reducer
     ];
     this.observers = new Set();
   }

@@ -2,14 +2,15 @@ import { AppSpecs, ReqActions, ReqRoles } from '../constants/api';
 import { BeamAmmount } from '../constants/app';
 
 export const argsParser = (args: {
-  action: ReqActions;
-  role: ReqRoles;
+  action?: ReqActions;
+  role?: ReqRoles;
   solution?: string;
   cid?: AppSpecs.CID;
   cancel_previous_game?: 1;
   bet?: number,
   just_generate?: number,
-  permutation?:number
+  permutation?:number,
+  asset_id?:number
 }):string => Object.entries(args)
   .map((arg) => arg.join('='))
   .join(',');
