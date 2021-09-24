@@ -32,7 +32,7 @@ export default class Main extends BaseComponent {
     Beam.addObservers(this);
     Beam.callApi(RC.viewMyInfo());
     this.menu = new Menu();
-    this.popupWon = new Popup({ key: 'win' });
+    this.popupWon = new Popup({ key: 'won' });
     this.router = new Router({
       mode: RouterMode.HISTORY,
       root: Routes.MAIN
@@ -75,7 +75,7 @@ export default class Main extends BaseComponent {
   };
 
   winner = (res: WinArgsType): void => {
-    // if (this.child) this.remove(this.child);
+    if (this.child) this.remove(this.child);
     Beam.callApi(RC.viewMyInfo());
     console.log(res);
     // this.append(this.child);
