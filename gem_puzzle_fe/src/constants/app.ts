@@ -10,7 +10,8 @@ export enum StoreActions {
   SET_AUTOPLAY = 'SET_AUTOPLAY',
   SET_REWARD = 'SET_REWARD',
   SET_TX = 'SET_TX',
-  SET_MY_INFO = 'SET_MY_INFO'
+  SET_MY_INFO = 'SET_MY_INFO',
+  SET_CID_PARAMS = 'SET_CID_PARAMS'
 }
 
 export enum GridActions {
@@ -20,9 +21,14 @@ export enum GridActions {
   SET_GAME = 'SET_GAME'
 }
 
-export enum PuzzleReducerActions {
-  SET_GRID = 'SET_GRID'
-}
+export const BOARD_EXAMPLE = JSON.stringify(
+  [
+    [1, 2, 3, 4],
+    [5, 6, 7, 8],
+    [9, 10, 11, 12],
+    [13, 14, 15, 0]
+  ]
+);
 
 export enum BeamAmmount {
   MIN_AMOUNT = 0,

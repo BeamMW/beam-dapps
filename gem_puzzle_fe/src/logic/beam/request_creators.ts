@@ -6,31 +6,19 @@ import {
   ReqID,
   AppSpecs
 } from '../../constants/api';
-import { parseToGroth } from '../../utils/string_handlers';
+import { argsParser } from '../../utils/string_handlers';
 import { Store } from '../store/state_handler';
-
-export type ReqArgsType = {
-  action: ReqActions;
-  role: ReqRoles;
-  solution?: string;
-  cid?: AppSpecs.CID;
-  cancel_previous_game?: 1;
-  bet?: string
-};
-
-const argsParser = (args: ReqArgsType) => Object.entries(args)
-  .map((arg) => arg.join('='))
-  .join(',');
 
 export const RC = {
 
   startGame: (): ApiArgs => {
-    const { rate } = Store.getState().info;
+    const { bet } = Store.getState().info;
     const args = argsParser({
       role: ReqRoles.PLAYER,
       action: ReqActions.NEW_GAME,
       cid: AppSpecs.CID,
-      bet: parseToGroth(rate)
+      just_generate: 0,
+      bet
     });
     return ({
       callID: ReqID.START_GAME,
@@ -42,22 +30,33 @@ export const RC = {
     } as const);
   },
 
-  invokeData: (data: number[]): ApiArgs => ({
-    callID: ReqID.INVOKE_DATA,
-    method: ReqMethods.PROCESS_INVOKE_DATA,
-    params: {
-      data
-    }
-  } as const),
-
   viewBoard: (): ApiArgs => {
+    const { bet } = Store.getState().info;
     const args = argsParser({
       role: ReqRoles.PLAYER,
-      action: ReqActions.VIEW_CURRENT_BOARD,
+      action: ReqActions.NEW_GAME,
+      cid: AppSpecs.CID,
+      just_generate: 0,
+      bet
+    });
+    return ({
+      callID: ReqID.VIEW_BOARD,
+      method: ReqMethods.INVOKE_CONTRACT,
+      params: {
+        create_tx: false,
+        args
+      }
+    } as const);
+  },
+
+  viewCidParams: ():ApiArgs => {
+    const args = argsParser({
+      role: ReqRoles.MANAGER,
+      action: ReqActions.VIEW_CONTRACT_PARAMS,
       cid: AppSpecs.CID
     });
     return {
-      callID: ReqID.VIEW_BOARD,
+      callID: ReqID.VIEW_CONTRACT_PARAMS,
       method: ReqMethods.INVOKE_CONTRACT,
       params: {
         create_tx: false,
@@ -65,6 +64,14 @@ export const RC = {
       }
     } as const;
   },
+
+  invokeData: (data: number[]): ApiArgs => ({
+    callID: ReqID.INVOKE_DATA,
+    method: ReqMethods.PROCESS_INVOKE_DATA,
+    params: {
+      data
+    }
+  } as const),
 
   viewTxStatus: (txId: string): ApiArgs => (
     {
@@ -92,12 +99,13 @@ export const RC = {
     } as const);
   },
 
-  checkSolution: (sol: string): ApiArgs => {
+  checkSolution: (sol: string, permutation: number): ApiArgs => {
     const args = argsParser({
       role: ReqRoles.PLAYER,
       action: ReqActions.CHECK_SOLUTION,
       solution: sol,
-      cid: AppSpecs.CID
+      cid: AppSpecs.CID,
+      permutation
     });
     return ({
       callID: ReqID.CHECK_SOLUTION,
@@ -138,7 +146,7 @@ export const RC = {
         create_tx: false,
         args
       }
-    });
+    }) as const;
   },
 
   takePendingRewards: (): ApiArgs => {
@@ -154,7 +162,7 @@ export const RC = {
         create_tx: false,
         args
       }
-    });
+    }) as const;
   },
 
   viewMyInfo: (): ApiArgs => {

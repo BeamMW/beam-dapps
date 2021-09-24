@@ -1,5 +1,6 @@
 import { BoardType } from 'beamApiProps';
 import { CellToRender } from 'ComponentProps';
+import { BOARD_EXAMPLE } from '../../constants/app';
 
 export class Box {
   x: number;
@@ -68,8 +69,6 @@ export class Box {
 
 export const solution: ('u' | 'd' | 'r' | 'l')[] = [];
 
-let empty = new Box(3, 3);
-
 export function swapBoxes(
   grid: BoardType,
   f: { x: number, y: number },
@@ -111,44 +110,6 @@ export function swapBoxes(
   return toRender;
 }
 
-export const emptyBox = (grid: BoardType):void => {
-  for (let i = 0; i < 4; i++) {
-    for (let j = 0; j < 4; j++) {
-      if (grid[i]?.[j] === 0) {
-        const prev: Box = empty;
-        empty = new Box(i, j);
-        if (empty.x > prev.x) {
-          solution.push('d');
-        }
-        if (empty.x < prev.x) {
-          solution.push('u');
-        }
-        if (empty.y > prev.y) {
-          solution.push('r');
-        }
-        if (empty.y < prev.y) {
-          solution.push('l');
-        }
-      // solution
-      }
-    }
-  }
-};
 export const isSolved = (grid: BoardType):boolean => (
-  grid[0]?.[0] === 1
-    && grid[0][1] === 2
-    && grid[0][2] === 3
-    && grid[0][3] === 4
-    && grid[1]?.[0] === 5
-    && grid[1][1] === 6
-    && grid[1][2] === 7
-    && grid[1][3] === 8
-    && grid[2]?.[0] === 9
-    && grid[2][1] === 10
-    && grid[2][2] === 11
-    && grid[2][3] === 12
-    && grid[3]?.[0] === 13
-    && grid[3][1] === 14
-    && grid[3][2] === 15
-    && grid[3][3] === 0
+  JSON.stringify(grid) === BOARD_EXAMPLE
 );

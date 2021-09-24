@@ -40,7 +40,6 @@ export default class Main extends BaseComponent {
     this.child = null;
     this.router.add(Routes.OPTIONS, this.optionsField);
     this.router.add(Routes.RETURN, this.cancelGame);
-    this.router.add(Routes.BEST, this.bestField);
     this.router.add(Routes.PLAY, this.initGameField);
     this.router.add('', this.initMainMenu);
     this.append(this.menu, this.popupWon);
@@ -55,17 +54,6 @@ export default class Main extends BaseComponent {
     this.menu.removeActive();
     Beam.callApi(RC.viewMyInfo());
     window.history.pushState({}, '', Routes.MAIN);
-  };
-
-  bestField = (top: any): void => {
-    if (this.child) this.remove(this.child);
-    Beam.callApi(RC.viewMyInfo());
-    if (!top) Beam.callApi(RC.viewTops());
-    this.child = new Best(top);
-    this.menu.replace(this.child);
-    this.menu.addActive();
-    this.append(this.menu);
-    Store.addObservers(this.menu);
   };
 
   initGameField = (): void => {
@@ -89,6 +77,7 @@ export default class Main extends BaseComponent {
   winner = (res: WinArgsType): void => {
     // if (this.child) this.remove(this.child);
     Beam.callApi(RC.viewMyInfo());
+    console.log(res);
     // this.append(this.child);
     this.append(this.popupWon);
     this.popupWon.addActive();
@@ -96,8 +85,12 @@ export default class Main extends BaseComponent {
 
   inform = (res: APIResponse): void => {
     switch (res.id) {
-      case ReqID.CHECK:
-        console.log(JSON.parse(res.result.output));
+      case ReqID.VIEW_CONTRACT_PARAMS:
+        Store.dispatch(
+          AC.setCidParams({
+            bet: JSON.parse(res.result.output).bet as number
+          })
+        );
         break;
 
       case ReqID.CHECK_SOLUTION:
@@ -111,7 +104,8 @@ export default class Main extends BaseComponent {
           AC.setGame({
             board: JSON.parse(res.result.output).board as BoardType,
             status: 'ready',
-            solution: []
+            solution: [],
+            permutation: JSON.parse(res.result.output).permutation as number
           })
         );
         break;
@@ -120,11 +114,6 @@ export default class Main extends BaseComponent {
         Store.dispatch(
           AC.setMyInfo(JSON.parse(res.result.output) as PlayerInfoType)
         );
-        break;
-
-      case ReqID.VIEW_TOPS:
-        console.log(`${res.result.output}`);
-        this.bestField(JSON.parse(`${res.result.output}`));
         break;
 
       case ReqID.VIEW_CHECK_RESULT:

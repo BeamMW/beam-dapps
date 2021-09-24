@@ -1,5 +1,5 @@
 export enum AppSpecs {
-  CID = '3fee46f54e3713c05eb1a2916c0476f8ff557167cc4299b751a1cad6f665ae97',
+  CID = '289edf39dbecebd6aca3764e34fdaf96d1e71ab3c357751be5a6ecc8e53b8258',
   TITLE = 'GEM-PUZZLE',
   TX_CHECK_INTERVAL = 3000
 }
@@ -20,7 +20,8 @@ export enum ReqID {
   TAKE_PENDING_REWARDS = 'TAKE_PENDING_REWARDS',
   VIEW_MY_PENDING_REWARDS = 'VIEW_MY_PENDING_REWARDS',
   HAS_ACTIVE_GAME = 'HAS_ACTIVE_GAME',
-  VIEW_MY_INFO = 'VIEW_MY_INFO'
+  VIEW_MY_INFO = 'VIEW_MY_INFO',
+  VIEW_CONTRACT_PARAMS = 'VIEW_CONTRACT_PARAMS'
 }
 
 export enum ReqRoles {
@@ -45,7 +46,8 @@ export enum ReqActions {
   VIEW_CHECK_RESULT = 'view_check_result',
   VIEW_TOPS = 'view_tops',
   TAKE_PENDING_REWARDS = 'take_pending_rewards',
-  GET_MY_INFO = 'get_my_info'
+  GET_MY_INFO = 'get_my_info',
+  VIEW_CONTRACT_PARAMS = 'view_contract_params'
 }
 
 export enum ResTXStatus {
@@ -57,6 +59,6 @@ export enum ResTXStatus {
 export enum ResTXComment{
   CREATE_NEW_GAME = 'Create new game',
   ENDING_EXISTING_GAME = 'Ending existing game',
-  CHECKIN_SOLUTION = 'Checking solution',
+  CHECKIN_SOLUTION = 'Checking your solution...',
   TAKING_PENDING_REWARS = 'Taking pending rewards'
 }

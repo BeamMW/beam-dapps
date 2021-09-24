@@ -60,13 +60,11 @@ declare module 'AppStateProps' {
   export interface IAppState {
     [key:string];
     activeGame: boolean;
-    move: string;
     time: number;
-    rate: number;
-    pKey: string;
     autoPlay: boolean;
     reward: number;
-    isTx: boolean
+    isTx: boolean;
+    bet: number;
   }
 
   export interface IState{
@@ -77,8 +75,8 @@ declare module 'AppStateProps' {
 
   export interface IGridState {
     board: BoardType | null;
+    permutation: number | null;
     solution: ('u' | 'd' | 'r' | 'l')[];
-    time: number;
     status: 'ready' | 'playing' | 'won';
   }
 

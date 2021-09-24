@@ -59,19 +59,22 @@ export default class Menu extends BaseComponent {
   };
 
   appInform = (state: IState): void => {
-    const { activeGame, isTx } = state.info;
+    const { activeGame, isTx, bet } = state.info;
     if (!this.classList.contains('active')) {
       if (isTx) {
         this.getBtn(MenuBtn.NEW).setDisplay = false;
         this.getBtn(MenuBtn.CANCEL).setDisplay = false;
         this.getBtn(MenuBtn.CONTINUE).setDisplay = false;
       } else {
-        this.getBtn(MenuBtn.NEW).setDisplay = !activeGame;
+        if (bet) {
+          this.getBtn(MenuBtn.NEW).setDisplay = true;
+        }
         this.getBtn(MenuBtn.CANCEL).setDisplay = activeGame;
-        this.getBtn(MenuBtn.CONTINUE).setDisplay = activeGame;
+        if (!bet) {
+          this.getBtn(MenuBtn.CONTINUE).setDisplay = true;
+        } else this.getBtn(MenuBtn.CONTINUE).setDisplay = activeGame;
       }
       this.getBtn(MenuBtn.OPTIONS).setDisplay = true;
-      this.getBtn(MenuBtn.BEST).setDisplay = true;
     }
   };
 }

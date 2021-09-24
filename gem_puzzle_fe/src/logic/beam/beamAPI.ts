@@ -3,7 +3,7 @@ import { QWebChannel, QWebChannelTransport, QObject } from 'qwebchannel';
 import { RC } from './request_creators';
 import shader from './app.wasm';
 import BaseComponent from '../../components/base/base.component';
-import { ReqID, ReqMethods, AppSpecs } from '../../constants/api';
+import { AppSpecs } from '../../constants/api';
 
 declare global {
   interface Window {
@@ -68,14 +68,7 @@ export class BeamAPI {
       .then((response) => response.arrayBuffer());
     if (this.contract) {
       this.initShader();
-      this.callApi({
-        callID: ReqID.CHECK,
-        method: ReqMethods.INVOKE_CONTRACT,
-        params: {
-          contract: Array.from(new Uint8Array(this.contract)),
-          create_tx: false
-        }
-      });
+      this.callApi(RC.viewCidParams());
     }
   };
 

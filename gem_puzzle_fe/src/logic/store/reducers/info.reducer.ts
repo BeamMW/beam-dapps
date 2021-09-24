@@ -6,13 +6,12 @@ import { StoreActions } from '../../../constants/app';
 
 const initialState: IAppState = {
   activeGame: false,
-  move: '',
   time: 0,
-  pKey: '...',
-  rate: 0.01,
   autoPlay: false,
   reward: 0,
-  isTx: false
+  isTx: false,
+  bet: 0,
+  permutation: null
 };
 
 export class InfoState implements BaseReducer<IAppState> {
@@ -27,17 +26,13 @@ export class InfoState implements BaseReducer<IAppState> {
   reducer = (obj: ReturnType<PropertiesType<typeof AC>>): void => {
     const { action, payload } = obj;
     switch (action) {
-      case StoreActions.SET_TIME:
-        this.state.time = payload as number;
-        break;
-      case StoreActions.SET_MOVE:
-        this.state.move = payload as string;
+      case StoreActions.SET_CID_PARAMS:
+        this.state.bet = (payload as { bet:number }).bet;
         break;
       case StoreActions.SET_RATE:
         this.state.rate = payload as number;
         break;
       case StoreActions.SET_MY_INFO:
-        this.state.pKey = (<PlayerInfoType>payload)['My public key'];
         this.state.activeGame = (<PlayerInfoType>payload).has_active_game;
         this.state.reward = (<PlayerInfoType>payload).pending_rewards;
         break;

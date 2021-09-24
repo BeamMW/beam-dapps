@@ -7,8 +7,8 @@ import { GridActions } from '../../../constants/app';
 const initialState:IGridState = {
   board: null,
   solution: [],
-  time: 0,
-  status: 'ready'
+  status: 'ready',
+  permutation: null
 };
 
 export class GridState implements BaseReducer<IGridState> {
@@ -24,27 +24,33 @@ export class GridState implements BaseReducer<IGridState> {
   PropertiesType<typeof AC>
   >):void => {
     switch (action) {
-      case GridActions.SET_GRID:
-        this.state.board = (payload as BoardType)
-          .map((y:number[]) => y.map((x) => x));
-        break;
-      case GridActions.SET_SOLUTION:
-        this.state.solution = [
-          ...this.state.solution, ...payload as ('u' | 'd' | 'r' | 'l')[]
-        ];
-        break;
-      case GridActions.SET_STATUS:
-        this.state.status = payload as 'ready' | 'playing' | 'won';
-        break;
       case GridActions.SET_GAME:
-        this.state.board = (payload as Omit<IGridState, 'time'>).board;
-        this.state.status = (payload as Omit<IGridState, 'time'>).status;
-        if ((payload as Omit<IGridState, 'time'>).solution.length) {
-          this.state.solution = [
-            ...this.state.solution,
-            ...(payload as Omit<IGridState, 'time'>).solution
-          ];
-        } else this.state.solution.length = 0;
+        if (typeof payload === 'object') {
+          if ((payload as Partial<IGridState>).board) {
+            this.state.board = ((payload as Partial<IGridState>)
+              .board as BoardType).map((y:number[]) => y.map((x) => x));
+          } else if ((payload as Partial<IGridState>)
+            .board === null) this.state.board = null;
+          if ((payload as Partial<IGridState>).status) {
+            this.state.status = (
+              payload as Partial<IGridState>
+            ).status as IGridState['status'];
+          }
+          if ((payload as Partial<IGridState>).solution) {
+            if ((payload as Partial<IGridState>).solution?.length) {
+              this.state.solution = [
+                ...this.state.solution,
+                ...(payload as Partial<IGridState>)
+                  .solution as IGridState['solution']
+              ];
+            } else this.state.solution.length = 0;
+          }
+          if ((payload as Partial<IGridState>).permutation) {
+            this.state.permutation = (payload as Partial<IGridState>)
+              .permutation as IGridState['permutation'];
+          } else this.state.permutation = null;
+          window.localStorage.setItem('state', JSON.stringify(this.state));
+        }
         break;
       default:
         break;
