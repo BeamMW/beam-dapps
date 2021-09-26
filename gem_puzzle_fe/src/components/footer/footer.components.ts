@@ -1,7 +1,7 @@
 import { APIResponse } from 'beamApiProps';
-import { Tags } from '../../constants/html_tags';
-import { ResTXStatus } from '../../constants/api_constants';
-import { ApiHandler } from '../../logic/beam_api/api_handler';
+import { Tags } from '../../constants/tags';
+import { ResTXStatus } from '../../constants/api';
+import { Beam } from '../../logic/beam/api_handler';
 import BaseComponent from '../base/base.component';
 import './footer.scss';
 
@@ -10,13 +10,11 @@ export default class Footer extends BaseComponent {
 
   errorBlock: BaseComponent;
 
-  // loaderBlock: BaseComponent;
-
   constructor() {
     super(Tags.DIV, ['footer']);
     this.timeoutId = null;
     this.errorBlock = new BaseComponent(Tags.DIV, ['errorBlock']);
-    ApiHandler.addObservers(this);
+    Beam.addObservers(this);
     this.append(this.errorBlock);
   }
 
@@ -42,6 +40,9 @@ export default class Footer extends BaseComponent {
       try {
         const output = JSON.parse(res.result?.output);
         console.log('output JSON', output);
+        if (output.error) {
+          this.viewMessage(output.error);
+        }
       } catch (error) {
         this.viewMessage(error as string);
         console.log('output not JSON', res.result.output);

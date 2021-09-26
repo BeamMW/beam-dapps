@@ -1,39 +1,36 @@
-import { IAppState } from 'AppStateProps';
-import { AppStateHandler } from '../../logic/app_state/state_handler';
-import { Tags } from '../../constants/html_tags';
+import { IState } from 'AppStateProps';
+import { Store } from '../../logic/store/state_handler';
+import { Tags } from '../../constants/tags';
 import BaseComponent from '../base/base.component';
 import './header.scss';
-import InfoBLock from './infoblock.component';
-import { takePendingRewards } from '../../logic/beam_api/request_creators';
+import InfoBLock from '../shared/header_info/header.info.component';
+import { RC } from '../../logic/beam/request_creators';
+import { Beam } from '../../logic/beam/api_handler';
+import { parseToBeam } from '../../utils/string_handlers';
 import { SVG } from '../../constants/svg.icons';
-import Greeting from '../greeting/greeting.component';
-import { GrState } from '../greeting/greeting_state';
 
 export default class Header extends BaseComponent {
-  greeting: Greeting;
-
   private readonly rewardBlock: BaseComponent;
 
   private readonly headerTop: BaseComponent;
 
   constructor() {
     super(Tags.DIV, ['header']);
-    AppStateHandler.addObservers(this);
-    this.greeting = new Greeting(GrState.MainTitle);
+    Store.addObservers(this);
     this.headerTop = new BaseComponent(Tags.DIV, ['header__top']);
     this.rewardBlock = new BaseComponent(Tags.DIV, ['infoblock']);
     this.rewardBlock.element.addEventListener('click', () => {
-      const { reward } = AppStateHandler.getState();
-      console.log(reward);
-      if (reward > 0) {
-        takePendingRewards();
+      const { isTx } = Store.getState().info;
+      const reward = Store.getState().info.pending_rewards;
+      if (!isTx && reward > 0) {
+        Beam.callApi(RC.takePendingRewards());
       }
     });
     this.initHeader();
   }
 
   initHeader = (): void => {
-    const { reward } = AppStateHandler.getState();
+    const reward = Store.getState().info.pending_rewards;
     const logoBlock = new InfoBLock({
       key: 'logo',
       title: SVG.logoGemPuzzleBig,
@@ -45,22 +42,18 @@ export default class Header extends BaseComponent {
     this.rewardBlock.element.innerHTML = `
     ${SVG.funt} <span> ${reward} FUNT</span>
     `;
-    this.rewardBlock.style.cursor = 'default';
     this.headerTop.append(this.rewardBlock);
-    this.append(this.headerTop, this.greeting);
+    this.append(this.headerTop);
   };
 
-  appInform = ({ reward }: IAppState): void => {
-    if (reward > 0) {
-      this.rewardBlock.element.innerHTML = `
-      ${SVG.funt} <span> CLAIM ${reward} FUNT</span>
-      `;
-      this.rewardBlock.style.cursor = 'pointer';
-    } else {
-      this.rewardBlock.element.innerHTML = `
-      ${SVG.funt} <span> ${reward} FUNT</span>
-      `;
-      this.rewardBlock.style.cursor = 'default';
-    }
+  appInform = (state: IState): void => {
+    const reward = state.info.pending_rewards;
+    const num = Number(parseToBeam(reward)).toFixed(8)
+      .replace(/\.?0+$/, '');
+    this.rewardBlock.element.innerHTML = `
+      ${SVG.funt} <span> CLAIM ${num} FUNT</span>`;
+    if (reward) {
+      this.rewardBlock.classList.add('active');
+    } else this.rewardBlock.classList.remove('active');
   };
 }

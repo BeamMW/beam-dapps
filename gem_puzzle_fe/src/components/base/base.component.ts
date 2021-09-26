@@ -1,6 +1,6 @@
-import { IAppState } from 'AppStateProps';
+import { IState } from 'AppStateProps';
 import { APIResponse } from 'beamApiProps';
-import { Tags } from '../../constants/html_tags';
+import { Tags } from '../../constants/tags';
 
 type HTMLAttributes = {
   [key:string]: string;
@@ -11,7 +11,7 @@ export default class BaseComponent {
 
   inform?: (res:APIResponse) => void;
 
-  appInform?:(state: IAppState) => void;
+  appInform?:(state: IState) => void;
 
   constructor(tag:Tags, styles: string[] = []) {
     this.element = document.createElement(tag);
@@ -30,9 +30,12 @@ export default class BaseComponent {
 
   public get dataset():DOMStringMap { return this.element.dataset; }
 
-  append = (...args: BaseComponent[]):void => {
+  append = (...args: (BaseComponent | HTMLElement)[]):void => {
     const nodes = args.map(
-      (component) => component.element
+      (component) => {
+        if (component instanceof BaseComponent) return component.element;
+        return component;
+      }
     );
     this.element.append(...nodes);
   };

@@ -1,7 +1,7 @@
-import { IAppState } from 'AppStateProps';
-import { AppStateHandler } from '../../logic/app_state/state_handler';
-import { Tags } from '../../constants/html_tags';
-import BaseComponent from '../base/base.component';
+import { IState } from 'AppStateProps';
+import { Store } from '../../../logic/store/state_handler';
+import { Tags } from '../../../constants/tags';
+import BaseComponent from '../../base/base.component';
 
 export default class InfoBLock extends BaseComponent {
   key: string;
@@ -40,7 +40,7 @@ export default class InfoBLock extends BaseComponent {
     callback?: ((numb:number) => string) | ((str:boolean) => string);
   }) {
     super(Tags.DIV, ['infoblock']);
-    AppStateHandler.addObservers(this);
+    Store.addObservers(this);
     this.key = key;
     this.title = title;
     this.value = value;
@@ -72,12 +72,12 @@ export default class InfoBLock extends BaseComponent {
     }
   };
 
-  appInform = (state: IAppState): void => {
+  appInform = (state: IState): void => {
     if (this.key in state) {
-      if (this.value !== state[this.key]) {
+      if (this.value !== state.info[this.key]) {
         this.value = this.callback
-          ? this.callback(state[this.key] as never)
-          : state[this.key];
+          ? this.callback(state.info[this.key] as never)
+          : state.info[this.key];
         this.render();
       }
     }

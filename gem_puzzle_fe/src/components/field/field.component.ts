@@ -1,22 +1,19 @@
-import { APIResponse, BoardLengthType, BoardType } from 'beamApiProps';
 import { CellToRender } from 'ComponentProps';
+import { BoardType, IState } from 'AppStateProps';
+import { AC } from '../../logic/store/app_action_creators';
 import { Cell } from './cell.component';
-import { ApiHandler } from '../../logic/beam_api/api_handler';
+import { Beam } from '../../logic/beam/api_handler';
 import {
-  viewBoard,
-  checkSolution
-} from '../../logic/beam_api/request_creators';
-import { HtmlProps, Tags } from '../../constants/html_tags';
+  RC
+} from '../../logic/beam/request_creators';
+import { HtmlProps, Tags } from '../../constants/tags';
 import {
-  Box, isSolved, solution, swapBoxes
+  Box, isSolved, swapBoxes
 } from './box';
 import './field.scss';
-import { State } from './state';
 import BaseComponent from '../base/base.component';
 import NPuzzleSolver from '../../logic/solver/solvers';
-import { AppStateHandler } from '../../logic/app_state/state_handler';
-import { ReqID } from '../../constants/api_constants';
-import { setModeAC } from '../../logic/app_state/app_action_creators';
+import { Store } from '../../logic/store/state_handler';
 
 type PuzzleSolveType = {
   piece: {
@@ -31,9 +28,9 @@ type PuzzleSolveType = {
 };
 
 export class Field extends BaseComponent {
-  private state: State | null;
-
   private solveList: PuzzleSolveType [] | null;
+
+  private readonly bet: boolean;
 
   private readonly nodeList: Cell[];
 
@@ -43,14 +40,14 @@ export class Field extends BaseComponent {
 
   constructor() {
     super(Tags.DIV, ['field']);
-    ApiHandler.addObservers(this);
+    Beam.addObservers(this);
+    Store.addObservers(this);
+    const { board } = Store.getState().grid;
+    this.bet = !!Store.getState().cid.max_bet;
     this.innerField = new BaseComponent(Tags.DIV, ['field-inner']);
     this.timeOutId = null;
     this.solveList = [];
     this.nodeList = [];
-    solution.length = 0;
-    this.state = null;
-    viewBoard();
     this.element.addEventListener('DOMNodeRemovedFromDocument',
       () => {
         if (this.timeOutId) {
@@ -58,38 +55,87 @@ export class Field extends BaseComponent {
           this.timeOutId = null;
         }
       });
+    if (board && this.bet) this.startGame(board);
+    else this.rebootHandler();
   }
 
-  inform = (res: APIResponse):void => {
-    switch (res.id) {
-      case ReqID.VIEW_BOARD:
-        this.startGame(JSON.parse(res.result.output).board as BoardType);
-        break;
-      default:
-        break;
+  rebootHandler = ():void => {
+    const state = window.localStorage.getItem('state');
+    if (state) {
+      const parsed = JSON.parse(state) as {
+        board: BoardType | null,
+        solution: ('u' | 'd' | 'r' | 'l')[],
+        permutation: number | null
+      };
+      if (parsed.board && parsed.permutation && this.bet) {
+        Store.dispatch(AC.setGame({
+          ...parsed,
+          status: 'ready'
+        }));
+      } else {
+        Beam.callApi(RC.viewBoard());
+      }
+    } else {
+      Beam.callApi(RC.viewBoard());
+    }
+  };
+
+  appInform = (store: IState):void => {
+    const {
+      status, solution, board, permutation
+    } = store.grid;
+    const { autoPlay } = store.info;
+
+    if (status === 'playing' && autoPlay) {
+      this.autoPlayHandle();
+    }
+
+    if (status === 'ready') {
+      if (board) {
+        this.startGame(board);
+      } else {
+        Beam.callApi(RC.viewBoard());
+      }
+    }
+
+    if (status === 'won' && board) {
+      Store.dispatch(AC.setGame({
+        status: 'won',
+        board: null,
+        solution: [],
+        permutation: null
+      }));
+      this.timeOutId = setTimeout(() => {
+        this.removeAll();
+        Beam.callApi(RC.checkSolution(solution.join(''), <number>permutation));
+        solution.length = 0;
+      }, 3000);
     }
   };
 
   listener = (e: Event):void => {
-    const target = e.target as HTMLDivElement;
-    const inner = target.closest('.cell-inner') as HTMLElement;
-    if (inner?.dataset?.number) {
-      const number = +inner.dataset.number;
-      const { x, y } = this.nodeList[number] as Cell;
-      this.handleClickBox(new Box(x, y));
+    const { status } = Store.getState().grid;
+    if (status === 'playing') {
+      const target = e.target as HTMLDivElement;
+      const inner = target.closest('.cell-inner') as HTMLElement;
+      if (inner?.dataset?.number) {
+        const number = +inner.dataset.number;
+        const { x, y } = this.nodeList[number] as Cell;
+        this.handleClickBox(new Box(x, y));
+      }
     }
   };
 
   startGame = (board: BoardType):void => {
-    const { autoPlay, mode } = AppStateHandler.getState();
-    if (mode !== board.length) {
-      AppStateHandler.dispatch(setModeAC(board.length as BoardLengthType));
-    }
-    this.state = new State(board, 0, 0, 'playing');
+    const { autoPlay } = Store.getState().info;
+    Store.dispatch(AC.setGame(
+      {
+        status: 'playing'
+      }
+    ));
     this.init(board);
     if (autoPlay) {
       this.solveList = new NPuzzleSolver(board).solve();
-      this.autoPlayHandle();
     } else {
       this.solveList = null;
       this.innerField.element.addEventListener('click',
@@ -97,64 +143,52 @@ export class Field extends BaseComponent {
     }
   };
 
-  setState = (newState: Partial<State>):void => {
-    if (this.state) {
-      this.state = { ...this.state, ...newState };
-    }
-  };
-
   handleClickBox = (box: Box):void => {
-    const { autoPlay } = AppStateHandler.getState();
+    const { grid } = Store.getState();
+    const { board, status } = grid;
     const nextdoorBoxes = box.getNextdoorBoxes();
     const blankBox = nextdoorBoxes.find(
-      (nextdoorBox) => this.state?.grid[nextdoorBox.y]?.[nextdoorBox.x] === 0
+      (nextdoorBox) => board?.[nextdoorBox.y]?.[nextdoorBox.x] === 0
     );
-    if (blankBox && this.state) {
-      const newGrid = [...this.state.grid];
+    if (blankBox && board) {
+      const newGrid: BoardType = board.map((y) => y.map((x) => x));
       const swapped = swapBoxes(newGrid, { x: box.x, y: box.y }, blankBox);
-      if (isSolved(newGrid) && this.state.status === 'playing') {
-        this.setState({
+      if (isSolved(newGrid) && status === 'playing') {
+        Store.dispatch(AC.setGame({
           status: 'won',
-          grid: newGrid,
-          move: this.state.move + 1
-        });
-        this.timeOutId = setTimeout(() => {
-          this.removeAll();
-          checkSolution(solution.join(''));
-          solution.length = 0;
-        }, 3000);
+          board: newGrid,
+          solution: swapped.map((move) => move.solution)
+        }));
       } else {
-        this.setState({
-          grid: newGrid,
-          move: this.state.move + 1
-        });
+        Store.dispatch(AC.setGame({
+          board: newGrid,
+          solution: swapped.map((move) => move.solution)
+        }));
+        if (this.bet) {
+          window.localStorage.setItem('state', JSON.stringify(grid));
+        }
       }
       this.rerender(swapped);
-      if (this.state?.status === 'playing' && autoPlay) {
-        this.autoPlayHandle();
-      }
     }
   };
 
   rerender = (swapped: CellToRender[]):void => {
     swapped.forEach(({ index, x, y }) => {
       const node = this.nodeList[index] as Cell;
-      node.render({
-        x, y, callback: this.handleClickBox
-      });
+      node.render({ x, y });
     });
   };
 
-  init = (grid: BoardType):void => {
-    const { mode } = AppStateHandler.getState();
-    const status = this.state?.status;
-    this.innerField.style.width = `${HtmlProps.PuzzleSize * mode}px`;
-    this.innerField.style.height = `${HtmlProps.PuzzleSize * mode}px`;
+  init = (board: BoardType):void => {
+    const { status } = Store.getState().grid;
+    const len = board.length;
+    this.innerField.style.width = `${HtmlProps.PuzzleSize * len}px`;
+    this.innerField.style.height = `${HtmlProps.PuzzleSize * len}px`;
     this.append(this.innerField);
-    for (let y = 0; y < mode; y++) {
-      for (let x = 0; x < mode; x++) {
-        if (grid[y]?.[x] && status === 'playing') {
-          const value = grid[y]?.[x] as number;
+    for (let y = 0; y < len; y++) {
+      for (let x = 0; x < len; x++) {
+        if (board[y]?.[x] && status === 'playing') {
+          const value = board[y]?.[x] as number;
           const button = new Cell({
             x,
             y,
@@ -170,11 +204,11 @@ export class Field extends BaseComponent {
   };
 
   autoPlayHandle = ():void => {
-    if (this.nodeList && this.state?.status === 'playing') {
+    if (this.nodeList) {
       this.timeOutId = setTimeout(() => {
         const { piece } = (this.solveList)?.shift() as PuzzleSolveType;
         this.handleClickBox(new Box(piece.x, piece.y));
-      }, 120);
+      }, 160);
     }
   };
 }

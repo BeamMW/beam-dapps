@@ -1,15 +1,14 @@
 <svg width="314" height="60" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <defs>
-        <filter x="0%" y="-3.3%" width="100.1%" height="106.7%" filterUnits="objectBoundingBox" id="b">
+        <filter x=".1%" y="-3.3%" width="99.8%" height="106.7%" filterUnits="objectBoundingBox" id="b">
             <feOffset dx="-3" dy="-4" in="SourceAlpha" result="shadowOffsetInner1"/>
             <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"/>
             <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0" in="shadowInnerInner1"/>
         </filter>
-        <path d="M29.18 0h257.14a12 12 0 0 1 9.476 4.638l16.368 21.067a7 7 0 0 1 0 8.59l-16.368 21.067A12 12 0 0 1 286.32 60H29.18a12 12 0 0 1-9.476-4.638L3.336 34.295a7 7 0 0 1 0-8.59L19.704 4.638A12 12 0 0 1 29.18 0z" id="a"/>
+        <path d="M32.217 0h253.566a12 12 0 0 1 8.941 3.997l19.097 21.334a7 7 0 0 1 0 9.338l-19.097 21.334a12 12 0 0 1-8.94 3.997H32.216a12 12 0 0 1-8.941-3.997L4.179 34.67a7 7 0 0 1 0-9.338L23.276 3.997A12 12 0 0 1 32.216 0z" id="a"/>
     </defs>
-    <g transform="translate(-2)" fill="none" fill-rule="evenodd" opacity=".5">
-        <use class="bgsvg" fill="#20866F" xlink:href="#a"/>
+    <g transform="translate(-2)" fill="none" fill-rule="evenodd" opacity="1">
+        <use fill="#00FF64" xlink:href="#a"/>
         <use fill="#000" filter="url(#b)" xlink:href="#a"/>
     </g>
-
 </svg>

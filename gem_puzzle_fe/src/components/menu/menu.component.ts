@@ -1,45 +1,33 @@
-import { IAppState } from 'AppStateProps';
+import { IState } from 'AppStateProps';
 import { APIResponse } from 'beamApiProps';
-import { ApiHandler } from '../../logic/beam_api/api_handler';
-import { Tags } from '../../constants/html_tags';
+import { Tags } from '../../constants/tags';
 import BaseComponent from '../base/base.component';
-import Button from '../button/button.component';
+import Button from '../shared/button/button.component';
 import './menu.scss';
-import { MenuBtn } from '../../constants/app_constants';
-import { menuProps } from '../../constants/menu_btn';
-import { AppStateHandler } from '../../logic/app_state/state_handler';
+import Greeting from '../greeting/greeting.component';
+import { MenuBtn } from '../../constants/app';
+import { Store } from '../../logic/store/state_handler';
+import { menuProps } from '../../constants/buttons';
 
 export default class Menu extends BaseComponent {
-  desc: BaseComponent;
+  greeting: Greeting;
 
   buttons: Map<MenuBtn, Button>;
 
   constructor() {
     super(Tags.DIV, ['menu']);
-    ApiHandler.addObservers(this);
-    AppStateHandler.addObservers(this);
-    this.desc = new BaseComponent(Tags.SPAN, ['desc']);
+    Store.addObservers(this);
+    this.greeting = new Greeting();
     this.buttons = new Map();
     menuProps.forEach((btn) => {
       this.buttons.set(btn.key, this.buttonBuilder(btn));
     });
     const values = this.buttons.values();
-    this.append(...values);
+    this.append(this.greeting, ...values);
   }
 
   buttonBuilder = (btn: typeof menuProps[number]):Button => {
-    const btnKey = new Button();
-    btnKey.element.classList.add(`btn_${btn.key}`);
-    if (!btn.icon) {
-      btnKey.element.innerHTML = ` <span>
-      
-    ${btn.title}</span>`;
-    } else {
-      btnKey.element.innerHTML = `${btn.icon} <span>${btn.title}</span>`;
-    }
-    btnKey.element.addEventListener('click', () => {
-      btn.handler();
-    });
+    const btnKey = new Button(btn);
     return btnKey;
   };
 
@@ -50,6 +38,7 @@ export default class Menu extends BaseComponent {
     this.buttons.forEach((value) => {
       value.setDisplay = false;
     });
+    this.greeting.element.style.display = 'flex';
   };
 
   addActive = (): void => {
@@ -57,35 +46,34 @@ export default class Menu extends BaseComponent {
     this.buttons.forEach((value, key) => {
       value.setDisplay = key === MenuBtn.RETURN;
     });
+    this.greeting.element.style.display = 'none';
   };
 
   inform = (res:APIResponse):void => {
     switch (res.id) {
-      // case ReqID.START_GAME:
-      // case ReqID.CANCEL_GAME:
-      // case ReqID.CHECK_SOLUTION:
-      // case ReqID.TAKE_PENDING_REWARDS:
-      //   this.removeActive();
-      //   break;
       default:
         break;
     }
   };
 
-  appInform = ({ activeGame, isTx }: IAppState): void => {
+  appInform = (state: IState): void => {
+    const { isTx } = state.info;
+    const activeGame = state.info.has_active_game;
+    const bet = Store.getState().cid.max_bet;
     if (!this.classList.contains('active')) {
-      this.desc.innerHTML = activeGame ? 'Play and earn!' : '';
       if (isTx) {
         this.getBtn(MenuBtn.NEW).setDisplay = false;
-        this.getBtn(MenuBtn.CANCEL).setDisplay = false;
         this.getBtn(MenuBtn.CONTINUE).setDisplay = false;
       } else {
-        this.getBtn(MenuBtn.NEW).setDisplay = !activeGame;
-        this.getBtn(MenuBtn.CANCEL).setDisplay = activeGame;
-        this.getBtn(MenuBtn.CONTINUE).setDisplay = activeGame;
+        if (bet) {
+          this.getBtn(MenuBtn.NEW).setDisplay = true;
+        }
+        if (!bet) {
+          this.getBtn(MenuBtn.CONTINUE).setDisplay = true;
+        } else this.getBtn(MenuBtn.CONTINUE).setDisplay = activeGame;
       }
       this.getBtn(MenuBtn.OPTIONS).setDisplay = true;
-      this.getBtn(MenuBtn.BEST).setDisplay = true;
+      this.getBtn(MenuBtn.DONATE).setDisplay = true;
     }
   };
 }

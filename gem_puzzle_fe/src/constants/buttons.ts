@@ -1,15 +1,15 @@
+import { MenuButtonType } from 'ComponentProps';
 import { SVG } from './svg.icons';
 import {
-  cancelGame,
-  startGame,
-  takePendingRewards
-} from '../logic/beam_api/request_creators';
-import { MenuBtn, Routes } from './app_constants';
+  RC
+} from '../logic/beam/request_creators';
+import { MenuBtn, Routes } from './app';
+import { Beam } from '../logic/beam/api_handler';
 
-export const menuProps = [
+export const menuProps: MenuButtonType[] = [
   {
     key: MenuBtn.CONTINUE,
-    title: 'CONTINUE',
+    title: 'PLAY',
     handler: ():void => {
       window.history.pushState({}, '', `/${Routes.PLAY}`);
     }
@@ -18,15 +18,7 @@ export const menuProps = [
     key: MenuBtn.NEW,
     icon: `${SVG.newGameIcon}`,
     title: 'NEW GAME',
-    handler: startGame
-  },
-  {
-    key: MenuBtn.BEST,
-    icon: `${SVG.leaderboardIcon}`,
-    title: 'LEADERBOARD',
-    handler: ():void => {
-      window.history.pushState({}, '', `/${Routes.BEST}`);
-    }
+    handler: () => Beam.callApi(RC.startGame())
   },
   {
     key: MenuBtn.OPTIONS,
@@ -44,9 +36,9 @@ export const menuProps = [
     }
   },
   {
-    key: MenuBtn.CANCEL,
-    title: 'CANCEL GAME',
-    handler: cancelGame
+    key: MenuBtn.DONATE,
+    title: 'DONATE FOR FOUND',
+    handler: () => Beam.callApi(RC.donate())
   }
 ];
 
@@ -55,6 +47,6 @@ export const claimBtn = [
     key: MenuBtn.CLAIM_REWARD,
     title: 'CLAIM REWARD',
     icon: SVG.buttonIcon,
-    handler: takePendingRewards
+    handler: ():void => Beam.callApi(RC.takePendingRewards())
   }
 ];

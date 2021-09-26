@@ -1,4 +1,4 @@
-export enum AppStateActions {
+export enum StoreActions {
   SET_TIME = 'SET_TIME',
   SET_MODE = 'SET_MODE',
   SET_MOVE = 'SET_MOVE',
@@ -9,12 +9,29 @@ export enum AppStateActions {
   SET_ACTIVE = 'SET_ACTIVE',
   SET_AUTOPLAY = 'SET_AUTOPLAY',
   SET_REWARD = 'SET_REWARD',
-  SET_TX = 'SET_TX'
+  SET_TX = 'SET_TX',
+  SET_MY_INFO = 'SET_MY_INFO',
 }
 
-export enum PuzzleReducerActions {
-  SET_GRID = 'SET_GRID'
+export enum CidActions {
+  SET_CID_PARAMS = 'SET_CID_PARAMS'
 }
+
+export enum GridActions {
+  SET_GRID = 'SET_GRID',
+  SET_STATUS = 'SET_STATUS',
+  SET_SOLUTION = 'SET_SOLUTION',
+  SET_GAME = 'SET_GAME'
+}
+
+export const BOARD_EXAMPLE = JSON.stringify(
+  [
+    [1, 2, 3, 4],
+    [5, 6, 7, 8],
+    [9, 10, 11, 12],
+    [13, 14, 15, 0]
+  ]
+);
 
 export enum BeamAmmount {
   MIN_AMOUNT = 0,
@@ -36,7 +53,8 @@ export enum MenuBtn {
   DESTROY_CONTRACT = 'DESTROY_CONTRACT',
   RETURN = 'RETURN',
   BEST = 'BEST',
-  CLAIM_REWARD = 'CLAIM_REWARD'
+  CLAIM_REWARD = 'CLAIM_REWARD',
+  DONATE = 'DONATE'
 }
 
 export enum RouterMode {

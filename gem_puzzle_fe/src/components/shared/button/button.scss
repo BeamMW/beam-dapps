@@ -1,0 +1,53 @@
+.button {
+    position: relative;
+    width: 314px;
+    height: 60px;
+    margin: 0 0 10px;
+    display: none;
+    margin: 0 0 0 11px;
+    font-family: Ubuntu;
+    font-size: 20px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.7;
+    letter-spacing: normal;
+    color: #fff;
+    user-select: none;
+    cursor: pointer;
+    // background: url('../../../assets/icon/button-settings.svg');
+
+    &:hover .svgBG{
+        fill: #00FF64 !important;
+    }
+
+    &.btn_NEW {
+        .svgBG{
+            fill: #00FF64 !important;
+        }
+    }
+ 
+    .titleDOM {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .bgSvg {
+        fill: #20866F;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: -1; 
+        .svgBG{
+            fill: #20866F;
+        }
+    }
+
+}
+
+
+span {
+    margin-left: 11px;
+}

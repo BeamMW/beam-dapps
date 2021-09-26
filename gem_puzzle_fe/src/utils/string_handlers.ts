@@ -1,8 +1,26 @@
-import { BeamAmmount } from '../constants/app_constants';
+import { AppSpecs, ReqActions, ReqRoles } from '../constants/api';
+import { BeamAmmount } from '../constants/app';
+
+export const argsParser = (args: {
+  action?: ReqActions;
+  role?: ReqRoles;
+  solution?: string;
+  cid?: AppSpecs.CID;
+  cancel_previous_game?: 1;
+  bet?: number,
+  just_generate?: number,
+  permutation?:number,
+  asset_id?:number
+}):string => Object.entries(args)
+  .map((arg) => arg.join('='))
+  .join(',');
 
 export const boardSchemeMaker = (
   length: number
 ): string => `${length}x${length}`;
+
+export const toDOMParser = (str: string):HTMLElement => new DOMParser()
+  .parseFromString(str, 'application/xml').documentElement;
 
 export const handleString = (next:string):boolean => {
   let result = true;
@@ -31,6 +49,11 @@ export const handleString = (next:string):boolean => {
 
 export const parseToGroth = (beams: number):string => {
   const numb = Math.ceil(beams * BeamAmmount.GROTHS_IN_BEAM);
+  return String(numb);
+};
+
+export const parseToBeam = (groth: number):string => {
+  const numb = groth / BeamAmmount.GROTHS_IN_BEAM;
   return String(numb);
 };
 
