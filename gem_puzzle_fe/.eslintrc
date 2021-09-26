@@ -25,6 +25,7 @@
     }, {
       "enforceForRenamedProperties": false
     }],
+    "no-nested-ternary": "off",
     "comma-dangle": ["error", {
       "arrays": "never",
       "objects": "never",

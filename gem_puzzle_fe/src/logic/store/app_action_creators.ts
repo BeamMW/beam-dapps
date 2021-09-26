@@ -33,5 +33,9 @@ export const AC = {
   setGame: (payload: Partial<IGridState>) => ({
     action: GridActions.SET_GAME,
     payload
+  } as const),
+  setPopup: (payload: IAppState['popup']) => ({
+    action: StoreActions.SET_POPUP,
+    payload
   } as const)
 };

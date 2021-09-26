@@ -9,7 +9,8 @@ const initialState: IAppState = {
   time: 0,
   autoPlay: false,
   pending_rewards: 0,
-  isTx: false
+  isTx: false,
+  popup: false
 };
 
 export class InfoState implements BaseReducer<IAppState> {
@@ -33,6 +34,9 @@ export class InfoState implements BaseReducer<IAppState> {
         break;
       case StoreActions.SET_TX:
         this.state.isTx = payload as boolean;
+        break;
+      case StoreActions.SET_POPUP:
+        this.state.popup = payload as IAppState['popup'];
         break;
       default:
         break;

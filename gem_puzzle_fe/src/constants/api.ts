@@ -1,7 +1,8 @@
 export enum AppSpecs {
-  CID = '289edf39dbecebd6aca3764e34fdaf96d1e71ab3c357751be5a6ecc8e53b8258',
+  CID = '1cec6c716d0bcc172a630cd24e5e6c99024ba0e633ab92359c342b28f894585b',
   TITLE = 'GEM-PUZZLE',
-  TX_CHECK_INTERVAL = 3000
+  TX_CHECK_INTERVAL = 3000,
+  MAX_MOVES = 400
 }
 // 289edf39dbecebd6aca3764e34fdaf96d1e71ab3c357751be5a6ecc8e53b8258 - w/o bet
 // cee263491c35189975d5ad65a4a54bbf374b1f89218e58fafea32c37d4b07a0b -bet aid!==0

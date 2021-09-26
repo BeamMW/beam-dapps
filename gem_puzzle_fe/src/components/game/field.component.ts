@@ -10,10 +10,11 @@ import { HtmlProps, Tags } from '../../constants/tags';
 import {
   Box, isSolved, swapBoxes
 } from './box';
-import './field.scss';
 import BaseComponent from '../base/base.component';
 import NPuzzleSolver from '../../logic/solver/solvers';
 import { Store } from '../../logic/store/state_handler';
+import { AppSpecs } from '../../constants/api';
+import { PopupKeys, Routes } from '../../constants/app';
 
 type PuzzleSolveType = {
   piece: {
@@ -43,7 +44,7 @@ export class Field extends BaseComponent {
     Beam.addObservers(this);
     Store.addObservers(this);
     const { board } = Store.getState().grid;
-    this.bet = !!Store.getState().cid.max_bet;
+    this.bet = Boolean(Store.getState().cid.max_bet);
     this.innerField = new BaseComponent(Tags.DIV, ['field-inner']);
     this.timeOutId = null;
     this.solveList = [];
@@ -84,10 +85,14 @@ export class Field extends BaseComponent {
     const {
       status, solution, board, permutation
     } = store.grid;
-    const { autoPlay } = store.info;
-
-    if (status === 'playing' && autoPlay) {
-      this.autoPlayHandle();
+    const { autoPlay, popup } = store.info;
+    if (!popup) {
+    if (status === 'playing') {
+      if (autoPlay) this.autoPlayHandle();
+      if (solution.length + 1 > AppSpecs.MAX_MOVES) {
+        window.history.pushState({}, '', `/${Routes.RETURN}`);
+        Store.dispatch(AC.setPopup(PopupKeys.LIMIT));
+      }
     }
 
     if (status === 'ready') {
@@ -99,18 +104,21 @@ export class Field extends BaseComponent {
     }
 
     if (status === 'won' && board) {
-      Store.dispatch(AC.setGame({
-        status: 'won',
-        board: null,
-        solution: [],
-        permutation: null
-      }));
+      if (this.bet) {
+        window.localStorage.setItem('state', JSON.stringify(store.grid));
+      }
       this.timeOutId = setTimeout(() => {
         this.removeAll();
+        Store.dispatch(AC.setGame({
+          board: null,
+          permutation: null,
+          solution: []
+        }));
         Beam.callApi(RC.checkSolution(solution.join(''), <number>permutation));
         solution.length = 0;
       }, 3000);
     }
+  }
   };
 
   listener = (e: Event):void => {
@@ -128,12 +136,12 @@ export class Field extends BaseComponent {
 
   startGame = (board: BoardType):void => {
     const { autoPlay } = Store.getState().info;
+    this.init(board);
     Store.dispatch(AC.setGame(
       {
-        status: 'playing'
+        status: isSolved(board) ? 'won' : 'playing'
       }
     ));
-    this.init(board);
     if (autoPlay) {
       this.solveList = new NPuzzleSolver(board).solve();
     } else {
@@ -144,8 +152,7 @@ export class Field extends BaseComponent {
   };
 
   handleClickBox = (box: Box):void => {
-    const { grid } = Store.getState();
-    const { board, status } = grid;
+    const { board, status } = Store.getState().grid;
     const nextdoorBoxes = box.getNextdoorBoxes();
     const blankBox = nextdoorBoxes.find(
       (nextdoorBox) => board?.[nextdoorBox.y]?.[nextdoorBox.x] === 0
@@ -165,6 +172,7 @@ export class Field extends BaseComponent {
           solution: swapped.map((move) => move.solution)
         }));
         if (this.bet) {
+          const { grid } = Store.getState();
           window.localStorage.setItem('state', JSON.stringify(grid));
         }
       }
@@ -180,14 +188,13 @@ export class Field extends BaseComponent {
   };
 
   init = (board: BoardType):void => {
-    const { status } = Store.getState().grid;
     const len = board.length;
     this.innerField.style.width = `${HtmlProps.PuzzleSize * len}px`;
     this.innerField.style.height = `${HtmlProps.PuzzleSize * len}px`;
     this.append(this.innerField);
     for (let y = 0; y < len; y++) {
       for (let x = 0; x < len; x++) {
-        if (board[y]?.[x] && status === 'playing') {
+        if (board[y]?.[x]) {
           const value = board[y]?.[x] as number;
           const button = new Cell({
             x,

@@ -1,21 +1,19 @@
 import { APIResponse, ResOutput } from 'beamApiProps';
-import { WinArgsType } from 'ComponentProps';
-import { Win } from '../win/win.components';
 import { Store } from '../../logic/store/state_handler';
 import { Beam } from '../../logic/beam/api_handler';
 import { Tags } from '../../constants/tags';
 import BaseComponent from '../base/base.component';
-import Menu from '../menu/menu.component';
-import { Field } from '../field/field.component';
+import Menu from './menu/menu.component';
+import { Field } from '../game/field.component';
 import { ReqID } from '../../constants/api';
 import { RC } from '../../logic/beam/request_creators';
 import './main.scss';
 import Router from '../../logic/router/router';
 import Options from '../options/options.component';
 import { RouterMode, Routes } from '../../constants/app';
-import { Best } from '../best/best.component';
 import { AC } from '../../logic/store/app_action_creators';
 import Popup from '../popup/popup.component';
+import { Game } from '../game/game.component';
 
 export default class Main extends BaseComponent {
   private readonly menu: Menu;
@@ -24,14 +22,14 @@ export default class Main extends BaseComponent {
 
   private readonly router: Router;
 
-  private child: Field | Win | Options | Best | null;
+  private child: Field | Options | null;
 
   constructor() {
     super(Tags.DIV, ['main']);
     Beam.addObservers(this);
     Beam.callApi(RC.viewMyInfo());
     this.menu = new Menu();
-    this.popupWon = new Popup({ key: 'won' });
+    this.popupWon = new Popup();
     this.router = new Router({
       mode: RouterMode.HISTORY,
       root: Routes.MAIN
@@ -57,7 +55,7 @@ export default class Main extends BaseComponent {
 
   initGameField = (): void => {
     if (this.child) this.remove(this.child);
-    this.child = new Field();
+    this.child = new Game();
     this.menu.replace(this.child);
     this.menu.addActive();
     this.append(this.menu);
@@ -73,15 +71,6 @@ export default class Main extends BaseComponent {
     Store.addObservers(this.menu);
   };
 
-  winner = (res: WinArgsType): void => {
-    if (this.child) this.remove(this.child);
-    Beam.callApi(RC.viewMyInfo());
-    console.log(res);
-    // this.append(this.child);
-    this.append(this.popupWon);
-    this.popupWon.addActive();
-  };
-
   inform = (res: APIResponse): void => {
     let output;
     if (res.result?.output) {
@@ -92,13 +81,7 @@ export default class Main extends BaseComponent {
         if (output) {
           Store.dispatch(
             AC.setCidParams({
-              max_bet: output.max_bet,
-              multiplier: output.multiplier,
-              free_time: output.free_time,
-              game_speed: output.game_speed,
-              prize_aid: output.prize_aid,
-              prize_amount: output.prize_amount,
-              prize_fund: output.prize_fund
+              ...output
             })
           );
           if (output.prize_aid) {
@@ -128,6 +111,7 @@ export default class Main extends BaseComponent {
           );
         }
         break;
+
       case ReqID.VIEW_MY_INFO:
         if (output) {
           Store.dispatch(
@@ -136,15 +120,6 @@ export default class Main extends BaseComponent {
               pending_rewards: output.pending_rewards
             })
           );
-        }
-        break;
-
-      case ReqID.VIEW_CHECK_RESULT:
-        if (output) {
-          this.winner({
-            verdict: output.verdict,
-            'time (min)': output['time (min)']
-          });
         }
         break;
 

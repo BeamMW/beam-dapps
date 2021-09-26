@@ -11,6 +11,7 @@ export enum StoreActions {
   SET_REWARD = 'SET_REWARD',
   SET_TX = 'SET_TX',
   SET_MY_INFO = 'SET_MY_INFO',
+  SET_POPUP = 'SET_POPUP'
 }
 
 export enum CidActions {
@@ -22,6 +23,13 @@ export enum GridActions {
   SET_STATUS = 'SET_STATUS',
   SET_SOLUTION = 'SET_SOLUTION',
   SET_GAME = 'SET_GAME'
+}
+
+export enum PopupKeys {
+  WIN = 'WIN',
+  LOSE = 'LOSE',
+  TIME_OUT = 'TIME_OUT',
+  LIMIT = 'LIMIT'
 }
 
 export const BOARD_EXAMPLE = JSON.stringify(
@@ -39,21 +47,19 @@ export enum BeamAmmount {
   GROTHS_IN_BEAM = 100000000
 }
 
-export enum BoardView {
-  NUMBERS = 'NUMBERS',
-  PICTURE = 'PICTURE'
-}
-
 export enum MenuBtn {
   NEW = 'NEW',
   CONTINUE = 'CONTINUE',
   OPTIONS = 'OPTIONS',
-  CANCEL = 'CANCEL',
-  VIEW_CONTRACTS = 'VIEW_CONTRACTS',
-  DESTROY_CONTRACT = 'DESTROY_CONTRACT',
   RETURN = 'RETURN',
   BEST = 'BEST',
   CLAIM_REWARD = 'CLAIM_REWARD'
+}
+
+export enum GreetingsText {
+  MainTitle = 'WELCOME TO GEM-PUZZLE!',
+  MainDesc = 'Play and earn!',
+  LeaderBoard = 'LEADERBOARD'
 }
 
 export enum RouterMode {

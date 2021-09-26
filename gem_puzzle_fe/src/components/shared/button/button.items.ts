@@ -1,10 +1,10 @@
 import { MenuButtonType } from 'ComponentProps';
-import { SVG } from './svg.icons';
+import { SVG } from '../../../constants/svg.icons';
 import {
   RC
-} from '../logic/beam/request_creators';
-import { MenuBtn, Routes } from './app';
-import { Beam } from '../logic/beam/api_handler';
+} from '../../../logic/beam/request_creators';
+import { MenuBtn, Routes } from '../../../constants/app';
+import { Beam } from '../../../logic/beam/api_handler';
 
 export const menuProps: MenuButtonType[] = [
   {
@@ -16,13 +16,13 @@ export const menuProps: MenuButtonType[] = [
   },
   {
     key: MenuBtn.NEW,
-    icon: `${SVG.newGameIcon}`,
-    title: 'NEW GAME',
+    icon: SVG.newGameIcon,
+    title: 'NEW BET',
     handler: () => Beam.callApi(RC.startGame())
   },
   {
     key: MenuBtn.OPTIONS,
-    icon: `${SVG.settingIcon}`,
+    icon: SVG.settingIcon,
     title: 'SETTING',
     handler: ():void => {
       window.history.pushState({}, '', `/${Routes.OPTIONS}`);
@@ -30,7 +30,8 @@ export const menuProps: MenuButtonType[] = [
   },
   {
     key: MenuBtn.RETURN,
-    title: 'RETURN TO MAIN',
+    title: 'CANCEL GAME',
+    icon: SVG.iconCancel,
     handler: ():void => {
       window.history.pushState({}, '', `/${Routes.RETURN}`);
     }

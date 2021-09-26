@@ -1,14 +1,14 @@
-.popup__won {
-        width: 674px;
-        height: 380px;
-        background: #dffd94;
-        border-radius: 56px;
-        position: absolute;
+.popup{
+    position: absolute;
     top: 177px;
     z-index: 1;
     transform: translate(0, -800px);
     transition: transform 200ms ease-in-out;
-
+.popup__WIN {
+        width: 674px;
+        height: 380px;
+        background: #dffd94;
+        border-radius: 56px;
         &_icon {
             left: 235.5px;
             top: -120px;
@@ -91,16 +91,12 @@
             }
         }
     }
-    .popup__lose {
+    .popup__LOSE {
         width: 674px;
         height: 380px;
         background: #dffd94;
         border-radius: 56px;
-        position: absolute;
-        top: 177px;
         z-index: 1;
-        transform: translate(0, -800px);
-        transition: transform 200ms ease-in-out;
         &_icon {
             left: 253px;
             top: -120px;
@@ -144,8 +140,8 @@
             }
         }
     }
-    
+}
 
-.popup__won.active, .popup__lose.active {
+.popup.active, .popup.active {
     transform: none;
 }
