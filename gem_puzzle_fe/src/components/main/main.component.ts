@@ -32,7 +32,7 @@ export default class Main extends BaseComponent {
     Beam.addObservers(this);
     Beam.callApi(RC.viewMyInfo());
     this.menu = new Menu();
-    this.popupWon = new Popup({ key: 'won' });
+    this.popupWon = new Popup({ key: 'donate' });
     this.router = new Router({
       mode: RouterMode.HISTORY,
       root: Routes.MAIN
@@ -48,6 +48,7 @@ export default class Main extends BaseComponent {
 
   initMainMenu = (): void => {
     this.child = null;
+    this.append(this.popupWon);
   };
 
   cancelGame = (): void => {
@@ -90,7 +91,10 @@ export default class Main extends BaseComponent {
     if (this.child) this.remove(this.child);
     Beam.callApi(RC.viewMyInfo());
     // this.append(this.child);
-    this.append(this.popupWon);
+    this.popupWon.addActive();
+  };
+
+  donate = (): void => {
     this.popupWon.addActive();
   };
 
@@ -131,6 +135,9 @@ export default class Main extends BaseComponent {
         this.winner(JSON.parse(res.result.output));
         break;
 
+      case ReqID.DONATE:
+        this.donate();
+        break;
       default:
         break;
     }

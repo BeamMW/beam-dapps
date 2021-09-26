@@ -17,8 +17,6 @@ export default class Menu extends BaseComponent {
   constructor() {
     super(Tags.DIV, ['menu']);
     Store.addObservers(this);
-    // this.desc = new BaseComponent(Tags.SPAN, ['desc']);
-    // this.desc.innerHTML = 'Play and earn!';
     this.greeting = new Greeting();
     this.buttons = new Map();
     menuProps.forEach((btn) => {
@@ -72,6 +70,7 @@ export default class Menu extends BaseComponent {
       }
       this.getBtn(MenuBtn.OPTIONS).setDisplay = true;
       this.getBtn(MenuBtn.BEST).setDisplay = true;
+      this.getBtn(MenuBtn.DONATE).setDisplay = true;
     }
   };
 }

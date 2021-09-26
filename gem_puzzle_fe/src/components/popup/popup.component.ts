@@ -46,6 +46,39 @@ export default class Popup extends BaseComponent {
         window.history.pushState({}, '', `/${Routes.RETURN}`);
       });
       this.append(iconSVG, titleText, btn);
+    } else if (key === 'donate') {
+      const iconSVG = new BaseComponent(Tags.DIV, [`popup__${key}_icon`]);
+      iconSVG.innerHTML = SVG.popupLose;
+      const titleText = new BaseComponent(Tags.SPAN, [`popup__${key}_text`]);
+      titleText.element.textContent = 'DONATE';
+      const input = new BaseComponent(Tags.INPUT, [`popup__${key}_input`]);
+      input.setAttributes({
+        value: '0'
+      });
+      const inputElement = input.element as HTMLInputElement;
+      this.append(iconSVG, titleText, input);
+      input.element.oninput = function () {
+        if (inputElement.value === '0') {
+          const btn = new BaseComponent(Tags.DIV, [`popup__${key}_back`]);
+          btn.element.textContent = 'Back to Main Menu';
+          btn.element.addEventListener('click', (): void => {
+            this.element.classList.remove('active');
+            window.history.pushState({}, '', `/${Routes.RETURN}`);
+          });
+          this.append(btn);
+        } else {
+          const setDonate = new BaseComponent(Tags.DIV, [`popup__${key}_btn`]);
+          setDonate.element.textContent = 'DONATE';
+          setDonate.element.addEventListener('click', () => {
+            console.log(inputElement.oninput);
+            console.log(1);
+          });
+          if (inputElement.value > 0) {
+            console.log(inputElement.value);
+          }
+          this.append(setDonate);
+        }
+      };
     }
   }
 

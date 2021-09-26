@@ -20,7 +20,8 @@ export enum ReqID {
   TAKE_PENDING_REWARDS = 'TAKE_PENDING_REWARDS',
   VIEW_MY_PENDING_REWARDS = 'VIEW_MY_PENDING_REWARDS',
   HAS_ACTIVE_GAME = 'HAS_ACTIVE_GAME',
-  VIEW_MY_INFO = 'VIEW_MY_INFO'
+  VIEW_MY_INFO = 'VIEW_MY_INFO',
+  DONATE = 'DONATE'
 }
 
 export enum ReqRoles {
@@ -45,7 +46,8 @@ export enum ReqActions {
   VIEW_CHECK_RESULT = 'view_check_result',
   VIEW_TOPS = 'view_tops',
   TAKE_PENDING_REWARDS = 'take_pending_rewards',
-  GET_MY_INFO = 'get_my_info'
+  GET_MY_INFO = 'get_my_info',
+  DONATE = 'donate'
 }
 
 export enum ResTXStatus {

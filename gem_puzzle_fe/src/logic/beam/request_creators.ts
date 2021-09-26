@@ -171,5 +171,22 @@ export const RC = {
         args
       }
     }) as const;
+  },
+
+  donate: (): ApiArgs => {
+    console.log('donate');
+    const args = argsParser({
+      role: ReqRoles.PLAYER,
+      action: ReqActions.DONATE,
+      cid: AppSpecs.CID
+    });
+    return ({
+      callID: ReqID.DONATE,
+      method: ReqMethods.INVOKE_CONTRACT,
+      params: {
+        create_tx: false,
+        args
+      }
+    } as const);
   }
 };

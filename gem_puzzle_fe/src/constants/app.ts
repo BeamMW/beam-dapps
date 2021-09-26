@@ -44,7 +44,8 @@ export enum MenuBtn {
   DESTROY_CONTRACT = 'DESTROY_CONTRACT',
   RETURN = 'RETURN',
   BEST = 'BEST',
-  CLAIM_REWARD = 'CLAIM_REWARD'
+  CLAIM_REWARD = 'CLAIM_REWARD',
+  DONATE = 'DONATE'
 }
 
 export enum RouterMode {

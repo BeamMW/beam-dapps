@@ -47,6 +47,11 @@ export const menuProps: MenuButtonType[] = [
     key: MenuBtn.CANCEL,
     title: 'CANCEL GAME',
     handler: () => Beam.callApi(RC.cancelGame())
+  },
+  {
+    key: MenuBtn.DONATE,
+    title: 'DONATE FOR FOUND',
+    handler: () => Beam.callApi(RC.donate())
   }
 ];
 
