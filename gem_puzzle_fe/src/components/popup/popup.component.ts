@@ -5,6 +5,7 @@ import { Tags } from '../../constants/tags';
 import BaseComponent from '../base/base.component';
 import { Store } from '../../logic/store/state_handler';
 import './popup.scss';
+import { handleString } from '../../utils/string_handlers';
 
 type PopupType = {
   key: string;
@@ -51,34 +52,42 @@ export default class Popup extends BaseComponent {
       iconSVG.innerHTML = SVG.popupLose;
       const titleText = new BaseComponent(Tags.SPAN, [`popup__${key}_text`]);
       titleText.element.textContent = 'DONATE';
+      const inputWrap = new BaseComponent(Tags.DIV, [
+        `popup__${key}_inputWrap`
+      ]);
       const input = new BaseComponent(Tags.INPUT, [`popup__${key}_input`]);
       input.setAttributes({
-        value: '0'
+        value: '0.1'
+      });
+      const currency = new BaseComponent(Tags.SPAN, [`popup__${key}_currency`]);
+      currency.element.textContent = 'FUNT';
+      inputWrap.append(input, currency);
+      const setDonate = new BaseComponent(Tags.DIV, [`popup__${key}_btn`]);
+      setDonate.element.textContent = 'DONATE';
+      setDonate.element.addEventListener('click', () => {
+        console.log('donate');
       });
       const inputElement = input.element as HTMLInputElement;
-      this.append(iconSVG, titleText, input);
       input.element.oninput = function () {
-        if (inputElement.value === '0') {
-          const btn = new BaseComponent(Tags.DIV, [`popup__${key}_back`]);
-          btn.element.textContent = 'Back to Main Menu';
-          btn.element.addEventListener('click', (): void => {
-            input.element.classList.remove('active');
-            window.history.pushState({}, '', `/${Routes.RETURN}`);
-          });
-        //   this.append(btn);
+        if (
+          inputElement.value === ''
+          || inputElement.value === '0'
+          || inputElement.value === '0'
+          || inputElement.value === '0.'
+          || inputElement.value > '100'
+          || !handleString(inputElement.value)
+        ) {
+          setDonate.element.classList.add('disabled');
         } else {
-          const setDonate = new BaseComponent(Tags.DIV, [`popup__${key}_btn`]);
-          setDonate.element.textContent = 'DONATE';
-          setDonate.element.addEventListener('click', () => {
-            console.log(inputElement.oninput);
-            console.log(1);
-          });
-        //   if (inputElement.value > 0) {
-        //     console.log(inputElement.value);
-        //   }
-        //   this.append(setDonate);
+          setDonate.element.classList.remove('disabled');
         }
-    };
+      };
+      const btn = new BaseComponent(Tags.DIV, [`popup__${key}_back`]);
+      btn.element.textContent = 'Back to Main Menu';
+      btn.element.addEventListener('click', (): void => {
+        this.element.classList.remove('active');
+      });
+      this.append(iconSVG, titleText, inputWrap, setDonate, btn);
     }
   }
 

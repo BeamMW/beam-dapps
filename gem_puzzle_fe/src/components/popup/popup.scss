@@ -169,7 +169,7 @@
 
     &_text {
         position: absolute;
-        top: 170px;
+        top: 95px;
         width: 100%;
         text-align: center;
         height: 22px;
@@ -185,20 +185,31 @@
         color: #081d11;
     }
 
-    &_input {
+    &_inputWrap{
+        display: flex;
+        width: 165px;
         position: absolute;
         top: 165px;
         left: 260px;
+        height: 50px;
+        align-items: center;
+    }
+
+    &_input {
+        text-align: center;
+        font-size: 20px;
         width: 150px;
         height: 50px;
         border-radius: 10px;
         border: none;
     }
-
+    &_currency{
+        font-size: 20px;
+    }
     &_btn {
         position: absolute;
         top: 240px;
-        left: 170px;
+        left: 176px;
         background-image: url('../../assets/icon/button-hard.svg');
         background-repeat: no-repeat;
         width: 314px;
@@ -207,12 +218,18 @@
         justify-content: center;
         align-items: center;
         background-size: cover;
+        opacity: 1;
     }
-
+    
     &_btn:hover {
         cursor: pointer;
     }
-
+    .disabled {
+        opacity: 0.3;
+        cursor: default;
+    pointer-events: none;
+    }
+    
     &_back {
         width: 314px;
         height: 60px;
