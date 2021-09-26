@@ -5,8 +5,8 @@
 #include "Genotype.h"
 #include "Mask.h"
 
-using signName = std::string;
-using externalExpression = std::string;
+using signName = std::string_view;
+using externalExpression = std::string_view;
 using phenotype = std::map<signName, externalExpression>;
 
 #pragma pack (push, 1)

@@ -1,7 +1,7 @@
 #pragma once
 #include "ChromosomeMask.h"
 
-using PhenotypeMask = std::vector<ChromosomeMask>;
+using PhenotypeMask = std::deque<ChromosomeMask>;
 
 #pragma pack (push, 1)
 /*

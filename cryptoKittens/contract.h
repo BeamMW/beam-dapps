@@ -1,14 +1,13 @@
 #pragma once
 #include "Genetic/Kitten.h"
 #include <map>
-#include <unordered_map>
-#include <vector>
+#include <deque>
 #include <queue>
 
 namespace CryptoKittens
 {
-	// SID: ecbaff8446e40a85dc72c3f5f979547b4c48fd49daf2582b0581d6a7724e5257
-	static const ShaderID s_SID = { 0xec,0xba,0xff,0x84,0x46,0xe4,0x0a,0x85,0xdc,0x72,0xc3,0xf5,0xf9,0x79,0x54,0x7b,0x4c,0x48,0xfd,0x49,0xda,0xf2,0x58,0x2b,0x05,0x81,0xd6,0xa7,0x72,0x4e,0x52,0x57 };
+	// SID: 2cb20033613becd6b318c260eab3d8d57e0a7a48adcfe2a3d3b1c7f43f960a36
+	static const ShaderID s_SID = { 0x2c,0xb2,0x00,0x33,0x61,0x3b,0xec,0xd6,0xb3,0x18,0xc2,0x60,0xea,0xb3,0xd8,0xd5,0x7e,0x0a,0x7a,0x48,0xad,0xcf,0xe2,0xa3,0xd3,0xb1,0xc7,0xf4,0x3f,0x96,0x0a,0x36 };
 
 #pragma pack (push, 1)
 	struct StartGameParams
@@ -20,11 +19,9 @@ namespace CryptoKittens
 	};
 
 	using AllKittens = std::queue<Kitten>;
-	using AccountKittens = std::vector<Kitten>;
-	//using KittensAndOwners = std::unordered_map<int/*PubKey*/, AccountKittens>;
+	using AccountKittens = std::deque<Kitten>;
 	using KittensAndOwners = std::map<int/*PubKey*/, AccountKittens>;
 	using KittensForGiveaway = std::map<CharacterId, Kitten>;
-	//using KittensForGiveaway = std::unordered_map<CharacterId, Kitten>;
 	struct CurrentGameState
 	{
 		AllKittens allKittens;

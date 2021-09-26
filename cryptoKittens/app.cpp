@@ -99,7 +99,7 @@ void On_action_view_my_kittens(const ContractID& cid)
         for (auto phenotypeIt = kittenIt->phenotype.setOfSigns.cbegin();
             phenotypeIt != kittenIt->phenotype.setOfSigns.cend(); ++phenotypeIt)
         {
-            Env::DocAddText(phenotypeIt->first.c_str(), phenotypeIt->second.c_str());
+         //   Env::DocAddText(phenotypeIt->first.c_str(), phenotypeIt->second.c_str());
         }
     }
 
@@ -121,14 +121,14 @@ void On_action_view_kittens_for_giveaway(const ContractID& cid)
         kittenIt != params.kittensForGiveaway.cend();
         ++kittenIt)
     {
-        std::string tmp = std::to_string(kittenIt->first);
-        Env::DocGroup kitten(tmp.c_str());
+       // std::string_view tmp = std::to_string_view(kittenIt->first);
+       // Env::DocGroup kitten(tmp.c_str());
 
-        for (auto phenotypeIt = kittenIt->second.phenotype.setOfSigns.cbegin(); 
-            phenotypeIt != kittenIt->second.phenotype.setOfSigns.cend(); ++phenotypeIt)
-        {
-            Env::DocAddText(phenotypeIt->first.c_str(), phenotypeIt->second.c_str());
-        }
+       // for (auto phenotypeIt = kittenIt->second.phenotype.setOfSigns.cbegin(); 
+       //     phenotypeIt != kittenIt->second.phenotype.setOfSigns.cend(); ++phenotypeIt)
+       // {
+           // Env::DocAddText(phenotypeIt->first.c_str(), phenotypeIt->second.c_str());
+       // }
     }
 }
 
@@ -216,7 +216,7 @@ constexpr size_t ROLE_BUF_SIZE = 16;
 using Action_func_t = void (*)(const ContractID&);
 
 template <typename T>
-auto find_if_contains(const char* str, const std::vector<std::pair<const char*, T>>& v) {
+auto find_if_contains(const char* str, const std::deque<std::pair<const char*, T>>& v) {
     return std::find_if(v.begin(), v.end(), [&str](const auto& p) {
         return !strcmp(str, p.first);
         });
@@ -224,7 +224,7 @@ auto find_if_contains(const char* str, const std::vector<std::pair<const char*, 
 
 BEAM_EXPORT void Method_1()
 {
-    const std::vector<std::pair<const char*, Action_func_t>> VALID_PLAYER_ACTIONS = {
+    const std::deque<std::pair<const char*, Action_func_t>> VALID_PLAYER_ACTIONS = {
         //{"withdraw_kitten", On_action_withdraw_kitten},
         {"view_my_kittens", On_action_view_my_kittens},
         {"view_kittens_for_giveaway", On_action_view_kittens_for_giveaway},
@@ -232,7 +232,7 @@ BEAM_EXPORT void Method_1()
         {"get_my_pkey", On_action_get_my_pkey},
     };
 
-    const std::vector<std::pair<const char*, Action_func_t>> VALID_MANAGER_ACTIONS = 
+    const std::deque<std::pair<const char*, Action_func_t>> VALID_MANAGER_ACTIONS = 
     {
         {"create_contract", On_action_create_contract},
         {"destroy_contract", On_action_destroy_contract},
@@ -240,7 +240,7 @@ BEAM_EXPORT void Method_1()
         {"view_contract_params", On_action_view_contract_params}
     };
 
-    const std::vector<std::pair<const char*, const std::vector<std::pair<const char*, Action_func_t>>&>> 
+    const std::deque<std::pair<const char*, const std::deque<std::pair<const char*, Action_func_t>>&>> 
         VALID_ROLES = {
         {"player", VALID_PLAYER_ACTIONS},
         {"manager", VALID_MANAGER_ACTIONS}

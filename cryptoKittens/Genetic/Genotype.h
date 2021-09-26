@@ -3,7 +3,7 @@
 
 #include "Chromosome.h"
 
-using genotype = std::vector<Chromosome>;
+using genotype = std::deque<Chromosome>;
 
 #pragma pack (push, 1)
 /*

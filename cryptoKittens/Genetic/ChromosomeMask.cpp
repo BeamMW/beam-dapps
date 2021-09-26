@@ -1,11 +1,11 @@
 #include "ChromosomeMask.h"
 
 ChromosomeMask::DependentSignsAndConditionOfExpression::DependentSignsAndConditionOfExpression() noexcept
-	: baseGene(GeneState::Dominant), baseGenePresence(BaseGenePresence::Presence), signs({}) {}
+	: baseGene(GeneState::Dominant), baseGenePresence(BaseGenePresence::Presence) {}
 
 ChromosomeMask::DependentSignsAndConditionOfExpression::DependentSignsAndConditionOfExpression
-(const GeneState baseGene, const BaseGenePresence baseGenePresence, 
-	const std::vector<ChromosomeMask>&& signs) noexcept
+(const GeneState baseGene, const BaseGenePresence baseGenePresence,
+	const std::deque<ChromosomeMask>&& signs) noexcept
 	: baseGene(baseGene), baseGenePresence(baseGenePresence), signs(signs)
 {}
 
@@ -14,9 +14,9 @@ ChromosomeMask::DependentSignsAndConditionOfExpression::DependentSignsAndConditi
 	: baseGene(cp.baseGene), baseGenePresence(cp.baseGenePresence), signs(cp.signs)
 {}
 
-ChromosomeMask::ChromosomeMask(const std::string signName,
-	const std::string dominantGeneticExpression,
-	const std::string recessiveGeneticExpression,
+ChromosomeMask::ChromosomeMask(const std::string_view signName,
+	const std::string_view dominantGeneticExpression,
+	const std::string_view recessiveGeneticExpression,
 	const ChromosomeMask::DependentSignsAndConditionOfExpression& dependentSigns) noexcept
 	: signName(signName),
 	dominantGeneticExpression(dominantGeneticExpression),
@@ -26,10 +26,10 @@ ChromosomeMask::ChromosomeMask(const std::string signName,
 	dependentSigns(dependentSigns)
 {}
 
-ChromosomeMask::ChromosomeMask(const std::string signName,
-	const std::string dominantGeneticExpression,
-	const std::string interveningGeneticExpression,
-	const std::string recessiveGeneticExpression,
+ChromosomeMask::ChromosomeMask(const std::string_view signName,
+	const std::string_view dominantGeneticExpression,
+	const std::string_view interveningGeneticExpression,
+	const std::string_view recessiveGeneticExpression,
 	const ChromosomeMask::DependentSignsAndConditionOfExpression& dependentSigns) noexcept
 	: signName(signName),
 	dominantGeneticExpression(dominantGeneticExpression),
@@ -37,6 +37,27 @@ ChromosomeMask::ChromosomeMask(const std::string signName,
 	recessiveGeneticExpression(recessiveGeneticExpression),
 	typeOfDominance(TypeOfDominance::Incomplete),
 	dependentSigns(dependentSigns)
+{}
+
+ChromosomeMask::ChromosomeMask(const std::string_view signName,
+	const std::string_view dominantGeneticExpression,
+	const std::string_view recessiveGeneticExpression) noexcept
+	: signName(signName),
+	dominantGeneticExpression(dominantGeneticExpression),
+	interveningGeneticExpression(""),
+	recessiveGeneticExpression(recessiveGeneticExpression),
+	typeOfDominance(TypeOfDominance::Complete)
+{}
+
+ChromosomeMask::ChromosomeMask(const std::string_view signName,
+	const std::string_view dominantGeneticExpression,
+	const std::string_view interveningGeneticExpression,
+	const std::string_view recessiveGeneticExpression) noexcept
+	: signName(signName),
+	dominantGeneticExpression(dominantGeneticExpression),
+	interveningGeneticExpression(interveningGeneticExpression),
+	recessiveGeneticExpression(recessiveGeneticExpression),
+	typeOfDominance(TypeOfDominance::Incomplete)
 {}
 
 ChromosomeMask::ChromosomeMask(const ChromosomeMask& cp)

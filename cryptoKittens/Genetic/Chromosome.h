@@ -1,7 +1,7 @@
 #pragma once
-#include <vector>
+#include <deque>
 #include <map>
-#include <string>
+#include <string_view>
 #include "Mask.h"
 
 #pragma pack (push, 1)
