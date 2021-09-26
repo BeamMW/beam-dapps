@@ -1,5 +1,5 @@
-import { BoardType, PropertiesType } from 'beamApiProps';
-import { IGridState } from 'AppStateProps';
+import { PropertiesType } from 'beamApiProps';
+import { BoardType, IGridState } from 'AppStateProps';
 import { BaseReducer } from './base.reducer';
 import { AC } from '../app_action_creators';
 import { GridActions } from '../../../constants/app';
@@ -7,8 +7,8 @@ import { GridActions } from '../../../constants/app';
 const initialState:IGridState = {
   board: null,
   solution: [],
-  time: 0,
-  status: 'ready'
+  status: 'ready',
+  permutation: null
 };
 
 export class GridState implements BaseReducer<IGridState> {
@@ -24,27 +24,34 @@ export class GridState implements BaseReducer<IGridState> {
   PropertiesType<typeof AC>
   >):void => {
     switch (action) {
-      case GridActions.SET_GRID:
-        this.state.board = (payload as BoardType)
-          .map((y:number[]) => y.map((x) => x));
-        break;
-      case GridActions.SET_SOLUTION:
-        this.state.solution = [
-          ...this.state.solution, ...payload as ('u' | 'd' | 'r' | 'l')[]
-        ];
-        break;
-      case GridActions.SET_STATUS:
-        this.state.status = payload as 'ready' | 'playing' | 'won';
-        break;
       case GridActions.SET_GAME:
-        this.state.board = (payload as Omit<IGridState, 'time'>).board;
-        this.state.status = (payload as Omit<IGridState, 'time'>).status;
-        if ((payload as Omit<IGridState, 'time'>).solution.length) {
-          this.state.solution = [
-            ...this.state.solution,
-            ...(payload as Omit<IGridState, 'time'>).solution
-          ];
-        } else this.state.solution.length = 0;
+        if (typeof payload === 'object') {
+          if ((payload as IGridState).board) {
+            this.state.board = ((payload as IGridState)
+              .board as BoardType).map((y:number[]) => y.map((x) => x));
+          } else if ((payload as IGridState)
+            .board === null) this.state.board = null;
+          if ((payload as IGridState).status) {
+            this.state.status = (
+              payload as IGridState
+            ).status;
+          }
+          if ((payload as IGridState).solution) {
+            if ((payload as IGridState).solution?.length) {
+              this.state.solution = [
+                ...this.state.solution,
+                ...(payload as IGridState)
+                  .solution
+              ];
+            } else this.state.solution.length = 0;
+          }
+          if ((payload as IGridState).permutation) {
+            this.state.permutation = (payload as IGridState)
+              .permutation;
+          } else if ((payload as IGridState).permutation === null) {
+            this.state.permutation = null;
+          }
+        }
         break;
       default:
         break;

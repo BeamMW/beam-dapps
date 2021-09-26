@@ -1,9 +1,11 @@
 export enum AppSpecs {
-  CID = '3fee46f54e3713c05eb1a2916c0476f8ff557167cc4299b751a1cad6f665ae97',
+  CID = '289edf39dbecebd6aca3764e34fdaf96d1e71ab3c357751be5a6ecc8e53b8258',
   TITLE = 'GEM-PUZZLE',
   TX_CHECK_INTERVAL = 3000
 }
-
+// 289edf39dbecebd6aca3764e34fdaf96d1e71ab3c357751be5a6ecc8e53b8258 - w/o bet
+// cee263491c35189975d5ad65a4a54bbf374b1f89218e58fafea32c37d4b07a0b -bet aid!==0
+// 1cec6c716d0bcc172a630cd24e5e6c99024ba0e633ab92359c342b28f894585b -bet aid===0
 export enum ReqID {
   CHECK = 'CHECK',
   CHECK_SOLUTION = 'CHECK_SOLUTION',
@@ -21,7 +23,9 @@ export enum ReqID {
   VIEW_MY_PENDING_REWARDS = 'VIEW_MY_PENDING_REWARDS',
   HAS_ACTIVE_GAME = 'HAS_ACTIVE_GAME',
   VIEW_MY_INFO = 'VIEW_MY_INFO',
-  DONATE = 'DONATE'
+  DONATE = 'DONATE',
+  VIEW_CONTRACT_PARAMS = 'VIEW_CONTRACT_PARAMS',
+  VIEW_ASSET_INFO = 'VIEW_ASSET_INFO'
 }
 
 export enum ReqRoles {
@@ -32,7 +36,8 @@ export enum ReqRoles {
 export enum ReqMethods {
   INVOKE_CONTRACT = 'invoke_contract',
   PROCESS_INVOKE_DATA = 'process_invoke_data',
-  TX_STATUS = 'tx_status'
+  TX_STATUS = 'tx_status',
+  GET_ASSET_INFO = 'get_asset_info'
 }
 
 export enum ReqActions {
@@ -47,7 +52,8 @@ export enum ReqActions {
   VIEW_TOPS = 'view_tops',
   TAKE_PENDING_REWARDS = 'take_pending_rewards',
   GET_MY_INFO = 'get_my_info',
-  DONATE = 'donate'
+  DONATE = 'donate',
+  VIEW_CONTRACT_PARAMS = 'view_contract_params'
 }
 
 export enum ResTXStatus {
@@ -57,8 +63,8 @@ export enum ResTXStatus {
 }
 
 export enum ResTXComment{
-  CREATE_NEW_GAME = 'Create new game',
+  CREATE_NEW_GAME = 'Taking your bet...',
   ENDING_EXISTING_GAME = 'Ending existing game',
-  CHECKIN_SOLUTION = 'Checking solution',
+  CHECKIN_SOLUTION = 'Checking your solution...',
   TAKING_PENDING_REWARS = 'Taking pending rewards'
 }

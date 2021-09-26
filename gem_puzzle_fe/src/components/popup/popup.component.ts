@@ -62,10 +62,10 @@ export default class Popup extends BaseComponent {
           const btn = new BaseComponent(Tags.DIV, [`popup__${key}_back`]);
           btn.element.textContent = 'Back to Main Menu';
           btn.element.addEventListener('click', (): void => {
-            this.element.classList.remove('active');
+            input.element.classList.remove('active');
             window.history.pushState({}, '', `/${Routes.RETURN}`);
           });
-          this.append(btn);
+        //   this.append(btn);
         } else {
           const setDonate = new BaseComponent(Tags.DIV, [`popup__${key}_btn`]);
           setDonate.element.textContent = 'DONATE';
@@ -73,12 +73,12 @@ export default class Popup extends BaseComponent {
             console.log(inputElement.oninput);
             console.log(1);
           });
-          if (inputElement.value > 0) {
-            console.log(inputElement.value);
-          }
-          this.append(setDonate);
+        //   if (inputElement.value > 0) {
+        //     console.log(inputElement.value);
+        //   }
+        //   this.append(setDonate);
         }
-      };
+    };
     }
   }
 
@@ -88,7 +88,6 @@ export default class Popup extends BaseComponent {
 
   appInform = (state: IState): void => {
     const { solution } = state.grid;
-    console.log(solution);
     if (solution.length > 0) {
       this.statMove.element.innerHTML = `<span>Move:</span> ${solution.length}`;
     }

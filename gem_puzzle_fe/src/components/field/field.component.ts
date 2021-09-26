@@ -1,6 +1,5 @@
-import { BoardType } from 'beamApiProps';
 import { CellToRender } from 'ComponentProps';
-import { IState } from 'AppStateProps';
+import { BoardType, IState } from 'AppStateProps';
 import { AC } from '../../logic/store/app_action_creators';
 import { Cell } from './cell.component';
 import { Beam } from '../../logic/beam/api_handler';
@@ -31,6 +30,8 @@ type PuzzleSolveType = {
 export class Field extends BaseComponent {
   private solveList: PuzzleSolveType [] | null;
 
+  private readonly bet: boolean;
+
   private readonly nodeList: Cell[];
 
   private readonly innerField: BaseComponent;
@@ -42,6 +43,7 @@ export class Field extends BaseComponent {
     Beam.addObservers(this);
     Store.addObservers(this);
     const { board } = Store.getState().grid;
+    this.bet = !!Store.getState().cid.max_bet;
     this.innerField = new BaseComponent(Tags.DIV, ['field-inner']);
     this.timeOutId = null;
     this.solveList = [];
@@ -53,7 +55,7 @@ export class Field extends BaseComponent {
           this.timeOutId = null;
         }
       });
-    if (board) this.startGame(board);
+    if (board && this.bet) this.startGame(board);
     else this.rebootHandler();
   }
 
@@ -61,27 +63,29 @@ export class Field extends BaseComponent {
     const state = window.localStorage.getItem('state');
     if (state) {
       const parsed = JSON.parse(state) as {
-        board: BoardType, solution: string
+        board: BoardType | null,
+        solution: ('u' | 'd' | 'r' | 'l')[],
+        permutation: number | null
       };
-      Store.dispatch(AC.setGame({
-        board: parsed.board,
-        solution: parsed.solution.split('') as ('u' | 'd' | 'r' | 'l')[],
-        status: 'ready'
-      }));
+      if (parsed.board && parsed.permutation && this.bet) {
+        Store.dispatch(AC.setGame({
+          ...parsed,
+          status: 'ready'
+        }));
+      } else {
+        Beam.callApi(RC.viewBoard());
+      }
     } else {
       Beam.callApi(RC.viewBoard());
     }
-    window.addEventListener('beforeunload', () => {
-      const { board, solution } = Store.getState().grid;
-      window.localStorage.setItem('state', JSON.stringify({
-        board, solution: solution.join('')
-      }));
-    });
   };
 
   appInform = (store: IState):void => {
-    const { status, solution, board } = store.grid;
+    const {
+      status, solution, board, permutation
+    } = store.grid;
     const { autoPlay } = store.info;
+
     if (status === 'playing' && autoPlay) {
       this.autoPlayHandle();
     }
@@ -98,11 +102,12 @@ export class Field extends BaseComponent {
       Store.dispatch(AC.setGame({
         status: 'won',
         board: null,
-        solution: []
+        solution: [],
+        permutation: null
       }));
       this.timeOutId = setTimeout(() => {
         this.removeAll();
-        Beam.callApi(RC.checkSolution(solution.join('')));
+        Beam.callApi(RC.checkSolution(solution.join(''), <number>permutation));
         solution.length = 0;
       }, 3000);
     }
@@ -123,11 +128,14 @@ export class Field extends BaseComponent {
 
   startGame = (board: BoardType):void => {
     const { autoPlay } = Store.getState().info;
-    Store.dispatch(AC.setStatus('playing'));
+    Store.dispatch(AC.setGame(
+      {
+        status: 'playing'
+      }
+    ));
     this.init(board);
     if (autoPlay) {
       this.solveList = new NPuzzleSolver(board).solve();
-      // this.autoPlayHandle();
     } else {
       this.solveList = null;
       this.innerField.element.addEventListener('click',
@@ -136,7 +144,8 @@ export class Field extends BaseComponent {
   };
 
   handleClickBox = (box: Box):void => {
-    const { board, status } = Store.getState().grid;
+    const { grid } = Store.getState();
+    const { board, status } = grid;
     const nextdoorBoxes = box.getNextdoorBoxes();
     const blankBox = nextdoorBoxes.find(
       (nextdoorBox) => board?.[nextdoorBox.y]?.[nextdoorBox.x] === 0
@@ -144,7 +153,6 @@ export class Field extends BaseComponent {
     if (blankBox && board) {
       const newGrid: BoardType = board.map((y) => y.map((x) => x));
       const swapped = swapBoxes(newGrid, { x: box.x, y: box.y }, blankBox);
-      this.rerender(swapped);
       if (isSolved(newGrid) && status === 'playing') {
         Store.dispatch(AC.setGame({
           status: 'won',
@@ -153,11 +161,14 @@ export class Field extends BaseComponent {
         }));
       } else {
         Store.dispatch(AC.setGame({
-          status: 'playing',
           board: newGrid,
           solution: swapped.map((move) => move.solution)
         }));
+        if (this.bet) {
+          window.localStorage.setItem('state', JSON.stringify(grid));
+        }
       }
+      this.rerender(swapped);
     }
   };
 

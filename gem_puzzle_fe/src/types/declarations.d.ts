@@ -55,31 +55,38 @@ declare module 'qwebchannel' {
 
 declare module 'AppStateProps' {
 
-  type BoardType = import('beamApiProps').BoardType;
+  export type BoardType = (number[])[];
 
   export interface IAppState {
     [key:string];
-    activeGame: boolean;
-    move: string;
+    has_active_game: boolean;
     time: number;
-    rate: number;
-    pKey: string;
     autoPlay: boolean;
-    reward: number;
-    isTx: boolean
+    pending_rewards: number;
+    isTx: boolean;
   }
 
   export interface IState{
     grid:IGridState;
-    info:IAppState
-
+    info:IAppState;
+    cid: ICidState;
   }
 
   export interface IGridState {
     board: BoardType | null;
+    permutation: number | null;
     solution: ('u' | 'd' | 'r' | 'l')[];
-    time: number;
     status: 'ready' | 'playing' | 'won';
+  }
+
+  export interface ICidState {
+    max_bet: number;
+    prize_aid: number;
+    prize_amount: number;
+    prize_fund: number;
+    multiplier: number;
+    free_time: number;
+    game_speed: number;
   }
 
   export type PropertiesType<T> = T extends { [key: string]: infer U }
@@ -93,14 +100,17 @@ declare module 'beamApiProps' {
   type ResTXStatus = import('../constants/api').ResTXStatus;
   type ReqID = import('../constants/api').ReqID;
   type ReqMethods = import('../constants/api').ReqMethods;
+  type AppState = import('AppStateProps').IAppState;
+  type CidState = import('AppStateProps').ICidState;
+  type GridState = import('AppStateProps').IGridState;
+  type WinArgsType = import('ComponentProps').WinArgsType;
 
   export type PropertiesType<T> = T extends { [key: string]: infer U }
     ? U : never;
 
   export type PlayerInfoType = {
-    ['My public key']: string;
-    has_active_game: boolean;
-    pending_rewards: number;
+    activeGame: boolean;
+    reward: number;
   };
 
   export type APIResponse = {
@@ -108,20 +118,21 @@ declare module 'beamApiProps' {
     jsonrpc: string;
     result: {
       [key:string];
-      output: string;
+      output?: string;
       txid: string;
       txId: string;
       raw_data: number[];
       comment: ResTXComment;
       status_string: ResTXStatus;
       failure_reason: string;
-      board?:BoardType;
     };
     error?: {
       code:number;
       message: string;
     }
   };
+
+  export type ResOutput = CidState & AppState & GridState & WinArgsType;
 
   export type ApiArgs = {
     callID: ReqID,
@@ -139,8 +150,6 @@ declare module 'beamApiProps' {
     addObservers: AddObserversType
   };
 
-  export type BoardType = (number[])[];
-
   export type BoardLengthType = 3 | 4 | 5;
 
   export type BeamApiParams = {
@@ -148,14 +157,14 @@ declare module 'beamApiProps' {
     create_tx?: boolean;
     args?: string;
     data?: number[];
-    txId?:string
+    txId?:string;
+    asset_id?: number
   };
 }
 
 declare module 'ComponentProps' {
   export type WinArgsType = {
     verdict: string;
-    moves: number;
     ['time (min)']: number;
   };
 

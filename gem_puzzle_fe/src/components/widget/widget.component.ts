@@ -27,38 +27,36 @@ export default class Widget extends BaseComponent {
       Store.dispatch(AC.setIsTx(true));
       this.classList.add('active');
     }
-    const transactionId = new WidgetProps(
-      {
-        value: txId || '...',
-        key: 'txId',
-        title: 'ID: '
-      }
-    );
-    const comment = new WidgetProps(
-      {
-        value: '...',
-        key: 'comment',
-        title: 'COMMENT: '
-      }
-    );
-    const status = new WidgetProps(
-      {
-        value: ResTXStatus.IN_PROGRESS,
-        key: 'status_string',
-        title: 'STATUS: '
-      }
-    );
+    const transactionId = new WidgetProps({
+      value: txId || '...',
+      key: 'txId',
+      title: 'ID: '
+    });
+    const comment = new WidgetProps({
+      value: '...',
+      key: 'comment',
+      title: 'COMMENT: '
+    });
+    const status = new WidgetProps({
+      value: ResTXStatus.IN_PROGRESS,
+      key: 'status_string',
+      title: 'STATUS: '
+    });
     infoBlocks.append(transactionId, comment, status);
     this.append(loader, infoBlocks);
   }
 
-  transactionHandler = (result: APIResponse['result']):void => {
+  transactionHandler = (result: APIResponse['result']): void => {
     if (result.status_string === ResTXStatus.IN_PROGRESS) {
-      setTimeout(() => Beam.callApi(RC.viewTxStatus(result.txId)),
-        AppSpecs.TX_CHECK_INTERVAL);
+      setTimeout(
+        () => Beam.callApi(RC.viewTxStatus(result.txId)),
+        AppSpecs.TX_CHECK_INTERVAL
+      );
     }
-    if (result.status_string === ResTXStatus.FAILED
-      || result.status_string === ResTXStatus.COMPLETED) {
+    if (
+      result.status_string === ResTXStatus.FAILED
+      || result.status_string === ResTXStatus.COMPLETED
+    ) {
       this.classList.remove('active');
       window.localStorage.removeItem('txId');
       Store.dispatch(AC.setIsTx(false));
@@ -80,36 +78,36 @@ export default class Widget extends BaseComponent {
   };
 
   inform = (res: APIResponse): void => {
-    switch (res.id) {
-      case ReqID.CHECK:
-        console.log(JSON.parse(res.result.output));
-        break;
+    if (res.result) {
+      switch (res.id) {
+        case ReqID.START_GAME:
+        case ReqID.CANCEL_GAME:
+        case ReqID.CHECK_SOLUTION:
+          Beam.callApi(RC.invokeData(res.result.raw_data));
+          break;
 
-      case ReqID.START_GAME:
-      case ReqID.CANCEL_GAME:
-      case ReqID.CHECK_SOLUTION:
-        Beam.callApi(RC.invokeData(res.result.raw_data));
-        break;
+        case ReqID.TAKE_PENDING_REWARDS:
+          Beam.callApi(RC.invokeData(res.result.raw_data));
+          Beam.callApi(RC.viewMyInfo());
+          break;
 
-      case ReqID.TAKE_PENDING_REWARDS:
-        Beam.callApi(RC.invokeData(res.result.raw_data));
-        Beam.callApi(RC.viewMyInfo());
-        break;
+        case ReqID.INVOKE_DATA:
+          if (res.result?.txid) {
+            window.localStorage.setItem('txId', res.result.txid);
+            Store.dispatch(AC.setIsTx(true));
+            this.classList.add('active');
+            setTimeout(
+              () => Beam.callApi(RC.viewTxStatus(res.result.txid)),
+              AppSpecs.TX_CHECK_INTERVAL
+            );
+          }
+          break;
 
-      case ReqID.INVOKE_DATA:
-        if (res.result?.txid) {
-          window.localStorage.setItem('txId', res.result.txid);
-          Store.dispatch(AC.setIsTx(true));
-          this.classList.add('active');
-          setTimeout(() => Beam.callApi(RC.viewTxStatus(res.result.txid)),
-            AppSpecs.TX_CHECK_INTERVAL);
-        }
-        break;
-
-      case ReqID.TX_STATUS:
-        this.transactionHandler(res.result);
-        break;
-      default:
+        case ReqID.TX_STATUS:
+          this.transactionHandler(res.result);
+          break;
+        default:
+      }
     }
   };
 }
