@@ -10,7 +10,8 @@ export const argsParser = (args: {
   bet?: number,
   just_generate?: number,
   permutation?:number,
-  asset_id?:number
+  asset_id?:number,
+  amount?:number
 }):string => Object.entries(args)
   .map((arg) => arg.join('='))
   .join(',');

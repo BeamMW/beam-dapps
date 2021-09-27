@@ -7,7 +7,7 @@ export class Store {
 
   static dispatch: (action: ReturnType<
   PropertiesType<typeof AC>
-  >) => void;
+  >, sync?: 'sync') => void;
 
   static getState: () => IState;
 
@@ -15,7 +15,7 @@ export class Store {
     addObservers: AddObserversType,
     dispatch: (action: ReturnType<
     PropertiesType<typeof AC>
-    >) => void,
+    >, sync?: 'sync') => void,
     getState: () => IState
   }): void => {
     Store.addObservers = obj.addObservers;

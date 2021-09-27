@@ -1,0 +1,13 @@
+.game-info{
+  font-family: Ubuntu;
+  font-size: 20px;
+  color: #fff;
+  font-weight: 300;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  .value{
+    color: rgba($color: #00ff64, $alpha: 0.3)
+  }
+}

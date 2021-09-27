@@ -1,104 +1,92 @@
+import { APIResponse, ResOutput } from 'beamApiProps';
 import { IState } from 'AppStateProps';
-import { Routes } from '../../constants/app';
-import { SVG } from '../../constants/svg.icons';
+import { Limit } from './elements/limit.component';
+import { Beam } from '../../logic/beam/api_handler';
 import { Tags } from '../../constants/tags';
 import BaseComponent from '../base/base.component';
 import { Store } from '../../logic/store/state_handler';
+import { PopupKeys } from '../../constants/app';
 import './popup.scss';
-import { handleString } from '../../utils/string_handlers';
-
-type PopupType = {
-  key: string;
-};
+import { Win } from './elements/win.component';
+import { Lose } from './elements/lose.component';
+import { ReqID } from '../../constants/api';
+import { AC } from '../../logic/store/app_action_creators';
+import { Donate } from './elements/donate.component';
 
 export default class Popup extends BaseComponent {
-  statMove!: BaseComponent;
+  private child: BaseComponent;
 
-  constructor({ key }: PopupType) {
-    super(Tags.DIV, [`popup__${key}`]);
+  private key: PopupKeys | false;
+
+  private data: number;
+
+  constructor() {
+    super(Tags.DIV, ['popup']);
+    Beam.addObservers(this);
     Store.addObservers(this);
-    const { solution } = Store.getState().grid;
-    if (key === 'won') {
-      const iconSVG = new BaseComponent(Tags.DIV, [`popup__${key}_icon`]);
-      iconSVG.innerHTML = SVG.popupWon;
-      const titleText = new BaseComponent(Tags.SPAN, [`popup__${key}_text`]);
-      titleText.element.textContent = 'YOU WON!';
-      const amountFunt = new BaseComponent(Tags.DIV, [`popup__${key}_amount`]);
-      amountFunt.innerHTML = `${SVG.funt} <spam> 20 FUNT </span>`;
-      const statWrap = new BaseComponent(Tags.DIV, [`popup__${key}_stat`]);
-      this.statMove = new BaseComponent(Tags.SPAN, [`popup__${key}_stat_move`]);
-      this.statMove.element.innerHTML = `<span>Move:</span> ${solution.length}`;
-      statWrap.append(this.statMove);
-      const btn = new BaseComponent(Tags.DIV, [`popup__${key}_back`]);
-      btn.element.textContent = 'Back to Main Menu';
-      btn.element.addEventListener('click', (): void => {
-        this.element.classList.remove('active');
-      });
-      this.append(iconSVG, titleText, amountFunt, statWrap, btn);
-    } else if (key === 'lose') {
-      const iconSVG = new BaseComponent(Tags.DIV, [`popup__${key}_icon`]);
-      iconSVG.innerHTML = SVG.popupLose;
-      const titleText = new BaseComponent(Tags.SPAN, [`popup__${key}_text`]);
-      titleText.element.textContent = 'BETTER LUCK NEXT TIME!';
-      const btn = new BaseComponent(Tags.DIV, [`popup__${key}_back`]);
-      btn.element.textContent = 'Back to Main Menu';
-      btn.element.addEventListener('click', (): void => {
-        this.element.classList.remove('active');
-        window.history.pushState({}, '', `/${Routes.RETURN}`);
-      });
-      this.append(iconSVG, titleText, btn);
-    } else if (key === 'donate') {
-      const iconSVG = new BaseComponent(Tags.DIV, [`popup__${key}_icon`]);
-      iconSVG.innerHTML = SVG.popupLose;
-      const titleText = new BaseComponent(Tags.SPAN, [`popup__${key}_text`]);
-      titleText.element.textContent = 'DONATE';
-      const inputWrap = new BaseComponent(Tags.DIV, [
-        `popup__${key}_inputWrap`
-      ]);
-      const input = new BaseComponent(Tags.INPUT, [`popup__${key}_input`]);
-      input.setAttributes({
-        value: '0.1'
-      });
-      const currency = new BaseComponent(Tags.SPAN, [`popup__${key}_currency`]);
-      currency.element.textContent = 'FUNT';
-      inputWrap.append(input, currency);
-      const setDonate = new BaseComponent(Tags.DIV, [`popup__${key}_btn`]);
-      setDonate.element.textContent = 'DONATE';
-      setDonate.element.addEventListener('click', () => {
-        console.log('donate');
-      });
-      const inputElement = input.element as HTMLInputElement;
-      input.element.oninput = function () {
-        if (
-          inputElement.value === ''
-          || inputElement.value === '0'
-          || inputElement.value === '0'
-          || inputElement.value === '0.'
-          || inputElement.value > '100'
-          || !handleString(inputElement.value)
-        ) {
-          setDonate.element.classList.add('disabled');
-        } else {
-          setDonate.element.classList.remove('disabled');
-        }
-      };
-      const btn = new BaseComponent(Tags.DIV, [`popup__${key}_back`]);
-      btn.element.textContent = 'Back to Main Menu';
-      btn.element.addEventListener('click', (): void => {
-        this.element.classList.remove('active');
-      });
-      this.append(iconSVG, titleText, inputWrap, setDonate, btn);
-    }
+    this.data = 0;
+    this.child = new Win(this.data);
+    this.key = false;
+    this.append(this.child);
   }
 
-  addActive = (): void => {
-    this.classList.add('active');
+  private readonly addActive = (isActive: boolean): void => {
+    if (isActive) this.classList.add('active');
+    else this.classList.remove('active');
   };
 
-  appInform = (state: IState): void => {
-    const { solution } = state.grid;
-    if (solution.length > 0) {
-      this.statMove.element.innerHTML = `<span>Move:</span> ${solution.length}`;
+  readonly inform = (res: APIResponse):void => {
+    let output;
+    if (res.result?.output) {
+      output = JSON.parse(res.result.output) as ResOutput;
+      switch (res.id) {
+        case ReqID.VIEW_CHECK_RESULT:
+          if (output) {
+            this.data = output['time (min)'];
+            Store.dispatch(AC.setPopup(
+              output.verdict === 'WIN'
+                ? PopupKeys.WIN
+                : PopupKeys.LOSE
+            ));
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  };
+
+  readonly appInform = (state: IState): void => {
+    const { popup } = state.info;
+    if (popup !== this.key) {
+      if (popup) {
+        const node = this.child;
+        switch (popup) {
+          case PopupKeys.WIN:
+            this.child = new Win(this.data);
+            node.replace(this.child);
+            break;
+          case PopupKeys.LOSE:
+            this.child = new Lose();
+            node.replace(this.child);
+            break;
+          case PopupKeys.LIMIT:
+            this.child = new Limit();
+            node.replace(this.child);
+            break;
+          case PopupKeys.DONATE:
+            this.child = new Donate();
+            node.replace(this.child);
+            break;
+          default:
+            break;
+        }
+        Store.addObservers(this);
+        this.addActive(true);
+      } else {
+        this.addActive(false);
+      }
+      this.key = popup;
     }
   };
 }

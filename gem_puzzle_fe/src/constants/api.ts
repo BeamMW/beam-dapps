@@ -1,7 +1,8 @@
 export enum AppSpecs {
   CID = '289edf39dbecebd6aca3764e34fdaf96d1e71ab3c357751be5a6ecc8e53b8258',
   TITLE = 'GEM-PUZZLE',
-  TX_CHECK_INTERVAL = 3000
+  TX_CHECK_INTERVAL = 3000,
+  MAX_MOVES = 400
 }
 // 289edf39dbecebd6aca3764e34fdaf96d1e71ab3c357751be5a6ecc8e53b8258 - w/o bet
 // cee263491c35189975d5ad65a4a54bbf374b1f89218e58fafea32c37d4b07a0b -bet aid!==0
@@ -25,7 +26,8 @@ export enum ReqID {
   VIEW_MY_INFO = 'VIEW_MY_INFO',
   DONATE = 'DONATE',
   VIEW_CONTRACT_PARAMS = 'VIEW_CONTRACT_PARAMS',
-  VIEW_ASSET_INFO = 'VIEW_ASSET_INFO'
+  VIEW_ASSET_INFO = 'VIEW_ASSET_INFO',
+  VIEW_PRIZE_FUND = 'VIEW_PRIZE_FUND'
 }
 
 export enum ReqRoles {
@@ -53,7 +55,8 @@ export enum ReqActions {
   TAKE_PENDING_REWARDS = 'take_pending_rewards',
   GET_MY_INFO = 'get_my_info',
   DONATE = 'donate',
-  VIEW_CONTRACT_PARAMS = 'view_contract_params'
+  VIEW_CONTRACT_PARAMS = 'view_contract_params',
+  VIEW_PRIZE_FUND = 'view_prize_fund'
 }
 
 export enum ResTXStatus {

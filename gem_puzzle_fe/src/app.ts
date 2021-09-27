@@ -1,5 +1,5 @@
 import { Store } from './logic/store/state_handler';
-import Loader from './components/loader/loader.component';
+import Loader from './components/shared/loader/loader.component';
 import { BeamAPI } from './logic/beam/beamAPI';
 import { Beam } from './logic/beam/api_handler';
 import Main from './components/main/main.component';

@@ -34,8 +34,9 @@ export default class AppState {
 
   readonly dispatch = (action: ReturnType<
   PropertiesType<typeof AC>
-  >): void => {
-    this.reducer(action);
+  >, sync?:'sync'): void => {
+    if (sync) this.reducer(action);
+    else setTimeout(() => this.reducer(action));
   };
 
   readonly getState = ():IState => this.state;

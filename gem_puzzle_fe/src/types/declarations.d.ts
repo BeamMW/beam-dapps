@@ -55,6 +55,8 @@ declare module 'qwebchannel' {
 
 declare module 'AppStateProps' {
 
+  type PopupKeys = import('../constants/app').PopupKeys;
+
   export type BoardType = (number[])[];
 
   export interface IAppState {
@@ -64,6 +66,8 @@ declare module 'AppStateProps' {
     autoPlay: boolean;
     pending_rewards: number;
     isTx: boolean;
+    popup: PopupKeys | false;
+    prizeFund: number
   }
 
   export interface IState{
@@ -163,6 +167,19 @@ declare module 'beamApiProps' {
 }
 
 declare module 'ComponentProps' {
+
+  export type GameInfoCb = {
+    value: string,
+    result: boolean,
+    color?: string
+  };
+
+  export type GameInfoParams = {
+    title: string,
+    icon: string,
+    callback:(state: IState) => GameInfoCb
+  };
+
   export type WinArgsType = {
     verdict: string;
     ['time (min)']: number;

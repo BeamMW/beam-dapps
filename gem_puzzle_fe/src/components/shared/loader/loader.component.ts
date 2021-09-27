@@ -1,6 +1,6 @@
-import loader from '../../assets/icon/loader.svg';
-import { Tags } from '../../constants/tags';
-import BaseComponent from '../base/base.component';
+import loader from '../../../assets/icon/loader.svg';
+import { Tags } from '../../../constants/tags';
+import BaseComponent from '../../base/base.component';
 import './loader.scss';
 
 export default class Loader extends BaseComponent {

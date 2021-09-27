@@ -26,6 +26,17 @@
             fill: #00FF64 !important;
         }
     }
+
+    &.btn_RETURN {
+        padding: 9px 30px 9px;
+        font-size: 16px;
+        border-radius: 100px;
+        border: solid 1px #979797;
+        .bgSvg {
+            display: none;
+        }
+
+    }
  
     .titleDOM {
         height: 100%;

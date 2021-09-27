@@ -1,13 +1,12 @@
 import { IState } from 'AppStateProps';
-import { APIResponse } from 'beamApiProps';
-import { Tags } from '../../constants/tags';
-import BaseComponent from '../base/base.component';
-import Button from '../shared/button/button.component';
+import { Tags } from '../../../constants/tags';
+import BaseComponent from '../../base/base.component';
+import Button from '../../shared/button/button.component';
 import './menu.scss';
 import Greeting from '../greeting/greeting.component';
-import { MenuBtn } from '../../constants/app';
-import { Store } from '../../logic/store/state_handler';
-import { menuProps } from '../../constants/buttons';
+import { MenuBtn } from '../../../constants/app';
+import { Store } from '../../../logic/store/state_handler';
+import { menuProps } from '../../shared/button/button.items';
 
 export default class Menu extends BaseComponent {
   greeting: Greeting;
@@ -47,13 +46,6 @@ export default class Menu extends BaseComponent {
       value.setDisplay = key === MenuBtn.RETURN;
     });
     this.greeting.element.style.display = 'none';
-  };
-
-  inform = (res:APIResponse):void => {
-    switch (res.id) {
-      default:
-        break;
-    }
   };
 
   appInform = (state: IState): void => {

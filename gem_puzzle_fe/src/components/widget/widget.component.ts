@@ -9,7 +9,7 @@ import {
 } from '../../constants/api';
 import { Tags } from '../../constants/tags';
 import BaseComponent from '../base/base.component';
-import Loader from '../loader/loader.component';
+import Loader from '../shared/loader/loader.component';
 import WidgetProps from '../shared/widget_info/widget.info.component';
 import './widget.scss';
 import { AC } from '../../logic/store/app_action_creators';
@@ -81,8 +81,8 @@ export default class Widget extends BaseComponent {
     if (res.result) {
       switch (res.id) {
         case ReqID.START_GAME:
-        case ReqID.CANCEL_GAME:
         case ReqID.CHECK_SOLUTION:
+          localStorage.removeItem('state');
           Beam.callApi(RC.invokeData(res.result.raw_data));
           break;
 
@@ -105,6 +105,10 @@ export default class Widget extends BaseComponent {
 
         case ReqID.TX_STATUS:
           this.transactionHandler(res.result);
+          break;
+
+        case ReqID.DONATE:
+          Beam.callApi(RC.invokeData(res.result.raw_data));
           break;
         default:
       }
