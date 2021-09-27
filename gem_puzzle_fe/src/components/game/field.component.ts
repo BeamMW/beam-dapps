@@ -111,8 +111,7 @@ export class Field extends BaseComponent {
           this.removeAll();
           Store.dispatch(AC.setGame({
             board: null,
-            permutation: null,
-            solution: []
+            permutation: null
           }));
           Beam.callApi(
             RC.checkSolution(solution.join(''), <number>permutation)

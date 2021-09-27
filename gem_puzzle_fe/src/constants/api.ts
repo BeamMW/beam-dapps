@@ -1,5 +1,5 @@
 export enum AppSpecs {
-  CID = '289edf39dbecebd6aca3764e34fdaf96d1e71ab3c357751be5a6ecc8e53b8258',
+  CID = '1cec6c716d0bcc172a630cd24e5e6c99024ba0e633ab92359c342b28f894585b',
   TITLE = 'GEM-PUZZLE',
   TX_CHECK_INTERVAL = 3000,
   MAX_MOVES = 400
