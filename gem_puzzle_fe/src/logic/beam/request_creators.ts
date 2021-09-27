@@ -174,14 +174,31 @@ export const RC = {
     }) as const;
   },
 
-  donate: (): ApiArgs => {
+  donate: (sum: number): ApiArgs => {
     const args = argsParser({
       role: ReqRoles.PLAYER,
       action: ReqActions.DONATE,
-      cid: AppSpecs.CID
+      cid: AppSpecs.CID,
+      amount: sum
     });
     return ({
       callID: ReqID.DONATE,
+      method: ReqMethods.INVOKE_CONTRACT,
+      params: {
+        create_tx: false,
+        args
+      }
+    } as const);
+  },
+
+  viewPrizeFund: (): ApiArgs => {
+    const args = argsParser({
+      role: ReqRoles.PLAYER,
+      action: ReqActions.VIEW_PRIZE_FUND,
+      cid: AppSpecs.CID
+    });
+    return ({
+      callID: ReqID.VIEW_PRIZE_FUND,
       method: ReqMethods.INVOKE_CONTRACT,
       params: {
         create_tx: false,

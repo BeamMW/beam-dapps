@@ -37,5 +37,9 @@ export const AC = {
   setPopup: (payload: IAppState['popup']) => ({
     action: StoreActions.SET_POPUP,
     payload
+  } as const),
+  setPrizeFund: (payload: IAppState['prizeFund']) => ({
+    action: StoreActions.SET_PRIZE_FUND,
+    payload
   } as const)
 };

@@ -66,7 +66,8 @@ declare module 'AppStateProps' {
     autoPlay: boolean;
     pending_rewards: number;
     isTx: boolean;
-    popup: PopupKeys | false
+    popup: PopupKeys | false;
+    prizeFund: number
   }
 
   export interface IState{

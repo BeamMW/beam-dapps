@@ -106,6 +106,10 @@ export default class Widget extends BaseComponent {
         case ReqID.TX_STATUS:
           this.transactionHandler(res.result);
           break;
+
+        case ReqID.DONATE:
+          Beam.callApi(RC.invokeData(res.result.raw_data));
+          break;
         default:
       }
     }

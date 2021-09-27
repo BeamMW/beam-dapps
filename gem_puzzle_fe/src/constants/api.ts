@@ -26,7 +26,8 @@ export enum ReqID {
   VIEW_MY_INFO = 'VIEW_MY_INFO',
   DONATE = 'DONATE',
   VIEW_CONTRACT_PARAMS = 'VIEW_CONTRACT_PARAMS',
-  VIEW_ASSET_INFO = 'VIEW_ASSET_INFO'
+  VIEW_ASSET_INFO = 'VIEW_ASSET_INFO',
+  VIEW_PRIZE_FUND = 'VIEW_PRIZE_FUND'
 }
 
 export enum ReqRoles {
@@ -54,7 +55,8 @@ export enum ReqActions {
   TAKE_PENDING_REWARDS = 'take_pending_rewards',
   GET_MY_INFO = 'get_my_info',
   DONATE = 'donate',
-  VIEW_CONTRACT_PARAMS = 'view_contract_params'
+  VIEW_CONTRACT_PARAMS = 'view_contract_params',
+  VIEW_PRIZE_FUND = 'view_prize_fund'
 }
 
 export enum ResTXStatus {

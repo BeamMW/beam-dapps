@@ -28,6 +28,7 @@ export default class Main extends BaseComponent {
     super(Tags.DIV, ['main']);
     Beam.addObservers(this);
     Beam.callApi(RC.viewMyInfo());
+    Beam.callApi(RC.viewPrizeFund());
     this.menu = new Menu();
     this.popupWon = new Popup();
     this.router = new Router({
@@ -122,7 +123,11 @@ export default class Main extends BaseComponent {
           );
         }
         break;
-
+      case ReqID.VIEW_PRIZE_FUND:
+        if (output) {
+          Store.dispatch(AC.setPrizeFund(output.prize_fund));
+        }
+        break;
       default:
         break;
     }

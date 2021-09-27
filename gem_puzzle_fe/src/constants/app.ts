@@ -11,7 +11,8 @@ export enum StoreActions {
   SET_REWARD = 'SET_REWARD',
   SET_TX = 'SET_TX',
   SET_MY_INFO = 'SET_MY_INFO',
-  SET_POPUP = 'SET_POPUP'
+  SET_POPUP = 'SET_POPUP',
+  SET_PRIZE_FUND = 'SET_PRIZE_FUND'
 }
 
 export enum CidActions {
