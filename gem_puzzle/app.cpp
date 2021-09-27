@@ -66,8 +66,12 @@ void On_action_new_game(const ContractID& cid)
 	hdr.m_Height = Env::get_Height();
 	Env::get_HdrInfo(hdr);
 
+	GemPuzzle::NewGameParams params;
+	Env::DerivePk(params.player, &cid, sizeof(cid));
+
 	uint64_t seed = 0;
-	Env::Memcpy(&seed, &hdr.m_Hash.m_p, 32);
+	Env::Memcpy(&seed, &hdr.m_Hash.m_p, 4);
+	Env::Memcpy((uint8_t*)(&seed) + 4, &params.player.X, 4);
 
 	std::mt19937_64 gen(seed);
 	std::uniform_int_distribution<uint64_t> distrib(1, factorial(GemPuzzle::Board::PERMUTATION_LEN) - 1);
@@ -87,7 +91,6 @@ void On_action_new_game(const ContractID& cid)
 	}
 
 	if (initial_params.max_bet && !just_regenerate) {
-		GemPuzzle::NewGameParams params;
 		if (!Env::DocGetNum64("bet", &params.bet)) {
 			return On_error("Bet must be non-zero");
 		}
@@ -95,8 +98,6 @@ void On_action_new_game(const ContractID& cid)
 		if (params.bet > initial_params.max_bet || params.bet < initial_params.min_bet) {
 			return On_error("Bet must be between contract's min_bet and max_bet");
 		}
-
-		Env::DerivePk(params.player, &cid, sizeof(cid));
 
 		SigRequest sig;
 		sig.m_pID = &cid;
