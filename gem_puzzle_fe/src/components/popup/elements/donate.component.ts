@@ -6,7 +6,7 @@ import { Beam } from '../../../logic/beam/api_handler';
 import { RC } from '../../../logic/beam/request_creators';
 import { AC } from '../../../logic/store/app_action_creators';
 import { Store } from '../../../logic/store/state_handler';
-import { handleString, parseToBeam } from '../../../utils/string_handlers';
+import { handleString, parseToBeam, parseToGroth } from '../../../utils/string_handlers';
 import BaseComponent from '../../base/base.component';
 
 export class Donate extends BaseComponent {
@@ -26,7 +26,8 @@ export class Donate extends BaseComponent {
       `popup__${key}_currencyFund`
     ]);
     currencyFund.element.textContent = 'FUNT';
-    this.prizeFund.element.textContent = `PRIZE FUND ${prizeAmount}`;
+    const amount = Number(parseToBeam(prizeAmount));
+    this.prizeFund.element.textContent = `PRIZE FUND ${amount}`;
     prizeWrap.append(this.prizeFund, currencyFund);
     const inputWrap = new BaseComponent(Tags.DIV, [`popup__${key}_inputWrap`]);
     const input = new BaseComponent(Tags.INPUT, [`popup__${key}_input`]);
@@ -34,13 +35,14 @@ export class Donate extends BaseComponent {
     currency.element.textContent = 'FUNT';
     const inputElement = input.element as HTMLInputElement;
     input.setAttributes({
-      value: '10000000'
+      value: '1'
     });
     inputWrap.append(input, currency);
     const setDonate = new BaseComponent(Tags.DIV, [`popup__${key}_btn`]);
     setDonate.element.textContent = 'DONATE';
     setDonate.element.addEventListener('click', () => {
-      Beam.callApi(RC.donate(Number(inputElement.value)));
+      const beamToGroth = parseToGroth(Number(inputElement.value));
+      Beam.callApi(RC.donate(Number(beamToGroth)));
       Store.dispatch(AC.setPopup(false));
     });
     input.element.oninput = function () {
@@ -67,11 +69,7 @@ export class Donate extends BaseComponent {
 
   appInform = (state: IState): void => {
     const prizeAmount = state.info.prizeFund;
-    const amount = Number(parseToBeam(prizeAmount))
-      .toFixed(8)
-      .replace(/\.?0+$/, '');
-    if (prizeAmount) {
+    const amount = Number(parseToBeam(prizeAmount));
       this.prizeFund.element.textContent = `PRIZE FUND ${amount}`;
-    }
   };
 }
