@@ -60,18 +60,23 @@ export default class Popup extends BaseComponent {
     const { popup } = state.info;
     if (popup !== this.key) {
       if (popup) {
+        const node = this.child;
         switch (popup) {
           case PopupKeys.WIN:
-            this.child.replace(new Win(this.data));
+            this.child = new Win(this.data);
+            node.replace(this.child);
             break;
           case PopupKeys.LOSE:
-            this.child.replace(new Lose());
+            this.child = new Lose();
+            node.replace(this.child);
             break;
           case PopupKeys.LIMIT:
-            this.child.replace(new Limit());
+            this.child = new Limit();
+            node.replace(this.child);
             break;
           case PopupKeys.DONATE:
-            this.child.replace(new Donate());
+            this.child = new Donate();
+            node.replace(this.child);
             break;
           default:
             break;
