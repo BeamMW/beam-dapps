@@ -1,8 +1,11 @@
 import { PropertiesType } from 'beamApiProps';
 import { ICidState } from 'AppStateProps';
+import { AppSpecs } from '../../../constants/api';
 import { BaseReducer } from './base.reducer';
 import { AC } from '../app_action_creators';
 import { CidActions } from '../../../constants/app';
+
+const currentCid = window.localStorage.getItem('cid');
 
 const initialState: ICidState = {
   max_bet: 0,
@@ -29,6 +32,10 @@ export class CidState implements BaseReducer<ICidState> {
         this.state.min_bet = (payload as ICidState).min_bet;
         this.state.prize_aid = (payload as ICidState).prize_aid;
         this.state.prize_amount = (payload as ICidState).prize_amount;
+        if (currentCid !== AppSpecs.CID) {
+          window.localStorage.setItem('cid', AppSpecs.CID);
+          window.localStorage.removeItem('state');
+        }
         break;
       default:
         break;

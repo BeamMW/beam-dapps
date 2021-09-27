@@ -101,7 +101,6 @@ export class Field extends BaseComponent {
       }
 
       if (status === 'won' && board) {
-        window.localStorage.setItem('state', JSON.stringify(store.grid));
         this.timeOutId = setTimeout(() => {
           this.removeAll();
           Store.dispatch(AC.setGame({
@@ -167,8 +166,6 @@ export class Field extends BaseComponent {
           board: newGrid,
           solution: swapped.map((move) => move.solution)
         }));
-        const { grid } = Store.getState();
-        window.localStorage.setItem('state', JSON.stringify(grid));
       }
       this.rerender(swapped);
     }

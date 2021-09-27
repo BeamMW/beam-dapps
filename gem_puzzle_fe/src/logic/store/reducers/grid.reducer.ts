@@ -51,6 +51,7 @@ export class GridState implements BaseReducer<IGridState> {
           } else if ((payload as IGridState).permutation === null) {
             this.state.permutation = null;
           }
+          window.localStorage.setItem('state', JSON.stringify(this.state));
         }
         break;
       default:

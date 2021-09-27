@@ -16,12 +16,10 @@ export class Win extends BaseComponent {
     );
     iconSVG.innerHTML = SVG.popupWon;
     const prize = Store.getState().cid.prize_amount;
-    const { grid } = Store.getState();
-    const { solution } = grid;
+    const { solution } = Store.getState().grid;
     Store.dispatch(AC.setGame({
       solution: []
     }));
-    window.localStorage.setItem('state', JSON.stringify(grid));
     const titleText = new BaseComponent(Tags.SPAN, [`popup__${key}_text`]);
     titleText.element.textContent = 'YOU WON!';
     const amountFunt = new BaseComponent(Tags.DIV, [`popup__${key}_amount`]);

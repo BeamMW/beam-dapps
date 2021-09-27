@@ -28,13 +28,13 @@ export class Cell extends BaseComponent {
     this.sizeX = HtmlProps.PuzzleSize * x;
     this.index = value - 1;
     const cellInner = new BaseComponent(Tags.DIV, ['cell-inner']);
-    const cellInnerOval = new BaseComponent(Tags.DIV, ['oval']);
-    cellInnerOval.innerHTML = `${value}`;
+    // const cellInnerOval = new BaseComponent(Tags.DIV, ['oval']);
+    cellInner.innerHTML = `${value}`;
     cellInner.setAttributes({
       'data-number': String(this.index)
     });
 
-    cellInner.append(cellInnerOval);
+    // cellInner.append(cellInnerOval);
     this.append(cellInner);
     this.render({ x, y });
   }

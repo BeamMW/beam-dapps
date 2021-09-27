@@ -22,7 +22,7 @@ export default class Popup extends BaseComponent {
     super(Tags.DIV, ['popup']);
     Beam.addObservers(this);
     Store.addObservers(this);
-    this.child = new Win();
+    this.child = new Donate();
     this.key = false;
     this.append(this.child);
   }
