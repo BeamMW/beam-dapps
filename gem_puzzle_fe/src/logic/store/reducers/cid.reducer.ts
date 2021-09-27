@@ -6,9 +6,7 @@ import { CidActions } from '../../../constants/app';
 
 const initialState: ICidState = {
   max_bet: 0,
-  multiplier: 0,
-  free_time: 0,
-  game_speed: 0,
+  min_bet: 0,
   prize_aid: 0,
   prize_amount: 0,
   prize_fund: 0
@@ -28,10 +26,9 @@ export class CidState implements BaseReducer<ICidState> {
     switch (action) {
       case CidActions.SET_CID_PARAMS:
         this.state.max_bet = (payload as ICidState).max_bet;
-        this.state.free_time = (payload as ICidState).free_time;
-        this.state.multiplier = (payload as ICidState).multiplier;
-        this.state.game_speed = (payload as ICidState).game_speed;
+        this.state.min_bet = (payload as ICidState).min_bet;
         this.state.prize_aid = (payload as ICidState).prize_aid;
+        this.state.prize_amount = (payload as ICidState).prize_amount;
         break;
       default:
         break;

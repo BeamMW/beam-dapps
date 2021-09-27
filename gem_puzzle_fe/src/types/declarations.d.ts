@@ -85,12 +85,10 @@ declare module 'AppStateProps' {
 
   export interface ICidState {
     max_bet: number;
+    min_bet: number;
     prize_aid: number;
     prize_amount: number;
     prize_fund: number;
-    multiplier: number;
-    free_time: number;
-    game_speed: number;
   }
 
   export type PropertiesType<T> = T extends { [key: string]: infer U }

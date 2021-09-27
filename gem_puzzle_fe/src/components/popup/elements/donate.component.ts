@@ -6,7 +6,7 @@ import { Beam } from '../../../logic/beam/api_handler';
 import { RC } from '../../../logic/beam/request_creators';
 import { AC } from '../../../logic/store/app_action_creators';
 import { Store } from '../../../logic/store/state_handler';
-import { handleString, parseToBeam } from '../../../utils/string_handlers';
+import { parseToBeam } from '../../../utils/string_handlers';
 import BaseComponent from '../../base/base.component';
 
 export class Donate extends BaseComponent {

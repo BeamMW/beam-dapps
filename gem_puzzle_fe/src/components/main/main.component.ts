@@ -26,6 +26,7 @@ export default class Main extends BaseComponent {
 
   constructor() {
     super(Tags.DIV, ['main']);
+    // Beam.callApi(RC.viewAssetInfo(0));
     Beam.addObservers(this);
     Beam.callApi(RC.viewMyInfo());
     Beam.callApi(RC.viewPrizeFund());

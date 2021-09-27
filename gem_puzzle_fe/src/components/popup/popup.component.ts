@@ -18,14 +18,11 @@ export default class Popup extends BaseComponent {
 
   private key: PopupKeys | false;
 
-  private data: number;
-
   constructor() {
     super(Tags.DIV, ['popup']);
     Beam.addObservers(this);
     Store.addObservers(this);
-    this.data = 0;
-    this.child = new Win(this.data);
+    this.child = new Win();
     this.key = false;
     this.append(this.child);
   }
@@ -42,7 +39,6 @@ export default class Popup extends BaseComponent {
       switch (res.id) {
         case ReqID.VIEW_CHECK_RESULT:
           if (output) {
-            this.data = output['time (min)'];
             Store.dispatch(AC.setPopup(
               output.verdict === 'WIN'
                 ? PopupKeys.WIN
@@ -63,7 +59,7 @@ export default class Popup extends BaseComponent {
         const node = this.child;
         switch (popup) {
           case PopupKeys.WIN:
-            this.child = new Win(this.data);
+            this.child = new Win();
             node.replace(this.child);
             break;
           case PopupKeys.LOSE:

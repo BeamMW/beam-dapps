@@ -31,8 +31,6 @@ type PuzzleSolveType = {
 export class Field extends BaseComponent {
   private solveList: PuzzleSolveType [] | null;
 
-  private readonly bet: boolean;
-
   private readonly nodeList: Cell[];
 
   private readonly innerField: BaseComponent;
@@ -44,7 +42,6 @@ export class Field extends BaseComponent {
     Beam.addObservers(this);
     Store.addObservers(this);
     const { board } = Store.getState().grid;
-    this.bet = Boolean(Store.getState().cid.max_bet);
     this.innerField = new BaseComponent(Tags.DIV, ['field-inner']);
     this.timeOutId = null;
     this.solveList = [];
@@ -56,7 +53,7 @@ export class Field extends BaseComponent {
           this.timeOutId = null;
         }
       });
-    if (board && this.bet) this.startGame(board);
+    if (board) this.startGame(board);
     else this.rebootHandler();
   }
 
@@ -68,7 +65,7 @@ export class Field extends BaseComponent {
         solution: ('u' | 'd' | 'r' | 'l')[],
         permutation: number | null
       };
-      if (parsed.board && parsed.permutation && this.bet) {
+      if (parsed.board && parsed.permutation) {
         Store.dispatch(AC.setGame({
           ...parsed,
           status: 'ready'
@@ -104,9 +101,7 @@ export class Field extends BaseComponent {
       }
 
       if (status === 'won' && board) {
-        if (this.bet) {
-          window.localStorage.setItem('state', JSON.stringify(store.grid));
-        }
+        window.localStorage.setItem('state', JSON.stringify(store.grid));
         this.timeOutId = setTimeout(() => {
           this.removeAll();
           Store.dispatch(AC.setGame({
@@ -172,10 +167,8 @@ export class Field extends BaseComponent {
           board: newGrid,
           solution: swapped.map((move) => move.solution)
         }));
-        if (this.bet) {
-          const { grid } = Store.getState();
-          window.localStorage.setItem('state', JSON.stringify(grid));
-        }
+        const { grid } = Store.getState();
+        window.localStorage.setItem('state', JSON.stringify(grid));
       }
       this.rerender(swapped);
     }
