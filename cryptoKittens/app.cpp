@@ -17,19 +17,19 @@ void On_action_create_contract(const ContractID& cid)
     CryptoKittens::StartGameParams params;
 
     Env::DocGetNum64("numberOfAllKittens", &params.numberOfAllKittens);
-    if (params.numberOfAllKittens > 0)
+    if (params.numberOfAllKittens < 1)
     {
         return On_error("numberOfAllKittens must at least 1 kitten");
     }
 
     Env::DocGetNum64("numberOfKittensForGiveAway", &params.numberOfKittensForGiveAway);
-    if (params.numberOfKittensForGiveAway >= params.numberOfAllKittens)
+    if (params.numberOfAllKittens >= params.numberOfKittensForGiveAway)
     {
-        return On_error("numberOfKittensForGiveAway must be greater than or equal to numberOfAllKittens");
+        return On_error("numberOfAllKittens must be greater than or equal to numberOfKittensForGiveAway");
     }
 
     Env::DocGetNum32("periodOfGiveaway", &params.periodOfGiveaway);
-    if (params.periodOfGiveaway < 0) // counted in blocks
+    if (params.periodOfGiveaway < 1) // counted in blocks
     {
         return On_error("periodOfGiveaway must be at least 1 block");
     }
