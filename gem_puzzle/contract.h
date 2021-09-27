@@ -3,8 +3,8 @@
 #include <cstddef>
 
 namespace GemPuzzle {
-	// SID: 8de22687499cde19824a00e21396d4a2780e8b44430547d6df7998413c90e66f
-	static const ShaderID s_SID = {0x8d,0xe2,0x26,0x87,0x49,0x9c,0xde,0x19,0x82,0x4a,0x00,0xe2,0x13,0x96,0xd4,0xa2,0x78,0x0e,0x8b,0x44,0x43,0x05,0x47,0xd6,0xdf,0x79,0x98,0x41,0x3c,0x90,0xe6,0x6f};
+	// SID: 64fbac64ea9bc2087bb3d9068bee547a27c3be576fbdffa8d36a170fd5c30d23
+	static const ShaderID s_SID = {0x64,0xfb,0xac,0x64,0xea,0x9b,0xc2,0x08,0x7b,0xb3,0xd9,0x06,0x8b,0xee,0x54,0x7a,0x27,0xc3,0xbe,0x57,0x6f,0xbd,0xff,0xa8,0xd3,0x6a,0x17,0x0f,0xd5,0xc3,0x0d,0x23};
 
 	constexpr size_t SOLUTION_BUF_SIZE = 8192;
 
@@ -18,9 +18,7 @@ namespace GemPuzzle {
 		Amount prize_fund;
 		// Params for paid game
 		Amount max_bet;
-		Amount multiplier;
-		Height free_time;
-		uint32_t game_speed;
+		Amount min_bet;
 		// Params for free game
 		Amount prize_amount;
 	};
@@ -29,7 +27,6 @@ namespace GemPuzzle {
 		static const uint32_t METHOD = 2;
 		PubKey player;
 		// Params for paid game
-		Height height;
 		Amount bet;
 	};
 
@@ -51,12 +48,8 @@ namespace GemPuzzle {
 		PubKey user;
 	};
 
-	struct GameResult {
-		Verdict verdict;
-		Height time;
-	};
-
 	using GameInfo = NewGameParams;
+	using GameResult = Verdict;
 
 	struct AccountInfo {
 		GameInfo game_info;
