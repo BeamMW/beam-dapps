@@ -23,7 +23,7 @@ void On_action_create_contract(const ContractID& cid)
     }
 
     Env::DocGetNum64("numberOfKittensForGiveAway", &params.numberOfKittensForGiveAway);
-    if (params.numberOfAllKittens >= params.numberOfKittensForGiveAway)
+    if (params.numberOfAllKittens <= params.numberOfKittensForGiveAway)
     {
         return On_error("numberOfAllKittens must be greater than or equal to numberOfKittensForGiveAway");
     }
