@@ -51,6 +51,7 @@ export default class Main extends BaseComponent {
     if (this.child) this.remove(this.child);
     this.menu.removeActive();
     Beam.callApi(RC.viewMyInfo());
+    Beam.callApi(RC.viewPrizeFund());
     window.history.pushState({}, '', Routes.MAIN);
   };
 

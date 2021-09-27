@@ -34,13 +34,14 @@ export class Donate extends BaseComponent {
     currency.element.textContent = 'FUNT';
     const inputElement = input.element as HTMLInputElement;
     input.setAttributes({
-      value: '0.1'
+      value: '10000000'
     });
     inputWrap.append(input, currency);
     const setDonate = new BaseComponent(Tags.DIV, [`popup__${key}_btn`]);
     setDonate.element.textContent = 'DONATE';
     setDonate.element.addEventListener('click', () => {
       Beam.callApi(RC.donate(Number(inputElement.value)));
+      Store.dispatch(AC.setPopup(false));
     });
     input.element.oninput = function () {
       if (
@@ -48,8 +49,8 @@ export class Donate extends BaseComponent {
         || inputElement.value === '0'
         || inputElement.value === '0'
         || inputElement.value === '0.'
-        || inputElement.value > '100'
-        || !handleString(inputElement.value)
+        || inputElement.value > '10000000000'
+        // !handleString(inputElement.value)
       ) {
         setDonate.element.classList.add('disabled');
       } else {
@@ -69,6 +70,8 @@ export class Donate extends BaseComponent {
     const amount = Number(parseToBeam(prizeAmount))
       .toFixed(8)
       .replace(/\.?0+$/, '');
-    this.prizeFund.element.textContent = `PRIZE FUND ${amount}`;
+    if (prizeAmount) {
+      this.prizeFund.element.textContent = `PRIZE FUND ${amount}`;
+    }
   };
 }
