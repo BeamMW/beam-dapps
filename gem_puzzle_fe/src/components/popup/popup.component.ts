@@ -11,6 +11,7 @@ import { Win } from './elements/win.component';
 import { Lose } from './elements/lose.component';
 import { ReqID } from '../../constants/api';
 import { AC } from '../../logic/store/app_action_creators';
+import { Donate } from './elements/donate.component';
 
 export default class Popup extends BaseComponent {
   private child: BaseComponent;
@@ -68,6 +69,9 @@ export default class Popup extends BaseComponent {
             break;
           case PopupKeys.LIMIT:
             this.child.replace(new Limit());
+            break;
+          case PopupKeys.DONATE:
+            this.child.replace(new Donate());
             break;
           default:
             break;

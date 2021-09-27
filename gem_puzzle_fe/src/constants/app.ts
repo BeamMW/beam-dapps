@@ -29,7 +29,8 @@ export enum PopupKeys {
   WIN = 'WIN',
   LOSE = 'LOSE',
   TIME_OUT = 'TIME_OUT',
-  LIMIT = 'LIMIT'
+  LIMIT = 'LIMIT',
+  DONATE = 'DONATE'
 }
 
 export const BOARD_EXAMPLE = JSON.stringify(
@@ -53,7 +54,8 @@ export enum MenuBtn {
   OPTIONS = 'OPTIONS',
   RETURN = 'RETURN',
   BEST = 'BEST',
-  CLAIM_REWARD = 'CLAIM_REWARD'
+  CLAIM_REWARD = 'CLAIM_REWARD',
+  DONATE = 'DONATE'
 }
 
 export enum GreetingsText {

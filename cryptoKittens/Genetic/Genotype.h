@@ -3,11 +3,9 @@
 
 #include "Chromosome.h"
 
-constexpr static int sid = 4583;
-std::mt19937 mersenne(sid);
+using genotype = std::deque<Chromosome>;
 
-using genotype = std::vector<Chromosome>;
-
+#pragma pack (push, 1)
 /*
 * Genotype - set of all genes 
 */
@@ -20,26 +18,14 @@ public:
 	genotype setOfGenes; // set of all genes
 
 	// method for generation of genotype - setting values for chromosomes
-	void generateGenotype(const uint16_t size) noexcept
-	{
-		setOfGenes.resize(size);
-		for (auto chromosomeIt = setOfGenes.begin(); chromosomeIt != setOfGenes.end(); ++chromosomeIt)
-		{
-			generateChromosome(*chromosomeIt);
-		}
-	}
+	void generateGenotype(const uint16_t size) noexcept;
 
 private:
 	// method for generation of gen value - Recessive or Dominant
-	GeneState generateGenValue() noexcept
-	{
-		return (mersenne() % 2) ? GeneState::Recessive : GeneState::Dominant;
-	}
+	GeneState generateGenValue() noexcept;
 
 	// method for generation of chromosome - setting values for all genes in chromosome
-	void generateChromosome(Chromosome& chromosome) noexcept
-	{
-		chromosome.setGenes(generateGenValue(), generateGenValue());
-	}
+	void generateChromosome(Chromosome& chromosome) noexcept;
 
 };
+#pragma pack (pop)

@@ -4,6 +4,8 @@
 #include "Phenotype.h"
 
 using CharacterId = uint32_t;
+
+#pragma pack (push, 1)
 class ICharacter
 {
 public:
@@ -14,3 +16,4 @@ public:
 	ICharacter() noexcept = default;
 	virtual ~ICharacter() noexcept = default;
 };
+#pragma pack (pop)

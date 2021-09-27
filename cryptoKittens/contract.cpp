@@ -2,6 +2,8 @@
 #include "../Math.h"
 #include "contract.h"
 #include <utility>
+#include <string_view>
+
 BEAM_EXPORT void Ctor(CryptoKittens::StartGameParams& params)
 {
 	CryptoKittens::CurrentGameState st;

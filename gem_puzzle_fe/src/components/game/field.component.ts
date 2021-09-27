@@ -87,38 +87,40 @@ export class Field extends BaseComponent {
     } = store.grid;
     const { autoPlay, popup } = store.info;
     if (!popup) {
-    if (status === 'playing') {
-      if (autoPlay) this.autoPlayHandle();
-      if (solution.length + 1 > AppSpecs.MAX_MOVES) {
-        window.history.pushState({}, '', `/${Routes.RETURN}`);
-        Store.dispatch(AC.setPopup(PopupKeys.LIMIT));
+      if (status === 'playing') {
+        if (autoPlay) this.autoPlayHandle();
+        if (solution.length + 1 > AppSpecs.MAX_MOVES) {
+          window.history.pushState({}, '', `/${Routes.RETURN}`);
+          Store.dispatch(AC.setPopup(PopupKeys.LIMIT));
+        }
       }
-    }
 
-    if (status === 'ready') {
-      if (board) {
-        this.startGame(board);
-      } else {
-        Beam.callApi(RC.viewBoard());
+      if (status === 'ready') {
+        if (board) {
+          this.startGame(board);
+        } else {
+          Beam.callApi(RC.viewBoard());
+        }
       }
-    }
 
-    if (status === 'won' && board) {
-      if (this.bet) {
-        window.localStorage.setItem('state', JSON.stringify(store.grid));
+      if (status === 'won' && board) {
+        if (this.bet) {
+          window.localStorage.setItem('state', JSON.stringify(store.grid));
+        }
+        this.timeOutId = setTimeout(() => {
+          this.removeAll();
+          Store.dispatch(AC.setGame({
+            board: null,
+            permutation: null,
+            solution: []
+          }));
+          Beam.callApi(
+            RC.checkSolution(solution.join(''), <number>permutation)
+          );
+          solution.length = 0;
+        }, 3000);
       }
-      this.timeOutId = setTimeout(() => {
-        this.removeAll();
-        Store.dispatch(AC.setGame({
-          board: null,
-          permutation: null,
-          solution: []
-        }));
-        Beam.callApi(RC.checkSolution(solution.join(''), <number>permutation));
-        solution.length = 0;
-      }, 3000);
     }
-  }
   };
 
   listener = (e: Event):void => {

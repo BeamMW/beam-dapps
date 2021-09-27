@@ -22,7 +22,7 @@ export class Win extends BaseComponent {
     this.statMove = new BaseComponent(Tags.SPAN, [`popup__${key}_stat_move`]);
     this.statMove.innerHTML = `<span>Time:</span> ${data}`;
     statWrap.append(this.statMove);
-    const btn = new BaseComponent(Tags.DIV, [`popup__${key}_back`]);
+    const btn = new BaseComponent(Tags.DIV, ['back-to-main']);
     btn.element.textContent = 'Back to Main Menu';
     btn.element.addEventListener('click', (): void => {
       Store.dispatch(AC.setPopup(false));

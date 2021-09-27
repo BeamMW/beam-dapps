@@ -65,6 +65,7 @@ export default class Menu extends BaseComponent {
         } else this.getBtn(MenuBtn.CONTINUE).setDisplay = activeGame;
       }
       this.getBtn(MenuBtn.OPTIONS).setDisplay = true;
+      this.getBtn(MenuBtn.DONATE).setDisplay = true;
     }
   };
 }

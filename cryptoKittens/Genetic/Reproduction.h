@@ -3,6 +3,7 @@
 
 #include "ICharacter.h"
 
+#pragma pack (push, 1)
 /*
 * class contains functions for crossover, mutations
 */
@@ -56,3 +57,4 @@ private:
 	void operator= (const Reproduction&) = delete;
 	void operator= (const Reproduction&&) = delete;
 };
+#pragma pack (pop)

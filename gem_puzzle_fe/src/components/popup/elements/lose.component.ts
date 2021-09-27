@@ -12,7 +12,7 @@ export class Lose extends BaseComponent {
     iconSVG.innerHTML = SVG.popupLose;
     const titleText = new BaseComponent(Tags.SPAN, [`popup__${key}_text`]);
     titleText.element.textContent = 'BETTER LUCK NEXT TIME!';
-    const btn = new BaseComponent(Tags.DIV, [`popup__${key}_back`]);
+    const btn = new BaseComponent(Tags.DIV, ['back-to-main']);
     btn.element.textContent = 'Back to Main Menu';
     btn.element.addEventListener('click', (): void => {
       Store.dispatch(AC.setPopup(false));

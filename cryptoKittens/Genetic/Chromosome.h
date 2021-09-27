@@ -1,9 +1,10 @@
 #pragma once
-#include <vector>
+#include <deque>
 #include <map>
-#include <string>
+#include <string_view>
 #include "Mask.h"
 
+#pragma pack (push, 1)
 /*
 * Chromosome, that consists of 2 alleles of gene, that describe sign expression
 */
@@ -17,9 +18,6 @@ public:
 	~Chromosome() noexcept = default;
 
 	// method for setting gene states in chromosome
-	void setGenes(const GeneState firstGeneValue, const GeneState secondGeneValue) noexcept
-	{
-		firstGene = firstGeneValue;
-		secondGene = secondGeneValue;
-	}
+	void setGenes(const GeneState firstGeneValue, const GeneState secondGeneValue) noexcept;
 };
+#pragma pack (pop)
