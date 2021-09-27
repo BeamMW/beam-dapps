@@ -51,8 +51,9 @@ export class Donate extends BaseComponent {
         || inputElement.value === '0'
         || inputElement.value === '0'
         || inputElement.value === '0.'
-        || inputElement.value > '10000000000'
-        // !handleString(inputElement.value)
+        || inputElement.value === '0.0'
+        || inputElement.value > '100'
+        // || !handleString(inputElement.value)
       ) {
         setDonate.element.classList.add('disabled');
       } else {
