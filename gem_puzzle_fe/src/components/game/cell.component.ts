@@ -45,28 +45,28 @@ export class Cell extends BaseComponent {
   }):void => {
     const kX = x > this.x ? 1 : -1;
     const kY = y > this.y ? 1 : -1;
-    const prevX = this.sizeX;
-    const prevY = this.sizeY;
+    // const prevX = this.sizeX;
+    // const prevY = this.sizeY;
     if (this.x !== x) {
       this.sizeX += (HtmlProps.PuzzleSize * kX);
     }
     if (this.y !== y) {
       this.sizeY += (HtmlProps.PuzzleSize * kY);
     }
-    this.element.animate([
-      {
-        transform: `translate3d(${prevX}px, ${prevY}px, 0)`
-      },
-      {
-        transform: `translate3d(${this.sizeX}px, ${this.sizeY}px, 0)`
-      }
-    ], 150)
-      .onfinish = () => {
+    // this.element.animate([
+    //   {
+    //     transform: `translate3d(${prevX}px, ${prevY}px, 0)`
+    //   },
+    //   {
+    //     transform: `translate3d(${this.sizeX}px, ${this.sizeY}px, 0)`
+    //   }
+    // ], 150)
+    //   .onfinish = () => {
         this.style.transform = `
         translate3d(${this.sizeX}px, ${this.sizeY}px, 0)
         `;
         this.x = x;
         this.y = y;
       };
-  };
+  // };
 }

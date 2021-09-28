@@ -87,7 +87,7 @@ export class Field extends BaseComponent {
       if (status === 'playing') {
         if (autoPlay) this.autoPlayHandle();
         if (solution.length + 1 > AppSpecs.MAX_MOVES) {
-          window.history.pushState({}, '', `/${Routes.RETURN}`);
+          window.history.pushState({}, '', Routes.MAIN);
           Store.dispatch(AC.setPopup(PopupKeys.LIMIT));
         }
       }

@@ -30,11 +30,10 @@ export default class Button extends BaseComponent {
       type: 'button'
     });
     this.titleDOM.append(...args);
-    this.append(bgSVG, this.titleDOM);
+    this.append(this.titleDOM);
   }
 
   public set setDisplay(value: boolean) {
-    // this.style.display = value ? 'block' : '';
     if (value !== this.value) {
       this.value = value;
       if (value) {
@@ -58,7 +57,6 @@ export default class Button extends BaseComponent {
         ).onfinish = () => {
           this.style.height = '60px';
           this.style.marginBottom = '10px';
-
           this.element.animate(
             [
               {
@@ -71,9 +69,7 @@ export default class Button extends BaseComponent {
             {
               duration: 180
             }
-          ).onfinish = () => {
-            this.style.opacity = '1';
-          };
+          );
         };
       } else if (!value) {
         this.element.animate(
@@ -96,7 +92,6 @@ export default class Button extends BaseComponent {
           this.style.height = '0';
           this.style.display = 'none';
           this.style.marginBottom = '0';
-          this.style.opacity = '0';
         };
       }
     }

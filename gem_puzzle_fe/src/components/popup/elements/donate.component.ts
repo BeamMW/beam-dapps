@@ -1,4 +1,3 @@
-import { IState } from 'AppStateProps';
 import { PopupKeys } from '../../../constants/app';
 import { SVG } from '../../../constants/svg.icons';
 import { Tags } from '../../../constants/tags';
@@ -6,7 +5,10 @@ import { Beam } from '../../../logic/beam/api_handler';
 import { RC } from '../../../logic/beam/request_creators';
 import { AC } from '../../../logic/store/app_action_creators';
 import { Store } from '../../../logic/store/state_handler';
-import { handleString, parseToBeam, parseToGroth } from '../../../utils/string_handlers';
+import {
+  handleString,
+  parseToGroth
+} from '../../../utils/string_handlers';
 import BaseComponent from '../../base/base.component';
 
 export class Donate extends BaseComponent {
@@ -14,10 +16,8 @@ export class Donate extends BaseComponent {
 
   inputValue = '1';
 
-  constructor(key = PopupKeys.DONATE) {
+  constructor(data: number, key = PopupKeys.DONATE) {
     super(Tags.DIV, [`popup__${key}`]);
-    Store.addObservers(this);
-    const prizeAmount = Store.getState().info.prizeFund;
     const iconSVG = new BaseComponent(Tags.DIV, [`popup__${key}_icon`]);
     iconSVG.innerHTML = SVG.popupLose;
     const titleText = new BaseComponent(Tags.SPAN, [`popup__${key}_text`]);
@@ -28,7 +28,7 @@ export class Donate extends BaseComponent {
       `popup__${key}_currencyFund`
     ]);
     currencyFund.element.textContent = 'FUNT';
-    const amount = Number(parseToBeam(prizeAmount));
+    const amount = data;
     this.prizeFund.element.textContent = `PRIZE FUND ${amount}`;
     prizeWrap.append(this.prizeFund, currencyFund);
     const inputWrap = new BaseComponent(Tags.DIV, [`popup__${key}_inputWrap`]);
@@ -80,10 +80,4 @@ export class Donate extends BaseComponent {
     });
     this.append(iconSVG, titleText, prizeWrap, inputWrap, setDonate, btn);
   }
-
-  appInform = (state: IState): void => {
-    const prizeAmount = state.info.prizeFund;
-    const amount = Number(parseToBeam(prizeAmount));
-    this.prizeFund.element.textContent = `PRIZE FUND ${amount}`;
-  };
 }

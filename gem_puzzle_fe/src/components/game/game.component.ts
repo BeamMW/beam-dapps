@@ -19,7 +19,7 @@ export class Game extends BaseComponent {
         title: 'CANCEL GAME',
         icon: SVG.iconCancel,
         handler: ():void => {
-          window.history.pushState({}, '', `/${Routes.RETURN}`);
+          window.history.pushState({}, '', Routes.MAIN);
         }
       }
     );

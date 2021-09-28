@@ -33,8 +33,8 @@ export class CidState implements BaseReducer<ICidState> {
         this.state.prize_aid = (payload as ICidState).prize_aid;
         this.state.prize_amount = (payload as ICidState).prize_amount;
         if (currentCid !== AppSpecs.CID) {
-          window.localStorage.setItem('cid', AppSpecs.CID);
-          window.localStorage.removeItem('state');
+          localStorage.setItem('cid', AppSpecs.CID);
+          localStorage.removeItem('state');
         }
         break;
       default:

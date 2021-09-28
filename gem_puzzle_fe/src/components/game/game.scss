@@ -29,7 +29,7 @@ $time:150ms;
       padding: 10px;   
       background-repeat: no-repeat;
       background-size: auto auto; 
-      // transition: transform $time;
+      transition: transform $time;
       .cell-inner {
         background-image: url('../../assets/icon/puzzle-block.svg');
         display: block;

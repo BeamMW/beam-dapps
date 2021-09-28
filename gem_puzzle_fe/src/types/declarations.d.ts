@@ -61,7 +61,7 @@ declare module 'AppStateProps' {
 
   export interface IAppState {
     [key:string];
-    has_active_game: boolean;
+    has_active_game: number;
     time: number;
     autoPlay: boolean;
     pending_rewards: number;
