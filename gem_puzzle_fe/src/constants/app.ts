@@ -56,7 +56,8 @@ export enum MenuBtn {
   RETURN = 'RETURN',
   BEST = 'BEST',
   CLAIM_REWARD = 'CLAIM_REWARD',
-  DONATE = 'DONATE'
+  DONATE = 'DONATE',
+  SET_ACTIVE = 'SET_ACTIVE'
 }
 
 export enum GreetingsText {

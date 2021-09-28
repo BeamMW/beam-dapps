@@ -6,11 +6,13 @@ import { Beam } from '../../../logic/beam/api_handler';
 import { RC } from '../../../logic/beam/request_creators';
 import { AC } from '../../../logic/store/app_action_creators';
 import { Store } from '../../../logic/store/state_handler';
-import { parseToBeam, parseToGroth } from '../../../utils/string_handlers';
+import { handleString, parseToBeam, parseToGroth } from '../../../utils/string_handlers';
 import BaseComponent from '../../base/base.component';
 
 export class Donate extends BaseComponent {
   prizeFund: BaseComponent;
+
+  inputValue = '1';
 
   constructor(key = PopupKeys.DONATE) {
     super(Tags.DIV, [`popup__${key}`]);
@@ -37,6 +39,7 @@ export class Donate extends BaseComponent {
     input.setAttributes({
       value: '1'
     });
+
     inputWrap.append(input, currency);
     const setDonate = new BaseComponent(Tags.DIV, [`popup__${key}_btn`]);
     setDonate.element.textContent = 'DONATE';
@@ -48,21 +51,28 @@ export class Donate extends BaseComponent {
         Store.dispatch(AC.setPopup(false));
       }
     });
-    input.element.oninput = function () {
-      if (
-        inputElement.value === ''
-        || inputElement.value === '0'
-        || inputElement.value === '0'
-        || inputElement.value === '0.'
-        || inputElement.value === '0.0'
-        || inputElement.value > '100'
-        // || !handleString(inputElement.value)
-      ) {
-        setDonate.element.classList.add('disabled');
+    input.element.addEventListener('input', (e:Event) => {
+      console.log(e);
+      const target = e.target as HTMLInputElement;
+      target.setSelectionRange(target.value.length, target.value.length);
+      target.value = this.inputValue;
+    });
+    input.element.addEventListener('keydown', (e:KeyboardEvent) => {
+      const target = e.target as HTMLInputElement;
+      const check = e.key === 'Backspace'
+        ? target.value.substring(0, target.value.length - 1)
+        : target.value + e.key;
+      const regex = new RegExp(/^-?\d+(\.\d*)?$/g);
+      if (!check.match(regex) && e.key !== 'Backspace') {
+        e.preventDefault();
+      } else if (handleString(check)) {
+        this.inputValue = check;
+        setDonate.classList.remove('disabled');
       } else {
-        setDonate.element.classList.remove('disabled');
+        this.inputValue = check;
+        setDonate.classList.add('disabled');
       }
-    };
+    });
     const btn = new BaseComponent(Tags.DIV, ['back-to-main']);
     btn.element.textContent = 'Back to Main Menu';
     btn.element.addEventListener('click', (): void => {

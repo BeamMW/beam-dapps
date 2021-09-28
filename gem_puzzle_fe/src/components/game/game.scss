@@ -1,11 +1,13 @@
 $time:150ms;
 .game {
   width: 100%;
+  animation: animate .3s;
   .game-infoblock{
     padding: 20px 30%;
     display: flex;
     justify-content: flex-end;
     flex-direction: column;
+    animation: animate .3s;
   }
 .field{
     width: max-content;
@@ -27,7 +29,7 @@ $time:150ms;
       padding: 10px;   
       background-repeat: no-repeat;
       background-size: auto auto; 
-      transition: transform $time;
+      // transition: transform $time;
       .cell-inner {
         background-image: url('../../assets/icon/puzzle-block.svg');
         display: block;

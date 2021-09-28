@@ -25,12 +25,12 @@ export default class Menu extends BaseComponent {
     this.append(this.greeting, ...values);
   }
 
-  buttonBuilder = (btn: typeof menuProps[number]):Button => {
+  buttonBuilder = (btn: typeof menuProps[number]): Button => {
     const btnKey = new Button(btn);
     return btnKey;
   };
 
-  getBtn = (btn:MenuBtn):Button => this.buttons.get(btn) as Button;
+  getBtn = (btn: MenuBtn): Button => this.buttons.get(btn) as Button;
 
   removeActive = (): void => {
     this.classList.remove('active');
@@ -56,16 +56,15 @@ export default class Menu extends BaseComponent {
       if (isTx) {
         this.getBtn(MenuBtn.NEW).setDisplay = false;
         this.getBtn(MenuBtn.CONTINUE).setDisplay = false;
+      } else if (bet) {
+        this.getBtn(MenuBtn.NEW).setDisplay = true;
+        this.getBtn(MenuBtn.CONTINUE).setDisplay = activeGame;
       } else {
-        if (bet) {
-          this.getBtn(MenuBtn.NEW).setDisplay = true;
-        }
-        if (!bet) {
-          this.getBtn(MenuBtn.CONTINUE).setDisplay = true;
-        } else this.getBtn(MenuBtn.CONTINUE).setDisplay = activeGame;
+        this.getBtn(MenuBtn.CONTINUE).setDisplay = true;
       }
-      this.getBtn(MenuBtn.OPTIONS).setDisplay = true;
+      // this.getBtn(MenuBtn.OPTIONS).setDisplay = true;
       this.getBtn(MenuBtn.DONATE).setDisplay = true;
+      // this.getBtn(MenuBtn.SET_ACTIVE).setDisplay = true;
     }
   };
 }

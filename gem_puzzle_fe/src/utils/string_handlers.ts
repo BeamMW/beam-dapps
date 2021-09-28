@@ -32,6 +32,7 @@ export const handleString = (next:string):boolean => {
     : '0';
   if (
     (next && !String(next).match(regex))
+    || next === ''
     || (String(next).length > 1
     && String(next)[0] === '0'
     && next.indexOf('.') < 0)
@@ -39,6 +40,7 @@ export const handleString = (next:string):boolean => {
     || afterDot.length > 8
     || (floatValue === 0 && next.length > 1 && next[1] !== '.')
     || (floatValue < 1 && next.length > 10)
+    || floatValue === 0
     || (floatValue > 0 && (
       floatValue < BeamAmmount.MIN_AMOUNT || floatValue > BeamAmmount.MAX_AMOUNT
     ))
