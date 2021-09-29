@@ -63,7 +63,9 @@ export class Donate extends BaseComponent {
         ? target.value.substring(0, target.value.length - 1)
         : target.value + e.key;
       const regex = new RegExp(/^-?\d+(\.\d*)?$/g);
-      if (!check.match(regex) && e.key !== 'Backspace') {
+      if ((!check.match(regex)
+      || check.length > 10)
+      && e.key !== 'Backspace') {
         e.preventDefault();
       } else if (handleString(check)) {
         this.inputValue = check;

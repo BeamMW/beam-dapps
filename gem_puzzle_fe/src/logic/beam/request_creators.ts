@@ -126,22 +126,6 @@ export const RC = {
     }) as const;
   },
 
-  viewTops: (): ApiArgs => {
-    const args = argsParser({
-      role: ReqRoles.PLAYER,
-      action: ReqActions.VIEW_TOPS,
-      cid: AppSpecs.CID
-    });
-    return ({
-      callID: ReqID.VIEW_TOPS,
-      method: ReqMethods.INVOKE_CONTRACT,
-      params: {
-        create_tx: false,
-        args
-      }
-    }) as const;
-  },
-
   takePendingRewards: (): ApiArgs => {
     const args = argsParser({
       role: ReqRoles.PLAYER,

@@ -71,7 +71,9 @@ export class BeamAPI {
       this.API = await new Promise<QObject>((resolve) => {
         window.addEventListener('message', async (ev) => {
           if (window.BeamApi) {
-            const webApiResult = window.BeamApi.callWalletApiResult as ApiResultWeb;
+            const webApiResult = window
+              .BeamApi
+              .callWalletApiResult as ApiResultWeb;
             if (ev.data === 'apiInjected') {
               await webApiResult(this.onApiResult);
               resolve(window.BeamApi);

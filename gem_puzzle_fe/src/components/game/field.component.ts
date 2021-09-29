@@ -115,6 +115,7 @@ export class Field extends BaseComponent {
           Beam.callApi(
             RC.checkSolution(solution.join(''), <number>permutation)
           );
+          window.history.pushState({}, '', Routes.MAIN);
           solution.length = 0;
         }, 3000);
       }
