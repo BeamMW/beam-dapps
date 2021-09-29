@@ -84,50 +84,21 @@ BEAM_EXPORT void Method_3(const GemPuzzle::CheckSolutionParams& params)
 	if (initial_params.max_bet) {
 		if (!is_loaded || !acc_info.has_active_game) {
 			Env::Halt();
-		} else {
-			Height cur_height = Env::get_Height();
-			acc_info.game_result.verdict = check_solution(params.permutation_num, params.solution);
-			acc_info.game_result.time = cur_height - acc_info.game_info.height;
+		} 
+	}
 
-			if (acc_info.game_result.verdict == GemPuzzle::Verdict::WIN) {
-				// Protection from cheaters
-				Height permutation_height;
-				Env::LoadVar_T(std::make_pair(params.player, params.permutation_num), permutation_height);
-				if (cur_height - permutation_height > DAY_IN_BLOCKS) {
-					GemPuzzle::InitialParams initial_params;
-					Env::LoadVar_T(0, initial_params);
-
-					Amount reward = 0;
-					if (acc_info.game_result.time <= initial_params.free_time) {
-						reward = initial_params.multiplier * acc_info.game_info.bet;
-					} else {
-						Amount lost = (acc_info.game_result.time - initial_params.free_time) * initial_params.game_speed * acc_info.game_info.bet / 100;
-						Amount max_earn = initial_params.multiplier * acc_info.game_info.bet;
-						if (lost < max_earn) {
-							reward = max_earn - lost;
-						}
-					}
-					Strict::Add(acc_info.pending_rewards, reward);
-					Strict::Sub(initial_params.prize_fund, reward);
-					acc_info.has_active_game = false;
-				}
-				Env::SaveVar_T(std::make_pair(params.player, params.permutation_num), cur_height);
-			}
+	Height cur_height = Env::get_Height();
+	acc_info.game_result = check_solution(params.permutation_num, params.solution);
+	if (acc_info.game_result == GemPuzzle::Verdict::WIN) {
+		// Protection from cheaters
+		Height permutation_height;
+		Env::LoadVar_T(std::make_pair(params.player, params.permutation_num), permutation_height);
+		if (cur_height - permutation_height > DAY_IN_BLOCKS) {
+			Strict::Sub(initial_params.prize_fund, initial_params.prize_amount);
+			Strict::Add(acc_info.pending_rewards, initial_params.prize_amount);
+			acc_info.has_active_game = false;
 		}
-	} else {
-		Height cur_height = Env::get_Height();
-		acc_info.game_result.verdict = check_solution(params.permutation_num, params.solution);
-		acc_info.game_result.time = cur_height - acc_info.game_info.height;
-		if (acc_info.game_result.verdict == GemPuzzle::Verdict::WIN) {
-			// Protection from cheaters
-			Height permutation_height;
-			Env::LoadVar_T(std::make_pair(params.player, params.permutation_num), permutation_height);
-			if (cur_height - permutation_height > DAY_IN_BLOCKS) {
-				Strict::Add(acc_info.pending_rewards, initial_params.prize_amount);
-				Strict::Sub(initial_params.prize_fund, initial_params.prize_amount);
-			}
-			Env::SaveVar_T(std::make_pair(params.player, params.permutation_num), cur_height);
-		}
+		Env::SaveVar_T(std::make_pair(params.player, params.permutation_num), cur_height);
 	}
 	Env::SaveVar_T(params.player, acc_info);
 }

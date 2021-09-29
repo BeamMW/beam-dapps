@@ -12,20 +12,21 @@ import { Lose } from './elements/lose.component';
 import { ReqID } from '../../constants/api';
 import { AC } from '../../logic/store/app_action_creators';
 import { Donate } from './elements/donate.component';
+import { parseToBeam } from '../../utils/string_handlers';
 
 export default class Popup extends BaseComponent {
   private child: BaseComponent;
 
   private key: PopupKeys | false;
 
-  private data: number;
+  data: number;
 
   constructor() {
     super(Tags.DIV, ['popup']);
     Beam.addObservers(this);
     Store.addObservers(this);
     this.data = 0;
-    this.child = new Win(this.data);
+    this.child = new Donate(this.data);
     this.key = false;
     this.append(this.child);
   }
@@ -42,7 +43,6 @@ export default class Popup extends BaseComponent {
       switch (res.id) {
         case ReqID.VIEW_CHECK_RESULT:
           if (output) {
-            this.data = output['time (min)'];
             Store.dispatch(AC.setPopup(
               output.verdict === 'WIN'
                 ? PopupKeys.WIN
@@ -51,6 +51,12 @@ export default class Popup extends BaseComponent {
           }
           break;
         default:
+          break;
+        case ReqID.VIEW_PRIZE_FUND:
+          if (output) {
+            this.data = Number(parseToBeam(output.prize_fund));
+            Store.dispatch(AC.setPopup(PopupKeys.DONATE));
+          }
           break;
       }
     }
@@ -63,7 +69,7 @@ export default class Popup extends BaseComponent {
         const node = this.child;
         switch (popup) {
           case PopupKeys.WIN:
-            this.child = new Win(this.data);
+            this.child = new Win();
             node.replace(this.child);
             break;
           case PopupKeys.LOSE:
@@ -75,7 +81,7 @@ export default class Popup extends BaseComponent {
             node.replace(this.child);
             break;
           case PopupKeys.DONATE:
-            this.child = new Donate();
+            this.child = new Donate(this.data);
             node.replace(this.child);
             break;
           default:

@@ -8,15 +8,9 @@
     justify-content: space-evenly;
 
     &.active {
-        // margin: 1vh auto;
-        width: 550px;
-        height: 70px;
-        display: flex;
-        flex-direction: row;
-        align-content: center;
+        display: none;
     }
     &.active_popup {
-        // margin: 1vh auto;
         filter: blur(4px);
     }
 
@@ -53,19 +47,4 @@
             color: #fff;
         }
     }
-
-    .button {
-        margin-bottom: 10px;
-    }
-
-    // .button::before {
-    //     content: "";
-    //     position: absolute;
-    //     height: 0;
-    //     width: 0;
-    //     left: 50px;
-    //     border-top: 25px solid transparent;
-    //     border-bottom: 25px solid transparent;
-    //     border-left: 15px solid #59324C;
-    // }
 }

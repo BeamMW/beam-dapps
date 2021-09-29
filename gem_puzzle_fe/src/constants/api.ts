@@ -1,12 +1,12 @@
 export enum AppSpecs {
-  CID = '289edf39dbecebd6aca3764e34fdaf96d1e71ab3c357751be5a6ecc8e53b8258',
+  CID = 'fe36e8eafa7657975951c7d1c85e10121949a06860e460471fec5d87a444e03c',
   TITLE = 'GEM-PUZZLE',
   TX_CHECK_INTERVAL = 3000,
   MAX_MOVES = 400
 }
-// 289edf39dbecebd6aca3764e34fdaf96d1e71ab3c357751be5a6ecc8e53b8258 - w/o bet
-// cee263491c35189975d5ad65a4a54bbf374b1f89218e58fafea32c37d4b07a0b -bet aid!==0
-// 1cec6c716d0bcc172a630cd24e5e6c99024ba0e633ab92359c342b28f894585b -bet aid===0
+// 8bc7e10eb2b17e72540b7217d80b23c2eff80450f49c3f6518f6a77a6ff4acaf - w/o bet
+// fe36e8eafa7657975951c7d1c85e10121949a06860e460471fec5d87a444e03c -bet aid!==0
+
 export enum ReqID {
   CHECK = 'CHECK',
   CHECK_SOLUTION = 'CHECK_SOLUTION',

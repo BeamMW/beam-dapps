@@ -28,13 +28,13 @@ export class Cell extends BaseComponent {
     this.sizeX = HtmlProps.PuzzleSize * x;
     this.index = value - 1;
     const cellInner = new BaseComponent(Tags.DIV, ['cell-inner']);
-    const cellInnerOval = new BaseComponent(Tags.DIV, ['oval']);
-    cellInnerOval.innerHTML = `${value}`;
+    // const cellInnerOval = new BaseComponent(Tags.DIV, ['oval']);
+    cellInner.innerHTML = `${value}`;
     cellInner.setAttributes({
       'data-number': String(this.index)
     });
 
-    cellInner.append(cellInnerOval);
+    // cellInner.append(cellInnerOval);
     this.append(cellInner);
     this.render({ x, y });
   }
@@ -45,14 +45,28 @@ export class Cell extends BaseComponent {
   }):void => {
     const kX = x > this.x ? 1 : -1;
     const kY = y > this.y ? 1 : -1;
+    // const prevX = this.sizeX;
+    // const prevY = this.sizeY;
     if (this.x !== x) {
       this.sizeX += (HtmlProps.PuzzleSize * kX);
     }
     if (this.y !== y) {
       this.sizeY += (HtmlProps.PuzzleSize * kY);
     }
-    this.style.transform = `translate(${this.sizeX}px, ${this.sizeY}px)`;
-    this.x = x;
-    this.y = y;
-  };
+    // this.element.animate([
+    //   {
+    //     transform: `translate3d(${prevX}px, ${prevY}px, 0)`
+    //   },
+    //   {
+    //     transform: `translate3d(${this.sizeX}px, ${this.sizeY}px, 0)`
+    //   }
+    // ], 150)
+    //   .onfinish = () => {
+        this.style.transform = `
+        translate3d(${this.sizeX}px, ${this.sizeY}px, 0)
+        `;
+        this.x = x;
+        this.y = y;
+      };
+  // };
 }

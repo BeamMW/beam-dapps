@@ -5,9 +5,9 @@ import { AC } from '../app_action_creators';
 import { StoreActions } from '../../../constants/app';
 
 const initialState: IAppState = {
-  has_active_game: false,
+  has_active_game: 0,
   time: 0,
-  autoPlay: false,
+  autoPlay: true,
   pending_rewards: 0,
   isTx: false,
   popup: false,

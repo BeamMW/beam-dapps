@@ -47,6 +47,7 @@ export default class Widget extends BaseComponent {
   }
 
   transactionHandler = (result: APIResponse['result']): void => {
+    const { popup } = Store.getState().info;
     if (result.status_string === ResTXStatus.IN_PROGRESS) {
       setTimeout(
         () => Beam.callApi(RC.viewTxStatus(result.txId)),
@@ -59,13 +60,16 @@ export default class Widget extends BaseComponent {
     ) {
       this.classList.remove('active');
       window.localStorage.removeItem('txId');
-      Store.dispatch(AC.setIsTx(false));
+      Store.dispatch(AC.setIsTx(false), 'sync');
       switch (result.comment) {
-        case ResTXComment.CREATE_NEW_GAME:
-          Beam.callApi(RC.viewBoard());
-          break;
+        // case ResTXComment.CREATE_NEW_GAME:
+        //   Beam.callApi(RC.viewBoard());
+        //   break;
         case ResTXComment.CHECKIN_SOLUTION:
-          Beam.callApi(RC.viewCheckResult());
+          if (popup) {
+            Store.dispatch(AC.setPopup(false), 'sync');
+            setTimeout(() => Beam.callApi(RC.viewCheckResult()), 400);
+          } else Beam.callApi(RC.viewCheckResult());
           break;
         case ResTXComment.ENDING_EXISTING_GAME:
           window.localStorage.removeItem('state');
@@ -88,7 +92,6 @@ export default class Widget extends BaseComponent {
 
         case ReqID.TAKE_PENDING_REWARDS:
           Beam.callApi(RC.invokeData(res.result.raw_data));
-          Beam.callApi(RC.viewMyInfo());
           break;
 
         case ReqID.INVOKE_DATA:

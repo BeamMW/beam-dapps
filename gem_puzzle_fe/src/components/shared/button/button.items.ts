@@ -1,12 +1,10 @@
 import { MenuButtonType } from 'ComponentProps';
-import { AC } from '../../../logic/store/app_action_creators';
 import { SVG } from '../../../constants/svg.icons';
 import {
   RC
 } from '../../../logic/beam/request_creators';
-import { MenuBtn, PopupKeys, Routes } from '../../../constants/app';
+import { MenuBtn, Routes } from '../../../constants/app';
 import { Beam } from '../../../logic/beam/api_handler';
-import { Store } from '../../../logic/store/state_handler';
 
 export const menuProps: MenuButtonType[] = [
   {
@@ -23,26 +21,18 @@ export const menuProps: MenuButtonType[] = [
     handler: () => Beam.callApi(RC.startGame())
   },
   {
-    key: MenuBtn.OPTIONS,
-    icon: SVG.settingIcon,
-    title: 'SETTING',
-    handler: ():void => {
-      window.history.pushState({}, '', `/${Routes.OPTIONS}`);
-    }
-  },
-  {
-    key: MenuBtn.RETURN,
-    title: 'CANCEL GAME',
-    icon: SVG.iconCancel,
-    handler: ():void => {
-      window.history.pushState({}, '', `/${Routes.RETURN}`);
-    }
-  },
-  {
     key: MenuBtn.DONATE,
     title: 'DONATE',
-    handler: () => Store.dispatch(AC.setPopup(PopupKeys.DONATE))
+    handler: () => Beam.callApi(RC.viewPrizeFund())
   }
+  // {
+  //   key: MenuBtn.SET_ACTIVE,
+  //   title: 'Active',
+  //   handler: ():void => {
+  //     const active = Store.getState().info.isTx;
+  //     Store.dispatch(AC.setIsTx(!active));
+  //   }
+  // }
 ];
 
 export const claimBtn = [

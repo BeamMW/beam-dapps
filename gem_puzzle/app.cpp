@@ -9,6 +9,7 @@
 #include "board.h"
 
 #include <bitset>
+#include <ctime>
 #include <iostream>
 #include <random>
 #include <vector>
@@ -65,9 +66,13 @@ void On_action_new_game(const ContractID& cid)
 	hdr.m_Height = Env::get_Height();
 	Env::get_HdrInfo(hdr);
 
+	GemPuzzle::NewGameParams params;
+	Env::DerivePk(params.player, &cid, sizeof(cid));
+
 	uint64_t seed = 0;
-	Env::Memcpy(&seed, &hdr.m_Hash.m_p, 32);
-	
+	Env::Memcpy(&seed, &hdr.m_Hash.m_p, 4);
+	Env::Memcpy((uint8_t*)(&seed) + 4, &params.player.X, 4);
+
 	std::mt19937_64 gen(seed);
 	std::uniform_int_distribution<uint64_t> distrib(1, factorial(GemPuzzle::Board::PERMUTATION_LEN) - 1);
 
@@ -86,18 +91,13 @@ void On_action_new_game(const ContractID& cid)
 	}
 
 	if (initial_params.max_bet && !just_regenerate) {
-		GemPuzzle::NewGameParams params;
-		params.height = hdr.m_Height;
-
 		if (!Env::DocGetNum64("bet", &params.bet)) {
 			return On_error("Bet must be non-zero");
 		}
 
-		if (params.bet > initial_params.max_bet) {
-			return On_error("Bet must be less or equal than contract's max_bet");
+		if (params.bet > initial_params.max_bet || params.bet < initial_params.min_bet) {
+			return On_error("Bet must be between contract's min_bet and max_bet");
 		}
-
-		Env::DerivePk(params.player, &cid, sizeof(cid));
 
 		SigRequest sig;
 		sig.m_pID = &cid;
@@ -145,23 +145,14 @@ void On_action_create_contract(const ContractID& unused)
 	if (!Env::DocGetNum64("max_bet", &params.max_bet)) {
 		params.max_bet = 0;
 	}
+	if (!Env::DocGetNum64("min_bet", &params.min_bet)) {
+		params.max_bet = 0;
+	}
 	if (!Env::DocGetNum32("prize_aid", &params.prize_aid)) {
 		params.prize_aid = 0;
 	}
 	if (!Env::DocGetNum64("prize_amount", &params.prize_amount)) {
 		params.prize_amount = 0;
-	}
-	if (!Env::DocGetNum32("game_speed", &params.game_speed)) {
-		params.game_speed = 0;
-	}
-	if (params.game_speed > 100) {
-		return On_error("game_speed must be in percents (100% maximum)");
-	}
-	if (!Env::DocGetNum64("free_time", &params.free_time)) {
-		params.free_time = 0;
-	}
-	if (!Env::DocGetNum64("multiplier", &params.multiplier)) {
-		params.multiplier = 0;
 	}
 	if (!Env::DocGetNum64("initial_prize_fund", &params.prize_fund)) {
 		params.prize_fund = 0;
@@ -195,7 +186,7 @@ void On_action_view_check_result(const ContractID& cid)
 	}
 
 	char verdict[VERDICT_BUF_SIZE];
-	switch (acc_info.game_result.verdict) {
+	switch (acc_info.game_result) {
 	case GemPuzzle::Verdict::WIN:
 		Env::Memcpy(verdict, "WIN", sizeof(verdict));
 		break;
@@ -210,7 +201,6 @@ void On_action_view_check_result(const ContractID& cid)
 	Env::DocGroup root("");
 	{
 		Env::DocAddText("verdict", verdict);
-		Env::DocAddNum64("time (min)", acc_info.game_result.time);
 	}
 }
 
@@ -288,12 +278,10 @@ void On_action_view_contract_params(const ContractID& cid)
 	Env::DocGroup root("");
 	{
 		Env::DocAddNum64("max_bet", params.max_bet);
+		Env::DocAddNum64("min_bet", params.min_bet);
 		Env::DocAddNum64("prize_aid", params.prize_aid);
 		Env::DocAddNum64("prize_amount", params.prize_amount);
 		Env::DocAddNum64("prize_fund", params.prize_fund);
-		Env::DocAddNum64("multiplier", params.multiplier);
-		Env::DocAddNum64("free_time", params.free_time);
-		Env::DocAddNum32("game_speed", params.game_speed);
 	}
 }
 
@@ -328,11 +316,9 @@ BEAM_EXPORT void Method_0()
             {
                 Env::DocGroup grMethod("create_contract");
                 Env::DocAddText("max_bet", "Amount");
+                Env::DocAddText("min_bet", "Amount");
                 Env::DocAddText("prize_aid", "AssetID");
                 Env::DocAddText("prize_amount", "Amount");
-                Env::DocAddText("multiplier", "Amount");
-                Env::DocAddText("free_time", "Height");
-				Env::DocAddText("game_speed", "uint32");
 				Env::DocAddText("initial_prize_fund", "Amount");
             }
             {

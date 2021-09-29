@@ -16,7 +16,7 @@ export class Lose extends BaseComponent {
     btn.element.textContent = 'Back to Main Menu';
     btn.element.addEventListener('click', (): void => {
       Store.dispatch(AC.setPopup(false));
-      window.history.pushState({}, '', `/${Routes.RETURN}`);
+      window.history.pushState({}, '', Routes.MAIN);
     });
     this.append(iconSVG, titleText, btn);
   }

@@ -26,9 +26,9 @@ export default class Main extends BaseComponent {
 
   constructor() {
     super(Tags.DIV, ['main']);
+    // Beam.callApi(RC.viewAssetInfo(0));
     Beam.addObservers(this);
     Beam.callApi(RC.viewMyInfo());
-    Beam.callApi(RC.viewPrizeFund());
     this.menu = new Menu();
     this.popupWon = new Popup();
     this.router = new Router({
@@ -37,21 +37,16 @@ export default class Main extends BaseComponent {
     });
     this.child = null;
     this.router.add(Routes.OPTIONS, this.optionsField);
-    this.router.add(Routes.RETURN, this.cancelGame);
     this.router.add(Routes.PLAY, this.initGameField);
     this.router.add('', this.initMainMenu);
     this.append(this.menu, this.popupWon);
   }
 
   initMainMenu = (): void => {
-    this.child = null;
-  };
-
-  cancelGame = (): void => {
     if (this.child) this.remove(this.child);
-    this.menu.removeActive();
+    if (this.menu.classList.contains('active')) this.menu.removeActive();
     Beam.callApi(RC.viewMyInfo());
-    window.history.pushState({}, '', Routes.MAIN);
+    this.child = null;
   };
 
   initGameField = (): void => {
@@ -96,7 +91,7 @@ export default class Main extends BaseComponent {
 
       case ReqID.CHECK_SOLUTION:
         if (this.router.current?.length) {
-          this.cancelGame();
+          this.initMainMenu();
         }
         break;
 
@@ -121,11 +116,6 @@ export default class Main extends BaseComponent {
               pending_rewards: output.pending_rewards
             })
           );
-        }
-        break;
-      case ReqID.VIEW_PRIZE_FUND:
-        if (output) {
-          Store.dispatch(AC.setPrizeFund(output.prize_fund));
         }
         break;
       default:
