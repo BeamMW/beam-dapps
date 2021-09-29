@@ -7,7 +7,7 @@ import { StoreActions } from '../../../constants/app';
 const initialState: IAppState = {
   has_active_game: 0,
   time: 0,
-  autoPlay: true,
+  autoPlay: false,
   pending_rewards: 0,
   isTx: false,
   popup: false,

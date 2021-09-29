@@ -4,7 +4,7 @@
     z-index: 9999;
     transform: translate(0, -800px);
     transition: transform 200ms ease-in-out;
-
+    font-family: Ubuntu-Bold;
     .back-to-main {
         width: 314px;
         height: 60px;
@@ -45,7 +45,6 @@
             width: 151px;
             height: 22px;
             margin: 0 0 30px;
-            font-family: Ubuntu;
             font-size: 30px;
             font-weight: normal;
             font-stretch: normal;
@@ -116,7 +115,6 @@
             text-align: center;
             height: 22px;
             margin: 0 0 30px;
-            font-family: Ubuntu;
             font-size: 30px;
             font-weight: normal;
             font-stretch: normal;
@@ -185,7 +183,6 @@
             text-align: center;
             height: 22px;
             margin: 0 0 30px;
-            font-family: Ubuntu;
             font-size: 30px;
             font-weight: normal;
             font-stretch: normal;

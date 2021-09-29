@@ -11,6 +11,8 @@ export default class Greeting extends BaseComponent {
 
   max_bet: number;
 
+  visible = false;
+
   constructor() {
     super(Tags.DIV, ['description']);
     Store.addObservers(this);
@@ -18,6 +20,8 @@ export default class Greeting extends BaseComponent {
     const titleDom = new BaseComponent(Tags.SPAN, ['title']);
     titleDom.innerHTML = GreetingsText.MainTitle;
     this.descDom = new BaseComponent(Tags.SPAN, ['desc']);
+    this.descDom.innerHTML = GreetingsText.MainDesc;
+    this.style.visibility = 'hidden';
     this.append(titleDom, this.descDom);
   }
 
@@ -28,6 +32,10 @@ export default class Greeting extends BaseComponent {
         ? `Current Bet: ${Number(parseToBeam(this.max_bet)).toFixed(8)
           .replace(/\.?0+$/, '')} BEAM`
         : GreetingsText.MainDesc;
+    }
+    if (!this.visible) {
+      this.visible = true;
+      this.style.visibility = 'visible';
     }
   };
 }

@@ -9,6 +9,7 @@ import { Beam } from '../../../logic/beam/api_handler';
 export const menuProps: MenuButtonType[] = [
   {
     key: MenuBtn.CONTINUE,
+    icon: SVG.leaderboardIcon,
     title: 'PLAY',
     handler: ():void => {
       window.history.pushState({}, '', `/${Routes.PLAY}`);
@@ -22,6 +23,7 @@ export const menuProps: MenuButtonType[] = [
   },
   {
     key: MenuBtn.DONATE,
+    icon: SVG.beamIcon,
     title: 'DONATE',
     handler: () => Beam.callApi(RC.viewPrizeFund())
   }

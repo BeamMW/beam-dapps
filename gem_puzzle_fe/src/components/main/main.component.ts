@@ -18,7 +18,7 @@ import { Game } from '../game/game.component';
 export default class Main extends BaseComponent {
   private readonly menu: Menu;
 
-  private readonly popupWon: Popup;
+  private readonly popup: Popup;
 
   private readonly router: Router;
 
@@ -30,7 +30,7 @@ export default class Main extends BaseComponent {
     Beam.addObservers(this);
     Beam.callApi(RC.viewMyInfo());
     this.menu = new Menu();
-    this.popupWon = new Popup();
+    this.popup = new Popup();
     this.router = new Router({
       mode: RouterMode.HISTORY,
       root: Routes.MAIN
@@ -39,7 +39,10 @@ export default class Main extends BaseComponent {
     this.router.add(Routes.OPTIONS, this.optionsField);
     this.router.add(Routes.PLAY, this.initGameField);
     this.router.add('', this.initMainMenu);
-    this.append(this.menu, this.popupWon);
+    this.append(this.menu, this.popup);
+    if (window.location.pathname !== Routes.MAIN) {
+      window.history.pushState({}, '', Routes.MAIN);
+    }
   }
 
   initMainMenu = (): void => {

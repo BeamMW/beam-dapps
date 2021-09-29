@@ -7,10 +7,6 @@
   padding: 0 10px 0 10px;
   margin: 0 auto;
   border-radius: 37.5px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
   &__top{
     display: flex;
     width: 100%;
@@ -46,6 +42,7 @@
     span{
       color:rgba($color: #fff, $alpha: 1);
       font-size: 20px;
+      font-family: Ubuntu-Bold;
       font-weight: bold;
       font-stretch: normal;
       font-style: normal;
