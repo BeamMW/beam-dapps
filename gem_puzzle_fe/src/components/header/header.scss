@@ -1,11 +1,6 @@
 .header {
-  // width: 1023px;
-  // height: 230px;
-  // margin: 0 10px 0 9px;
-
   width: 872px;
-  padding: 0 10px 0 10px;
-  margin: 0 auto;
+  margin: 40px auto;
   border-radius: 37.5px;
   display: flex;
   flex-direction: column;
@@ -15,18 +10,8 @@
     display: flex;
     width: 100%;
     align-items:center;
-    // margin-bottom: 70px;
+    justify-content: space-between;
   }
-  div + div{
-    margin-left: 23px;
-  }
-  div:last-child{
-    margin-right: 23px;
-  }
-  div:first-child{
-    margin-left: 23px;
-    margin-right: auto;
-  };
   
   .infoblock {
     width: 314px;
@@ -35,7 +20,6 @@
     user-select: none;
     justify-content: center;
     align-items: center;
-    margin: 40px 493px 3px 14px;
     background-image: url('../../assets/icon/button-0-funt.svg');
     background-repeat: no-repeat;
     background-size: cover;
@@ -66,7 +50,6 @@
   .infoblock:first-child {
     width: 285px;
     height: 75px;
-    padding: 17px 25px 18px;
     border-radius: 37.5px;
     background-color: rgba(255, 255, 255, 0.1);
     cursor: default;
