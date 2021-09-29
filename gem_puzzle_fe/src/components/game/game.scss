@@ -1,7 +1,7 @@
 $time:150ms;
 .game {
   width: 100%;
-  animation: animate .3s;
+  
   .game-infoblock{
     padding: 20px 30%;
     display: flex;
@@ -9,8 +9,12 @@ $time:150ms;
     flex-direction: column;
     animation: animate .3s;
   }
-.field{
+.field {
+    animation: animate .3s;
     width: max-content;
+    min-width: 424px;
+    min-height: 424px;
+    height: 0;
     margin-left: auto;
     margin-right: auto;
     padding: 10px;
@@ -20,6 +24,7 @@ $time:150ms;
     margin-bottom: 10px;
     .field-inner{
     .cell {
+      animation: cellAnimated .2s;
       position: absolute;
       display: block;
       will-change: transform; 
@@ -33,7 +38,10 @@ $time:150ms;
       .cell-inner {
         background-image: url('../../assets/icon/puzzle-block.svg');
         display: block;
+        font-family: Ubuntu-Regular;
+        font-stretch: normal;
         line-height: 80px;
+        letter-spacing: normal;
         width: 80px;
         height: 80px;
         margin: 0 auto;
@@ -44,6 +52,7 @@ $time:150ms;
         color: #081d11;
         font-size: 40px;
         user-select: none; 
+        animation: animate .3s;
       }
     }
     }

@@ -4,7 +4,7 @@
     z-index: 9999;
     transform: translate(0, -800px);
     transition: transform 200ms ease-in-out;
-
+    font-family: Ubuntu-Regular;
     .back-to-main {
         width: 314px;
         height: 60px;
@@ -19,6 +19,7 @@
         position: absolute;
         top: 312px;
         left: 165px;
+        font-family: Ubuntu-Bold;
 
         &:hover {
             cursor: pointer;
@@ -45,8 +46,8 @@
             width: 151px;
             height: 22px;
             margin: 0 0 30px;
-            font-family: Ubuntu;
             font-size: 30px;
+            font-family: Ubuntu-Regular;
             font-weight: normal;
             font-stretch: normal;
             font-style: normal;
@@ -62,7 +63,7 @@
             left: 233px;
             width: 210px;
             height: 35px;
-            font-weight: bold;
+            font-family: Ubuntu-Bold;
             font-stretch: normal;
             font-style: normal;
             line-height: normal;
@@ -116,7 +117,6 @@
             text-align: center;
             height: 22px;
             margin: 0 0 30px;
-            font-family: Ubuntu;
             font-size: 30px;
             font-weight: normal;
             font-stretch: normal;
@@ -185,8 +185,8 @@
             text-align: center;
             height: 22px;
             margin: 0 0 30px;
-            font-family: Ubuntu;
             font-size: 30px;
+            font-family: Ubuntu-Regular;
             font-weight: normal;
             font-stretch: normal;
             font-style: normal;
@@ -244,6 +244,7 @@
             align-items: center;
             background-size: cover;
             opacity: 1;
+            font-family: Ubuntu-Bold;
         }
 
         &_btn:hover {

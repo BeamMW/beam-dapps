@@ -15,6 +15,7 @@ import NPuzzleSolver from '../../logic/solver/solvers';
 import { Store } from '../../logic/store/state_handler';
 import { AppSpecs } from '../../constants/api';
 import { PopupKeys, Routes } from '../../constants/app';
+import Loader from '../shared/loader/loader.component';
 
 type PuzzleSolveType = {
   piece: {
@@ -46,6 +47,7 @@ export class Field extends BaseComponent {
     this.timeOutId = null;
     this.solveList = [];
     this.nodeList = [];
+
     this.element.addEventListener('DOMNodeRemovedFromDocument',
       () => {
         if (this.timeOutId) {
@@ -54,7 +56,10 @@ export class Field extends BaseComponent {
         }
       });
     if (board) this.startGame(board);
-    else this.rebootHandler();
+    else {
+      this.append(new Loader());
+      this.rebootHandler();
+    }
   }
 
   rebootHandler = ():void => {
@@ -131,6 +136,8 @@ export class Field extends BaseComponent {
 
   startGame = (board: BoardType):void => {
     const { autoPlay } = Store.getState().info;
+    if (this.element.firstChild) this.removeAll();
+    this.style.height = 'max-content';
     this.init(board);
     Store.dispatch(AC.setGame(
       {
@@ -182,7 +189,6 @@ export class Field extends BaseComponent {
     const len = board.length;
     this.innerField.style.width = `${HtmlProps.PuzzleSize * len}px`;
     this.innerField.style.height = `${HtmlProps.PuzzleSize * len}px`;
-    this.append(this.innerField);
     for (let y = 0; y < len; y++) {
       for (let x = 0; x < len; x++) {
         if (board[y]?.[x]) {
@@ -198,6 +204,7 @@ export class Field extends BaseComponent {
         }
       }
     }
+    this.append(this.innerField);
     this.nodeList.sort((a, b) => a.index - b.index);
   };
 

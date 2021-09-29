@@ -1,6 +1,9 @@
 import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+// const GenerateSW  = require('workbox-webpack-plugin').GenerateSW;
+
+// const FontPreloadPlugin = require("webpack-font-preload-plugin");
 
 export default {
   devtool: 'eval-source-map',
@@ -46,6 +49,23 @@ export default {
     extensions: ['.ts', '.js']
   },
   plugins: [
+    // new GenerateSW({
+    //   runtimeCaching: [
+    //     {
+    //       urlPattern: /^https:\/\/fonts\.gstatic\.com/,
+    //       handler: 'StaleWhileRevalidate',
+    //       options: {
+    //         cacheName: 'google-fonts-webfonts'
+    //       }
+    //     }
+    //   ]
+    // }),
+    // new FontPreloadPlugin({
+    //   index: "index.html",
+    //   extensions: ["ttf", "woff", "woff2"],
+    //   crossorigin: true,
+    //   loadType: "preload",
+    // }),
     new HtmlWebpackPlugin({
       inject: true,
       title: 'beamer',

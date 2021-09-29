@@ -209,6 +209,22 @@ iconCancel: `<svg width="15" height="15" xmlns="http://www.w3.org/2000/svg">
     <path d="m13.466 12.64-.326.326a1.5 1.5 0 0 1-2.121 0L2.534 4.481a1.5 1.5 0 0 1 0-2.121l.326-.326a1.5 1.5 0 0 1 2.121 0l8.485 8.485a1.5 1.5 0 0 1 0 2.121z"/>
     <path d="m2.534 12.64.326.326a1.5 1.5 0 0 0 2.121 0l8.485-8.485a1.5 1.5 0 0 0 0-2.121l-.326-.326a1.5 1.5 0 0 0-2.121 0l-8.485 8.485a1.5 1.5 0 0 0 0 2.121z"/>
 </g>
+</svg>`,
+beamIcon: `<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+<defs>
+    <radialGradient cx="50%" cy="50%" fx="50%" fy="50%" r="50%" id="a">
+        <stop stop-color="#008471" offset="0%"/>
+        <stop stop-color="#103051" offset="100%"/>
+    </radialGradient>
+</defs>
+<g fill="none" fill-rule="evenodd">
+    <circle stroke="#00F6D2" stroke-width="2" fill="url(#a)" cx="12" cy="12" r="10.818"/>
+    <g fill="#FFF">
+        <path d="m12.028 5.836 6.136 10.637h-6.137v-1.777l3.132.001-3.13-5.517V5.836zM12.026 5.836 5.891 16.473h6.136v-1.777l-3.131.001 3.13-5.517V5.836z"/>
+        <path d="M12.027 10.55v3.499l-1.94.003zM12.027 10.55v3.499l1.941.003z"/>
+        <path d="M12.436 11.956 5.891 9.109v3.273l6.545-.133zM12.436 11.956l6.546-2.847v3.273l-6.546-.133z"/>
+    </g>
+</g>
 </svg>`
 };
 
