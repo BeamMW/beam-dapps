@@ -30,9 +30,14 @@ declare module 'qwebchannel' {
     subscribe: (callback: (json: string) => void) => void;
   };
 
+  type ApiResultWeb = ((callback: (arg: string) => void) => void);
+  export type CallApiDesktop = (json: string) => void;
+  export type CallApiWeb = (
+    callid: string, method: string, params: Params) => void;
   export type QObject = {
-    callWalletApi: (json: string) => void;
-    callWalletApiResult: ApiResult;
+    callWalletApi: CallApiDesctop | CallApi,
+    callWalletApiResult: ApiResult
+    | ApiResultWeb;
     apiResult$: ApiResult$;
     callApi: (callid: string, method: string, params: Params) => void;
     initializeShader: (contract: string, name: string) => void;

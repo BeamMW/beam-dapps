@@ -12,9 +12,9 @@ export const gameInfoElements:GameInfoParams[] = [
       const value = AppSpecs.MAX_MOVES - solution.length;
       const color = value < (AppSpecs.MAX_MOVES / 2)
       && value >= (AppSpecs.MAX_MOVES / 4)
-        ? 'rgba(247, 202, 24, 0.3)'
+        ? 'rgb(247, 202, 24)'
         : value < (AppSpecs.MAX_MOVES / 4)
-          ? 'rgba(240, 52, 52, 0.3)'
+          ? 'rgb(240, 52, 52)'
           : '';
       return {
         value: String(value), result: value > 0, color
