@@ -1,7 +1,7 @@
 import { APIResponse, ResOutput } from 'beamApiProps';
 import { Store } from '../../logic/store/state_handler';
 import { Beam } from '../../logic/beam/api_handler';
-import { Tags } from '../../constants/tags';
+import { Tags } from '../../constants/html';
 import BaseComponent from '../base/base.component';
 import Menu from './menu/menu.component';
 import { Field } from '../game/field.component';
@@ -36,7 +36,6 @@ export default class Main extends BaseComponent {
       root: Routes.MAIN
     });
     this.child = null;
-    this.router.add(Routes.OPTIONS, this.optionsField);
     this.router.add(Routes.PLAY, this.initGameField);
     this.router.add('', this.initMainMenu);
     this.append(this.menu, this.popup);
@@ -57,15 +56,6 @@ export default class Main extends BaseComponent {
     this.child = new Game();
     this.menu.replace(this.child);
     this.menu.addActive();
-    this.append(this.menu);
-    Store.addObservers(this.menu);
-  };
-
-  optionsField = (): void => {
-    if (this.child) this.remove(this.child);
-    this.menu.addActive();
-    this.child = new Options();
-    this.menu.replace(this.child);
     this.append(this.menu);
     Store.addObservers(this.menu);
   };

@@ -1,5 +1,5 @@
 import { MenuButtonType } from 'ComponentProps';
-import { Tags } from '../../../constants/tags';
+import { Tags } from '../../../constants/html';
 import BaseComponent from '../../base/base.component';
 import './button.scss';
 import { toDOMParser } from '../../../utils/string_handlers';

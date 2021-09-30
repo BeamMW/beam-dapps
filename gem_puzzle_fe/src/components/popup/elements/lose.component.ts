@@ -1,7 +1,7 @@
 import { AC } from '../../../logic/store/app_action_creators';
 import { PopupKeys, Routes } from '../../../constants/app';
 import { SVG } from '../../../constants/svg.icons';
-import { Tags } from '../../../constants/tags';
+import { Tags } from '../../../constants/html';
 import BaseComponent from '../../base/base.component';
 import { Store } from '../../../logic/store/state_handler';
 

@@ -1,9 +1,12 @@
 @import 'fonts';
 
+$max-width: 872px;
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  user-select: none;
 }
 
 html {
@@ -29,7 +32,6 @@ body {
   backdrop-filter: blur(24px);
   overflow-y: scroll;
   overflow-x: hidden;
-
 }
 
 ::-webkit-scrollbar {
@@ -39,7 +41,7 @@ body {
 
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background: rgba(255, 255, 255, .5);
+  background: rgba(255, 255, 255, 0.5);
   border: 3px solid rgba(0, 0, 0, 0);
   background-clip: padding-box;
 }
@@ -52,19 +54,88 @@ body {
   display: none;
 }
 
+.header {
+  max-width: $max-width;
+  width: 100%;
+}
+
 .footer {
+  width: 100%;
+  max-width: $max-width;
   margin-top: auto;
-  // position: fixed;
-  // z-index: -1;
-  // left: 0;
-  // bottom: 0;
 }
 
 @keyframes animate {
-  0%{
-      opacity: 0;
+  0% {
+    opacity: 0;
   }
-  100%{
-      opacity: 1;
+  100% {
+    opacity: 1;
   }
 }
+
+@media (max-width: 600px) {
+  .header {
+    margin: 20px 0 !important;
+    .infoblock:first-child {
+      width: max-content !important;
+      background-color: transparent !important;
+      margin: 0 0 !important;
+      padding-left: 10px;
+      .title {
+        display: table;
+        vertical-align: middle;
+        svg {
+          display: table-cell;
+        }
+      }
+      span {
+        margin: 0 0;
+      }
+      .after {
+        font-size: 15px !important;
+        margin-left: 3px;
+      }
+    }
+  }
+  .footer {
+    padding-left: 10px;
+    padding-right: 10px;
+    .on-twitter {
+      display: none;
+    }
+  }
+  .widget {
+    max-width: 400px;
+    right: 0;
+    left: 0;
+    margin: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    .infoblock:first-child {
+        .after {
+          display: none !important;
+      }
+    }
+  }
+}
+
+@media (max-height: 880px) {
+  .header {
+    margin-bottom: 0 !important;
+  }
+  .game-infoblock{
+    padding-top: 0px !important;
+  }
+  .footer {
+    padding-top: 0 !important;
+    padding-bottom: 10px !important;
+    .errorBlock{
+      padding: 0 !important;
+    }
+  }
+}
+

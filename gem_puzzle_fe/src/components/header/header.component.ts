@@ -1,6 +1,6 @@
 import { IState } from 'AppStateProps';
 import { Store } from '../../logic/store/state_handler';
-import { Tags } from '../../constants/tags';
+import { Tags } from '../../constants/html';
 import BaseComponent from '../base/base.component';
 import './header.scss';
 import InfoBLock from '../shared/header_info/header.info.component';
@@ -14,6 +14,8 @@ export default class Header extends BaseComponent {
 
   private readonly headerTop: BaseComponent;
 
+  reward = 0;
+
   constructor() {
     super(Tags.DIV, ['header']);
     Store.addObservers(this);
@@ -21,8 +23,8 @@ export default class Header extends BaseComponent {
     this.rewardBlock = new BaseComponent(Tags.DIV, ['infoblock']);
     this.rewardBlock.element.addEventListener('click', () => {
       const { isTx } = Store.getState().info;
-      const reward = Store.getState().info.pending_rewards;
-      if (!isTx && reward > 0) {
+      this.reward = Store.getState().info.pending_rewards;
+      if (!isTx && this.reward > 0) {
         Beam.callApi(RC.takePendingRewards());
       }
     });
@@ -30,7 +32,6 @@ export default class Header extends BaseComponent {
   }
 
   initHeader = (): void => {
-    const reward = Store.getState().info.pending_rewards;
     const logoBlock = new InfoBLock({
       key: 'logo',
       title: SVG.logoGemPuzzleBig,
@@ -40,7 +41,7 @@ export default class Header extends BaseComponent {
     });
     this.headerTop.append(logoBlock);
     this.rewardBlock.element.innerHTML = `
-    ${SVG.funt} <span> ${reward} FUNT</span>
+    ${SVG.funt} <span> ${this.reward} FUNT</span>
     `;
     this.headerTop.append(this.rewardBlock);
     this.append(this.headerTop);
@@ -48,12 +49,18 @@ export default class Header extends BaseComponent {
 
   appInform = (state: IState): void => {
     const reward = state.info.pending_rewards;
-    const num = Number(parseToBeam(reward)).toFixed(8)
-      .replace(/\.?0+$/, '');
-    this.rewardBlock.element.innerHTML = `
-      ${SVG.funt} <span> CLAIM ${num} FUNT</span>`;
-    if (reward) {
-      this.rewardBlock.classList.add('active');
-    } else this.rewardBlock.classList.remove('active');
+    if (reward !== this.reward) {
+      this.reward = reward;
+      const num = Number(parseToBeam(reward))
+        .toFixed(8)
+        .replace(/\.?0+$/, '');
+      this.rewardBlock.element.innerHTML = this.reward
+        ? `
+      ${SVG.funt} <span> CLAIM ${num} FUNT</span>`
+        : `<span> ${num} FUNT</span>`;
+      if (reward) {
+        this.rewardBlock.classList.add('active');
+      } else this.rewardBlock.classList.remove('active');
+    }
   };
 }

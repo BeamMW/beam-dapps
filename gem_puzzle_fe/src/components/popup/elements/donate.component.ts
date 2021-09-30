@@ -1,6 +1,6 @@
 import { PopupKeys } from '../../../constants/app';
 import { SVG } from '../../../constants/svg.icons';
-import { Tags } from '../../../constants/tags';
+import { Tags } from '../../../constants/html';
 import { Beam } from '../../../logic/beam/api_handler';
 import { RC } from '../../../logic/beam/request_creators';
 import { AC } from '../../../logic/store/app_action_creators';
@@ -70,7 +70,9 @@ export class Donate extends BaseComponent {
         ? target.value.substring(0, target.value.length - 1)
         : target.value + e.key;
       const regex = new RegExp(/^-?\d+(\.\d*)?$/g);
-      if (!check.match(regex) && e.key !== 'Backspace') {
+      if ((!check.match(regex)
+      || check.length > 10)
+      && e.key !== 'Backspace') {
         e.preventDefault();
       } else if (handleString(check)) {
         this.inputValue = check;

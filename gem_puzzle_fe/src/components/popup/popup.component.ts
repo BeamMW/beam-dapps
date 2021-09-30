@@ -2,7 +2,7 @@ import { APIResponse, ResOutput } from 'beamApiProps';
 import { IState } from 'AppStateProps';
 import { Limit } from './elements/limit.component';
 import { Beam } from '../../logic/beam/api_handler';
-import { Tags } from '../../constants/tags';
+import { Tags } from '../../constants/html';
 import BaseComponent from '../base/base.component';
 import { Store } from '../../logic/store/state_handler';
 import { PopupKeys } from '../../constants/app';

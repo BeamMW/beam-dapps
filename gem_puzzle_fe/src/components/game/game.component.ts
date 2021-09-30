@@ -1,5 +1,5 @@
 import { Field } from './field.component';
-import { Tags } from '../../constants/tags';
+import { Tags } from '../../constants/html';
 import BaseComponent from '../base/base.component';
 import { GameInfo } from '../shared/game_info/game.info.component';
 import { gameInfoElements } from '../shared/game_info/game.info.items';

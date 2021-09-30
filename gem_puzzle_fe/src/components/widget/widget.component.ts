@@ -1,4 +1,5 @@
 import { APIResponse } from 'beamApiProps';
+import { Routes } from '../../constants/app';
 import { Beam } from '../../logic/beam/api_handler';
 import { Store } from '../../logic/store/state_handler';
 import {
@@ -7,7 +8,7 @@ import {
   ResTXComment,
   ResTXStatus
 } from '../../constants/api';
-import { Tags } from '../../constants/tags';
+import { Tags } from '../../constants/html';
 import BaseComponent from '../base/base.component';
 import Loader from '../shared/loader/loader.component';
 import WidgetProps from '../shared/widget_info/widget.info.component';
@@ -62,9 +63,6 @@ export default class Widget extends BaseComponent {
       window.localStorage.removeItem('txId');
       Store.dispatch(AC.setIsTx(false), 'sync');
       switch (result.comment) {
-        // case ResTXComment.CREATE_NEW_GAME:
-        //   Beam.callApi(RC.viewBoard());
-        //   break;
         case ResTXComment.CHECKIN_SOLUTION:
           if (popup) {
             Store.dispatch(AC.setPopup(false), 'sync');
@@ -96,6 +94,9 @@ export default class Widget extends BaseComponent {
 
         case ReqID.INVOKE_DATA:
           if (res.result?.txid) {
+            if (window.location.pathname !== Routes.MAIN) {
+              window.history.pushState({}, '', Routes.MAIN);
+            }
             window.localStorage.setItem('txId', res.result.txid);
             Store.dispatch(AC.setIsTx(true));
             this.classList.add('active');
