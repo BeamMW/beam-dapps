@@ -9,7 +9,7 @@ import { Beam } from '../../../logic/beam/api_handler';
 export const menuProps: MenuButtonType[] = [
   {
     key: MenuBtn.CONTINUE,
-    icon: SVG.leaderboardIcon,
+    icon: SVG.newGameIcon,
     title: 'PLAY',
     handler: ():void => {
       window.history.pushState({}, '', `/${Routes.PLAY}`);
@@ -17,7 +17,7 @@ export const menuProps: MenuButtonType[] = [
   },
   {
     key: MenuBtn.NEW,
-    icon: SVG.newGameIcon,
+    icon: SVG.beamIcon,
     title: 'NEW BET',
     handler: () => Beam.callApi(RC.startGame())
   },

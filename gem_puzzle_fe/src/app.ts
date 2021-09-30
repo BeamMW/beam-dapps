@@ -17,7 +17,7 @@ export class App {
   private readonly AppState: AppState;
 
   constructor(rootElement: HTMLElement) {
-    const loader = new Loader().element;
+    const loader = new Loader('preGame').element;
     this.rootElement = rootElement;
     this.rootElement.append(loader);
     this.API = new BeamAPI();
