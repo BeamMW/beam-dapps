@@ -1,12 +1,13 @@
 .header {
-  width: 872px;
+  width: 90vw;
+  max-width: 955px;
   margin: 40px auto;
   border-radius: 37.5px;
   &__top{
     display: flex;
-    width: 100%;
+    // width: 100%;
     align-items:center;
-    justify-content: space-between;
+    justify-content: space-around;
   }
   
   .infoblock {
@@ -65,4 +66,33 @@
       color: #fff;
     }
   }
+}
+
+@media screen and (max-width: 680px) {
+  .header {
+    width: 0;
+    margin: 20px auto;
+    border-radius: 37.5px;
+
+  }
+  .header__top{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+  }
+    
+  .infoblock {
+    margin-bottom: 10px;
+}
+
+.main {
+  flex-direction: row;
+  height: auto;
+}
+.description{
+  margin-top: 0;
+}
+
 }

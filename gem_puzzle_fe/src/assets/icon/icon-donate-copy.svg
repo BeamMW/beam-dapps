@@ -1,0 +1,28 @@
+<svg width="34" height="34" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <path id="b" d="m6.7 0 6.703 3.794-.17 7.497z"/>
+        <path id="c" d="m0 0 6.703 3.794-.17 7.497z"/>
+        <filter x="-11.8%" y="-11.8%" width="123.5%" height="123.5%" filterUnits="objectBoundingBox" id="a">
+            <feOffset dx="2" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0" in="shadowOffsetOuter1" result="shadowMatrixOuter1"/>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+    </defs>
+    <g filter="url(#a)" fill="none" fill-rule="evenodd">
+        <path d="m30.473 22.559-4.22 5.625a6.16 6.16 0 0 1-4.921 2.46h-7.84c-2.742 0-5.431-.562-7.963-1.634l-.193-5.414c1.178-5.643 7.014-7.049 10.389-4.078.369.299.79.492 1.212.545.123.035.229.035.334.035h3.182c.316 0 .615.088.879.246.51.281.861.844.879 1.494v.018a1.73 1.73 0 0 1-.879 1.511 1.698 1.698 0 0 1-.879.246h-5.361a.87.87 0 0 0-.88.88.87.87 0 0 0 .88.878h6.82c.879 0 1.512-.369 2.057-.984l3.99-4.606c.633-.685 1.723-.738 2.373-.175.158.123.299.263.404.439.405.598.352 1.705-.263 2.514z" fill="#FFE300" fill-rule="nonzero"/>
+        <path fill="#FF6400" d="M18.765 2.258 12.232 13.55l6.533 4.193 6.533-4.193z"/>
+        <path fill="#FFE300" d="M18.765 2.258 12.232 13.55l6.533.74 6.533-.74z"/>
+        <g transform="translate(12.065 2.258)">
+            <use fill="#FFE300" xlink:href="#b"/>
+            <use fill-opacity=".5" fill="#FF6400" xlink:href="#b"/>
+        </g>
+        <g transform="matrix(-1 0 0 1 18.768 2.258)">
+            <use fill="#FFE300" xlink:href="#c"/>
+            <use fill-opacity=".5" fill="#FF6400" xlink:href="#c"/>
+        </g>
+        <path d="M8.148 20.977a2.64 2.64 0 0 0-2.636-2.637H1.879A.878.878 0 0 0 1 19.22v10.547c0 .486.393.879.879.879h3.633a2.64 2.64 0 0 0 2.636-2.637v-7.031z" fill="#FF6400" fill-rule="nonzero"/>
+    </g>
+</svg>

@@ -23,7 +23,7 @@ export const menuProps: MenuButtonType[] = [
   },
   {
     key: MenuBtn.DONATE,
-    icon: SVG.beamIcon,
+    icon: SVG.iconDonate,
     title: 'DONATE',
     handler: () => Beam.callApi(RC.viewPrizeFund())
   }

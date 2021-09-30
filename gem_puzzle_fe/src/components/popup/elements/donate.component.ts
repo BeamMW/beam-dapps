@@ -19,18 +19,23 @@ export class Donate extends BaseComponent {
   constructor(data: number, key = PopupKeys.DONATE) {
     super(Tags.DIV, [`popup__${key}`]);
     const iconSVG = new BaseComponent(Tags.DIV, [`popup__${key}_icon`]);
-    iconSVG.innerHTML = SVG.popupLose;
+    iconSVG.innerHTML = SVG.popupDonate;
     const titleText = new BaseComponent(Tags.SPAN, [`popup__${key}_text`]);
     titleText.element.textContent = 'DONATE';
+    const iconFund = new BaseComponent(Tags.DIV, [
+      `popup__${key}_iconFund`]);
+    iconFund.innerHTML = SVG.funt;
     const prizeWrap = new BaseComponent(Tags.DIV, [`popup__${key}_prizeWrap`]);
     this.prizeFund = new BaseComponent(Tags.SPAN, [`popup__${key}_prizeFund`]);
     const currencyFund = new BaseComponent(Tags.SPAN, [
       `popup__${key}_currencyFund`
     ]);
-    currencyFund.element.textContent = 'FUNT';
+    currencyFund.element.innerHTML = 'FUNT';
     const amount = data;
-    this.prizeFund.element.textContent = `PRIZE FUND ${amount}`;
-    prizeWrap.append(this.prizeFund, currencyFund);
+    const spanFund = new BaseComponent(Tags.SPAN);
+    spanFund.element.textContent = 'PRIZE FUND: ';
+    this.prizeFund.element.textContent = `${amount}`;
+    prizeWrap.append(spanFund, this.prizeFund, iconFund, currencyFund);
     const inputWrap = new BaseComponent(Tags.DIV, [`popup__${key}_inputWrap`]);
     const input = new BaseComponent(Tags.INPUT, [`popup__${key}_input`]);
     const currency = new BaseComponent(Tags.SPAN, [`popup__${key}_currency`]);
@@ -39,8 +44,10 @@ export class Donate extends BaseComponent {
     input.setAttributes({
       value: '1'
     });
-
-    inputWrap.append(input, currency);
+    const iconCurrency = new BaseComponent(Tags.DIV, [
+      `popup__${key}_iconCurrency`]);
+    iconCurrency.innerHTML = SVG.funt;
+    inputWrap.append(input, iconCurrency, currency);
     const setDonate = new BaseComponent(Tags.DIV, [`popup__${key}_btn`]);
     setDonate.element.textContent = 'DONATE';
     setDonate.element.addEventListener('click', () => {
