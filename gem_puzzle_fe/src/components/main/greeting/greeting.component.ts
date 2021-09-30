@@ -1,6 +1,5 @@
 import { IState } from 'AppStateProps';
-import { GreetingsText } from '../../../constants/app';
-import { Tags } from '../../../constants/tags';
+import { HtmlTexts, Tags } from '../../../constants/html';
 import { Store } from '../../../logic/store/state_handler';
 import { parseToBeam } from '../../../utils/string_handlers';
 import BaseComponent from '../../base/base.component';
@@ -18,9 +17,9 @@ export default class Greeting extends BaseComponent {
     Store.addObservers(this);
     this.max_bet = 0;
     const titleDom = new BaseComponent(Tags.SPAN, ['title']);
-    titleDom.innerHTML = GreetingsText.MainTitle;
+    titleDom.innerHTML = HtmlTexts.MAIN_TITLE;
     this.descDom = new BaseComponent(Tags.SPAN, ['desc']);
-    this.descDom.innerHTML = GreetingsText.MainDesc;
+    this.descDom.innerHTML = HtmlTexts.MAIN_DESC;
     this.style.visibility = 'hidden';
     this.append(titleDom, this.descDom);
   }
@@ -31,7 +30,7 @@ export default class Greeting extends BaseComponent {
       this.descDom.innerHTML = this.max_bet > 0
         ? `Current Bet: ${Number(parseToBeam(this.max_bet)).toFixed(8)
           .replace(/\.?0+$/, '')} BEAM`
-        : GreetingsText.MainDesc;
+        : HtmlTexts.MAIN_DESC;
     }
     if (!this.visible) {
       this.visible = true;

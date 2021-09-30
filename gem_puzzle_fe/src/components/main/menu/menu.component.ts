@@ -1,5 +1,5 @@
 import { IState } from 'AppStateProps';
-import { Tags } from '../../../constants/tags';
+import { Tags } from '../../../constants/html';
 import BaseComponent from '../../base/base.component';
 import Button from '../../shared/button/button.component';
 import './menu.scss';

@@ -1,8 +1,9 @@
 import { APIResponse } from 'beamApiProps';
-import { Tags } from '../../constants/tags';
+import { HtmlTexts, Tags } from '../../constants/html';
 import { ResTXStatus } from '../../constants/api';
 import { Beam } from '../../logic/beam/api_handler';
 import BaseComponent from '../base/base.component';
+import img from '../../assets/icon/enefftee-logo-small.svg';
 import './footer.scss';
 
 export default class Footer extends BaseComponent {
@@ -14,8 +15,25 @@ export default class Footer extends BaseComponent {
     super(Tags.DIV, ['footer']);
     this.timeoutId = null;
     this.errorBlock = new BaseComponent(Tags.DIV, ['errorBlock']);
+    const footerContent = new BaseComponent(Tags.DIV, ['footer-content']);
+    const followBlock = new BaseComponent(Tags.P);
+    const follow = new BaseComponent(Tags.SPAN, ['follow-txt']);
+    follow.innerHTML = HtmlTexts.FOLLOW;
+    const enefftee = new BaseComponent(Tags.A);
+    enefftee.innerHTML = HtmlTexts.ENEFFTEE;
+    enefftee.setAttributes({
+      href: HtmlTexts.ENEFFTEE_HREF
+    });
+    const onTwitter = new BaseComponent(Tags.SPAN, ['on-twitter']);
+    onTwitter.innerHTML = HtmlTexts.ON_TWITTER;
+    const enefteeBlock = new BaseComponent(Tags.IMG);
+    enefteeBlock.setAttributes({
+      src: img
+    });
+    footerContent.append(followBlock, enefteeBlock);
+    followBlock.append(follow, enefftee, onTwitter);
     Beam.addObservers(this);
-    this.append(this.errorBlock);
+    this.append(this.errorBlock, footerContent);
   }
 
   private readonly viewMessage = (message:string) => {

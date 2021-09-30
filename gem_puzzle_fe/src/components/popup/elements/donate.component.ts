@@ -1,6 +1,6 @@
 import { PopupKeys } from '../../../constants/app';
 import { SVG } from '../../../constants/svg.icons';
-import { Tags } from '../../../constants/tags';
+import { Tags } from '../../../constants/html';
 import { Beam } from '../../../logic/beam/api_handler';
 import { RC } from '../../../logic/beam/request_creators';
 import { AC } from '../../../logic/store/app_action_creators';

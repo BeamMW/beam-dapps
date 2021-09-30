@@ -1,4 +1,4 @@
-import { HtmlProps, Tags } from '../../constants/tags';
+import { HtmlProps, Tags } from '../../constants/html';
 import BaseComponent from '../base/base.component';
 import { Box } from './box';
 

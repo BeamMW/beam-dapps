@@ -47,9 +47,6 @@
     }
  
     .titleDOM {
-        position: absolute;
-        left: 0;
-        top: 0;
         display: flex;
         z-index: 1; 
         height: 100%;
@@ -64,10 +61,10 @@
             fill: #20866F;
         }
     }
-
+    span {
+        margin-left: 11px;
+    }
 }
 
 
-span {
-    margin-left: 11px;
-}
+

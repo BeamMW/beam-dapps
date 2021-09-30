@@ -60,12 +60,6 @@ export enum MenuBtn {
   SET_ACTIVE = 'SET_ACTIVE'
 }
 
-export enum GreetingsText {
-  MainTitle = 'WELCOME TO GEM-PUZZLE!',
-  MainDesc = 'Play and earn!',
-  LeaderBoard = 'LEADERBOARD'
-}
-
 export enum RouterMode {
   HISTORY = 'history',
   HASH = 'hash'

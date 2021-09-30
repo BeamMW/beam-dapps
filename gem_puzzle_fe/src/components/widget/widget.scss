@@ -1,7 +1,7 @@
 .widget{
   position: absolute;
   z-index: 1;
-  bottom:0;
+  bottom: 70px;
   right: 20px;
   transform: translate(500px, 0px);
   background-color: rgba(255, 255, 255, 0.1);
@@ -16,6 +16,9 @@
   border-radius: 10px;
   transition: transform 200ms ease-in;
   font-family: Ubuntu-Bold;
+  .loader{
+    margin-right: 10px;
+  }
     &.active {
       transform: none;
     }

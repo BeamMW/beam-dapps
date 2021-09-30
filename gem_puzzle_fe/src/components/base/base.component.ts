@@ -1,6 +1,6 @@
 import { IState } from 'AppStateProps';
 import { APIResponse } from 'beamApiProps';
-import { Tags } from '../../constants/tags';
+import { Tags } from '../../constants/html';
 
 type HTMLAttributes = {
   [key:string]: string;

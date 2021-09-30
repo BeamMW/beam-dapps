@@ -1,5 +1,5 @@
 import loader from '../../../assets/icon/loader.svg';
-import { Tags } from '../../../constants/tags';
+import { Tags } from '../../../constants/html';
 import BaseComponent from '../../base/base.component';
 import './loader.scss';
 

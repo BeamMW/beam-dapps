@@ -8,7 +8,7 @@ import {
   ResTXComment,
   ResTXStatus
 } from '../../constants/api';
-import { Tags } from '../../constants/tags';
+import { Tags } from '../../constants/html';
 import BaseComponent from '../base/base.component';
 import Loader from '../shared/loader/loader.component';
 import WidgetProps from '../shared/widget_info/widget.info.component';

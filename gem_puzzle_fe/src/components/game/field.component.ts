@@ -6,7 +6,7 @@ import { Beam } from '../../logic/beam/api_handler';
 import {
   RC
 } from '../../logic/beam/request_creators';
-import { HtmlProps, Tags } from '../../constants/tags';
+import { HtmlProps, Tags } from '../../constants/html';
 import {
   Box, isSolved, swapBoxes
 } from './box';

@@ -1,7 +1,7 @@
 import { APIResponse, ResOutput } from 'beamApiProps';
 import { Store } from '../../logic/store/state_handler';
 import { Beam } from '../../logic/beam/api_handler';
-import { Tags } from '../../constants/tags';
+import { Tags } from '../../constants/html';
 import BaseComponent from '../base/base.component';
 import Menu from './menu/menu.component';
 import { Field } from '../game/field.component';

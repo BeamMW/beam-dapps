@@ -1,6 +1,6 @@
 import { IState } from 'AppStateProps';
 import { Store } from '../../logic/store/state_handler';
-import { Tags } from '../../constants/tags';
+import { Tags } from '../../constants/html';
 import BaseComponent from '../base/base.component';
 import './header.scss';
 import InfoBLock from '../shared/header_info/header.info.component';
