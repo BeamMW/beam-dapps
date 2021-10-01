@@ -36,7 +36,7 @@ uint64_t MergeNumbers(uint32_t upper, uint32_t lower) {
 }
 
 uint64_t GenerateSeed(const ContractID& cid, AssetID aid) {
-    NFTGenerator::SaveNewSeed request;
+    NFTGenerator::AddExhibit request;
     _POD_(request.key) = cid;
 
     std::random_device rd;
@@ -51,6 +51,17 @@ uint64_t GenerateSeed(const ContractID& cid, AssetID aid) {
                         &request, sizeof(request), nullptr, 0,
                         nullptr, 0, "set new seed to nft-generator", 0);
     return seed;
+}
+
+void SendSeedFromContract(const ContractID& gallery_cid, AssetID aid, int64_t seed, PubKey artist) {
+    NFTGenerator::AddExhibit request;
+
+    request.m_pkArtist = artist;
+    // add picture to request idk how
+
+    Env::GenerateKernel(&gallery_cid, NFTGenerator::AddExhibit::s_iMethod,
+                        &request, sizeof(request), nullptr, 0,
+                        nullptr, 0, "send new picture for gallery", 0);
 }
 
 void Method_1() {
@@ -87,6 +98,14 @@ void Method_1() {
             Env::DocGet("cid", cid);
             Env::DocGet("aid", aid);
             Env::DocAddNum("New seed: ", GenerateSeed(cid, aid));
+        } else if (Env::Strcmp(method, "gallery_send") == 0) {
+            AssetID aid;
+            int64_t seed;
+            PubKey user_artist;
+            Env::DocGet("user_artist", user_artist);
+            Env::DocGet("seed", seed);
+            Env::DocGet("aid", aid);
+            Env::DocAddNum("New seed: ", SendSeedFromContract(gallery_CID, aid, seed, user_artist));
         } else {
             Env::DocAddText("error", "Invalid method");
         }
