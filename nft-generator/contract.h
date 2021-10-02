@@ -18,7 +18,7 @@ namespace NFTGenerator {
 
     enum class State {
         NEW,
-        SOLD
+        SEND
     };
 
     struct SaveNewSeed {
