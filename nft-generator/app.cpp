@@ -12,6 +12,7 @@ void Method_0() {
                 Env::DocGroup method("generate");
                 Env::DocAddText("cid", "ContractID");
                 Env::DocAddText("aid", "AssetID");
+                Env::DocAddText("holder", "Holder PubKey");
             }
 
         }
@@ -49,8 +50,8 @@ bool IsSeedAlreadyGenerated(const ContractID& cid, AssetID aid, uint64_t seed) {
     end_key.m_KeyInContract.seed = static_cast<uint64_t>(-1);
 
     Env::Key_T<NFTGenerator::ComplexKeyWithSeed> key;
-    NFTGenerator::State value;
-    for (Env::VarReader reader(start_key, end_key); reader.MoveNext_T(key, value); ) {
+    PubKey holder;
+    for (Env::VarReader reader(start_key, end_key); reader.MoveNext_T(key, holder); ) {
         if (key.m_KeyInContract.seed == seed) {
             return true;
         }
@@ -69,17 +70,17 @@ void GetAllSeeds(const ContractID& cid) {
     end_key.m_KeyInContract.key.aid = static_cast<AssetID>(-1);
 
     Env::Key_T<NFTGenerator::ComplexKeyWithSeed> key;
-    NFTGenerator::State value;
+    PubKey holder;
     Env::DocGroup seeds("seeds");
-    for (Env::VarReader reader(start_key, end_key); reader.MoveNext_T(key, value); ) {
+    for (Env::VarReader reader(start_key, end_key); reader.MoveNext_T(key, holder); ) {
         Env::DocAddNum("AssetID", key.m_KeyInContract.key.aid);
         Env::DocAddNum("Seed", key.m_KeyInContract.seed);
-        Env::DocAddNum("State", static_cast<uint32_t>(value));
+        Env::DocAddBlob_T("Holder", holder);
     }
 }
 
-uint64_t GenerateSeed(const ContractID& cid, AssetID aid) {
-    NFTGenerator::AddExhibit request;
+uint64_t GenerateSeed(const ContractID& cid, AssetID aid, const PubKey& holder) {
+    NFTGenerator::SaveNewSeed request;
     _POD_(request.key) = cid;
 
     std::random_device rd;
@@ -93,7 +94,7 @@ uint64_t GenerateSeed(const ContractID& cid, AssetID aid) {
 
     request.key.aid = aid;
     request.seed = seed;
-    request.state = NFTGenerator::State::NEW;
+    request.holder = holder;
     Env::GenerateKernel(&cid, NFTGenerator::SaveNewSeed::s_iMethod,
                         &request, sizeof(request), nullptr, 0,
                         nullptr, 0, "set new seed to nft-generator", 0);
@@ -148,9 +149,11 @@ void Method_1() {
         if (Env::Strcmp(method, "generate") == 0) {
             ContractID cid;
             AssetID aid;
+            PubKey holder;
             Env::DocGet("cid", cid);
             Env::DocGet("aid", aid);
-            Env::DocAddNum("New seed: ", GenerateSeed(cid, aid));
+            Env::DocGet("holder", holder);
+            Env::DocAddNum("New seed: ", GenerateSeed(cid, aid, holder));
         } else if (Env::Strcmp(method, "gallery_send") == 0) {
             AssetID aid;
             uint64_t seed;

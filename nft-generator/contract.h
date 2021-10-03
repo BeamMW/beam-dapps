@@ -16,9 +16,9 @@ namespace NFTGenerator {
         ContractID cid;
     };
 
-    enum class State {
-        NEW,
-        SEND
+    struct ComplexKeyWithSeed {
+        ComplexKey key;
+        uint64_t seed;
     };
 
     struct SaveNewSeed {
@@ -27,7 +27,7 @@ namespace NFTGenerator {
 
         ComplexKey key;
         uint64_t seed;
-        State state;
+        PubKey holder;
     };
 
     struct AddExhibit // struct from gallery to add pic
