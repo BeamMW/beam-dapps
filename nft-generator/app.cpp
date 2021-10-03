@@ -27,6 +27,10 @@ void Method_0() {
             {
                 Env::DocGroup method("view");
             }
+            {
+                Env::DocGroup method("seeds");
+                Env::DocAddText("cid", "ContractID");
+            }
         }
     }
 }
@@ -38,8 +42,8 @@ uint64_t MergeNumbers(uint32_t upper, uint32_t lower) {
 bool IsSeedAlreadyGenerated(const ContractID& cid, AssetID aid, uint64_t seed) {
     Env::Key_T<NFTGenerator::ComplexKeyWithSeed> start_key, end_key;
     _POD_(start_key.m_Prefix.m_Cid) = contract_id;
-    _POD_(start_key.m_KeyInContract.key) = pub_key;
-    start_key.m_KeyInContract.asset_id = aid;
+    _POD_(start_key.m_KeyInContract.key.cid) = cid;
+    start_key.m_KeyInContract.key.aid = aid;
     start_key.m_KeyInContract.seed = 0;
     _POD_(end_key) = start_key;
     end_key.m_KeyInContract.seed = static_cast<uint64_t>(-1);
@@ -53,6 +57,25 @@ bool IsSeedAlreadyGenerated(const ContractID& cid, AssetID aid, uint64_t seed) {
     }
 
     return false;
+}
+
+void GetAllSeeds(const ContractID& cid) {
+    Env::Key_T<NFTGenerator::ComplexKeyWithSeed> start_key, end_key;
+    _POD_(start_key.m_Prefix.m_Cid) = contract_id;
+    _POD_(start_key.m_KeyInContract.key.cid) = cid;
+    start_key.m_KeyInContract.key.aid = 0;
+    start_key.m_KeyInContract.seed = 0;
+    _POD_(end_key) = start_key;
+    end_key.m_KeyInContract.key.aid = static_cast<AssetID>(-1);
+
+    Env::Key_T<NFTGenerator::ComplexKeyWithSeed> key;
+    NFTGenerator::State value;
+    Env::DocGroup seeds("seeds");
+    for (Env::VarReader reader(start_key, end_key); reader.MoveNext_T(key, value); ) {
+        Env::DocAddNum("AssetID", key.m_KeyInContract.key.aid);
+        Env::DocAddNum("Seed", key.m_KeyInContract.seed);
+        Env::DocAddNum("State", static_cast<uint32_t>(value));
+    }
 }
 
 uint64_t GenerateSeed(const ContractID& cid, AssetID aid) {
@@ -94,11 +117,13 @@ void Method_1() {
     char role[0x10], method[0x10];
 
     if (!Env::DocGetText("role", role)) {
-
+        Env::DocAddText("error", "Not providing role");
+        return;
     }
 
     if (!Env::DocGetText("method", method)) {
-
+        Env::DocAddText("error", "Not providing method");
+        return;
     }
 
     if (Env::Strcmp(role, "manager") == 0) {
@@ -112,6 +137,10 @@ void Method_1() {
                                 "destroy nft-generator", 0);
         } else if (Env::Strcmp(method, "view") == 0) {
             EnumAndDumpContracts(NFTGenerator::SID);
+        } else if (Env::Strcmp(method, "seeds") == 0) {
+            ContractID cid;
+            Env::DocGet("cid", cid);
+            GetAllSeeds(cid);
         } else {
             Env::DocAddText("error", "Invalid method");
         }
