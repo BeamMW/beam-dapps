@@ -21,7 +21,7 @@
   border: 2px dashed #1af6d6;
   background-color: rgba(26, 246, 214, 0.1);
 
-  &:hover {
+  &:hover, &.hover{
   background-color: rgba(26, 246, 214, 0.2);
     cursor: pointer;
     .label {
