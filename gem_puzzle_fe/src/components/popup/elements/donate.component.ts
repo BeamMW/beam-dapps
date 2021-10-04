@@ -18,6 +18,7 @@ export class Donate extends BaseComponent {
 
   constructor(data: number, key = PopupKeys.DONATE) {
     super(Tags.DIV, [`popup__${key}`]);
+    const { asset } = Store.getState().info;
     const iconSVG = new BaseComponent(Tags.DIV, [`popup__${key}_icon`]);
     iconSVG.innerHTML = SVG.popupDonate;
     const titleText = new BaseComponent(Tags.SPAN, [`popup__${key}_text`]);
@@ -30,16 +31,16 @@ export class Donate extends BaseComponent {
     const currencyFund = new BaseComponent(Tags.SPAN, [
       `popup__${key}_currencyFund`
     ]);
-    currencyFund.element.innerHTML = 'FUNT';
+    currencyFund.innerHTML = asset.name;
     const amount = data;
     const spanFund = new BaseComponent(Tags.SPAN);
     spanFund.element.textContent = 'PRIZE FUND: ';
-    this.prizeFund.element.textContent = `${amount}`;
+    this.prizeFund.innerHTML = `${amount}`;
     prizeWrap.append(spanFund, this.prizeFund, iconFund, currencyFund);
     const inputWrap = new BaseComponent(Tags.DIV, [`popup__${key}_inputWrap`]);
     const input = new BaseComponent(Tags.INPUT, [`popup__${key}_input`]);
     const currency = new BaseComponent(Tags.SPAN, [`popup__${key}_currency`]);
-    currency.element.textContent = 'FUNT';
+    currency.innerHTML = asset.name;
     const inputElement = input.element as HTMLInputElement;
     input.setAttributes({
       value: '1'

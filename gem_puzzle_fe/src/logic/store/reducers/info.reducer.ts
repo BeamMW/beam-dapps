@@ -3,6 +3,7 @@ import { IAppState } from 'AppStateProps';
 import { BaseReducer } from './base.reducer';
 import { AC } from '../app_action_creators';
 import { StoreActions } from '../../../constants/app';
+import { AppSpecs } from '../../../constants/api';
 
 const initialState: IAppState = {
   has_active_game: 0,
@@ -11,7 +12,11 @@ const initialState: IAppState = {
   pending_rewards: 0,
   isTx: false,
   popup: false,
-  prizeFund: 0
+  prizeFund: 0,
+  asset: {
+    name: <string>AppSpecs.DEFAULT_ASSET,
+    color: '#fff'
+  }
 };
 
 export class InfoState implements BaseReducer<IAppState> {
@@ -32,6 +37,11 @@ export class InfoState implements BaseReducer<IAppState> {
         break;
       case StoreActions.SET_AUTOPLAY:
         this.state.autoPlay = payload as boolean;
+        break;
+      case StoreActions.SET_ASSET_NAME:
+        this.state.asset = {
+          ...payload as { name: string, color: string }
+        };
         break;
       case StoreActions.SET_TX:
         this.state.isTx = payload as boolean;

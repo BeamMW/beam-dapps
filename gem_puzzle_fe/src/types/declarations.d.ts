@@ -72,7 +72,11 @@ declare module 'AppStateProps' {
     pending_rewards: number;
     isTx: boolean;
     popup: PopupKeys | false;
-    prizeFund: number
+    prizeFund: number;
+    asset: {
+      name: string,
+      color: string
+    };
   }
 
   export interface IState{
@@ -120,6 +124,11 @@ declare module 'beamApiProps' {
     reward: number;
   };
 
+  export interface IAssetMeta {
+    N: string;
+    OPT_COLOR: string;
+  }
+
   export type APIResponse = {
     id: ReqIds;
     jsonrpc: string;
@@ -132,6 +141,7 @@ declare module 'beamApiProps' {
       comment: ResTXComment;
       status_string: ResTXStatus;
       failure_reason: string;
+      metadata_pairs: IAssetMeta;
     };
     error?: {
       code:number;

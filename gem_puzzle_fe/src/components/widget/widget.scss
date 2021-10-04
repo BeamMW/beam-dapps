@@ -1,33 +1,60 @@
 .widget{
+  right: 10px;
+  display: none;
+  bottom: 30px;
   position: absolute;
-  z-index: 1;
-  bottom: 70px;
-  right: 20px;
-  transform: translate(500px, 0px);
-  background-color: rgba(255, 255, 255, 0.1);
+  z-index: 9999;
   color: cornflowerblue;
-  display: flex;
   align-items: center;
-  padding: 5px;
-  min-width: 380px;
-  -webkit-backdrop-filter: blur(24px);
-  backdrop-filter: blur(24px);
+  padding: 20px;
+  min-width: 370px;
+  background-color: rgba(255, 255, 255, 0.1);
   padding: 14px 14px 14px;
   border-radius: 10px;
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
   transition: transform 200ms ease-in;
   font-family: Ubuntu-Bold;
+  animation: animate .3s;
   .loader{
-    margin-right: 10px;
+    border-radius:50%;
+    width: 50px;
+    height: 50px;
+    background-color: #042548;
+    img {
+      width: 25px;
+    }
   }
     &.active {
-      transform: none;
+      display: flex;
     }
-  .tx-infoblock{
+    .infoblock-wrapp{
+      font-family: SFProDisplay;
+      margin-left: 20px;
+  
     .title{
-      color: #dffd94;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      margin-bottom: 4px;
     }
     .value{
-      color: #fff;;  
+      font-size: 14px;
+      color: rgba($color: #fff, $alpha: 0.7)  
     }
   }
-}
+  svg {
+    margin-left: auto;
+    align-self: flex-start;
+    cursor: pointer;
+  }
+  svg:hover {
+    path{
+      fill:#00ff64;
+    }
+  }
+  }

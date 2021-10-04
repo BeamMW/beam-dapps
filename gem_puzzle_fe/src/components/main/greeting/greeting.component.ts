@@ -1,4 +1,5 @@
 import { IState } from 'AppStateProps';
+import { AppSpecs } from '../../../constants/api';
 import { HtmlTexts, Tags } from '../../../constants/html';
 import { Store } from '../../../logic/store/state_handler';
 import { parseToBeam } from '../../../utils/string_handlers';
@@ -11,6 +12,8 @@ export default class Greeting extends BaseComponent {
   max_bet: number;
 
   visible = false;
+
+  asset_name = <string>AppSpecs.DEFAULT_ASSET;
 
   constructor() {
     super(Tags.DIV, ['description']);
@@ -25,11 +28,15 @@ export default class Greeting extends BaseComponent {
   }
 
   appInform = (state: IState):void => {
-    if (this.max_bet !== state.cid.max_bet) {
+    if (this.max_bet !== state.cid.max_bet
+      || this.asset_name !== state.info.asset_name
+    ) {
       this.max_bet = state.cid.max_bet;
+      this.asset_name = state.info.asset.name;
+      this.descDom.style.color = state.info.asset.color || '#fff';
       this.descDom.innerHTML = this.max_bet > 0
         ? `Current Bet: ${Number(parseToBeam(this.max_bet)).toFixed(8)
-          .replace(/\.?0+$/, '')} BEAM`
+          .replace(/\.?0+$/, '')} ${this.asset_name}`
         : HtmlTexts.MAIN_DESC;
     }
     if (!this.visible) {

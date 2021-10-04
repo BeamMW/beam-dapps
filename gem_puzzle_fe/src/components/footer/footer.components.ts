@@ -5,6 +5,7 @@ import { Beam } from '../../logic/beam/api_handler';
 import BaseComponent from '../base/base.component';
 import img from '../../assets/icon/enefftee-logo-small.svg';
 import './footer.scss';
+import Widget from '../widget/widget.component';
 
 export default class Footer extends BaseComponent {
   private timeoutId: null | NodeJS.Timeout;
@@ -33,7 +34,7 @@ export default class Footer extends BaseComponent {
     footerContent.append(followBlock, enefteeBlock);
     followBlock.append(follow, enefftee, onTwitter);
     Beam.addObservers(this);
-    this.append(this.errorBlock, footerContent);
+    this.append(this.errorBlock, footerContent, new Widget());
   }
 
   private readonly viewMessage = (message:string) => {

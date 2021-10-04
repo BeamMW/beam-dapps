@@ -1,4 +1,6 @@
 import { APIResponse } from 'beamApiProps';
+import { SVG } from '../../constants/svg.icons';
+import { toDOMParser } from '../../utils/string_handlers';
 import { Routes } from '../../constants/app';
 import { Beam } from '../../logic/beam/api_handler';
 import { Store } from '../../logic/store/state_handler';
@@ -28,23 +30,13 @@ export default class Widget extends BaseComponent {
       Store.dispatch(AC.setIsTx(true));
       this.classList.add('active');
     }
-    const transactionId = new WidgetProps({
-      value: txId || '...',
-      key: 'txId',
-      title: 'ID: '
+    const transaction = new WidgetProps();
+    infoBlocks.append(transaction);
+    const closeIcon = toDOMParser(SVG.closeIcon);
+    this.append(loader, infoBlocks, closeIcon);
+    closeIcon.addEventListener('click', () => {
+      this.classList.remove('active');
     });
-    const comment = new WidgetProps({
-      value: '...',
-      key: 'comment',
-      title: 'COMMENT: '
-    });
-    const status = new WidgetProps({
-      value: ResTXStatus.IN_PROGRESS,
-      key: 'status_string',
-      title: 'STATUS: '
-    });
-    infoBlocks.append(transactionId, comment, status);
-    this.append(loader, infoBlocks);
   }
 
   transactionHandler = (result: APIResponse['result']): void => {
@@ -58,6 +50,7 @@ export default class Widget extends BaseComponent {
     if (
       result.status_string === ResTXStatus.FAILED
       || result.status_string === ResTXStatus.COMPLETED
+      || result.status_string === ResTXStatus.EXPIRED
     ) {
       this.classList.remove('active');
       window.localStorage.removeItem('txId');
@@ -98,12 +91,9 @@ export default class Widget extends BaseComponent {
               window.history.pushState({}, '', Routes.MAIN);
             }
             window.localStorage.setItem('txId', res.result.txid);
-            Store.dispatch(AC.setIsTx(true));
             this.classList.add('active');
-            setTimeout(
-              () => Beam.callApi(RC.viewTxStatus(res.result.txid)),
-              AppSpecs.TX_CHECK_INTERVAL
-            );
+            Store.dispatch(AC.setIsTx(true), 'sync');
+            Beam.callApi(RC.viewTxStatus(res.result.txid));
           }
           break;
 

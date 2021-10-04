@@ -7,7 +7,6 @@ import './style/index.scss';
 import AppState from './logic/store/reducer';
 import Header from './components/header/header.component';
 import Footer from './components/footer/footer.components';
-import Widget from './components/widget/widget.component';
 
 export class App {
   private readonly rootElement: HTMLElement;
@@ -36,8 +35,7 @@ export class App {
       this.rootElement.append(
         new Header().element,
         new Main().element,
-        new Footer().element,
-        new Widget().element
+        new Footer().element
       );
     });
   }

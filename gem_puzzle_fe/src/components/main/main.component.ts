@@ -26,7 +26,6 @@ export default class Main extends BaseComponent {
 
   constructor() {
     super(Tags.DIV, ['main']);
-    // Beam.callApi(RC.viewAssetInfo(0));
     Beam.addObservers(this);
     Beam.callApi(RC.viewMyInfo());
     this.menu = new Menu();
@@ -62,6 +61,7 @@ export default class Main extends BaseComponent {
 
   inform = (res: APIResponse): void => {
     let output;
+    const state = Store.getState();
     if (res.result?.output) {
       output = JSON.parse(res.result.output) as ResOutput;
     }
@@ -74,14 +74,20 @@ export default class Main extends BaseComponent {
             })
           );
           if (output.prize_aid) {
-            Beam.callApi(RC.viewAssetInfo(output.prize_aid));
+            Beam.callApi(RC.txAssetInfo(output.prize_aid));
           }
         }
         break;
-      case ReqID.VIEW_ASSET_INFO:
-        console.log(res);
+      case ReqID.TX_ASSET_INFO:
+        Beam.callApi(RC.viewAssetInfo(state.cid.prize_aid));
         break;
 
+      case ReqID.VIEW_ASSET_INFO:
+        Store.dispatch(AC.setAssetName({
+          name: res.result.metadata_pairs.N,
+          color: res.result.metadata_pairs.OPT_COLOR
+        }));
+        break;
       case ReqID.CHECK_SOLUTION:
         if (this.router.current?.length) {
           this.initMainMenu();

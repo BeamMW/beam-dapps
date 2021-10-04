@@ -17,16 +17,18 @@ export class Win extends BaseComponent {
     iconSVG.innerHTML = SVG.popupWon;
     const prize = Store.getState().cid.prize_amount;
     const { solution } = Store.getState().grid;
+    const { asset } = Store.getState().info;
     Store.dispatch(AC.setGame({
       solution: []
     }));
     const titleText = new BaseComponent(Tags.SPAN, [`popup__${key}_text`]);
     titleText.element.textContent = 'YOU WON!';
     const amountFunt = new BaseComponent(Tags.DIV, [`popup__${key}_amount`]);
+
     amountFunt.innerHTML = `${SVG.funt} <span> ${
       Number(parseToBeam(prize)).toFixed(8)
         .replace(/\.?0+$/, '')
-    } FUNT </span>`;
+    } ${asset.name} </span>`;
     const statWrap = new BaseComponent(Tags.DIV, [`popup__${key}_stat`]);
     this.statMove = new BaseComponent(Tags.SPAN, [`popup__${key}_stat_move`]);
     this.statMove.innerHTML = `<span>Move:</span> ${solution.length}`;

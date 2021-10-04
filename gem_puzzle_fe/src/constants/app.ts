@@ -12,7 +12,8 @@ export enum StoreActions {
   SET_TX = 'SET_TX',
   SET_MY_INFO = 'SET_MY_INFO',
   SET_POPUP = 'SET_POPUP',
-  SET_PRIZE_FUND = 'SET_PRIZE_FUND'
+  SET_PRIZE_FUND = 'SET_PRIZE_FUND',
+  SET_ASSET_NAME = 'SET_ASSET_NAME'
 }
 
 export enum CidActions {
@@ -72,3 +73,11 @@ export enum Routes {
   BEST = 'best',
   PLAY = 'play'
 }
+
+// export enum Routes {
+//   OPTIONS = 'beam-dapps/options',
+//   RETURN = 'beam-dapps/return',
+//   MAIN = '/beam-dapps',
+//   BEST = 'beam-dapps/best',
+//   PLAY = 'beam-dapps/play'
+// }

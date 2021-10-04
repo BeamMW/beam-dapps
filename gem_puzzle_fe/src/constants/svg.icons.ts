@@ -292,6 +292,9 @@ popupDonate: `<svg width="174" height="173" xmlns="http://www.w3.org/2000/svg" x
     </g>
 </g>
 </svg>`,
+closeIcon: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+    <path d="m9.426 8 4.279-4.278a1.009 1.009 0 0 0-1.427-1.427L8 6.575l-4.279-4.28a1.008 1.008 0 1 0-1.426 1.427L6.574 8l-4.279 4.28a1.009 1.009 0 0 0 1.426 1.426L8 9.426l4.278 4.28a1.008 1.008 0 1 0 1.427-1.427L9.426 8.001z" fill="#FFF" fill-rule="nonzero"/>
+</svg>`
 };
 
 

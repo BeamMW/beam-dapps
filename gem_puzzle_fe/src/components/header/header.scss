@@ -11,6 +11,7 @@
   }
   
   .infoblock {
+    color: #fff;
     width: 314px;
     height: 60px;
     display: flex;
@@ -26,7 +27,6 @@
     }
     span{
       margin-left: 11px;
-      color:rgba($color: #fff, $alpha: 1);
       font-size: 20px;
       font-family: Ubuntu-Bold;
       font-weight: bold;
@@ -34,7 +34,6 @@
       font-style: normal;
       line-height: 1.42;
       letter-spacing: normal;
-      color: #fff;
     }
     .title{
       margin: 0 16px 0 0;
@@ -69,31 +68,31 @@
   }
 }
 
-@media screen and (max-width: 680px) {
-  .header {
-    width: 0;
-    margin: 20px auto;
-    border-radius: 37.5px;
+// @media screen and (max-width: 530px) {
+//   .header {
+//     width: 0;
+//     margin: 20px auto;
+//     border-radius: 37.5px;
 
-  }
-  .header__top{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-  }
+//   }
+//   .header__top{
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: center;
+//     align-items: center;
+//     align-content: center;
+//   }
     
-  .infoblock {
-    margin-bottom: 10px;
-}
+//   .infoblock {
+//     margin-bottom: 10px;
+// }
 
-.main {
-  flex-direction: row;
-  height: auto;
-}
-.description{
-  margin-top: 0;
-}
+// .main {
+//   flex-direction: row;
+//   height: auto;
+// }
+// .description{
+//   margin-top: 0;
+// }
 
-}
+// }
