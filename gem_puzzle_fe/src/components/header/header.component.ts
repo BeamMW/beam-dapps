@@ -58,7 +58,6 @@ export default class Header extends BaseComponent {
     if (reward !== this.reward || asset.name !== this.asset) {
       this.reward = reward;
       this.asset = asset.name;
-      this.rewardBlock.style.color = asset.color || '#fff';
       const num = Number(parseToBeam(reward))
         .toFixed(8)
         .replace(/\.?0+$/, '');
