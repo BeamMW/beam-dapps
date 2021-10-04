@@ -20,15 +20,6 @@ export const RC = {
     }
   } as const),
 
-  txAssetTx: (aid: number, tx: string): ApiArgs => ({
-    callID: ReqID.VIEW_ASSET_INFO_TX,
-    method: ReqMethods.GET_ASSET_INFO,
-    params: {
-      asset_id: aid,
-      txId: tx
-    }
-  } as const),
-
   txAssetInfo: (aid: number, txId?: string): ApiArgs => {
     const args:ApiArgs = {
       callID: ReqID.TX_ASSET_INFO,
