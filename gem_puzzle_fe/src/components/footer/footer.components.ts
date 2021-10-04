@@ -23,7 +23,8 @@ export default class Footer extends BaseComponent {
     const enefftee = new BaseComponent(Tags.A);
     enefftee.innerHTML = HtmlTexts.ENEFFTEE;
     enefftee.setAttributes({
-      href: HtmlTexts.ENEFFTEE_HREF
+      href: HtmlTexts.ENEFFTEE_HREF,
+      target: '_blank'
     });
     const onTwitter = new BaseComponent(Tags.SPAN, ['on-twitter']);
     onTwitter.innerHTML = HtmlTexts.ON_TWITTER;
