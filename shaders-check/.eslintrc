@@ -11,7 +11,7 @@
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
       "project": "tsconfig.json",
-      "tsconfigRootDir": "./shaders-check",
+      "tsconfigRootDir": "./",
       "sourceType": "module"
     },
     "plugins": [

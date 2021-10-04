@@ -1,8 +1,9 @@
 import { BeamAPI } from './utils/BeamAPI';
-import Container from './components/Container/container.component';
+import MainPage from './components/MainPage/mainPage.component';
 import Loader from './components/Loader/loader.component';
 import './scss/main.scss';
 import { ApiHandler } from './utils/api_handlers';
+import Container from './components/Container/container.component';
 
 export class App {
   private readonly rootElement: HTMLElement;
@@ -23,6 +24,7 @@ export class App {
         });
         this.rootElement.innerHTML = '';
         this.rootElement.append(new Container().element);
+        this.rootElement.append(new MainPage().element);
       });
   }
 }

@@ -18,7 +18,7 @@ export enum TreeIcons {
 }
 
 export enum InnerTexts {
-  DROP_BUTTON_TXT = 'Drag and drop  or attach .wasm file',
+  DROP_BUTTON_TXT = 'or just drop it here',
   DROP_SIZE_ERROR_TXT = 'The size exceeds the allowable value!',
   NOT_JSON = 'result.output in not JSON.'
 }
