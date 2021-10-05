@@ -1,33 +1,58 @@
 .popup {
     position: absolute;
     z-index: 9998;
-    width: 95vw;
-    max-width: 674px;
-    min-width: 380px;
-    height: 380px;
-    background: #dffd94;
-    border-radius: 56px;
-    top: 177px;
+    top: 65px;
     transform: translate(0, -800px);
     transition: transform 200ms ease-in-out;
-    font-family: Ubuntu-Regular;
+    .popup-icon {
+        margin: 0 auto;
+        margin-top: -85px;
+    }
+    .popup-content{
+        text-align: center;
+        // max-width: 674px;
+        // min-width: 380px;
+        // height: 380px;
+        background: #dffd94;
+        border-radius: 56px;
+        font-family: Ubuntu-Regular;
+        padding-bottom: 81px;
+    }
+    .popup-btn_block{
+        margin-top: -31px;
+        .or-text{
+            text-align: center;
+            padding: 20px;
+            font-family: Ubuntu-Regular;
+            font-size: 16px;
+            color: #fff;
+            line-height: 1.38;
+        }
+    }
 }
 
 .popup__DONATE,
 .popup__WIN,
 .popup__LOSE {
-    position: relative;
+    // position: relative;
     z-index: 9999;
     width: 95vw;
     max-width: 674px;
     min-width: 380px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    height: 493px;
     border-radius: 35px;
     top: -85px;
+
+    .popup-title{
+        display: block;
+        margin: 47px auto 0;
+        text-align: center;
+        font-size: 30px;
+        font-family: Ubuntu-Regular;
+        line-height: 0.73;
+        letter-spacing: normal;
+        text-align: center;
+        color: #081d11;
+    }
 
     .back-to-main {
         width: 314px;
@@ -40,6 +65,7 @@
         background-repeat: no-repeat;
         background-size: cover;
         font-family: Ubuntu-Bold;
+        margin: 0 auto;
 
         &:hover {
             cursor: pointer;
@@ -48,55 +74,56 @@
 }
 
 .popup__DONATE {
-
-    &_text {
-        width: 100%;
-        text-align: center;
-        height: 22px;
-        font-size: 30px;
-        font-family: Ubuntu-Regular;
-        font-weight: normal;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 0.73;
-        letter-spacing: normal;
-        text-align: center;
-        color: #081d11;
-    }
-
     &_prizeWrap {
+        margin: 0 auto;
         display: flex;
-        height: 50px;
         align-items: center;
-        font-size: 25px;
+        font-size: 14px;
         flex-wrap: wrap;
         justify-content: center;
+        font-family: Ubuntu-Italic;
+    }
+    &_iconWrapper{
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        padding: 14px;
+        background-color: rgba(255, 255, 255, 0.6);
+        border: solid 3px rgba($color: #00ff64, $alpha: 1);
+        border-left: none;
+        border-radius: 0 10px 10px 0;
+        height: 100%;
+        width: max-content;
     }
 
-    &_iconFund, &_iconCurrency {
+    &_iconCurrency {
+        margin: 0 auto;
         margin-left: 10px;
+        width: 21px;
     }
 
     &_inputWrap {
+        margin: 30px auto 0;
         display: flex;
-        width: 165px;
+        width: 414px;
         height: 50px;
         align-items: center;
+        justify-content: center;
     }
 
-    &_input {
-        text-align: center;
+    &_input {   
+        padding: 14px;
         font-size: 20px;
         font-weight: bold;
-        width: 150px;
+        width: 100%;
         height: 50px;
-        border-radius: 10px;
-        border: solid 3px rgba($color: #00ff64, $alpha: .2);
+        border-radius: 10px 0 0 10px;
+        border: solid 3px rgba($color: #00ff64, $alpha: 1);
+        border-right: none;
         background-color: rgba(255, 255, 255, 0.6);
 
         &:focus {
             outline: none;
-            border: solid 3px rgba($color: #00ff64, $alpha: 1);
         }
     }
 
@@ -104,9 +131,24 @@
         font-size: 20px;
     }
 
-    &_btn {
-        background-image: url('../../assets/icon/button-hard.svg');
+    .btn_RETURN_DONATE {
+        margin: 0 auto;
+        display: block;
+        padding: 9px 30px;
+        border-radius: 100px;
+        background: rgba($color: #fff, $alpha: 0.1);
+        font-size: 16px;
+        font-weight: bold;
+        font-family: Ubuntu-Bold;
+        text-align: center;
+        color: #fff;
+    }
+
+    .btn_DONATE {
+        margin: 0 auto;
+        background-image: url('../../assets/icon/button-backmainmenu.svg');
         background-repeat: no-repeat;
+        color: #081d11;
         width: 314px;
         height: 60px;
         display: flex;
@@ -120,34 +162,15 @@
     &_btn:hover {
         cursor: pointer;
     }
-
     .disabled {
-        opacity: 0.3;
+        opacity: 0.6;
         cursor: default;
         pointer-events: none;
     }
-
-
 }
 
 .popup__WIN {
-
-    &_text {
-        width: 151px;
-        height: 22px;
-        font-size: 30px;
-        font-family: Ubuntu-Regular;
-        font-weight: normal;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 0.73;
-        letter-spacing: normal;
-        text-align: center;
-        color: #081d11;
-    }
-
-    &_amount {
-        width: 210px;
+  &_amount {
         height: 35px;
         font-family: Ubuntu-Bold;
         font-stretch: normal;
@@ -156,12 +179,17 @@
         color: #081d11;
         letter-spacing: normal;
         display: flex;
-        justify-content: space-evenly;
+        justify-content: center;
         align-items: center;
         font-size: 20px;
+        margin-top: 30px;
+        img {
+            margin-right: 17px;
+        }
     }
 
     &_stat {
+        margin-top: 21px;
         width: 100%;
         height: 80px;
         background: #20866f;
@@ -182,22 +210,7 @@
 
 .popup__LOSE {
 
-
-    &_text {
-        width: 100%;
-        text-align: center;
-        height: 22px;
-        font-size: 30px;
-        font-weight: normal;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 0.73;
-        letter-spacing: normal;
-        text-align: center;
-        color: #081d11;
-    }
-
-    &_amount {
+  &_amount {
         width: 127px;
         height: 35px;
         font-weight: bold;

@@ -5,11 +5,14 @@ import {
 } from '../../../logic/beam/request_creators';
 import { MenuBtn, Routes } from '../../../constants/app';
 import { Beam } from '../../../logic/beam/api_handler';
+import playIcon from '../../../assets/icon/icon-new-game-copy-2.svg';
+import donateIcon from '../../../assets/icon/icon-donate-copy.svg';
+import beamIcon from '../../../assets/icon/icon-beam-copy-356.svg';
 
 export const menuProps: MenuButtonType[] = [
   {
     key: MenuBtn.CONTINUE,
-    icon: SVG.newGameIcon,
+    icon: playIcon,
     title: 'PLAY',
     handler: ():void => {
       window.history.pushState({}, '', `/${Routes.PLAY}`);
@@ -17,13 +20,13 @@ export const menuProps: MenuButtonType[] = [
   },
   {
     key: MenuBtn.NEW,
-    icon: SVG.beamIcon,
+    icon: beamIcon,
     title: 'NEW BET',
     handler: () => Beam.callApi(RC.startGame())
   },
   {
     key: MenuBtn.DONATE,
-    icon: SVG.iconDonate,
+    icon: donateIcon,
     title: 'DONATE',
     handler: () => Beam.callApi(RC.viewPrizeFund())
   }
@@ -31,8 +34,8 @@ export const menuProps: MenuButtonType[] = [
   //   key: MenuBtn.SET_ACTIVE,
   //   title: 'Active',
   //   handler: ():void => {
-  //     const active = Store.getState().info.isTx;
-  //     Store.dispatch(AC.setIsTx(!active));
+  //     // const active = Store.getState().info.isTx;
+  //     Store.dispatch(AC.setPopup(PopupKeys.LIMIT));
   //   }
   // }
 ];

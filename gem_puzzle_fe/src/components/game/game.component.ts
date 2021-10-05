@@ -6,7 +6,7 @@ import { gameInfoElements } from '../shared/game_info/game.info.items';
 import './game.scss';
 import Button from '../shared/button/button.component';
 import { MenuBtn, Routes } from '../../constants/app';
-import { SVG } from '../../constants/svg.icons';
+import cancelIcon from '../../assets/icon/icon-cancel.svg';
 
 export class Game extends BaseComponent {
   constructor() {
@@ -17,7 +17,7 @@ export class Game extends BaseComponent {
       {
         key: MenuBtn.RETURN,
         title: 'CANCEL GAME',
-        icon: SVG.iconCancel,
+        icon: cancelIcon,
         handler: ():void => {
           window.history.pushState({}, '', Routes.MAIN);
         }

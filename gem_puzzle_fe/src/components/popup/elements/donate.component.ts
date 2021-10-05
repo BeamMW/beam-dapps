@@ -1,5 +1,5 @@
-import { PopupKeys } from '../../../constants/app';
-import { SVG } from '../../../constants/svg.icons';
+import { MenuBtn, PopupKeys } from '../../../constants/app';
+import imgTitle from '../../../assets/icon/il-giveaway-started.svg';
 import { Tags } from '../../../constants/html';
 import { Beam } from '../../../logic/beam/api_handler';
 import { RC } from '../../../logic/beam/request_creators';
@@ -10,6 +10,10 @@ import {
   parseToGroth
 } from '../../../utils/string_handlers';
 import BaseComponent from '../../base/base.component';
+import gemIcon from '../../../assets/icon/icon-funts-coins-stack.svg';
+import Button from '../../shared/button/button.component';
+import donateIcon from '../../../assets/icon/icon-donate-copy.svg';
+import backIcon from '../../../assets/icon/icon-back-to-game.svg';
 
 export class Donate extends BaseComponent {
   prizeFund: BaseComponent;
@@ -19,13 +23,18 @@ export class Donate extends BaseComponent {
   constructor(data: number, key = PopupKeys.DONATE) {
     super(Tags.DIV, [`popup__${key}`]);
     const { asset } = Store.getState().info;
-    const iconSVG = new BaseComponent(Tags.DIV, [`popup__${key}_icon`]);
-    iconSVG.innerHTML = SVG.popupDonate;
-    const titleText = new BaseComponent(Tags.SPAN, [`popup__${key}_text`]);
-    titleText.element.textContent = 'DONATE';
-    const iconFund = new BaseComponent(Tags.DIV, [
-      `popup__${key}_iconFund`]);
-    iconFund.innerHTML = SVG.funt;
+    const contentWrapper = new BaseComponent(Tags.DIV, ['popup-content']);
+    const buttonBlock = new BaseComponent(Tags.DIV, ['popup-btn_block']);
+    const iconSVG = new BaseComponent(
+      Tags.IMG, [`popup__${key}_icon`, 'popup-icon']
+    );
+    iconSVG.setAttributes({
+      src: imgTitle
+    });
+    const titleText = new BaseComponent(
+      Tags.SPAN, [`popup__${key}_text`, 'popup-title']
+    );
+    titleText.innerHTML = 'DONATE';
     const prizeWrap = new BaseComponent(Tags.DIV, [`popup__${key}_prizeWrap`]);
     this.prizeFund = new BaseComponent(Tags.SPAN, [`popup__${key}_prizeFund`]);
     const currencyFund = new BaseComponent(Tags.SPAN, [
@@ -34,23 +43,32 @@ export class Donate extends BaseComponent {
     currencyFund.innerHTML = asset.name;
     const amount = data;
     const spanFund = new BaseComponent(Tags.SPAN);
-    spanFund.element.textContent = 'PRIZE FUND: ';
+    spanFund.innerHTML = 'PRIZE FUND: ';
     this.prizeFund.innerHTML = `${amount}`;
-    prizeWrap.append(spanFund, this.prizeFund, iconFund, currencyFund);
+    prizeWrap.append(spanFund, this.prizeFund, currencyFund);
     const inputWrap = new BaseComponent(Tags.DIV, [`popup__${key}_inputWrap`]);
     const input = new BaseComponent(Tags.INPUT, [`popup__${key}_input`]);
+    const iconWrapper = new BaseComponent(
+      Tags.DIV, [`popup__${key}_iconWrapper`]
+    );
     const currency = new BaseComponent(Tags.SPAN, [`popup__${key}_currency`]);
     currency.innerHTML = asset.name;
     const inputElement = input.element as HTMLInputElement;
     input.setAttributes({
       value: '1'
     });
-    const iconCurrency = new BaseComponent(Tags.DIV, [
+    const iconCurrency = new BaseComponent(Tags.IMG, [
       `popup__${key}_iconCurrency`]);
-    iconCurrency.innerHTML = SVG.funt;
-    inputWrap.append(input, iconCurrency, currency);
-    const setDonate = new BaseComponent(Tags.DIV, [`popup__${key}_btn`]);
-    setDonate.element.textContent = 'DONATE';
+    iconCurrency.setAttributes({
+      src: gemIcon
+    });
+    iconWrapper.append(iconCurrency, currency);
+    inputWrap.append(input, iconWrapper);
+    const setDonate = new Button({
+      key: MenuBtn.DONATE,
+      icon: donateIcon,
+      title: 'PROCEED'
+    });
     setDonate.element.addEventListener('click', () => {
       const { isTx } = Store.getState().info;
       if (!isTx) {
@@ -83,11 +101,19 @@ export class Donate extends BaseComponent {
         setDonate.classList.add('disabled');
       }
     });
-    const btn = new BaseComponent(Tags.DIV, ['back-to-main']);
-    btn.element.textContent = 'Back to Main Menu';
+    const orText = new BaseComponent(Tags.DIV, ['or-text']);
+    orText.innerHTML = 'or';
+    const btn = new Button({
+      key: MenuBtn.RETURN_DONATE,
+      icon: backIcon,
+      title: 'BACK TO MAIN SCREEN'
+    });
+
     btn.element.addEventListener('click', (): void => {
       Store.dispatch(AC.setPopup(false));
     });
-    this.append(iconSVG, titleText, prizeWrap, inputWrap, setDonate, btn);
+    contentWrapper.append(iconSVG, titleText, inputWrap, prizeWrap);
+    buttonBlock.append(setDonate, orText, btn);
+    this.append(contentWrapper, buttonBlock);
   }
 }

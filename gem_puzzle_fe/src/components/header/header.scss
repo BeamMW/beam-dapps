@@ -1,13 +1,12 @@
 .header {
-  width: 90vw;
-  max-width: 955px;
-  margin: 40px auto;
+  max-width: 872px;
+  margin: 0 auto 40px;
   border-radius: 37.5px;
   &__top{
     display: flex;
     // width: 100%;
     align-items:center;
-    justify-content: space-around;
+    justify-content: space-between;
   }
   
   .infoblock {

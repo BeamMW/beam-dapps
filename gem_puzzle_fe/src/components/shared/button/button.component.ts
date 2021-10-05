@@ -2,8 +2,6 @@ import { MenuButtonType } from 'ComponentProps';
 import { Tags } from '../../../constants/html';
 import BaseComponent from '../../base/base.component';
 import './button.scss';
-import { toDOMParser } from '../../../utils/string_handlers';
-import { buttonFromMenu } from '../../../constants/svg.icons';
 
 export default class Button extends BaseComponent {
   value = false;
@@ -14,18 +12,22 @@ export default class Button extends BaseComponent {
     key, title, icon, handler
   }: MenuButtonType) {
     super(Tags.DIV, ['button', `btn_${key}`]);
-    const bgSVG = toDOMParser(buttonFromMenu(key));
-    bgSVG.classList.add('bgSvg');
+
     const titleDOMText = new BaseComponent(Tags.SPAN);
     const args: (BaseComponent | HTMLElement)[] = [titleDOMText];
     if (icon) {
-      const iconDOM = toDOMParser(icon);
+      const iconDOM = new BaseComponent(Tags.IMG);
+      iconDOM.setAttributes({
+        src: icon
+      });
       args.unshift(iconDOM);
     }
     titleDOMText.innerHTML = title;
-    this.element.addEventListener('click', () => {
-      handler();
-    });
+    if (handler) {
+      this.element.addEventListener('click', () => {
+        handler();
+      });
+    }
     this.setAttributes({
       type: 'button'
     });
