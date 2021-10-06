@@ -19,9 +19,9 @@ export const dropHandler = async (
   span: HTMLElement
 ): Promise<void> => {
   e.preventDefault();
-  const target = (<Element>e.target).closest('.formUpload');
-  target?.classList.remove('hover');
-  // target?.classList.add('drop');
+  const target = (<Element>e.target).closest('.upload');
+  target?.classList.remove('active');
+  target?.classList.add('drop');
   const uploadDragFiles = e.dataTransfer?.files as FileList;
   const files = (await uploadDragFiles[0]?.arrayBuffer()) as ArrayBuffer;
   createForm(files);

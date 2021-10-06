@@ -1,14 +1,16 @@
-.upload{
+.upload {
   display: none;
 }
+
 .upload.active {
   position: absolute;
   z-index: 999;
-  height: auto;
+  height: 98%;
   display: flex;
   background-color: #042548;
   width: 99vw;
 }
+
 .formUpload {
   display: flex;
   flex-direction: column;
@@ -21,16 +23,21 @@
   border: 2px dashed #1af6d6;
   background-color: rgba(26, 246, 214, 0.1);
 
-  &:hover, &.hover{
-  background-color: rgba(26, 246, 214, 0.2);
+  &:hover,
+  &.hover {
+    background-color: rgba(26, 246, 214, 0.2);
     cursor: pointer;
+
     .label {
       opacity: .5;
+      cursor: pointer;
     }
+
     .text {
       opacity: .35;
     }
-    #iconDrop{
+
+    #iconDrop {
       opacity: .5;
     }
   }
@@ -43,6 +50,7 @@
   overflow: hidden;
   width: 0.4px;
   height: 0.4px;
+
 }
 
 .label {
@@ -58,10 +66,12 @@
   font-stretch: normal;
   font-style: normal;
   line-height: normal;
-  .labelText{
+
+  .labelText {
     padding: 0 0 4px;
   }
 }
+
 .text {
   color: #fff;
   opacity: .7;
