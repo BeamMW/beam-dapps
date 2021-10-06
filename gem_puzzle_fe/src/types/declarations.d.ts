@@ -202,7 +202,7 @@ declare module 'ComponentProps' {
     key: MenuBtn,
     title: string,
     icon?: string,
-    handler: (arg?) => void;
+    handler?: (arg?) => void;
   };
 
   export type CellToRender = {

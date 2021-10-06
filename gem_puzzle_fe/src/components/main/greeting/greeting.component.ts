@@ -33,7 +33,6 @@ export default class Greeting extends BaseComponent {
     ) {
       this.max_bet = state.cid.max_bet;
       this.asset_name = state.info.asset.name;
-      this.descDom.style.color = state.info.asset.color || '#fff';
       this.descDom.innerHTML = this.max_bet > 0
         ? `Current Bet: ${Number(parseToBeam(this.max_bet)).toFixed(8)
           .replace(/\.?0+$/, '')} ${this.asset_name}`

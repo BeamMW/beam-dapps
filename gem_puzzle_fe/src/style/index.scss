@@ -16,11 +16,11 @@ html {
 
 body {
   margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: column;
+  height: 100%;
+  // display: flex;
+  // justify-content: flex-start;
+  // align-items: center;
+  // flex-direction: column;
   width: 100%;
   background: url('../assets/bg-copy@3x1.jpg');
   background-repeat: no-repeat;
@@ -28,7 +28,12 @@ body {
   background-position: center 20%;
   overflow-y: scroll;
   overflow-x: hidden;
-  background-color: #081d11;;
+  background-color: #081d11;
+}
+.container{
+  min-height: 100%;
+  padding-bottom: 97px;
+  padding-top: 40px;
 }
 
 ::-webkit-scrollbar {
@@ -57,8 +62,8 @@ body {
 }
 
 .footer {
+  margin-top: -97px;
   width: 100%;
-  margin-top: auto;
 }
 
 @keyframes animate {
@@ -122,15 +127,17 @@ body {
   .game-infoblock{
     padding-top: 0px !important;
   }
-  .footer {
-    padding-top: 0 !important;
-    padding-bottom: 10px !important;
-    .errorBlock{
-      padding: 0 !important;
-    }
-  }
+  // .footer {
+  //   padding-top: 0 !important;
+  //   padding-bottom: 10px !important;
+  //   .errorBlock{
+  //     padding: 0 !important;
+  //   }
+  // }
   .widget {
     bottom: 10px !important;
   }
+  .popup {
+  top: unset;
 }
-
+}

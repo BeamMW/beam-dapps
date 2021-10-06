@@ -58,7 +58,9 @@ export enum MenuBtn {
   BEST = 'BEST',
   CLAIM_REWARD = 'CLAIM_REWARD',
   DONATE = 'DONATE',
-  SET_ACTIVE = 'SET_ACTIVE'
+  SET_ACTIVE = 'SET_ACTIVE',
+  PROCEED = 'PROCEED',
+  RETURN_DONATE = 'RETURN_DONATE'
 }
 
 export enum RouterMode {

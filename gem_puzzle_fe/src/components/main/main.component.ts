@@ -1,3 +1,4 @@
+import { IState } from 'AppStateProps';
 import { APIResponse, ResOutput } from 'beamApiProps';
 import { Store } from '../../logic/store/state_handler';
 import { Beam } from '../../logic/beam/api_handler';
@@ -18,7 +19,7 @@ import { Game } from '../game/game.component';
 export default class Main extends BaseComponent {
   private readonly menu: Menu;
 
-  private readonly popup: Popup;
+  readonly popup: Popup;
 
   private readonly router: Router;
 
@@ -26,8 +27,8 @@ export default class Main extends BaseComponent {
 
   constructor() {
     super(Tags.DIV, ['main']);
+    Store.addObservers(this);
     Beam.addObservers(this);
-    Beam.callApi(RC.viewMyInfo());
     this.menu = new Menu();
     this.popup = new Popup();
     this.router = new Router({
@@ -41,7 +42,19 @@ export default class Main extends BaseComponent {
     if (window.location.pathname !== Routes.MAIN) {
       window.history.pushState({}, '', Routes.MAIN);
     }
+    window.addEventListener('resize', this.adaptivePopup);
   }
+
+  adaptivePopup = (): void => {
+    const { popup } = Store.getState().info;
+    if (popup) {
+      const mainHeight = window.innerHeight;
+      const popupHeight = this.popup.element.clientHeight;
+      if (mainHeight < 775) {
+        this.menu.style.marginBottom = `${popupHeight / 2.5}px`;
+      } else this.menu.style.marginBottom = '';
+    }
+  };
 
   initMainMenu = (): void => {
     if (this.child) this.remove(this.child);
@@ -57,6 +70,13 @@ export default class Main extends BaseComponent {
     this.menu.addActive();
     this.append(this.menu);
     Store.addObservers(this.menu);
+  };
+
+  appInform = (state: IState):void => {
+    const { popup } = state.info;
+    if (popup) {
+      this.adaptivePopup();
+    } else this.menu.style.marginBottom = '';
   };
 
   inform = (res: APIResponse): void => {
