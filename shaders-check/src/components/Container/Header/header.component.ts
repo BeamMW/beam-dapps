@@ -1,14 +1,14 @@
 import { APIResponse } from 'beamApiProps';
 import { Tags } from '../../../constants/html_elements';
 import { ReqID } from '../../../constants/variables';
-import { ApiHandler } from '../../../utils/api_handlers';
+import { BEAM } from '../../../utils/api_handlers';
 import BaseComponent from '../../BaseComponent/base.component';
 import './header.scss';
 
 export default class Header extends BaseComponent {
   constructor() {
     super(Tags.DIV, ['header']);
-    ApiHandler.addObservers(this);
+    BEAM.addObservers(this);
     const app = new BaseComponent(Tags.DIV, ['header__app']);
     const info = new BaseComponent(Tags.DIV, ['header__info']);
     const infoTitles = new BaseComponent(Tags.DIV, ['info__titles']);

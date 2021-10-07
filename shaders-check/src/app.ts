@@ -1,9 +1,9 @@
 import { BeamAPI } from './utils/BeamAPI';
 import MainPage from './components/MainPage/mainPage.component';
-import Loader from './components/Loader/loader.component';
 import './scss/main.scss';
-import { ApiHandler } from './utils/api_handlers';
+import { BEAM } from './utils/api_handlers';
 import Container from './components/Container/container.component';
+import Loader from './components/loader/loader.component';
 
 export class App {
   private readonly rootElement: HTMLElement;
@@ -16,7 +16,7 @@ export class App {
     this.rootElement.append(new Loader().element);
     this.API.loadAPI()
       .then(() => {
-        ApiHandler.setApiHandlers({
+        BEAM.setApiHandlers({
           addObservers: this.API.addObservers,
           callApi: this.API.callApi,
           initShader: this.API.initShader,

@@ -1,10 +1,15 @@
 import { APIResponse } from 'beamApiProps';
 import { InnerTexts, Tags } from '../../../../constants/html_elements';
 import { isJson } from '../../../../utils/json_handlers';
-import { ReqID, ResTXStatus } from '../../../../constants/variables';
+import {
+  ReqID,
+  ResTXStatus,
+  ShaderProps
+} from '../../../../constants/variables';
 import BaseComponent from '../../../BaseComponent/base.component';
 import { TreeBuilder } from './TreeBuilder/tree_builder.component';
-import { invokeData, txStatus } from '../../../../utils/request_creators';
+import { RC } from '../../../../utils/request_creators';
+import { BEAM } from '../../../../utils/api_handlers';
 
 export class OutputPlace extends BaseComponent {
   constructor() {
@@ -16,7 +21,7 @@ export class OutputPlace extends BaseComponent {
     switch (res.id) {
       case ReqID.SUBMIT_RESULT:
         if (res.result.raw_data) {
-          invokeData(ReqID.INVOKE_DATA, res.result.raw_data);
+          BEAM.callApi(RC.invokeData(ReqID.INVOKE_DATA, res.result.raw_data));
         } else {
           this.removeAll();
           if (isJson(res.result.output)) {
@@ -28,11 +33,13 @@ export class OutputPlace extends BaseComponent {
         }
         break;
       case ReqID.INVOKE_DATA:
-        txStatus(res.result.txid);
+        BEAM.callApi(RC.txStatus(res.result.txid));
         break;
       case ReqID.TX_STATUS:
         if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
-          txStatus(res.result.txId);
+          setTimeout(() => {
+            BEAM.callApi(RC.txStatus(res.result.txId));
+          }, ShaderProps.TX_CHECK_INTERVAL);
         } else {
           console.log(res);
         }
