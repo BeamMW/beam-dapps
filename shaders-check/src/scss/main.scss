@@ -50,7 +50,7 @@ fieldset{
 }
 .container{
   border-radius: 10px;
-  border: 1px solid #da68f5;
+  // border: 1px solid #da68f5;
   margin-top: 20px;
   overflow: auto;
 }
@@ -246,59 +246,56 @@ padding-top: 20px;
   justify-content:space-between;
 }
 
-.input__role{
-  display: flex;
-  justify-content:space-between;
-}
 
-.custom-radio>input {
-  position: absolute;
-  z-index: -1;
-  opacity: 0;
-}
 
-.custom-radio>span {
-  color: #da68f5;
-  display: inline-flex;
-  align-items: center;
-  user-select: none;
-}
+// .custom-radio>input {
+//   position: absolute;
+//   z-index: -1;
+//   opacity: 0;
+// }
 
-.custom-radio>span::before {
-  content: '';
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  flex-shrink: 0;
-  flex-grow: 0;
-  border: 1px solid #00f6d2;
-  border-radius: 50%;
-  margin-right: 0.5em;
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: 50% 50%;
-}
-.custom-radio>input:not(:disabled):not(:checked)+span:hover::before {
-  border-color: #00f6d2;
-}
-.custom-radio>input:not(:disabled):active+span::before {
-  background-color: #00f6d2;
-  border-color: #00f6d2;
-}
-.custom-radio>input:focus+span::before {
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-.custom-radio>input:focus:not(:checked)+span::before {
-  border-color: #00f6d2;
-}
-.custom-radio>input:checked+span::before {
-  border-color: #da68f5;
-  background-color: #da68f5;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
-}
-.custom-radio>input:disabled+span::before {
-  background-color: #00f6d2;
-}
+// .custom-radio>span {
+//   color: #da68f5;
+//   display: inline-flex;
+//   align-items: center;
+//   user-select: none;
+// }
+
+// .custom-radio>span::before {
+//   content: '';
+//   display: inline-block;
+//   width: 1em;
+//   height: 1em;
+//   flex-shrink: 0;
+//   flex-grow: 0;
+//   border: 1px solid #00f6d2;
+//   border-radius: 50%;
+//   margin-right: 0.5em;
+//   background-repeat: no-repeat;
+//   background-position: center center;
+//   background-size: 50% 50%;
+// }
+// .custom-radio>input:not(:disabled):not(:checked)+span:hover::before {
+//   border-color: #00f6d2;
+// }
+// .custom-radio>input:not(:disabled):active+span::before {
+//   background-color: #00f6d2;
+//   border-color: #00f6d2;
+// }
+// .custom-radio>input:focus+span::before {
+//   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+// }
+// .custom-radio>input:focus:not(:checked)+span::before {
+//   border-color: #00f6d2;
+// }
+// .custom-radio>input:checked+span::before {
+//   border-color: #da68f5;
+//   background-color: #da68f5;
+//   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+// }
+// .custom-radio>input:disabled+span::before {
+//   background-color: #00f6d2;
+// }
 
 
 .submit {

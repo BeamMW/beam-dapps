@@ -11,7 +11,8 @@ export class RoleLabel extends BaseComponent {
     this.input = new RoleInput(role, dispatch, index);
     const span = new BaseComponent(Tags.SPAN);
     span.element.innerText = <string>role[0];
+    const underline = new BaseComponent(Tags.DIV, ['active']);
     this.element.setAttribute('for', <string>role[0]);
-    this.append(this.input, span);
+    this.append(this.input, span, underline);
   }
 }

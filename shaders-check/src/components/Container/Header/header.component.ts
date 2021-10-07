@@ -8,6 +8,7 @@ import './header.scss';
 export default class Header extends BaseComponent {
   constructor() {
     super(Tags.DIV, ['header']);
+    ApiHandler.addObservers(this);
     const app = new BaseComponent(Tags.DIV, ['header__app']);
     const info = new BaseComponent(Tags.DIV, ['header__info']);
     const infoTitles = new BaseComponent(Tags.DIV, ['info__titles']);
