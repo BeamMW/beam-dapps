@@ -1,4 +1,7 @@
 import { APIResponse } from 'beamApiProps';
+import { SVG } from '../../constants/svg.icons';
+import { toDOMParser } from '../../utils/string_handlers';
+import { Routes } from '../../constants/app';
 import { Beam } from '../../logic/beam/api_handler';
 import { Store } from '../../logic/store/state_handler';
 import {
@@ -7,7 +10,7 @@ import {
   ResTXComment,
   ResTXStatus
 } from '../../constants/api';
-import { Tags } from '../../constants/tags';
+import { Tags } from '../../constants/html';
 import BaseComponent from '../base/base.component';
 import Loader from '../shared/loader/loader.component';
 import WidgetProps from '../shared/widget_info/widget.info.component';
@@ -27,26 +30,17 @@ export default class Widget extends BaseComponent {
       Store.dispatch(AC.setIsTx(true));
       this.classList.add('active');
     }
-    const transactionId = new WidgetProps({
-      value: txId || '...',
-      key: 'txId',
-      title: 'ID: '
+    const transaction = new WidgetProps();
+    infoBlocks.append(transaction);
+    const closeIcon = toDOMParser(SVG.closeIcon);
+    this.append(loader, infoBlocks, closeIcon);
+    closeIcon.addEventListener('click', () => {
+      this.classList.remove('active');
     });
-    const comment = new WidgetProps({
-      value: '...',
-      key: 'comment',
-      title: 'COMMENT: '
-    });
-    const status = new WidgetProps({
-      value: ResTXStatus.IN_PROGRESS,
-      key: 'status_string',
-      title: 'STATUS: '
-    });
-    infoBlocks.append(transactionId, comment, status);
-    this.append(loader, infoBlocks);
   }
 
   transactionHandler = (result: APIResponse['result']): void => {
+    const { popup } = Store.getState().info;
     if (result.status_string === ResTXStatus.IN_PROGRESS) {
       setTimeout(
         () => Beam.callApi(RC.viewTxStatus(result.txId)),
@@ -56,16 +50,17 @@ export default class Widget extends BaseComponent {
     if (
       result.status_string === ResTXStatus.FAILED
       || result.status_string === ResTXStatus.COMPLETED
+      || result.status_string === ResTXStatus.EXPIRED
     ) {
       this.classList.remove('active');
       window.localStorage.removeItem('txId');
-      Store.dispatch(AC.setIsTx(false));
+      Store.dispatch(AC.setIsTx(false), 'sync');
       switch (result.comment) {
-        case ResTXComment.CREATE_NEW_GAME:
-          Beam.callApi(RC.viewBoard());
-          break;
         case ResTXComment.CHECKIN_SOLUTION:
-          Beam.callApi(RC.viewCheckResult());
+          if (popup) {
+            Store.dispatch(AC.setPopup(false), 'sync');
+            setTimeout(() => Beam.callApi(RC.viewCheckResult()), 400);
+          } else Beam.callApi(RC.viewCheckResult());
           break;
         case ResTXComment.ENDING_EXISTING_GAME:
           window.localStorage.removeItem('state');
@@ -88,18 +83,17 @@ export default class Widget extends BaseComponent {
 
         case ReqID.TAKE_PENDING_REWARDS:
           Beam.callApi(RC.invokeData(res.result.raw_data));
-          Beam.callApi(RC.viewMyInfo());
           break;
 
         case ReqID.INVOKE_DATA:
           if (res.result?.txid) {
+            if (window.location.pathname !== Routes.MAIN) {
+              window.history.pushState({}, '', Routes.MAIN);
+            }
             window.localStorage.setItem('txId', res.result.txid);
-            Store.dispatch(AC.setIsTx(true));
             this.classList.add('active');
-            setTimeout(
-              () => Beam.callApi(RC.viewTxStatus(res.result.txid)),
-              AppSpecs.TX_CHECK_INTERVAL
-            );
+            Store.dispatch(AC.setIsTx(true), 'sync');
+            Beam.callApi(RC.viewTxStatus(res.result.txid));
           }
           break;
 

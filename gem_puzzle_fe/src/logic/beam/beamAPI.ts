@@ -1,5 +1,11 @@
 import { PropertiesType } from 'beamApiProps';
-import { QWebChannel, QWebChannelTransport, QObject } from 'qwebchannel';
+import {
+  QWebChannel,
+  QWebChannelTransport,
+  QObject,
+  ApiResult,
+  ApiResultWeb
+} from 'qwebchannel';
 import { RC } from './request_creators';
 import shader from './app.wasm';
 import BaseComponent from '../../components/base/base.component';
@@ -8,7 +14,7 @@ import { AppSpecs } from '../../constants/api';
 declare global {
   interface Window {
     qt: QWebChannelTransport;
-    beam: QObject;
+    BeamApi: QObject;
   }
 }
 
@@ -52,29 +58,47 @@ export class BeamAPI {
   };
 
   readonly loadAPI = async (): Promise<void> => {
-    const { qt, beam } = window;
-    if (beam) {
-      window.beam.apiResult$.subscribe(this.onApiResult);
-      this.API = beam;
-    } else {
+    const { qt } = window;
+    const ua = navigator.userAgent;
+    if (/QtWebEngine/i.test(ua)) {
       this.API = await new Promise<QObject>(
         (resolve) => new QWebChannel(qt.webChannelTransport, (channel) => {
           resolve(channel.objects.BEAM.api);
         })
       );
-      this.API?.callWalletApiResult.connect(this.onApiResult);
+      (this.API?.callWalletApiResult as ApiResult).connect(this.onApiResult);
+    } else {
+      this.API = await new Promise<QObject>((resolve) => {
+        window.addEventListener('message', async (ev) => {
+          if (window.BeamApi) {
+            const webApiResult = window
+              .BeamApi
+              .callWalletApiResult as ApiResultWeb;
+            if (ev.data === 'apiInjected') {
+              await webApiResult(this.onApiResult);
+              resolve(window.BeamApi);
+            }
+          }
+        }, { once: false });
+        window.postMessage({
+          type: 'create_beam_api',
+          apiver: 'current',
+          apivermin: '',
+          appname: 'BEAM GEM_PUZZLE'
+        }, window.origin);
+      });
     }
     this.contract = await fetch(shader)
       .then((response) => response.arrayBuffer());
     if (this.contract) {
-      this.initShader();
+      // this.initShader();
       this.callApi(RC.viewCidParams());
     }
   };
 
-  private readonly initShader = (): void => {
-    if (window.beam) {
-      window.beam.initializeShader(AppSpecs.CID, AppSpecs.TITLE);
+  readonly initShader = (): void => {
+    if (window.BeamApi) {
+      window.BeamApi.initializeShader(AppSpecs.CID, AppSpecs.TITLE);
     }
   };
 
@@ -92,8 +116,8 @@ export class BeamAPI {
         params: { ...params, contract }
       };
       console.log('request: ', request);
-      if (window.beam) {
-        window.beam.callApi(callID, method, { ...params, contract });
+      if (window.BeamApi) {
+        window.BeamApi.callWalletApi(callID, method, { ...params, contract });
       } else {
         this.API?.callWalletApi(JSON.stringify(request));
       }

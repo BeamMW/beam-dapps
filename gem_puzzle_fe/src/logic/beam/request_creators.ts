@@ -20,6 +20,20 @@ export const RC = {
     }
   } as const),
 
+  txAssetInfo: (aid: number, txId?: string): ApiArgs => {
+    const args:ApiArgs = {
+      callID: ReqID.TX_ASSET_INFO,
+      method: ReqMethods.TX_ASSET_INFO,
+      params: {
+        asset_id: aid
+      }
+    };
+    if (txId) {
+      args.params.txId = txId;
+    }
+    return args;
+  },
+
   startGame: (): ApiArgs => {
     const bet = Store.getState().cid.max_bet;
     const args = argsParser({
@@ -118,22 +132,6 @@ export const RC = {
     });
     return ({
       callID: ReqID.VIEW_CHECK_RESULT,
-      method: ReqMethods.INVOKE_CONTRACT,
-      params: {
-        create_tx: false,
-        args
-      }
-    }) as const;
-  },
-
-  viewTops: (): ApiArgs => {
-    const args = argsParser({
-      role: ReqRoles.PLAYER,
-      action: ReqActions.VIEW_TOPS,
-      cid: AppSpecs.CID
-    });
-    return ({
-      callID: ReqID.VIEW_TOPS,
       method: ReqMethods.INVOKE_CONTRACT,
       params: {
         create_tx: false,

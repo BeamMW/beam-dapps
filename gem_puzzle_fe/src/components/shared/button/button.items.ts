@@ -1,16 +1,18 @@
 import { MenuButtonType } from 'ComponentProps';
-import { AC } from '../../../logic/store/app_action_creators';
 import { SVG } from '../../../constants/svg.icons';
 import {
   RC
 } from '../../../logic/beam/request_creators';
-import { MenuBtn, PopupKeys, Routes } from '../../../constants/app';
+import { MenuBtn, Routes } from '../../../constants/app';
 import { Beam } from '../../../logic/beam/api_handler';
-import { Store } from '../../../logic/store/state_handler';
+import playIcon from '../../../assets/icon/icon-new-game-copy-2.svg';
+import donateIcon from '../../../assets/icon/icon-donate-copy.svg';
+import beamIcon from '../../../assets/icon/icon-beam-copy-356.svg';
 
 export const menuProps: MenuButtonType[] = [
   {
     key: MenuBtn.CONTINUE,
+    icon: playIcon,
     title: 'PLAY',
     handler: ():void => {
       window.history.pushState({}, '', `/${Routes.PLAY}`);
@@ -18,31 +20,24 @@ export const menuProps: MenuButtonType[] = [
   },
   {
     key: MenuBtn.NEW,
-    icon: SVG.newGameIcon,
+    icon: beamIcon,
     title: 'NEW BET',
     handler: () => Beam.callApi(RC.startGame())
   },
   {
-    key: MenuBtn.OPTIONS,
-    icon: SVG.settingIcon,
-    title: 'SETTING',
-    handler: ():void => {
-      window.history.pushState({}, '', `/${Routes.OPTIONS}`);
-    }
-  },
-  {
-    key: MenuBtn.RETURN,
-    title: 'CANCEL GAME',
-    icon: SVG.iconCancel,
-    handler: ():void => {
-      window.history.pushState({}, '', `/${Routes.RETURN}`);
-    }
-  },
-  {
     key: MenuBtn.DONATE,
+    icon: donateIcon,
     title: 'DONATE',
-    handler: () => Store.dispatch(AC.setPopup(PopupKeys.DONATE))
+    handler: () => Beam.callApi(RC.viewPrizeFund())
   }
+  // {
+  //   key: MenuBtn.SET_ACTIVE,
+  //   title: 'Active',
+  //   handler: ():void => {
+  //     // const active = Store.getState().info.isTx;
+  //     Store.dispatch(AC.setPopup(PopupKeys.LIMIT));
+  //   }
+  // }
 ];
 
 export const claimBtn = [

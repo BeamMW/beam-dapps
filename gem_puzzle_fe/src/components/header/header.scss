@@ -1,41 +1,22 @@
 .header {
-  // width: 1023px;
-  // height: 230px;
-  // margin: 0 10px 0 9px;
-
-  width: 872px;
-  padding: 0 10px 0 10px;
-  margin: 0 auto;
+  max-width: 872px;
+  margin: 0 auto 40px;
   border-radius: 37.5px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
   &__top{
     display: flex;
-    width: 100%;
+    // width: 100%;
     align-items:center;
-    // margin-bottom: 70px;
+    justify-content: space-between;
   }
-  div + div{
-    margin-left: 23px;
-  }
-  div:last-child{
-    margin-right: 23px;
-  }
-  div:first-child{
-    margin-left: 23px;
-    margin-right: auto;
-  };
   
   .infoblock {
+    color: #fff;
     width: 314px;
     height: 60px;
     display: flex;
     user-select: none;
     justify-content: center;
     align-items: center;
-    margin: 40px 493px 3px 14px;
     background-image: url('../../assets/icon/button-0-funt.svg');
     background-repeat: no-repeat;
     background-size: cover;
@@ -44,14 +25,14 @@
       background-image: url('../../assets/icon/button-new-game.svg');
     }
     span{
-      color:rgba($color: #fff, $alpha: 1);
+      margin-left: 11px;
       font-size: 20px;
+      font-family: Ubuntu-Bold;
       font-weight: bold;
       font-stretch: normal;
       font-style: normal;
       line-height: 1.42;
       letter-spacing: normal;
-      color: #fff;
     }
     .title{
       margin: 0 16px 0 0;
@@ -66,7 +47,6 @@
   .infoblock:first-child {
     width: 285px;
     height: 75px;
-    padding: 17px 25px 18px;
     border-radius: 37.5px;
     background-color: rgba(255, 255, 255, 0.1);
     cursor: default;
@@ -86,3 +66,32 @@
     }
   }
 }
+
+// @media screen and (max-width: 530px) {
+//   .header {
+//     width: 0;
+//     margin: 20px auto;
+//     border-radius: 37.5px;
+
+//   }
+//   .header__top{
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: center;
+//     align-items: center;
+//     align-content: center;
+//   }
+    
+//   .infoblock {
+//     margin-bottom: 10px;
+// }
+
+// .main {
+//   flex-direction: row;
+//   height: auto;
+// }
+// .description{
+//   margin-top: 0;
+// }
+
+// }

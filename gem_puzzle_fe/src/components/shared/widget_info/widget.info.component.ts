@@ -1,42 +1,54 @@
 import { APIResponse } from 'beamApiProps';
-import { Tags } from '../../../constants/tags';
+import {
+  ResTXComment,
+  ResTXStatus,
+  WidgetTxDescription
+} from '../../../constants/api';
+import { Tags } from '../../../constants/html';
 import { Beam } from '../../../logic/beam/api_handler';
 import BaseComponent from '../../base/base.component';
-import { ReqID, ResTXStatus } from '../../../constants/api';
-
-type WidgetPropsType = {
-  value: string,
-  key: keyof APIResponse['result'],
-  title: string
-};
 
 export default class WidgetProps extends BaseComponent {
-  value: BaseComponent;
+  value: ResTXComment | false;
 
-  key: keyof APIResponse['result'];
+  mainDesc = new BaseComponent(Tags.DIV, ['title']);
 
-  constructor({ value, key, title }:WidgetPropsType) {
+  constructor() {
     super(Tags.DIV, ['tx-infoblock']);
     Beam.addObservers(this);
-    const titleSpan = new BaseComponent(Tags.SPAN, ['title']);
-    titleSpan.innerHTML = title;
-    this.value = new BaseComponent(Tags.SPAN, ['value']);
-    this.key = key;
-    this.value.innerHTML = value;
-    this.append(titleSpan, this.value);
+    this.value = false;
+    this.mainDesc.innerHTML = '...';
+    const gemPuzzle = new BaseComponent(Tags.DIV, ['value']);
+    gemPuzzle.innerHTML = 'Gem-Puzzle';
+    this.append(this.mainDesc, gemPuzzle);
   }
 
   inform = (res: APIResponse): void => {
-    if (res.id === ReqID.INVOKE_DATA) {
-      if (this.key === 'txId') {
-        this.value.innerHTML = window.localStorage.getItem('txId') || '...';
-      }
-    }
-    if (res.id === ReqID.TX_STATUS) {
-      this.value.innerHTML = res.result[this.key];
-      if (res.result.status_string === ResTXStatus.FAILED
-        || res.result.status_string === ResTXStatus.COMPLETED) {
-        this.value.innerHTML = '...';
+    const status = res.result?.comment || null;
+    if (status !== null && status !== this.value) {
+      if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
+        if (!this.classList.contains('active')) this.classList.add('active');
+        this.value = status;
+        switch (this.value) {
+          case ResTXComment.CHECKIN_SOLUTION:
+            this.mainDesc.innerHTML = WidgetTxDescription.CHECK;
+            break;
+          case ResTXComment.CREATE_NEW_GAME:
+            this.mainDesc.innerHTML = WidgetTxDescription.NEW_BET;
+            break;
+          case ResTXComment.GIVING_YOU_REWARD:
+            this.mainDesc.innerHTML = WidgetTxDescription.CLAIM_REWARD;
+            break;
+          case ResTXComment.DONATING:
+            this.mainDesc.innerHTML = WidgetTxDescription.DONATE;
+            break;
+          default:
+            break;
+        }
+      } else {
+        this.classList.remove('active');
+        this.value = false;
+        this.mainDesc.innerHTML = '...';
       }
     }
   };

@@ -1,6 +1,6 @@
 import { IState } from 'AppStateProps';
 import { GameInfoCb, GameInfoParams } from 'ComponentProps';
-import { Tags } from '../../../constants/tags';
+import { Tags } from '../../../constants/html';
 import { Store } from '../../../logic/store/state_handler';
 import BaseComponent from '../../base/base.component';
 import './game.info.scss';

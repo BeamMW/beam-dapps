@@ -6,7 +6,7 @@ import { Beam } from '../../logic/beam/api_handler';
 import {
   RC
 } from '../../logic/beam/request_creators';
-import { HtmlProps, Tags } from '../../constants/tags';
+import { HtmlProps, Tags } from '../../constants/html';
 import {
   Box, isSolved, swapBoxes
 } from './box';
@@ -15,6 +15,7 @@ import NPuzzleSolver from '../../logic/solver/solvers';
 import { Store } from '../../logic/store/state_handler';
 import { AppSpecs } from '../../constants/api';
 import { PopupKeys, Routes } from '../../constants/app';
+import Loader from '../shared/loader/loader.component';
 
 type PuzzleSolveType = {
   piece: {
@@ -31,8 +32,6 @@ type PuzzleSolveType = {
 export class Field extends BaseComponent {
   private solveList: PuzzleSolveType [] | null;
 
-  private readonly bet: boolean;
-
   private readonly nodeList: Cell[];
 
   private readonly innerField: BaseComponent;
@@ -44,11 +43,11 @@ export class Field extends BaseComponent {
     Beam.addObservers(this);
     Store.addObservers(this);
     const { board } = Store.getState().grid;
-    this.bet = Boolean(Store.getState().cid.max_bet);
     this.innerField = new BaseComponent(Tags.DIV, ['field-inner']);
     this.timeOutId = null;
     this.solveList = [];
     this.nodeList = [];
+
     this.element.addEventListener('DOMNodeRemovedFromDocument',
       () => {
         if (this.timeOutId) {
@@ -56,8 +55,11 @@ export class Field extends BaseComponent {
           this.timeOutId = null;
         }
       });
-    if (board && this.bet) this.startGame(board);
-    else this.rebootHandler();
+    if (board) this.startGame(board);
+    else {
+      this.append(new Loader());
+      this.rebootHandler();
+    }
   }
 
   rebootHandler = ():void => {
@@ -68,7 +70,7 @@ export class Field extends BaseComponent {
         solution: ('u' | 'd' | 'r' | 'l')[],
         permutation: number | null
       };
-      if (parsed.board && parsed.permutation && this.bet) {
+      if (parsed.board && parsed.permutation) {
         Store.dispatch(AC.setGame({
           ...parsed,
           status: 'ready'
@@ -90,7 +92,7 @@ export class Field extends BaseComponent {
       if (status === 'playing') {
         if (autoPlay) this.autoPlayHandle();
         if (solution.length + 1 > AppSpecs.MAX_MOVES) {
-          window.history.pushState({}, '', `/${Routes.RETURN}`);
+          window.history.pushState({}, '', Routes.MAIN);
           Store.dispatch(AC.setPopup(PopupKeys.LIMIT));
         }
       }
@@ -104,19 +106,16 @@ export class Field extends BaseComponent {
       }
 
       if (status === 'won' && board) {
-        if (this.bet) {
-          window.localStorage.setItem('state', JSON.stringify(store.grid));
-        }
         this.timeOutId = setTimeout(() => {
           this.removeAll();
           Store.dispatch(AC.setGame({
             board: null,
-            permutation: null,
-            solution: []
+            permutation: null
           }));
           Beam.callApi(
             RC.checkSolution(solution.join(''), <number>permutation)
           );
+          window.history.pushState({}, '', Routes.MAIN);
           solution.length = 0;
         }, 3000);
       }
@@ -138,6 +137,8 @@ export class Field extends BaseComponent {
 
   startGame = (board: BoardType):void => {
     const { autoPlay } = Store.getState().info;
+    if (this.element.firstChild) this.removeAll();
+    this.style.height = 'max-content';
     this.init(board);
     Store.dispatch(AC.setGame(
       {
@@ -173,10 +174,6 @@ export class Field extends BaseComponent {
           board: newGrid,
           solution: swapped.map((move) => move.solution)
         }));
-        if (this.bet) {
-          const { grid } = Store.getState();
-          window.localStorage.setItem('state', JSON.stringify(grid));
-        }
       }
       this.rerender(swapped);
     }
@@ -193,7 +190,6 @@ export class Field extends BaseComponent {
     const len = board.length;
     this.innerField.style.width = `${HtmlProps.PuzzleSize * len}px`;
     this.innerField.style.height = `${HtmlProps.PuzzleSize * len}px`;
-    this.append(this.innerField);
     for (let y = 0; y < len; y++) {
       for (let x = 0; x < len; x++) {
         if (board[y]?.[x]) {
@@ -209,6 +205,7 @@ export class Field extends BaseComponent {
         }
       }
     }
+    this.append(this.innerField);
     this.nodeList.sort((a, b) => a.index - b.index);
   };
 

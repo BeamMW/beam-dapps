@@ -30,9 +30,14 @@ declare module 'qwebchannel' {
     subscribe: (callback: (json: string) => void) => void;
   };
 
+  type ApiResultWeb = ((callback: (arg: string) => void) => void);
+  export type CallApiDesktop = (json: string) => void;
+  export type CallApiWeb = (
+    callid: string, method: string, params: Params) => void;
   export type QObject = {
-    callWalletApi: (json: string) => void;
-    callWalletApiResult: ApiResult;
+    callWalletApi: CallApiDesctop | CallApi,
+    callWalletApiResult: ApiResult
+    | ApiResultWeb;
     apiResult$: ApiResult$;
     callApi: (callid: string, method: string, params: Params) => void;
     initializeShader: (contract: string, name: string) => void;
@@ -61,13 +66,17 @@ declare module 'AppStateProps' {
 
   export interface IAppState {
     [key:string];
-    has_active_game: boolean;
+    has_active_game: number;
     time: number;
     autoPlay: boolean;
     pending_rewards: number;
     isTx: boolean;
     popup: PopupKeys | false;
-    prizeFund: number
+    prizeFund: number;
+    asset: {
+      name: string,
+      color: string
+    };
   }
 
   export interface IState{
@@ -85,12 +94,10 @@ declare module 'AppStateProps' {
 
   export interface ICidState {
     max_bet: number;
+    min_bet: number;
     prize_aid: number;
     prize_amount: number;
     prize_fund: number;
-    multiplier: number;
-    free_time: number;
-    game_speed: number;
   }
 
   export type PropertiesType<T> = T extends { [key: string]: infer U }
@@ -117,6 +124,11 @@ declare module 'beamApiProps' {
     reward: number;
   };
 
+  export interface IAssetMeta {
+    N: string;
+    OPT_COLOR: string;
+  }
+
   export type APIResponse = {
     id: ReqIds;
     jsonrpc: string;
@@ -129,6 +141,7 @@ declare module 'beamApiProps' {
       comment: ResTXComment;
       status_string: ResTXStatus;
       failure_reason: string;
+      metadata_pairs: IAssetMeta;
     };
     error?: {
       code:number;
@@ -189,7 +202,7 @@ declare module 'ComponentProps' {
     key: MenuBtn,
     title: string,
     icon?: string,
-    handler: (arg?) => void;
+    handler?: (arg?) => void;
   };
 
   export type CellToRender = {

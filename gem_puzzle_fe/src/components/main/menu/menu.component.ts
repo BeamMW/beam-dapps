@@ -1,5 +1,5 @@
 import { IState } from 'AppStateProps';
-import { Tags } from '../../../constants/tags';
+import { Tags } from '../../../constants/html';
 import BaseComponent from '../../base/base.component';
 import Button from '../../shared/button/button.component';
 import './menu.scss';
@@ -56,15 +56,13 @@ export default class Menu extends BaseComponent {
       if (isTx) {
         this.getBtn(MenuBtn.NEW).setDisplay = false;
         this.getBtn(MenuBtn.CONTINUE).setDisplay = false;
+      } else if (bet) {
+        this.getBtn(MenuBtn.NEW).setDisplay = true;
+        this.getBtn(MenuBtn.CONTINUE).setDisplay = Boolean(activeGame);
       } else {
-        if (bet) {
-          this.getBtn(MenuBtn.NEW).setDisplay = true;
-        }
-        if (!bet) {
-          this.getBtn(MenuBtn.CONTINUE).setDisplay = true;
-        } else this.getBtn(MenuBtn.CONTINUE).setDisplay = activeGame;
+        this.getBtn(MenuBtn.CONTINUE).setDisplay = true;
       }
-      this.getBtn(MenuBtn.OPTIONS).setDisplay = true;
+      // this.getBtn(MenuBtn.SET_ACTIVE).setDisplay = true;
       this.getBtn(MenuBtn.DONATE).setDisplay = true;
     }
   };

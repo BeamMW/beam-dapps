@@ -1,6 +1,6 @@
 import { IState } from 'AppStateProps';
 import { AC } from '../../logic/store/app_action_creators';
-import { Tags } from '../../constants/tags';
+import { Tags } from '../../constants/html';
 import { Store } from '../../logic/store/state_handler';
 import BaseComponent from '../base/base.component';
 

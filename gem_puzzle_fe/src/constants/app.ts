@@ -12,7 +12,8 @@ export enum StoreActions {
   SET_TX = 'SET_TX',
   SET_MY_INFO = 'SET_MY_INFO',
   SET_POPUP = 'SET_POPUP',
-  SET_PRIZE_FUND = 'SET_PRIZE_FUND'
+  SET_PRIZE_FUND = 'SET_PRIZE_FUND',
+  SET_ASSET_NAME = 'SET_ASSET_NAME'
 }
 
 export enum CidActions {
@@ -56,13 +57,10 @@ export enum MenuBtn {
   RETURN = 'RETURN',
   BEST = 'BEST',
   CLAIM_REWARD = 'CLAIM_REWARD',
-  DONATE = 'DONATE'
-}
-
-export enum GreetingsText {
-  MainTitle = 'WELCOME TO GEM-PUZZLE!',
-  MainDesc = 'Play and earn!',
-  LeaderBoard = 'LEADERBOARD'
+  DONATE = 'DONATE',
+  SET_ACTIVE = 'SET_ACTIVE',
+  PROCEED = 'PROCEED',
+  RETURN_DONATE = 'RETURN_DONATE'
 }
 
 export enum RouterMode {
@@ -77,3 +75,11 @@ export enum Routes {
   BEST = 'best',
   PLAY = 'play'
 }
+
+// export enum Routes {
+//   OPTIONS = 'beam-dapps/options',
+//   RETURN = 'beam-dapps/return',
+//   MAIN = '/beam-dapps',
+//   BEST = 'beam-dapps/best',
+//   PLAY = 'beam-dapps/play'
+// }

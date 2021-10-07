@@ -12,7 +12,7 @@ export enum Tags {
   TH = 'th',
   TD = 'td',
   A = 'a',
-  H1 = 'h1'
+  H1 = 'h1',
 }
 
 export enum HtmlProps {

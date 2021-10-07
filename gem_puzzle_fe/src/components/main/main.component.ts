@@ -1,7 +1,8 @@
+import { IState } from 'AppStateProps';
 import { APIResponse, ResOutput } from 'beamApiProps';
 import { Store } from '../../logic/store/state_handler';
 import { Beam } from '../../logic/beam/api_handler';
-import { Tags } from '../../constants/tags';
+import { Tags } from '../../constants/html';
 import BaseComponent from '../base/base.component';
 import Menu from './menu/menu.component';
 import { Field } from '../game/field.component';
@@ -18,7 +19,7 @@ import { Game } from '../game/game.component';
 export default class Main extends BaseComponent {
   private readonly menu: Menu;
 
-  private readonly popupWon: Popup;
+  readonly popup: Popup;
 
   private readonly router: Router;
 
@@ -26,32 +27,40 @@ export default class Main extends BaseComponent {
 
   constructor() {
     super(Tags.DIV, ['main']);
+    Store.addObservers(this);
     Beam.addObservers(this);
-    Beam.callApi(RC.viewMyInfo());
-    Beam.callApi(RC.viewPrizeFund());
     this.menu = new Menu();
-    this.popupWon = new Popup();
+    this.popup = new Popup();
     this.router = new Router({
       mode: RouterMode.HISTORY,
       root: Routes.MAIN
     });
     this.child = null;
-    this.router.add(Routes.OPTIONS, this.optionsField);
-    this.router.add(Routes.RETURN, this.cancelGame);
     this.router.add(Routes.PLAY, this.initGameField);
     this.router.add('', this.initMainMenu);
-    this.append(this.menu, this.popupWon);
+    this.append(this.menu, this.popup);
+    if (window.location.pathname !== Routes.MAIN) {
+      window.history.pushState({}, '', Routes.MAIN);
+    }
+    window.addEventListener('resize', this.adaptivePopup);
   }
 
-  initMainMenu = (): void => {
-    this.child = null;
+  adaptivePopup = (): void => {
+    const { popup } = Store.getState().info;
+    if (popup) {
+      const mainHeight = window.innerHeight;
+      const popupHeight = this.popup.element.clientHeight;
+      if (mainHeight < 775) {
+        this.menu.style.marginBottom = `${popupHeight / 2.5}px`;
+      } else this.menu.style.marginBottom = '';
+    }
   };
 
-  cancelGame = (): void => {
+  initMainMenu = (): void => {
     if (this.child) this.remove(this.child);
-    this.menu.removeActive();
+    if (this.menu.classList.contains('active')) this.menu.removeActive();
     Beam.callApi(RC.viewMyInfo());
-    window.history.pushState({}, '', Routes.MAIN);
+    this.child = null;
   };
 
   initGameField = (): void => {
@@ -63,17 +72,16 @@ export default class Main extends BaseComponent {
     Store.addObservers(this.menu);
   };
 
-  optionsField = (): void => {
-    if (this.child) this.remove(this.child);
-    this.menu.addActive();
-    this.child = new Options();
-    this.menu.replace(this.child);
-    this.append(this.menu);
-    Store.addObservers(this.menu);
+  appInform = (state: IState):void => {
+    const { popup } = state.info;
+    if (popup) {
+      this.adaptivePopup();
+    } else this.menu.style.marginBottom = '';
   };
 
   inform = (res: APIResponse): void => {
     let output;
+    const state = Store.getState();
     if (res.result?.output) {
       output = JSON.parse(res.result.output) as ResOutput;
     }
@@ -86,17 +94,23 @@ export default class Main extends BaseComponent {
             })
           );
           if (output.prize_aid) {
-            Beam.callApi(RC.viewAssetInfo(output.prize_aid));
+            Beam.callApi(RC.txAssetInfo(output.prize_aid));
           }
         }
         break;
-      case ReqID.VIEW_ASSET_INFO:
-        console.log(res);
+      case ReqID.TX_ASSET_INFO:
+        Beam.callApi(RC.viewAssetInfo(state.cid.prize_aid));
         break;
 
+      case ReqID.VIEW_ASSET_INFO:
+        Store.dispatch(AC.setAssetName({
+          name: res.result.metadata_pairs.N,
+          color: res.result.metadata_pairs.OPT_COLOR
+        }));
+        break;
       case ReqID.CHECK_SOLUTION:
         if (this.router.current?.length) {
-          this.cancelGame();
+          this.initMainMenu();
         }
         break;
 
@@ -121,11 +135,6 @@ export default class Main extends BaseComponent {
               pending_rewards: output.pending_rewards
             })
           );
-        }
-        break;
-      case ReqID.VIEW_PRIZE_FUND:
-        if (output) {
-          Store.dispatch(AC.setPrizeFund(output.prize_fund));
         }
         break;
       default:

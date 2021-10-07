@@ -1,13 +1,18 @@
 .game-info{
-  font-family: Ubuntu;
+  font-family: Ubuntu-Light;
+  font-size: 20px;
   font-size: 20px;
   color: #fff;
   font-weight: 300;
   min-height: 28px;
   display: flex;
   align-items: center;
-  margin-left: auto;
+  margin: 0 auto;
   .value{
-    color: rgba($color: #00ff64, $alpha: 0.3)
+    font-family: Ubuntu-Bold;
+    color:  #00ff64;
+  }
+  span {
+    margin-left: 10px;
   }
 }

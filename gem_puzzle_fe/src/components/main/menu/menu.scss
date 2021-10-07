@@ -1,6 +1,7 @@
 .menu {
     margin: 0 auto;
-    width: 525px;
+    width: 100%;
+    max-width: 525px;
     height: auto;
     display: flex;
     flex-direction: column;
@@ -8,15 +9,9 @@
     justify-content: space-evenly;
 
     &.active {
-        // margin: 1vh auto;
-        width: 550px;
-        height: 70px;
-        display: flex;
-        flex-direction: row;
-        align-content: center;
+        display: none;
     }
     &.active_popup {
-        // margin: 1vh auto;
         filter: blur(4px);
     }
 
@@ -28,12 +23,10 @@
         margin-top: 70px;
         .title {
             width: 100%;
-            font-family: Ubuntu;
+            font-family: Ubuntu-Regular;
             margin-bottom: 22px;
             font-size: 30px;
-            font-weight: normal;
             font-stretch: normal;
-            font-style: normal;
             line-height: 1.33;
             letter-spacing: normal;
             text-align: center;
@@ -44,28 +37,12 @@
             width: 100%;
             margin: 0 0px 40px 0;
             font-size: 20px;
-            font-weight: normal;
+            font-family: Ubuntu-Regular;
             font-stretch: normal;
-            font-style: normal;
             line-height: 1.5;
             letter-spacing: normal;
             text-align: center;
             color: #fff;
         }
     }
-
-    .button {
-        margin-bottom: 10px;
-    }
-
-    // .button::before {
-    //     content: "";
-    //     position: absolute;
-    //     height: 0;
-    //     width: 0;
-    //     left: 50px;
-    //     border-top: 25px solid transparent;
-    //     border-bottom: 25px solid transparent;
-    //     border-left: 15px solid #59324C;
-    // }
 }

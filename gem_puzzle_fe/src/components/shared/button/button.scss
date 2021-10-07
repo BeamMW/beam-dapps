@@ -1,13 +1,11 @@
 .button {
+    will-change: height, margin-bottom, display; 
+    background: url('../../../assets/icon/button-settings.svg');
     position: relative;
     width: 314px;
-    height: 60px;
-    margin: 0 0 10px;
     display: none;
-    margin: 0 0 0 11px;
-    font-family: Ubuntu;
+    font-family: Ubuntu-Bold;
     font-size: 20px;
-    font-weight: bold;
     font-stretch: normal;
     font-style: normal;
     line-height: 1.7;
@@ -15,23 +13,33 @@
     color: #fff;
     user-select: none;
     cursor: pointer;
-    // background: url('../../../assets/icon/button-settings.svg');
-
     &:hover .svgBG{
         fill: #00FF64 !important;
     }
 
     &.btn_NEW {
+    background: url('../../../assets/icon/button-new-game.svg');
+
         .svgBG{
             fill: #00FF64 !important;
         }
     }
 
     &.btn_RETURN {
+        height: 60px;
+        display: block;
+        opacity: 1;
+        background-image:none;
+        margin: 0 auto;
         padding: 9px 30px 9px;
         font-size: 16px;
+        width: 314px !important;
+        align-self: center;
         border-radius: 100px;
         border: solid 1px #979797;
+        .titleDOM {
+            display: flex;
+        }
         .bgSvg {
             display: none;
         }
@@ -39,26 +47,24 @@
     }
  
     .titleDOM {
-        height: 100%;
         display: flex;
+        z-index: 1; 
+        height: 100%;
+        width: 100%;
         align-items: center;
         justify-content: center;
     }
 
     .bgSvg {
         fill: #20866F;
-        position: absolute;
-        left: 0;
-        top: 0;
-        z-index: -1; 
         .svgBG{
             fill: #20866F;
         }
     }
-
+    span {
+        margin-left: 11px;
+    }
 }
 
 
-span {
-    margin-left: 11px;
-}
+

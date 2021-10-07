@@ -2,12 +2,10 @@ import { Store } from './logic/store/state_handler';
 import Loader from './components/shared/loader/loader.component';
 import { BeamAPI } from './logic/beam/beamAPI';
 import { Beam } from './logic/beam/api_handler';
-import Main from './components/main/main.component';
 import './style/index.scss';
 import AppState from './logic/store/reducer';
-import Header from './components/header/header.component';
 import Footer from './components/footer/footer.components';
-import Widget from './components/widget/widget.component';
+import { Container } from './components/container/container';
 
 export class App {
   private readonly rootElement: HTMLElement;
@@ -17,7 +15,8 @@ export class App {
   private readonly AppState: AppState;
 
   constructor(rootElement: HTMLElement) {
-    const loader = new Loader().element;
+    const loader = new Loader('preGame').element;
+
     this.rootElement = rootElement;
     this.rootElement.append(loader);
     this.API = new BeamAPI();
@@ -34,10 +33,8 @@ export class App {
       });
       this.rootElement.removeChild(loader);
       this.rootElement.append(
-        new Header().element,
-        new Main().element,
-        new Footer().element,
-        new Widget().element
+        new Container().element,
+        new Footer().element
       );
     });
   }

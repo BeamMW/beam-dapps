@@ -26,6 +26,13 @@ export const AC = {
     action: StoreActions.SET_TX,
     payload
   } as const),
+  setAssetName: (payload: {
+    name: string,
+    color: string
+  }) => ({
+    action: StoreActions.SET_ASSET_NAME,
+    payload
+  } as const),
   setMyInfo: (payload:Partial<IAppState>) => ({
     action: StoreActions.SET_MY_INFO,
     payload

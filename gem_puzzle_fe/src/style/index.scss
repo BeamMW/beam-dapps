@@ -1,11 +1,12 @@
 @import 'fonts';
 
+$max-width: 872px;
+
 * {
-  font-family: 'Ubuntu';
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-weight: 600;
+  user-select: none;
 }
 
 html {
@@ -14,24 +15,25 @@ html {
 }
 
 body {
-  height: 100%;
   margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: column;
+  height: 100%;
+  // display: flex;
+  // justify-content: flex-start;
+  // align-items: center;
+  // flex-direction: column;
   width: 100%;
-  background-color: #081d11;
-  background-image: url('../assets/bg.svg');
-  background-size: 50%;
+  background: url('../assets/bg-copy@3x1.jpg');
   background-repeat: no-repeat;
   background-size: cover;
-  -webkit-backdrop-filter: blur(24px);
-  backdrop-filter: blur(24px);
+  background-position: center 20%;
   overflow-y: scroll;
   overflow-x: hidden;
-
+  background-color: #081d11;
+}
+.container{
+  min-height: 100%;
+  padding-bottom: 97px;
+  padding-top: 40px;
 }
 
 ::-webkit-scrollbar {
@@ -41,7 +43,7 @@ body {
 
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background: rgba(255, 255, 255, .5);
+  background: rgba(255, 255, 255, 0.5);
   border: 3px solid rgba(0, 0, 0, 0);
   background-clip: padding-box;
 }
@@ -54,10 +56,88 @@ body {
   display: none;
 }
 
+.header {
+  max-width: $max-width;
+  width: 100%;
+}
+
 .footer {
-  margin-top: auto;
-  // position: fixed;
-  // z-index: -1;
-  // left: 0;
-  // bottom: 0;
+  margin-top: -97px;
+  width: 100%;
+}
+
+@keyframes animate {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .header {
+    margin: 20px 0 !important;
+    .infoblock:first-child {
+      width: max-content !important;
+      background-color: transparent !important;
+      margin: 0 0 !important;
+      padding-left: 10px;
+      .title {
+        display: table;
+        vertical-align: middle;
+        svg {
+          display: table-cell;
+        }
+      }
+      span {
+        margin: 0 0;
+      }
+      .after {
+        font-size: 15px !important;
+        margin-left: 3px;
+      }
+    }
+  }
+  .footer {
+    padding-left: 10px;
+    padding-right: 10px;
+    .on-twitter {
+      display: none;
+    }
+  }
+}
+
+
+
+@media (max-width: 530px) {
+  .header {
+    .infoblock:first-child {
+        .after {
+          display: none !important;
+      }
+    }
+  }
+}
+
+@media (max-height: 880px) {
+  .header {
+    margin-bottom: 0 !important;
+  }
+  .game-infoblock{
+    padding-top: 0px !important;
+  }
+  // .footer {
+  //   padding-top: 0 !important;
+  //   padding-bottom: 10px !important;
+  //   .errorBlock{
+  //     padding: 0 !important;
+  //   }
+  // }
+  .widget {
+    bottom: 10px !important;
+  }
+  .popup {
+  top: unset;
+}
 }

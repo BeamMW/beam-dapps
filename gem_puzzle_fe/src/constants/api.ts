@@ -1,12 +1,12 @@
 export enum AppSpecs {
-  CID = '289edf39dbecebd6aca3764e34fdaf96d1e71ab3c357751be5a6ecc8e53b8258',
+  CID = '8bc7e10eb2b17e72540b7217d80b23c2eff80450f49c3f6518f6a77a6ff4acaf',
   TITLE = 'GEM-PUZZLE',
   TX_CHECK_INTERVAL = 3000,
-  MAX_MOVES = 400
+  MAX_MOVES = 400,
+  DEFAULT_ASSET = 'BEAM'
 }
-// 289edf39dbecebd6aca3764e34fdaf96d1e71ab3c357751be5a6ecc8e53b8258 - w/o bet
-// cee263491c35189975d5ad65a4a54bbf374b1f89218e58fafea32c37d4b07a0b -bet aid!==0
-// 1cec6c716d0bcc172a630cd24e5e6c99024ba0e633ab92359c342b28f894585b -bet aid===0
+// 8bc7e10eb2b17e72540b7217d80b23c2eff80450f49c3f6518f6a77a6ff4acaf - w/o bet
+// fe36e8eafa7657975951c7d1c85e10121949a06860e460471fec5d87a444e03c -bet aid!==0
 export enum ReqID {
   CHECK = 'CHECK',
   CHECK_SOLUTION = 'CHECK_SOLUTION',
@@ -27,7 +27,9 @@ export enum ReqID {
   DONATE = 'DONATE',
   VIEW_CONTRACT_PARAMS = 'VIEW_CONTRACT_PARAMS',
   VIEW_ASSET_INFO = 'VIEW_ASSET_INFO',
-  VIEW_PRIZE_FUND = 'VIEW_PRIZE_FUND'
+  VIEW_PRIZE_FUND = 'VIEW_PRIZE_FUND',
+  TX_ASSET_INFO = 'TX_ASSET_INFO',
+  VIEW_ASSET_INFO_TX = 'VIEW_ASSET_INFO_TX'
 }
 
 export enum ReqRoles {
@@ -39,7 +41,8 @@ export enum ReqMethods {
   INVOKE_CONTRACT = 'invoke_contract',
   PROCESS_INVOKE_DATA = 'process_invoke_data',
   TX_STATUS = 'tx_status',
-  GET_ASSET_INFO = 'get_asset_info'
+  GET_ASSET_INFO = 'get_asset_info',
+  TX_ASSET_INFO = 'tx_asset_info'
 }
 
 export enum ReqActions {
@@ -62,12 +65,21 @@ export enum ReqActions {
 export enum ResTXStatus {
   IN_PROGRESS = 'in progress',
   FAILED = 'failed',
-  COMPLETED = 'completed'
+  COMPLETED = 'completed',
+  EXPIRED = 'expired'
 }
 
-export enum ResTXComment{
+export enum ResTXComment {
   CREATE_NEW_GAME = 'Taking your bet...',
   ENDING_EXISTING_GAME = 'Ending existing game',
   CHECKIN_SOLUTION = 'Checking your solution...',
-  TAKING_PENDING_REWARS = 'Taking pending rewards'
+  GIVING_YOU_REWARD = 'Giving you reward...',
+  DONATING = 'Donating...'
+}
+
+export enum WidgetTxDescription {
+  CLAIM_REWARD = 'Claim reward: withdrawing funds',
+  NEW_BET = 'Bet: depositing funds',
+  CHECK = 'Check: Checkin solution',
+  DONATE = 'Donate: depositing funds'
 }
