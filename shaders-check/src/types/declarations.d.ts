@@ -25,14 +25,14 @@ declare module 'qwebchannel' {
     disconnect: (callback: (arg: string) => void) => void;
   };
 
-  export type ApiResult$ = {
-    handlers: (arg: string) => void[];
-    subscribe: (callback: (json: string) => void) => void;
-  };
-
+  export type ApiResultWeb = ((callback: (arg: string) => void) => void);
+  export type CallApiDesktop = (json: string) => void;
+  export type CallApiWeb = (
+    callid: string, method: string, params: Params) => void;
   export type QObject = {
-    callWalletApi: (json: string) => void;
-    callWalletApiResult: ApiResult;
+    callWalletApi: CallApiDesctop | CallApi,
+    callWalletApiResult: ApiResult
+    | ApiResultWeb;
     apiResult$: ApiResult$;
     callApi: (callid: string, method: string, params: Params) => void;
     initializeShader: (contract: string, name: string) => void;
@@ -81,21 +81,33 @@ declare module 'formProps' {
 declare module 'beamApiProps' {
   import BaseComponent from '../components/base/base.component';
 
+  export type PropertiesType<T> = T extends { [key: string]: infer U }
+    ? U : never;
+
+  export type ApiArgs = {
+    callID: ReqID,
+    method: ReqMethods,
+    params: BeamApiParams
+  };
+
   export type APIResponse = {
     id: ReqIds;
     jsonrpc: string;
     result: {
+      [key:string];
       output: string;
       txid: string;
       txId: string;
       raw_data: number[];
-      status_string: string;
-      board?: BoardType;
+      comment: ResTXComment;
+      status_string: ResTXStatus;
+      failure_reason: string;
+      metadata_pairs: IAssetMeta;
     };
     error?: {
-      code: number;
+      code:number;
       message: string;
-    };
+    }
   };
 
   export interface IActionParams {
@@ -118,11 +130,8 @@ declare module 'beamApiProps' {
     roles: IRoleOutput;
   }
 
-  export type CallApiType = (
-    callid: string,
-    method: string,
-    params: BeamApiParams
-  ) => void;
+  export type CallApiType =
+  (obj:ApiArgs) => void;
 
   export type AddObserversType = (...components: BaseComponent[]) => void;
 
@@ -144,6 +153,7 @@ declare module 'beamApiProps' {
     create_tx?: boolean;
     args?: string;
     data?: number[];
-    txId?: string;
+    txId?:string;
+    asset_id?: number
   };
 }

@@ -1,30 +1,38 @@
-import { ShaderProps, ReqID, ReqMethods } from '../constants/variables';
-import { ApiHandler } from './api_handlers';
+import { ApiArgs } from 'beamApiProps';
+import { ReqID, ReqMethods } from '../constants/variables';
+import { BEAM } from './api_handlers';
 
-export const submitResult = (args:string): void => {
-  ApiHandler.callApi(ReqID.SUBMIT_RESULT, ReqMethods.INVOKE_CONTRACT, {
-    create_tx: false,
-    args
-  });
-};
-
-export const createForm = (files: ArrayBuffer): void => {
-  ApiHandler.initShader(files);
-  ApiHandler.callApi(ReqID.FORM_GENERATOR, ReqMethods.INVOKE_CONTRACT, {
-    create_tx: false
-  });
-};
-
-export const invokeData = (id: ReqID, data: number[]):void => {
-  ApiHandler.callApi(id, ReqMethods.PROCESS_INVOKE_DATA, {
-    data
-  });
-};
-
-export const txStatus = (txId:string): void => {
-  setTimeout(() => {
-    ApiHandler.callApi(ReqID.TX_STATUS, ReqMethods.TX_STATUS, {
+export const RC = {
+  submitResult: (args: string): ApiArgs => ({
+    callID: ReqID.SUBMIT_RESULT,
+    method: ReqMethods.INVOKE_CONTRACT,
+    params: {
+      create_tx: false,
+      args
+    }
+  } as const),
+  createForm: (files: ArrayBuffer): ApiArgs => {
+    BEAM.initShader(files);
+    return ({
+      callID: ReqID.FORM_GENERATOR,
+      method: ReqMethods.INVOKE_CONTRACT,
+      params: {
+        create_tx: false
+      }
+    } as const);
+  },
+  invokeData: (id: ReqID, data: number[]): ApiArgs => ({
+    callID: id,
+    method: ReqMethods.PROCESS_INVOKE_DATA,
+    params: {
+      data
+    }
+  } as const),
+  txStatus: (txId: string): ApiArgs => ({
+    callID: ReqID.TX_STATUS,
+    method: ReqMethods.TX_STATUS,
+    params: {
       txId
-    });
-  }, ShaderProps.TX_CHECK_INTERVAL);
+    }
+  } as const)
 };

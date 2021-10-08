@@ -1,4 +1,5 @@
 import { IOutput } from 'beamApiProps';
+import { BEAM } from '../../../../../utils/api_handlers';
 import { FormApi } from '../../../../../utils/args_reducer';
 import BaseComponent from '../../../../BaseComponent/base.component';
 import { Tags } from '../../../../../constants/html_elements';
@@ -6,7 +7,7 @@ import { Value } from './Methods/Action/action_value.component';
 import { Params } from './Methods/Params/params_value.component';
 import { Role } from './Methods/Role/role_value.component';
 import { Submit } from './Methods/Submit/submit.component';
-import { submitResult } from '../../../../../utils/request_creators';
+import { RC } from '../../../../../utils/request_creators';
 
 export class Form extends BaseComponent {
   role: Role;
@@ -48,7 +49,7 @@ export class Form extends BaseComponent {
     this.append(role, actionParamsWrapper);
     this.element.addEventListener('submit', (e:Event) => {
       e.preventDefault();
-      submitResult(getArgs());
+      BEAM.callApi(RC.submitResult(getArgs()));
     });
   }
 }

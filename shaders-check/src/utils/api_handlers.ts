@@ -6,7 +6,7 @@ import {
   InitShaderType
 } from 'beamApiProps';
 
-export class ApiHandler {
+export class BEAM {
   static addObservers: AddObserversType;
 
   static callApi: CallApiType;
@@ -16,9 +16,9 @@ export class ApiHandler {
   static deleteObserver: DeleteObserverType;
 
   static setApiHandlers = (obj: BeamApiHandlers): void => {
-    ApiHandler.addObservers = obj.addObservers;
-    ApiHandler.callApi = obj.callApi;
-    ApiHandler.initShader = obj.initShader;
-    ApiHandler.deleteObserver = obj.deleteObserver;
+    BEAM.addObservers = obj.addObservers;
+    BEAM.callApi = obj.callApi;
+    BEAM.initShader = obj.initShader;
+    BEAM.deleteObserver = obj.deleteObserver;
   };
 }
