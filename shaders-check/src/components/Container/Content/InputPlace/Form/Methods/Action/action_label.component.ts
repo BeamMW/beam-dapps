@@ -4,7 +4,6 @@ import BaseComponent from '../../../../../../BaseComponent/base.component';
 import { Tags } from '../../../../../../../constants/html_elements';
 import { ValueInput } from './action_input.component';
 import { SVG } from '../../../../../../../constants/svg.icons';
-import { Params } from '../Params/params_value.component';
 
 export class ValueLabel extends BaseComponent {
   input: ValueInput;
