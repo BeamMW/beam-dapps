@@ -14,17 +14,18 @@ body {
   font-family: 'SFProDisplay', sans-serif;
   font-weight: normal;
   height: 100%;
-  overflow: auto;
+  margin: 0 auto;
   background-color: #042548;
-  display: flex;
-  flex-direction: column;
+  // display: flex;
+  // flex-direction: column;
   /* align-content: center; */
-  align-items: center;
+  // align-items: center;
 }
 .main {
   position: relative;
   z-index: 1;
-  width: 98vw;
+  margin: 0 auto;
+  width: 914px;
 }
 // fieldset{
 //   display: flex;
@@ -53,7 +54,7 @@ body {
   // border: 1px solid #da68f5;
   margin-top: 20px;
   overflow: auto;
-  width: 98vw;
+  width: 99%;
 }
 .control{
 display: flex;

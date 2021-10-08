@@ -12,9 +12,10 @@ export default class Content extends BaseComponent {
   constructor() {
     super(Tags.DIV, ['container__content', 'container']);
     this.inputPlace = new InputPlace();
-    this.outputPlace = new OutputPlace();
-    this.outputPlace.setAttributes({ id: 'input__place' });
-    BEAM.addObservers(this.inputPlace, this.outputPlace);
-    this.append(this.inputPlace, this.outputPlace);
+    // this.outputPlace = new OutputPlace();
+    // this.outputPlace.setAttributes({ id: 'input__place' });
+    BEAM.addObservers(this.inputPlace);
+    this.append(this.inputPlace);
+    // , this.outputPlace
   }
 }

@@ -17,6 +17,7 @@ export class ValueInput extends BaseComponent {
     this.element.addEventListener('change', (e) => {
       if ((e.target as HTMLInputElement).checked) {
         dispatch(setActionAC({ action: this.element.id, params: action[1] }));
+        e.stopPropagation();
       }
     });
   }

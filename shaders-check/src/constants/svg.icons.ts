@@ -31,5 +31,8 @@ iconDrop: `
   iconArrow: `<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
 <path d="M8.296 14c.38 0 .69-.314.69-.695V4.553s2.482 2.412 2.915 2.54c.432.129 1.178-.437 1.092-1.093-.085-.656-4.007-4-4.88-4C7.24 2 3.239 5.648 3.04 6.106c-.2.459.382 1.08 1 .987.617-.093 3.2-2.54 3.2-2.54v8.752a.69.69 0 0 0 .69.695h.366z" fill="#032E49" stroke="#032E49" stroke-width=".5" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
-`
+`,
+iconArrowDown: `<svg width="13" height="8" xmlns="http://www.w3.org/2000/svg">
+<path d="M.719 2.363A.955.955 0 0 1 .728.979l.11-.104A1.06 1.06 0 0 1 2.28.892l4.27 4.174 4.156-4.34a.993.993 0 0 1 1.41-.027l.169.165a.975.975 0 0 1 .005 1.4L7.193 7.3a1.022 1.022 0 0 1-1.428-.002L.719 2.363z" fill="#BDBDBD" fill-rule="evenodd"/>
+</svg>`
 };

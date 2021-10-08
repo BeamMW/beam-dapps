@@ -46,7 +46,7 @@ export class Form extends BaseComponent {
     const actionParamsWrapper = new BaseComponent(Tags.DIV, ['action-params']);
     actionParamsWrapper.append(action);
     const submit = new Submit();
-    this.append(role, actionParamsWrapper);
+    this.append(role, actionParamsWrapper, params);
     this.element.addEventListener('submit', (e:Event) => {
       e.preventDefault();
       BEAM.callApi(RC.submitResult(getArgs()));
