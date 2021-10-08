@@ -7,6 +7,7 @@ import { FormActions } from '../../../../../../../constants/variables';
 import {
   unsubscribeBeforeRemoveAC
 } from '../../../../../../../utils/action_creators';
+import './action.scss';
 
 export class Value extends BaseComponent {
   action: string;
@@ -48,12 +49,12 @@ export class Value extends BaseComponent {
 
   render = (output: IOutput, dispatch: FormDispatch):void => {
     this.element.innerHTML = '';
-    const title = new BaseComponent(Tags.DIV, ['action-title']);
-    title.element.innerText = 'Action: ';
+    // const title = new BaseComponent(Tags.DIV, ['action-title']);
+    // title.element.innerText = 'Action: ';
     const actions = Object.entries(output.roles[this.role] as IActionOutput);
     const valuesList = actions.map(
       (el) => new ValueLabel(el, this.action, dispatch)
     );
-    this.append(title, ...valuesList);
+    this.append(...valuesList);
   };
 }

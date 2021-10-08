@@ -43,9 +43,9 @@ export class Form extends BaseComponent {
       addObserver
     );
     const actionParamsWrapper = new BaseComponent(Tags.DIV, ['action-params']);
-    actionParamsWrapper.append(action, params);
+    actionParamsWrapper.append(action);
     const submit = new Submit();
-    this.append(role, submit, actionParamsWrapper);
+    this.append(role, actionParamsWrapper);
     this.element.addEventListener('submit', (e:Event) => {
       e.preventDefault();
       submitResult(getArgs());
