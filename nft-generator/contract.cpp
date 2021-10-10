@@ -1,4 +1,5 @@
 #include "contract.h"
+#include "../common.h"
 #include "../Math.h"
 
 BEAM_EXPORT void Ctor(void *) {
@@ -13,9 +14,26 @@ BEAM_EXPORT void Method_2(const NFTGenerator::SaveNewSeed &request) {
     Env::SaveVar_T(request.nft.seed, request.nft);
 }
 
+#ifndef HOST_BUILD
+
+namespace {
+    bool operator==(const Secp_point_data& lhs, const Secp_point_data& rhs) {
+        for (uint32_t i = 0; i < 32; ++i) {
+            if (lhs.X.m_p[i] != rhs.X.m_p[i]) {
+                return false;
+            }
+        }
+
+        return lhs.Y == rhs.Y;
+    }
+}
+
+#endif
+
 BEAM_EXPORT void Method_3(const NFTGenerator::SetPrice &r) {
     NFTGenerator::NFT m;
     Env::Halt_if(!Env::LoadVar_T(r.updated_nft.seed, m));
+    Env::Halt_if(!(r.updated_nft.holder == m.holder));
 
     _POD_(m) = r.updated_nft;
     Env::SaveVar_T(m.seed, m);
@@ -73,6 +91,10 @@ BEAM_EXPORT void Method_4(const NFTGenerator::Buy &r) {
 }
 
 BEAM_EXPORT void Method_5(const NFTGenerator::Withdraw &r) {
+    NFTGenerator::NFT m;
+    Env::Halt_if(!Env::LoadVar_T(r.key.seed, m));
+    Env::Halt_if(!(m.holder == r.key.user));
+
     PayoutMove(r.key, r.value, false);
     Env::FundsUnlock(r.key.asset_id, r.value);
     Env::AddSig(r.key.user);
