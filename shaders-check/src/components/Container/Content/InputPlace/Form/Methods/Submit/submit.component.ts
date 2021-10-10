@@ -1,4 +1,4 @@
-import BaseComponent from '../../../../../../BaseComponent/base.component';
+import BaseComponent from '../../../../../../shared/base/base.component';
 import { Tags } from '../../../../../../../constants/html_elements';
 
 export class Submit extends BaseComponent {

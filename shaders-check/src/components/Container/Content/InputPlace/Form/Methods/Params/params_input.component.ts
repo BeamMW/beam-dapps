@@ -1,22 +1,15 @@
-import { AddObsever, FormDispatch, InformArgs } from 'formProps';
-import {
-  unsubscribeBeforeRemoveAC,
-  setParamValueAC
-} from '../../../../../../../utils/action_creators';
+import { InformArgs } from 'formProps';
 import { Tags } from '../../../../../../../constants/html_elements';
 import { FormActions } from '../../../../../../../constants/variables';
-import BaseComponent from '../../../../../../BaseComponent/base.component';
+import BaseComponent from '../../../../../../shared/base/base.component';
 
 export class ParamsInput extends BaseComponent {
   private readonly param: string;
 
   constructor(
-    param: string,
-    dispatch: FormDispatch,
-    addObserver: AddObsever
+    param: string
   ) {
     super(Tags.INPUT, ['params__input']);
-    addObserver(this);
     this.param = param;
     this.setAttributes(
       {
@@ -26,15 +19,8 @@ export class ParamsInput extends BaseComponent {
     );
     this.element.addEventListener('change', (e:Event) => {
       const target = e.target as HTMLInputElement;
-      dispatch(setParamValueAC({
-        key: this.param,
-        value: target.value
-      }));
+      console.log(target);
     });
-    this.element.addEventListener(
-      'DOMNodeRemovedFromDocument',
-      () => dispatch(unsubscribeBeforeRemoveAC(this))
-    );
   }
 
   formInform = ({ formAction, currentParams }:InformArgs):void => {

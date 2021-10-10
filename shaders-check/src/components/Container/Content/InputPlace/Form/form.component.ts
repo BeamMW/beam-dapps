@@ -1,55 +1,48 @@
 import { IOutput } from 'beamApiProps';
-import { BEAM } from '../../../../../utils/api_handlers';
-import { FormApi } from '../../../../../utils/args_reducer';
-import BaseComponent from '../../../../BaseComponent/base.component';
+import { FormApi } from '../../../../../logic/form/form.logic';
+import BaseComponent from '../../../../shared/base/base.component';
 import { Tags } from '../../../../../constants/html_elements';
 import { Value } from './Methods/Action/action_value.component';
 import { Params } from './Methods/Params/params_value.component';
 import { Role } from './Methods/Role/role_value.component';
 import { Submit } from './Methods/Submit/submit.component';
-import { RC } from '../../../../../utils/request_creators';
+import { FORM } from '../../../../controllers/form.controller';
 
 export class Form extends BaseComponent {
   role: Role;
 
-  action: Value;
+  action: BaseComponent;
 
   params: Params;
+
+  output: IOutput;
 
   submit: Submit;
 
   constructor(output: IOutput) {
     super(Tags.FORM, ['form']);
+    this.output = output;
     const formApi = new FormApi(output);
-    const {
-      currentRole,
-      currentAction,
-      dispatch,
-      addObserver,
-      getArgs
-    } = formApi;
-    const role = new Role(output, dispatch);
-    const action = new Value(
-      output,
-      currentRole,
-      currentAction,
-      dispatch,
-      addObserver
-    );
-    const params = new Params(
-      output,
-      currentRole,
-      currentAction,
-      dispatch,
-      addObserver
-    );
-    const actionParamsWrapper = new BaseComponent(Tags.DIV, ['action-params']);
-    actionParamsWrapper.append(action);
-    const submit = new Submit();
-    this.append(role, actionParamsWrapper, params);
+    FORM.setApiHandlers({
+      addObserver: formApi.addObserver,
+      dispatch: formApi.dispatch,
+      getRole: formApi.getRole
+    });
+    FORM.addObserver(this);
+    const role = new Role(this.output);
+    this.action = new BaseComponent(Tags.DIV, ['action-params']);
+    this.action.append(new Value(this.output, FORM.getRole()));
+    // const submit = new Submit();
+    this.append(role, this.action);
     this.element.addEventListener('submit', (e:Event) => {
       e.preventDefault();
-      BEAM.callApi(RC.submitResult(getArgs()));
     });
   }
+
+  informForm = (role:string):void => {
+    this.action.removeAll();
+    this.action.append(new Value(
+      this.output, role
+    ));
+  };
 }

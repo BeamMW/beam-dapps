@@ -6,15 +6,14 @@ import {
   ResTXStatus,
   ShaderProps
 } from '../../../../constants/variables';
-import BaseComponent from '../../../BaseComponent/base.component';
+import BaseComponent from '../../../shared/base/base.component';
 import { TreeBuilder } from './TreeBuilder/tree_builder.component';
-import { RC } from '../../../../utils/request_creators';
-import { BEAM } from '../../../../utils/api_handlers';
+import { RC } from '../../../../logic/beam/request_creators';
+import { BEAM } from '../../../controllers/beam.controller';
 
 export class OutputPlace extends BaseComponent {
   constructor() {
     super(Tags.DIV, ['output__place']);
-    this.unsubscribeBeforeRemove();
   }
 
   inform = (res: APIResponse): void => {

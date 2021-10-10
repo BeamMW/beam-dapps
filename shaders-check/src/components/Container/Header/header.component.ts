@@ -1,8 +1,8 @@
 import { APIResponse } from 'beamApiProps';
 import { Tags } from '../../../constants/html_elements';
 import { ReqID } from '../../../constants/variables';
-import { BEAM } from '../../../utils/api_handlers';
-import BaseComponent from '../../BaseComponent/base.component';
+import { BEAM } from '../../controllers/beam.controller';
+import BaseComponent from '../../shared/base/base.component';
 import './header.scss';
 
 export default class Header extends BaseComponent {
@@ -19,12 +19,12 @@ export default class Header extends BaseComponent {
     const dataStatus = new BaseComponent(Tags.DIV, ['info__data-status']);
     const dataId = new BaseComponent(Tags.SPAN, ['info__data-id']);
     const dataName = new BaseComponent(Tags.SPAN, ['info__data-name']);
-    titlesStatus.element.textContent = 'Connect to contract status:';
-    titlesId.element.textContent = 'ID shaders:';
-    titlesName.element.textContent = 'Name:';
-    dataStatus.element.textContent = 'connected';
-    dataId.element.textContent = '38234c93434ebb572a22bab82799f9ffa0ddfcc9e0687a2a9a61ce055bdd5c42';
-    dataName.element.textContent = 'Test DAPP';
+    titlesStatus.textContent = 'Connect to contract status:';
+    titlesId.textContent = 'ID shaders:';
+    titlesName.textContent = 'Name:';
+    dataStatus.textContent = 'connected';
+    dataId.textContent = '38234c93434ebb572a22bab82799f9ffa0ddfcc9e0687a2a9a61ce055bdd5c42';
+    dataName.textContent = 'Test DAPP';
     infoTitles.append(titlesStatus, titlesId, titlesName);
     infoData.append(dataStatus, dataId, dataName);
 

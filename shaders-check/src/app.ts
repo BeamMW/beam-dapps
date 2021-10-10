@@ -1,7 +1,7 @@
-import { BeamAPI } from './utils/BeamAPI';
+import { BeamAPI } from './logic/beam/BeamAPI';
 import MainPage from './components/MainPage/mainPage.component';
 import './scss/main.scss';
-import { BEAM } from './utils/api_handlers';
+import { BEAM } from './components/controllers/beam.controller';
 import Container from './components/Container/container.component';
 import Loader from './components/loader/loader.component';
 

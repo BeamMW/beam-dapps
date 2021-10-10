@@ -1,5 +1,5 @@
 import { Tags } from '../../constants/html_elements';
-import BaseComponent from '../BaseComponent/base.component';
+import BaseComponent from '../shared/base/base.component';
 import ButtonDrop from '../Container/Header/button_drop.component';
 // import Content from '../Container/Content/content.component';
 import './mainPage.scss';

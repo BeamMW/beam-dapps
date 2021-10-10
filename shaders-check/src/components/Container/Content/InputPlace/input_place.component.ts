@@ -1,13 +1,12 @@
 import { APIResponse } from 'beamApiProps';
 import { ReqID } from '../../../../constants/variables';
 import { Tags } from '../../../../constants/html_elements';
-import BaseComponent from '../../../BaseComponent/base.component';
+import BaseComponent from '../../../shared/base/base.component';
 import { Form } from './Form/form.component';
 
 export class InputPlace extends BaseComponent {
   constructor() {
     super(Tags.DIV, ['input__place']);
-    this.unsubscribeBeforeRemove();
   }
 
   inform = (res: APIResponse): void => {

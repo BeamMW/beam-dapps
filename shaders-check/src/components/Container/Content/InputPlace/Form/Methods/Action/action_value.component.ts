@@ -1,12 +1,7 @@
 import { IOutput, IActionOutput } from 'beamApiProps';
-import { AddObsever, FormDispatch, InformArgs } from 'formProps';
-import BaseComponent from '../../../../../../BaseComponent/base.component';
+import BaseComponent from '../../../../../../shared/base/base.component';
 import { Tags } from '../../../../../../../constants/html_elements';
 import { ValueLabel } from './action_label.component';
-import { FormActions } from '../../../../../../../constants/variables';
-import {
-  unsubscribeBeforeRemoveAC
-} from '../../../../../../../utils/action_creators';
 import './action.scss';
 
 export class Value extends BaseComponent {
@@ -16,44 +11,30 @@ export class Value extends BaseComponent {
 
   constructor(
     output: IOutput,
-    role: string,
-    action: string,
-    dispatch: FormDispatch,
-    observe: AddObsever
+    role: string
   ) {
     super(Tags.DIV, ['input__action-radio']);
-    observe(this);
     this.role = role;
-    this.action = action;
-    this.render(output, dispatch);
-    this.element.addEventListener(
-      'DOMNodeRemovedFromDocument',
-      () => dispatch(unsubscribeBeforeRemoveAC(this))
-    );
+    this.render(output);
   }
 
-  informForm = ({
-    formAction,
-    currentRole,
-    currentAction,
-    output,
-    dispatch
-  }: InformArgs):void => {
-    if (formAction === FormActions.SET_ROLE
-      || formAction === FormActions.SET_ACTION) {
-      this.role = currentRole;
-      this.action = currentAction;
-      this.render(output, dispatch);
-    }
+  informForm = (role:string):void => {
+    console.log(role);
+    // if (formAction === FormActions.SET_ROLE
+    //   || formAction === FormActions.SET_ACTION) {
+    //   this.role = currentRole;
+    //   this.action = currentAction;
+    //   this.render(output);
+    // }
   };
 
-  render = (output: IOutput, dispatch: FormDispatch):void => {
+  render = (output: IOutput):void => {
     this.element.innerHTML = '';
     // const title = new BaseComponent(Tags.DIV, ['action-title']);
     // title.element.innerText = 'Action: ';
     const actions = Object.entries(output.roles[this.role] as IActionOutput);
     const valuesList = actions.map(
-      (el) => new ValueLabel(el, this.action, dispatch)
+      (el) => new ValueLabel(el, this.action)
     );
     this.append(...valuesList);
   };

@@ -1,6 +1,6 @@
 import { ResponseResultType } from 'beamApiProps';
 import { Tags, TreeIcons } from '../../../../../constants/html_elements';
-import BaseComponent from '../../../../BaseComponent/base.component';
+import BaseComponent from '../../../../shared/base/base.component';
 
 export class TreeBuilder extends BaseComponent {
   constructor(result:ResponseResultType) {

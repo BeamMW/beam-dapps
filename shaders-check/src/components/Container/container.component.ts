@@ -1,5 +1,5 @@
 import { Tags } from '../../constants/html_elements';
-import BaseComponent from '../BaseComponent/base.component';
+import BaseComponent from '../shared/base/base.component';
 import Content from './Content/content.component';
 import Header from './Header/header.component';
 

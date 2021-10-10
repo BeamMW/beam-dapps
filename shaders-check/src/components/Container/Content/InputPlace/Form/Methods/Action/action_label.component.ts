@@ -1,6 +1,6 @@
 import { IActionParams } from 'beamApiProps';
-import { FormDispatch } from 'formProps';
-import BaseComponent from '../../../../../../BaseComponent/base.component';
+import { Params } from '../Params/params_value.component';
+import BaseComponent from '../../../../../../shared/base/base.component';
 import { Tags } from '../../../../../../../constants/html_elements';
 import { ValueInput } from './action_input.component';
 import { SVG } from '../../../../../../../constants/svg.icons';
@@ -12,17 +12,17 @@ export class ValueLabel extends BaseComponent {
 
   constructor(
     action: [string, IActionParams],
-    currentAction: string,
-    dispatch: FormDispatch
+    currentAction: string
   ) {
     super(Tags.LABEL, ['method__label', 'custom-radio']);
-    this.input = new ValueInput(action, currentAction, dispatch);
+    this.input = new ValueInput(action, currentAction);
     const title = new BaseComponent(Tags.DIV, ['method__label-title']);
     const span = new BaseComponent(Tags.SPAN);
-    span.element.innerText = action[0] as string;
+    span.textContent = action[0] as string;
     const arrowDown = new BaseComponent(Tags.DIV, ['arrowDown']);
-    arrowDown.element.innerHTML = `${SVG.iconArrowDown}`;
+    arrowDown.innerHTML = `${SVG.iconArrowDown}`;
     this.methodAction = new BaseComponent(Tags.DIV, ['output__place']);
+    this.methodAction.append(new Params(action[1]));
     this.setAttributes({ for: span.element.innerText });
     title.element.addEventListener('click', (e) => {
       title.element.classList.toggle('active');

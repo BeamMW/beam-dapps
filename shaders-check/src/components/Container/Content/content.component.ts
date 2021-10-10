@@ -1,13 +1,13 @@
 import { InputPlace } from './InputPlace/input_place.component';
 import { Tags } from '../../../constants/html_elements';
-import BaseComponent from '../../BaseComponent/base.component';
-import { OutputPlace } from './OutputPlace/output_place.component';
-import { BEAM } from '../../../utils/api_handlers';
+import BaseComponent from '../../shared/base/base.component';
+// import { OutputPlace } from './OutputPlace/output_place.component';
+import { BEAM } from '../../controllers/beam.controller';
 
 export default class Content extends BaseComponent {
   private readonly inputPlace: InputPlace;
 
-  private readonly outputPlace: OutputPlace;
+  // private readonly outputPlace: OutputPlace;
 
   constructor() {
     super(Tags.DIV, ['container__content', 'container']);

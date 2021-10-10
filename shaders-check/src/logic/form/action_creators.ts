@@ -1,6 +1,6 @@
 import { ActionPayloadArgsType, ParamPayloadArgsType } from 'formProps';
-import BaseComponent from '../components/BaseComponent/base.component';
-import { FormActions } from '../constants/variables';
+import BaseComponent from '../../components/shared/base/base.component';
+import { FormActions } from '../../constants/variables';
 
 export const setRoleAC = (payload:string) => (
   { action: FormActions.SET_ROLE, payload }

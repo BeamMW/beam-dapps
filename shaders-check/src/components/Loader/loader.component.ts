@@ -1,4 +1,4 @@
-import BaseComponent from '../BaseComponent/base.component';
+import BaseComponent from '../shared/base/base.component';
 import loader from '../../assets/loader.svg';
 import { Tags } from '../../constants/html_elements';
 

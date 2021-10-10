@@ -8,7 +8,7 @@ import {
   ApiResult,
   ApiResultWeb
 } from 'qwebchannel';
-import BaseComponent from '../components/BaseComponent/base.component';
+import BaseComponent from '../../components/shared/base/base.component';
 import { RC } from './request_creators';
 
 declare global {

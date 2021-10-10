@@ -1,7 +1,7 @@
-import { RC } from './request_creators';
+import { RC } from '../logic/beam/request_creators';
 import { InnerTexts } from '../constants/html_elements';
 import { ShaderProps } from '../constants/variables';
-import { BEAM } from './api_handlers';
+import { BEAM } from '../components/controllers/beam.controller';
 
 export const dragoverHandler = (e: DragEvent): void => {
   e.preventDefault();

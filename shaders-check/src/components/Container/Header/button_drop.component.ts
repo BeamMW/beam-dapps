@@ -3,7 +3,7 @@ import {
 } from '../../../utils/dragndrop_handlers';
 import { InnerTexts, Tags } from '../../../constants/html_elements';
 import { SVG } from '../../../constants/svg.icons';
-import BaseComponent from '../../BaseComponent/base.component';
+import BaseComponent from '../../shared/base/base.component';
 
 export default class ButtonDrop extends BaseComponent {
   constructor() {
