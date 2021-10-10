@@ -14,7 +14,34 @@ void Method_0() {
                 Env::DocAddText("aid", "AssetID");
                 Env::DocAddText("holder", "Holder PubKey");
             }
-
+            {
+                Env::DocGroup method("gallery_send");
+                Env::DocAddText("cid", "ContractID");
+                Env::DocAddText("aid", "AssetID");
+                Env::DocAddText("holder", "Holder PubKey");
+                Env::DocAddText("seed", "Seed to send");
+            }
+            {
+                Env::DocGroup method("set_price");
+                Env::DocAddText("cid", "ContractID");
+                Env::DocAddText("aid", "AssetID");
+                Env::DocAddText("holder", "Holder PubKey");
+                Env::DocAddText("seed", "Seed to send");
+                Env::DocAddText("price", "New price");
+            }
+            {
+                Env::DocGroup method("buy");
+                Env::DocAddText("cid", "ContractID");
+                Env::DocAddText("holder", "Holder PubKey");
+                Env::DocAddText("seed", "Seed to send");
+                Env::DocAddText("price", "New price");
+            }
+            {
+                Env::DocGroup method("withdraw");
+                Env::DocAddText("cid", "ContractID");
+                Env::DocAddText("amount", "Amount");
+                Env::DocAddText("aid", "AssetID");
+            }
         }
         {
             Env::DocGroup role("manager");
@@ -117,6 +144,9 @@ void SendSeedFromContract(const ContractID &gallery_cid, uint64_t seed, PubKey a
 }
 
 void SetSeedPrice(const ContractID &gallery_cid, uint64_t seed, PubKey holder, Price price, AssetID aid) {
+
+    // TODO: Add check if holder can change price of the seed
+
     NFTGenerator::SetPrice args;
     args.updated_nft.seed = seed;
     args.updated_nft.holder = holder;
@@ -134,7 +164,7 @@ void SetSeedPrice(const ContractID &gallery_cid, uint64_t seed, PubKey holder, P
 
 void BuySeed(gallery_CID, seed, buyer, price) {
 
-    // need to include some checking if seed is available to buy
+    // TODO: need to include some checking if seed is available to buy
 //    auto id_ = Utils::FromBE(id);
 //
 //    Gallery::Masterpiece m;
@@ -152,11 +182,48 @@ void BuySeed(gallery_CID, seed, buyer, price) {
     args.price = price;
 
     FundsChange fc;
-    fc.m_Consume = 1;
+    fc.m_Consume = true;
     fc.m_Amount = price.m_Amount;
     fc.m_Aid = price.m_Aid;
 
     Env::GenerateKernel(&cid, args.s_iMethod, &args, sizeof(args), &fc, 1, nullptr, 0, "gallery buy seed", 0);
+}
+
+#pragma pack (push, 1)
+struct PersonalID {
+    ContractID cid;
+    uint8_t context = 0;
+};
+#pragma pack (pop)
+
+PubKey GetKeyByCID(const ContractID &cid) {
+    PersonalID id;
+    id.cid = cid;
+    PubKey key;
+    Env::DerivePk(key, &id, sizeof(id));
+    return key;
+}
+
+void Withdraw(const ContractID &contract_id, Amount amount, AssetID asset_id) {
+    NFTGenerator::Withdraw request;
+    request.amount = amount;
+    request.key.asset_id = asset_id;
+    request.key.key = GetKeyByCID(contract_id);
+
+    FundsChange fc;
+    fc.m_Amount = request.amount;
+    fc.m_Aid = request.key.asset_id;
+    fc.m_Consume = true;
+
+    PersonalID id;
+    id.cid = contract_id;
+
+    SigRequest sig;
+    sig.m_pID = &id;
+    sig.m_nID = sizeof(id);
+
+    Env::GenerateKernel(&contract_id, NFTGenerator::Withdraw::s_iMethod, &request, sizeof(request),
+                        &fc, 1, &sig, 1, "withdraw", 0);
 }
 
 void Method_1() {
@@ -206,7 +273,7 @@ void Method_1() {
             AssetID aid;
             uint64_t seed;
             PubKey holder;
-            Env::DocGet("gallery_CID", gallery_CID);
+            Env::DocGet("cid", gallery_CID);
             Env::DocGet("holder", holder);
             Env::DocGet("seed", seed);
             Env::DocGet("aid", aid);
@@ -217,7 +284,7 @@ void Method_1() {
             uint64_t seed;
             PubKey holder;
             Price price;
-            Env::DocGet("gallery_CID", gallery_CID);
+            Env::DocGet("cid", gallery_CID);
             Env::DocGet("holder", holder);
             Env::DocGet("seed", seed);
             Env::DocGet("price", price);
@@ -228,13 +295,19 @@ void Method_1() {
             uint64_t seed;
             PubKey buyer;
             Price price;
-            Env::DocGet("gallery_CID", gallery_CID);
+            Env::DocGet("cid", gallery_CID);
             Env::DocGet("seed", seed);
             Env::DocGet("holder", buyer);
             Env::DocGet("price", price);
             BuySeed(gallery_CID, seed, buyer, price);
         } else if (Env::Strcmp(method, "withdraw") == 0) {
-
+            ContractID gallery_CID;
+            Amount amount;
+            AssetID aid;
+            Env::DocGet("cid", gallery_CID);
+            Env::DocGet("amount", amount);
+            Env::DocGet("aid", aid);
+            Withdraw(gallery_CID, amount, aid);
         } else {
             Env::DocAddText("error", "Invalid method");
         }
