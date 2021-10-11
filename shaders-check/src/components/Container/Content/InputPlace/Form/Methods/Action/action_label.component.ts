@@ -8,6 +8,7 @@ import { SVG } from '../../../../../../../constants/svg.icons';
 import { Submit } from '../Submit/submit.component';
 import { FORM } from '../../../../../../controllers/form.controller';
 import { OutputPlace } from '../../../../OutputPlace/output_place.component';
+import { Clear } from '../Clear/clear.components';
 
 export class ValueLabel extends BaseComponent {
   role = FORM.getRole();
@@ -26,11 +27,13 @@ export class ValueLabel extends BaseComponent {
     const title = new BaseComponent(Tags.DIV, ['method__label-title']);
     const arrowDown = new BaseComponent(Tags.DIV, ['arrowDown']);
     const methodAction = new BaseComponent(Tags.DIV, ['action__place']);
-    const requestBlock = new BaseComponent(Tags.DIV);
+    const requestBlock = new BaseComponent(Tags.DIV, ['action__request']);
     const responseBlock = new OutputPlace(this.action);
     const span = new BaseComponent(Tags.SPAN);
     const submit = new Submit(this.action, this.getArgs);
     const input = new ValueInput(action);
+    const buttons = new BaseComponent(Tags.DIV, ['buttons']);
+    const clear = new Clear();
 
     span.innerHTML = this.action;
     arrowDown.innerHTML = `${SVG.iconArrowDown}`;
@@ -46,9 +49,10 @@ export class ValueLabel extends BaseComponent {
       e.preventDefault();
     });
 
+    buttons.append(clear,
+      submit);
     requestBlock.append(
-      new Params(action[1], this.setParamsValue),
-      submit
+      new Params(action[1], this.setParamsValue), buttons
     );
     methodAction.append(
       requestBlock,

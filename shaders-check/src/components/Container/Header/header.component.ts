@@ -1,5 +1,6 @@
 import { APIResponse } from 'beamApiProps';
 import { Tags } from '../../../constants/html_elements';
+import { SVG } from '../../../constants/svg.icons';
 import { ReqID } from '../../../constants/variables';
 import { BEAM } from '../../controllers/beam.controller';
 import BaseComponent from '../../shared/base/base.component';
@@ -19,12 +20,15 @@ export default class Header extends BaseComponent {
     const dataStatus = new BaseComponent(Tags.DIV, ['info__data-status']);
     const dataId = new BaseComponent(Tags.SPAN, ['info__data-id']);
     const dataName = new BaseComponent(Tags.SPAN, ['info__data-name']);
+    const svgIcon = new BaseComponent(Tags.DIV, ['header__app-icon']);
+    svgIcon.innerHTML = `${SVG.iconCloseSmall}`;
     titlesStatus.textContent = 'Connect to contract status:';
     titlesId.textContent = 'ID shaders:';
     titlesName.textContent = 'Name:';
     dataStatus.textContent = 'connected';
     dataId.textContent = '38234c93434ebb572a22bab82799f9ffa0ddfcc9e0687a2a9a61ce055bdd5c42';
     dataName.textContent = 'Test DAPP';
+    app.append(svgIcon);
     infoTitles.append(titlesStatus, titlesId, titlesName);
     infoData.append(dataStatus, dataId, dataName);
 

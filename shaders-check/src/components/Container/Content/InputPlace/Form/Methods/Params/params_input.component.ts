@@ -2,6 +2,7 @@ import { InformArgs, ParamPayloadArgsType } from 'formProps';
 import { Tags } from '../../../../../../../constants/html_elements';
 import { FormActions } from '../../../../../../../constants/variables';
 import BaseComponent from '../../../../../../shared/base/base.component';
+import './params.scss';
 
 export class ParamsInput extends BaseComponent {
   private readonly param: string;
@@ -14,7 +15,7 @@ export class ParamsInput extends BaseComponent {
     this.param = param;
     this.setAttributes(
       {
-        placeholder: this.param,
+        placeholder: '',
         value: ''
       }
     );
@@ -34,5 +35,6 @@ export class ParamsInput extends BaseComponent {
         value: currentParams[this.param]
       });
     }
+    console.log(currentParams);
   };
 }

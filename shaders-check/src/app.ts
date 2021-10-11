@@ -3,7 +3,7 @@ import MainPage from './components/MainPage/mainPage.component';
 import './scss/main.scss';
 import { BEAM } from './components/controllers/beam.controller';
 import Container from './components/Container/container.component';
-import Loader from './components/loader/loader.component';
+import Loader from './components/Loader/loader.component';
 
 export class App {
   private readonly rootElement: HTMLElement;
