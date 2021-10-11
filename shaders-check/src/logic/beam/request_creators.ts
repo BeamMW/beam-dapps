@@ -3,8 +3,8 @@ import { ReqID, ReqMethods } from '../../constants/variables';
 import { BEAM } from '../../components/controllers/beam.controller';
 
 export const RC = {
-  submitResult: (args: string): ApiArgs => ({
-    callID: ReqID.SUBMIT_RESULT,
+  submitResult: (id:string, args: string): ApiArgs => ({
+    callID: id,
     method: ReqMethods.INVOKE_CONTRACT,
     params: {
       create_tx: false,

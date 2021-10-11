@@ -10,25 +10,32 @@ import BaseComponent from '../../../shared/base/base.component';
 import { TreeBuilder } from './TreeBuilder/tree_builder.component';
 import { RC } from '../../../../logic/beam/request_creators';
 import { BEAM } from '../../../controllers/beam.controller';
+import './output_place.scss';
 
 export class OutputPlace extends BaseComponent {
-  constructor() {
+  action: string;
+
+  constructor(action: string) {
     super(Tags.DIV, ['output__place']);
+    BEAM.addObservers(this);
+    this.action = action;
+    const baseBlock = new BaseComponent(Tags.DIV, ['output__base-block']);
+    baseBlock.innerHTML = 'Fill in the parametres to check the method';
+    this.append(baseBlock);
   }
 
   inform = (res: APIResponse): void => {
     switch (res.id) {
-      case ReqID.SUBMIT_RESULT:
+      case this.action:
+        this.removeAll();
+        if (isJson(res.result.output)) {
+          this.append(new TreeBuilder(JSON.parse(res.result.output)));
+        } else {
+          this.element.innerText = `${InnerTexts.NOT_JSON}
+        ${res.result.output}`;
+        }
         if (res.result.raw_data) {
           BEAM.callApi(RC.invokeData(ReqID.INVOKE_DATA, res.result.raw_data));
-        } else {
-          this.removeAll();
-          if (isJson(res.result.output)) {
-            this.append(new TreeBuilder(JSON.parse(res.result.output)));
-          } else {
-            this.element.innerText = `${InnerTexts.NOT_JSON}
-          ${res.result.output}`;
-          }
         }
         break;
       case ReqID.INVOKE_DATA:

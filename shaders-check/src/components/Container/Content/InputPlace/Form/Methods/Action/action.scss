@@ -46,13 +46,13 @@
     cursor: pointer;
 }
 
-.output__place {
+.action__place {
     padding: 0 18px;
     background-color: rgba($color: #fff, $alpha: .05);
     display: none;
     overflow: hidden;
-    height: 200px;
-    width: 96%;
+    min-height: 200px;
     transition: max-height 0.2s ease-out;
     border-radius: 0 0 10px 10px;
+    justify-content: space-between;
 }

@@ -5,8 +5,6 @@ import { ValueLabel } from './action_label.component';
 import './action.scss';
 
 export class Value extends BaseComponent {
-  action: string;
-
   role: string;
 
   constructor(
@@ -34,7 +32,7 @@ export class Value extends BaseComponent {
     // title.element.innerText = 'Action: ';
     const actions = Object.entries(output.roles[this.role] as IActionOutput);
     const valuesList = actions.map(
-      (el) => new ValueLabel(el, this.action)
+      (el) => new ValueLabel(el)
     );
     this.append(...valuesList);
   };

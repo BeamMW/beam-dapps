@@ -3,21 +3,13 @@ import { FormApi } from '../../../../../logic/form/form.logic';
 import BaseComponent from '../../../../shared/base/base.component';
 import { Tags } from '../../../../../constants/html_elements';
 import { Value } from './Methods/Action/action_value.component';
-import { Params } from './Methods/Params/params_value.component';
 import { Role } from './Methods/Role/role_value.component';
-import { Submit } from './Methods/Submit/submit.component';
 import { FORM } from '../../../../controllers/form.controller';
 
 export class Form extends BaseComponent {
-  role: Role;
-
   action: BaseComponent;
 
-  params: Params;
-
   output: IOutput;
-
-  submit: Submit;
 
   constructor(output: IOutput) {
     super(Tags.FORM, ['form']);

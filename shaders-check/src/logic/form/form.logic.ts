@@ -55,14 +55,6 @@ export class FormApi {
   };
 
   getRole = ():string => this.role;
-  // getArgs = (): string => {
-  //   const args = {
-  //     role: this.currentRole,
-  //     action: this.currentAction,
-  //     ...this.currentParams
-  //   };
-  //   return argsStringify(args);
-  // };
 
   reducer = (obj: ActionTypes): void => {
     const { action, payload } = obj;

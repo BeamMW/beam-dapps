@@ -1,14 +1,16 @@
 import { IActionParams } from 'beamApiProps';
+import { ParamPayloadArgsType } from 'formProps';
 import { Tags } from '../../../../../../../constants/html_elements';
 import BaseComponent from '../../../../../../shared/base/base.component';
 import { ParamsLabel } from './params_label.component';
 
 export class Params extends BaseComponent {
   constructor(
-    params:IActionParams
+    params:IActionParams,
+    callback: (obj:ParamPayloadArgsType) => void
   ) {
     super(Tags.DIV, ['input__params']);
-    this.render(params);
+    this.render(params, callback);
   }
 
   informForm = (role:string):void => {
@@ -16,7 +18,8 @@ export class Params extends BaseComponent {
   };
 
   render = (
-    params:IActionParams
+    params:IActionParams,
+    callback: (obj:ParamPayloadArgsType) => void
   ):void => {
     this.element.innerHTML = '';
     const title = new BaseComponent(Tags.DIV, ['params-title']);
@@ -25,7 +28,7 @@ export class Params extends BaseComponent {
       params as IActionParams
     );
     const valuesList = list.map(
-      (el) => new ParamsLabel(el[0])
+      (el) => new ParamsLabel(el[0], callback)
     );
     if (valuesList.length) this.append(title, ...valuesList);
   };

@@ -1,4 +1,4 @@
-import { InformArgs } from 'formProps';
+import { InformArgs, ParamPayloadArgsType } from 'formProps';
 import { Tags } from '../../../../../../../constants/html_elements';
 import { FormActions } from '../../../../../../../constants/variables';
 import BaseComponent from '../../../../../../shared/base/base.component';
@@ -7,7 +7,8 @@ export class ParamsInput extends BaseComponent {
   private readonly param: string;
 
   constructor(
-    param: string
+    param: string,
+    callback: (obj:ParamPayloadArgsType) => void
   ) {
     super(Tags.INPUT, ['params__input']);
     this.param = param;
@@ -17,8 +18,12 @@ export class ParamsInput extends BaseComponent {
         value: ''
       }
     );
-    this.element.addEventListener('change', (e:Event) => {
+    this.element.addEventListener('input', (e:Event) => {
       const target = e.target as HTMLInputElement;
+      callback({
+        key: param,
+        value: target.value
+      });
       console.log(target);
     });
   }
