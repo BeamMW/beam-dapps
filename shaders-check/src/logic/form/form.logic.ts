@@ -15,14 +15,16 @@ export class FormApi {
 
   private readonly observers: Set<BaseComponent>;
 
-  role: string;
+  role: string | null = null;
 
   constructor(output: IOutput) {
     this.output = output;
     this.observers = new Set();
-    const roles = Object.entries(this.output.roles);
-    // const actions = Object.keys(roles[0]?.[1] as IActionOutput);
-    this.role = roles[0]?.[0] as string;
+    if (this.output.roles) {
+      const roles = Object.entries(this.output.roles);
+      this.role = roles[0]?.[0] as string;
+    }
+    // const actions = Object.keys(roles[0]?.[1] as IActionOutput;
     // this.currentAction = actions[0] as string;
     // this.currentParams = paramsObjectCreator(
     //   this.output.roles?.[this.currentRole]?.[
@@ -54,7 +56,7 @@ export class FormApi {
     this.reducer(obj);
   };
 
-  getRole = ():string => this.role;
+  getRole = ():string | null => this.role;
 
   reducer = (obj: ActionTypes): void => {
     const { action, payload } = obj;

@@ -1,8 +1,8 @@
 import { BeamAPI } from './logic/beam/BeamAPI';
-import MainPage from './components/MainPage/mainPage.component';
+import MainPage from './components/drop_page/mainPage.component';
 import './scss/main.scss';
-import { BEAM } from './components/controllers/beam.controller';
-import Container from './components/Container/container.component';
+import { BEAM } from './controllers/beam.controller';
+import Container from './components/main/container.component';
 import Loader from './components/loader/loader.component';
 
 export class App {

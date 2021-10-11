@@ -127,7 +127,7 @@ declare module 'beamApiProps' {
   };
 
   export interface IOutput {
-    roles: IRoleOutput;
+    [key: string]: IRoleOutput | IActionOutput;
   }
 
   export type CallApiType =

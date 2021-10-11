@@ -10,7 +10,7 @@ export default class BaseComponent {
 
   inform?: (res:APIResponse) => void;
 
-  informForm?: (obj: string) => void;
+  informForm?: (obj: string | null) => void;
 
   constructor(tag:Tags, styles: string[] = []) {
     this.element = document.createElement(tag);
