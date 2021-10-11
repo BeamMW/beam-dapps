@@ -14,6 +14,7 @@ import {
   OutputPlace
 } from '../../output/output_place.component';
 import { ValueInput } from './action_input.component';
+import { Clear } from '../clear/clear.components';
 
 export class ValueLabel extends BaseComponent {
   role = FORM.getRole();
@@ -32,6 +33,8 @@ export class ValueLabel extends BaseComponent {
     const methodAction = new BaseComponent(Tags.DIV, ['action__place']);
     const requestBlock = new BaseComponent(Tags.DIV);
     const span = new BaseComponent(Tags.SPAN);
+    const buttons = new BaseComponent(Tags.DIV, ['buttons']);
+    const clear = new Clear();
 
     span.innerHTML = this.action;
     arrowDown.innerHTML = `${SVG.iconArrowDown}`;
@@ -39,9 +42,10 @@ export class ValueLabel extends BaseComponent {
 
     this.element.addEventListener('click', this.actionMenuListener);
 
+    buttons.append(clear,
+      new Submit(this.action, this.getArgs));
     requestBlock.append(
-      new Params(action[1], this.setParamsValue),
-      new Submit(this.action, this.getArgs)
+      new Params(action[1], this.setParamsValue), buttons
     );
     methodAction.append(
       requestBlock,

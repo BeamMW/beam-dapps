@@ -18,14 +18,13 @@ export class Params extends BaseComponent {
     callback: (obj:ParamPayloadArgsType) => void
   ):void => {
     this.element.innerHTML = '';
-    const title = new BaseComponent(Tags.DIV, ['params-title']);
-    title.element.innerText = 'Params: ';
+    // const title = new BaseComponent(Tags.DIV, ['params-title']);
     const list = Object.entries(
       params as IActionParams
     );
     const valuesList = list.map(
       (el) => new ParamsLabel(el[0], callback)
     );
-    if (valuesList.length) this.append(title, ...valuesList);
+    if (valuesList.length) this.append(...valuesList);
   };
 }

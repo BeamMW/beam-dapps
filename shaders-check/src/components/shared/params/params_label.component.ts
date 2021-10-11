@@ -12,6 +12,7 @@ export class ParamsLabel extends BaseComponent {
   ) {
     super(Tags.LABEL, ['params__label']);
     this.input = new ParamsInput(role, callback);
+    this.textContent = `${role}`;
     this.setAttributes({ for: role });
     this.append(this.input);
   }

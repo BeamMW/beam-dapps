@@ -198,10 +198,10 @@ padding-top: 20px;
   display: block;
 }
 
-.submit{
-  width: 150px;
-  color:#da68f5
-}
+// .submit{
+//   width: 150px;
+//   color:#da68f5
+// }
 
 .list .list{
   display:none;
@@ -225,22 +225,18 @@ padding-top: 20px;
   color:#00f6d2;
 }
 
-.list button {
-  display: inline-block;
-  vertical-align: center;
-  text-align: center;
-  font-size: 10px;
-  background-color: transparent;
-  color: #da68f5;
-  border: 1px solid #da68f5;
-  width:  20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.params__input::placeholder{
-  color: black;
-}
+// .list button {
+//   display: inline-block;
+//   vertical-align: center;
+//   text-align: center;
+//   font-size: 10px;
+//   background-color: transparent;
+//   color: #da68f5;
+//   border: 1px solid #da68f5;
+//   width:  20px;
+//   height: 20px;
+//   border-radius: 50%;
+// }
 
 .action-params{
   display: flex;
@@ -298,30 +294,28 @@ padding-top: 20px;
 //   background-color: #00f6d2;
 // }
 
-
-.submit {
+.button {
   cursor: pointer;
-  text-decoration: none;
-  display: inline-block;
-  margin: 5px 10px;
-  padding: 5px 10px;
-  overflow: hidden;
-  font-size: 12px;
-  border: 2px solid;
-  font-family: 'Montserrat', sans-serif;
-  text-transform: uppercase;
-  font-weight: bold;
-  letter-spacing: 2px;
-  color: rgba(30, 255, 188, 1);
-  background: transparent;
-  transition: color .3s, background .5s;
+    width: 139px;
+    height: 38px;
+    margin: 20px 35px 2px 0;
+    padding: 11px 30px;
+    border-radius: 50px;
+    background-color: #00f6d2;
+    border: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #032e49;
 }
-.submit:hover {
-  animation: stripes .75s infinite linear;
-  background: linear-gradient(45deg, rgba(30, 255, 188, 1) 25%, transparent 25%, transparent 50%, rgba(30, 255, 188, 1) 50%, rgba(30, 255, 188, 1) 75%, transparent 75%, transparent);
-  background-size: 10px 10px;
-  color: #FF50E5;
-}
+
 @keyframes stripes {
   0% {
     background-position: 0 0;

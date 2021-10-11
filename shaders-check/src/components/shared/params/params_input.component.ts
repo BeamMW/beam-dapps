@@ -14,7 +14,7 @@ export class ParamsInput extends BaseComponent {
     this.param = param;
     this.setAttributes(
       {
-        placeholder: this.param,
+        placeholder: '',
         value: ''
       }
     );
@@ -34,5 +34,6 @@ export class ParamsInput extends BaseComponent {
         value: currentParams[this.param]
       });
     }
+    console.log(currentParams);
   };
 }

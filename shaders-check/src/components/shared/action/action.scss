@@ -44,11 +44,6 @@
             display: flex;
         }
     }
-    // &.active,
-    // .method__label:hover {
-    // // background-color: #ccc;
-    // cursor: pointer;
-// }
 }
 
 .method__input {
@@ -58,4 +53,32 @@
 
 .input__action-radio {
     width: 100%;
+}
+
+.action__place {
+    background-color: rgba($color: #fff, $alpha: .05);
+    display: none;
+    overflow: hidden;
+    min-height: 200px;
+    transition: max-height 0.2s ease-out;
+    border-radius: 0 0 10px 10px;
+    justify-content: space-between;
+}
+
+.action__request{
+    padding: 20px 0 20px 20px;
+}
+
+.buttons{
+    display: flex;
+}
+
+.clear{
+    width: 122px;
+    height: 38px;
+    margin: 20px 20px 2px 4px;
+    padding: 10px 30px 11px;
+    border-radius: 50px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.3);
 }
