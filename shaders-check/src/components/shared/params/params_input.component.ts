@@ -1,9 +1,6 @@
 import { IActionParams } from 'beamApiProps';
-import { InformArgs } from 'formProps';
 import { Tags } from '../../../constants/html_elements';
-import { FormActions } from '../../../constants/variables';
 import BaseComponent from '../base/base.component';
-import { Clear } from '../clear/clear.component';
 
 export class ParamsInput extends BaseComponent {
   readonly param: string;
@@ -14,25 +11,27 @@ export class ParamsInput extends BaseComponent {
   ) {
     super(Tags.INPUT, ['params__input']);
     this.param = param;
-    addObserver(this);
     this.setAttributes(
       {
         placeholder: '',
         value: ''
       }
     );
+    addObserver(this);
   }
 
   public valueChanger = (params: IActionParams):void => {
     const el = this.element as HTMLInputElement;
-    el.value = params[this.param] as string;
-  };
-
-  formInform = ({ formAction, currentParams }:InformArgs):void => {
-    if (formAction === FormActions.SET_PARAM_VALUE) {
-      this.setAttributes({
-        value: currentParams[this.param]
-      });
+    if (params[this.param] !== el.value) {
+      el.value = params[this.param] as string;
     }
   };
+
+  // formInform = ({ formAction, currentParams }:InformArgs):void => {
+  //   if (formAction === FormActions.SET_PARAM_VALUE) {
+  //     this.setAttributes({
+  //       value: currentParams[this.param]
+  //     });
+  //   }
+  // };
 }

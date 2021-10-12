@@ -52,8 +52,8 @@ export class ValueLabel extends BaseComponent {
     this.element.addEventListener('click', this.actionMenuListener);
     this.clear.element.addEventListener('click', () => {
       this.params = this.paramsObjectCreator(action[1]);
+      this.setActiveButton(false);
       this.notifyAll();
-      this.clear.classList.remove('active');
     });
 
     buttons.append(this.clear, this.submit);
@@ -74,11 +74,6 @@ export class ValueLabel extends BaseComponent {
     this.append(title, methodAction);
   }
 
-  paramsChanger = (action: string, value:string):void => {
-    this.params[action] = value;
-    this.notifyAll();
-  };
-
   actionMenuListener = (e: Event):void => {
     const target = e.target as HTMLElement;
     if (target.closest('.method__label-title')) {
@@ -88,20 +83,27 @@ export class ValueLabel extends BaseComponent {
 
   addObserver = (component: ParamsInput): void => {
     this.observers.add(component);
-    this.element.addEventListener('input', (e:Event) => {
+    component.element.addEventListener('input', (e:Event) => {
       const target = e.target as HTMLInputElement;
       this.setParamsValue({
         key: component.param,
         value: target.value
       });
-      if (target.value !== '') {
-        this.clear.classList.add('active');
-        this.submit.classList.add('active');
-      } else {
-        this.clear.classList.remove('active');
-        this.submit.classList.remove('active');
-      }
+      const values = Object.values(this.params);
+      this.notifyAll();
+      console.log(this.params);
+      this.setActiveButton(values.findIndex((el) => el.length) !== -1);
     });
+  };
+
+  setActiveButton = (isActive: boolean):void => {
+    if (isActive) {
+      this.clear.classList.add('active');
+      // this.submit.classList.add('active');
+    } else {
+      this.clear.classList.remove('active');
+      // this.submit.classList.remove('active');
+    }
   };
 
   notifyAll = (): void => this.observers.forEach((subs) => {
