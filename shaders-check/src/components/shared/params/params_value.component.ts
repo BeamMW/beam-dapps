@@ -3,6 +3,7 @@ import { Tags } from '../../../constants/html_elements';
 import BaseComponent from '../base/base.component';
 import { ParamsInput } from './params_input.component';
 import { ParamsLabel } from './params_label.component';
+import './params.scss';
 
 export class Params extends BaseComponent {
   constructor(

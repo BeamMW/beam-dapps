@@ -26,6 +26,10 @@ export class ValueLabel extends BaseComponent {
 
   private readonly observers: Set<ParamsInput>;
 
+  clear: Clear;
+
+  submit: Submit;
+
   constructor(action: [string, IActionParams]) {
     super(Tags.LABEL, ['method__label', 'custom-radio']);
     this.action = action[0];
@@ -35,23 +39,24 @@ export class ValueLabel extends BaseComponent {
     const title = new BaseComponent(Tags.DIV, ['method__label-title']);
     const arrowDown = new BaseComponent(Tags.DIV, ['arrowDown']);
     const methodAction = new BaseComponent(Tags.DIV, ['action__place']);
-    const requestBlock = new BaseComponent(Tags.DIV);
+    const requestBlock = new BaseComponent(Tags.DIV, ['action__request']);
     const span = new BaseComponent(Tags.SPAN);
     const buttons = new BaseComponent(Tags.DIV, ['buttons']);
-    const clear = new Clear();
+    this.clear = new Clear();
+    this.submit = new Submit(this.action, this.getArgs);
 
     span.innerHTML = this.action;
     arrowDown.innerHTML = `${SVG.iconArrowDown}`;
     this.setAttributes({ for: span.innerHTML });
 
     this.element.addEventListener('click', this.actionMenuListener);
-    clear.element.addEventListener('click', () => {
+    this.clear.element.addEventListener('click', () => {
       this.params = this.paramsObjectCreator(action[1]);
       this.notifyAll();
+      this.clear.classList.remove('active');
     });
 
-    buttons.append(clear,
-      new Submit(this.action, this.getArgs));
+    buttons.append(this.clear, this.submit);
     requestBlock.append(
       new Params(
         action[1],
@@ -89,6 +94,13 @@ export class ValueLabel extends BaseComponent {
         key: component.param,
         value: target.value
       });
+      if (target.value !== '') {
+        this.clear.classList.add('active');
+        this.submit.classList.add('active');
+      } else {
+        this.clear.classList.remove('active');
+        this.submit.classList.remove('active');
+      }
     });
   };
 

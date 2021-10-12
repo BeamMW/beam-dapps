@@ -7,6 +7,5 @@ export class Clear extends BaseComponent {
     super(Tags.BUTTON, ['button', 'clear']);
     (<HTMLInputElement> this.element).value = 'clear';
     this.innerHTML = `${SVG.iconCancel} clear`;
-    this.element.setAttribute('type', 'submit');
   }
 }

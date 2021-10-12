@@ -78,10 +78,10 @@ display: flex;
   background-color: #00f6d2;
 }
 
-.button{
-  width: 100px;
-  height: 25px;
-}
+// .button{
+//   width: 100px;
+//   height: 25px;
+// }
 // input{
 //   color: #00f6d2
 // }
@@ -314,6 +314,10 @@ padding-top: 20px;
     line-height: normal;
     letter-spacing: normal;
     color: #032e49;
+    opacity: .3;
+    &.active{
+      opacity: 1;
+    }
 }
 
 @keyframes stripes {

@@ -3,6 +3,7 @@ import { InformArgs } from 'formProps';
 import { Tags } from '../../../constants/html_elements';
 import { FormActions } from '../../../constants/variables';
 import BaseComponent from '../base/base.component';
+import { Clear } from '../clear/clear.component';
 
 export class ParamsInput extends BaseComponent {
   readonly param: string;
