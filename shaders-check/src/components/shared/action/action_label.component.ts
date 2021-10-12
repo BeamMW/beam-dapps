@@ -54,6 +54,7 @@ export class ValueLabel extends BaseComponent {
       this.params = this.paramsObjectCreator(action[1]);
       this.notifyAll();
       this.clear.classList.remove('active');
+      this.submit.classList.remove('active');
     });
 
     buttons.append(this.clear, this.submit);
@@ -94,7 +95,11 @@ export class ValueLabel extends BaseComponent {
         key: component.param,
         value: target.value
       });
-      if (target.value !== '') {
+      const values = Object.values(this.params);
+
+      values.findIndex((el) => console.log(el));
+
+      if (values.findIndex((el) => el.length > 0) !== -1) {
         this.clear.classList.add('active');
         this.submit.classList.add('active');
       } else {

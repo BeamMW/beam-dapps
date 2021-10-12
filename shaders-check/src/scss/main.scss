@@ -198,10 +198,14 @@ padding-top: 20px;
   display: block;
 }
 
-// .submit{
-//   width: 150px;
-//   color:#da68f5
-// }
+.submit{
+  opacity: .3;
+  pointer-events: none;
+    &.active{
+      opacity: 1;
+  pointer-events: all;
+    }
+}
 
 .list .list{
   display:none;
@@ -314,11 +318,8 @@ padding-top: 20px;
     line-height: normal;
     letter-spacing: normal;
     color: #032e49;
-    opacity: .3;
-    &.active{
-      opacity: 1;
-    }
 }
+
 
 @keyframes stripes {
   0% {
