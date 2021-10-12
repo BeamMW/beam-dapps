@@ -14,7 +14,8 @@ import {
   OutputPlace
 } from '../../output/output_place.component';
 import { ValueInput } from './action_input.component';
-import { Clear } from '../clear/clear.components';
+import { Clear } from '../clear/clear.component';
+import { ParamsInput } from '../params/params_input.component';
 
 export class ValueLabel extends BaseComponent {
   role = FORM.getRole();
@@ -23,10 +24,13 @@ export class ValueLabel extends BaseComponent {
 
   params: IActionParams;
 
+  private readonly observers: Set<ParamsInput>;
+
   constructor(action: [string, IActionParams]) {
     super(Tags.LABEL, ['method__label', 'custom-radio']);
     this.action = action[0];
     this.params = this.paramsObjectCreator(action[1]);
+    this.observers = new Set();
 
     const title = new BaseComponent(Tags.DIV, ['method__label-title']);
     const arrowDown = new BaseComponent(Tags.DIV, ['arrowDown']);
@@ -41,19 +45,34 @@ export class ValueLabel extends BaseComponent {
     this.setAttributes({ for: span.innerHTML });
 
     this.element.addEventListener('click', this.actionMenuListener);
+    clear.element.addEventListener('click', () => {
+      this.params = this.paramsObjectCreator(action[1]);
+      this.notifyAll();
+    });
 
     buttons.append(clear,
       new Submit(this.action, this.getArgs));
     requestBlock.append(
-      new Params(action[1], this.setParamsValue), buttons
+      new Params(
+        action[1],
+        this.addObserver
+      ), buttons
     );
     methodAction.append(
       requestBlock,
       new OutputPlace(this.action)
     );
-    title.append(new ValueInput(action), span, arrowDown);
+    title.append(
+      new ValueInput(action),
+      span, arrowDown
+    );
     this.append(title, methodAction);
   }
+
+  paramsChanger = (action: string, value:string):void => {
+    this.params[action] = value;
+    this.notifyAll();
+  };
 
   actionMenuListener = (e: Event):void => {
     const target = e.target as HTMLElement;
@@ -61,6 +80,21 @@ export class ValueLabel extends BaseComponent {
       this.classList.toggle('active');
     }
   };
+
+  addObserver = (component: ParamsInput): void => {
+    this.observers.add(component);
+    this.element.addEventListener('input', (e:Event) => {
+      const target = e.target as HTMLInputElement;
+      this.setParamsValue({
+        key: component.param,
+        value: target.value
+      });
+    });
+  };
+
+  notifyAll = (): void => this.observers.forEach((subs) => {
+    subs.valueChanger(this.params);
+  });
 
   paramsObjectCreator = (params: { [key: string]: string }): IActionParams => {
     const obj = {};

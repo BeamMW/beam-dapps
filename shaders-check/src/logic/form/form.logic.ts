@@ -42,7 +42,6 @@ export class FormApi {
   };
 
   deleteObserver:DeleteObserverType = (component: BaseComponent) => {
-    console.log(this.observers.size);
     this.observers.delete(component);
   };
 

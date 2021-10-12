@@ -1,29 +1,28 @@
 import { IActionParams } from 'beamApiProps';
-import { ParamPayloadArgsType } from 'formProps';
 import { Tags } from '../../../constants/html_elements';
 import BaseComponent from '../base/base.component';
+import { ParamsInput } from './params_input.component';
 import { ParamsLabel } from './params_label.component';
 
 export class Params extends BaseComponent {
   constructor(
     params:IActionParams,
-    callback: (obj:ParamPayloadArgsType) => void
+    addObserver: (component: ParamsInput) => void
   ) {
     super(Tags.DIV, ['input__params']);
-    this.render(params, callback);
+    this.render(params, addObserver);
   }
 
   render = (
     params:IActionParams,
-    callback: (obj:ParamPayloadArgsType) => void
+    addObserver: (component: ParamsInput) => void
   ):void => {
     this.element.innerHTML = '';
-    // const title = new BaseComponent(Tags.DIV, ['params-title']);
     const list = Object.entries(
       params as IActionParams
     );
     const valuesList = list.map(
-      (el) => new ParamsLabel(el[0], callback)
+      (el) => new ParamsLabel(el[0], addObserver)
     );
     if (valuesList.length) this.append(...valuesList);
   };
