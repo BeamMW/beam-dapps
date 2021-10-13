@@ -16,6 +16,7 @@ import {
 import { ValueInput } from './action_input.component';
 import { Clear } from '../clear/clear.component';
 import { ParamsInput } from '../params/params_input.component';
+import { actionColors } from './action.data';
 
 export class ValueLabel extends BaseComponent {
   role = FORM.getState().role;
@@ -30,7 +31,7 @@ export class ValueLabel extends BaseComponent {
 
   private readonly submit: Submit;
 
-  constructor(action: [string, IActionParams]) {
+  constructor(action: [string, IActionParams], index: number) {
     super(Tags.LABEL, ['method__label', 'custom-radio']);
     this.action = action[0];
     this.params = this.paramsObjectCreator(action[1]);
@@ -48,6 +49,7 @@ export class ValueLabel extends BaseComponent {
     span.innerHTML = this.action;
     arrowDown.innerHTML = `${SVG.iconArrowDown}`;
     this.setAttributes({ for: span.innerHTML });
+    this.style.background = <string>actionColors[index];
 
     this.element.addEventListener('click', this.actionMenuListener);
     this.clear.element.addEventListener('click', () => {
@@ -127,8 +129,7 @@ export class ValueLabel extends BaseComponent {
   argsStringify = (args: {
     [key: string]: string
   }): string => Object.entries(args)
-    .map((arg) => arg.join('='))
-    .join(',');
+    .map((arg) => arg.join('=')).join(',');
 
   getArgs = (): string => {
     const args: { [key:string]:string } = {

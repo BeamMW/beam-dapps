@@ -24,7 +24,7 @@ export class Value extends BaseComponent {
         : output
     );
     const valuesList = actions.map(
-      (el) => new ValueLabel(el)
+      (el, i) => new ValueLabel(el, i)
     );
     this.append(...valuesList);
   };
