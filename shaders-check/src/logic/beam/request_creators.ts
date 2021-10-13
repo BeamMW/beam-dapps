@@ -21,15 +21,15 @@ export const RC = {
       }
     } as const);
   },
-  invokeData: (id: ReqID, data: number[]): ApiArgs => ({
+  invokeData: (id: string, data: number[]): ApiArgs => ({
     callID: id,
     method: ReqMethods.PROCESS_INVOKE_DATA,
     params: {
       data
     }
   } as const),
-  txStatus: (txId: string): ApiArgs => ({
-    callID: ReqID.TX_STATUS,
+  txStatus: (id: string, txId: string): ApiArgs => ({
+    callID: id,
     method: ReqMethods.TX_STATUS,
     params: {
       txId

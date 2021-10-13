@@ -43,9 +43,12 @@ export class OutputPlace extends BaseComponent {
   };
 
   inform = (res: APIResponse): void => {
+    const THIS_ACTION = this.action;
+    const THIS_INVOKE_DATA = `${ReqID.INVOKE_DATA}_${THIS_ACTION}`;
+    const THIS_TX_STATUS = `${ReqID.TX_STATUS}_${THIS_ACTION}`;
     switch (res.id) {
-      case this.action:
-        FORM.dispatch(deleteOnloadAC(this.action));
+      case THIS_ACTION:
+        FORM.dispatch(deleteOnloadAC(THIS_ACTION));
         if (isJson(res.result.output)) {
           const treeBlock = new TreeBuilder(JSON.parse(res.result.output));
           this.child.replace(treeBlock);
@@ -60,16 +63,16 @@ export class OutputPlace extends BaseComponent {
           this.child = noJsonBlock;
         }
         if (res.result.raw_data) {
-          BEAM.callApi(RC.invokeData(ReqID.INVOKE_DATA, res.result.raw_data));
+          BEAM.callApi(RC.invokeData(THIS_INVOKE_DATA, res.result.raw_data));
         }
         break;
-      case ReqID.INVOKE_DATA:
-        BEAM.callApi(RC.txStatus(res.result.txid));
+      case THIS_INVOKE_DATA:
+        BEAM.callApi(RC.txStatus(THIS_TX_STATUS, res.result.txid));
         break;
-      case ReqID.TX_STATUS:
+      case THIS_TX_STATUS:
         if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
           setTimeout(() => {
-            BEAM.callApi(RC.txStatus(res.result.txId));
+            BEAM.callApi(RC.txStatus(THIS_TX_STATUS, res.result.txId));
           }, ShaderProps.TX_CHECK_INTERVAL);
         } else {
           console.log(res);
