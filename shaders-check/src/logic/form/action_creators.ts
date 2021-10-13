@@ -1,21 +1,17 @@
-import { ActionPayloadArgsType, ParamPayloadArgsType } from 'formProps';
-import BaseComponent from '../../components/shared/base/base.component';
 import { FormActions } from '../../constants/variables';
 
 export const setRoleAC = (payload:string) => (
-  { action: FormActions.SET_ROLE, payload }
+  { action: FormActions.SET_ROLE, payload } as const
 );
-export const setActionAC = (payload: ActionPayloadArgsType) => (
-  { action: FormActions.SET_ACTION, payload }
+export const setOnloadAC = (payload: string) => (
+  { action: FormActions.SET_ONLOAD, payload } as const
 );
-export const setParamValueAC = (payload:ParamPayloadArgsType) => (
-  { action: FormActions.SET_PARAM_VALUE, payload }
-);
-
-export const unsubscribeBeforeRemoveAC = (payload:BaseComponent) => (
-  { action: FormActions.UNSUBSCRIBE, payload }
+export const deleteOnloadAC = (payload: string) => (
+  { action: FormActions.DELETE_ONLOAD, payload } as const
 );
 
-export type ActionTypes = ReturnType<typeof setRoleAC
-| typeof setActionAC
-| typeof setParamValueAC>;
+export type ActionTypes = ReturnType<
+  typeof setRoleAC
+| typeof setOnloadAC
+| typeof deleteOnloadAC
+>;

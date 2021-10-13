@@ -1,0 +1,23 @@
+.output__place {
+  .list .list {
+    display: none;
+    color: #da68f5;
+  }
+
+  .visible {
+    display: block !important;
+  }
+
+  .list .key {
+    color: #da68f5;
+  }
+
+  .list .type {
+    color: #99ff99;
+  }
+
+  .list li {
+    list-style-type: none;
+    color: #00f6d2;
+  }
+}

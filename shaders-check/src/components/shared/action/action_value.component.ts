@@ -21,7 +21,7 @@ export class Value extends BaseComponent {
     const actions = Object.entries(
       this.role
         ? output?.roles?.[this.role] as IActionOutput
-        : output as unknown as IActionOutput
+        : output
     );
     const valuesList = actions.map(
       (el) => new ValueLabel(el)

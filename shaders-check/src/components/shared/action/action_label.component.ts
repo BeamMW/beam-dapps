@@ -12,23 +12,23 @@ import {
 import { FORM } from '../../../controllers/form.controller';
 import {
   OutputPlace
-} from '../../output/output_place.component';
+} from '../output/output_place.component';
 import { ValueInput } from './action_input.component';
 import { Clear } from '../clear/clear.component';
 import { ParamsInput } from '../params/params_input.component';
 
 export class ValueLabel extends BaseComponent {
-  role = FORM.getRole();
-
-  action: string;
-
-  params: IActionParams;
+  role = FORM.getState().role;
 
   private readonly observers: Set<ParamsInput>;
 
-  clear: Clear;
+  private readonly action: string;
 
-  submit: Submit;
+  private params: IActionParams;
+
+  private readonly clear: Clear;
+
+  private readonly submit: Submit;
 
   constructor(action: [string, IActionParams]) {
     super(Tags.LABEL, ['method__label', 'custom-radio']);
@@ -91,7 +91,6 @@ export class ValueLabel extends BaseComponent {
       });
       const values = Object.values(this.params);
       this.notifyAll();
-      console.log(this.params);
       this.setActiveButton(values.findIndex((el) => el.length) !== -1);
     });
   };
@@ -99,10 +98,8 @@ export class ValueLabel extends BaseComponent {
   setActiveButton = (isActive: boolean):void => {
     if (isActive) {
       this.clear.classList.add('active');
-      // this.submit.classList.add('active');
     } else {
       this.clear.classList.remove('active');
-      // this.submit.classList.remove('active');
     }
   };
 

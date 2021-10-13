@@ -67,6 +67,11 @@ declare module 'formProps' {
     params: IActionParams
   };
 
+  export interface IFormState {
+    role: string | null;
+    onload: Set<string>
+  }
+
   export type InformArgs = {
     formAction: FormActions
     currentRole: string;
@@ -126,9 +131,9 @@ declare module 'beamApiProps' {
     [key:string | number]: never | string | number | ResponseResultType
   };
 
-  export interface IOutput {
+  export type IOutput = {
     [key: string]: IRoleOutput | IActionOutput;
-  }
+  } | IActionOutput;
 
   export type CallApiType =
   (obj:ApiArgs) => void;

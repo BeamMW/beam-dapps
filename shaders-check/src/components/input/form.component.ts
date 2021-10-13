@@ -1,4 +1,5 @@
 import { IOutput } from 'beamApiProps';
+import { IFormState } from 'formProps';
 import { FormApi } from '../../logic/form/form.logic';
 import BaseComponent from '../shared/base/base.component';
 import { Tags } from '../../constants/html_elements';
@@ -8,6 +9,8 @@ import { FORM } from '../../controllers/form.controller';
 
 export class Form extends BaseComponent {
   action: BaseComponent;
+
+  role: string | null;
 
   output: IOutput;
 
@@ -21,19 +24,23 @@ export class Form extends BaseComponent {
       getRole: formApi.getRole
     });
     FORM.addObserver(this);
+    this.role = FORM.getState().role;
     const role = new Role(this.output);
     this.action = new BaseComponent(Tags.DIV, ['action-params']);
-    this.action.append(new Value(this.output, FORM.getRole()));
+    this.action.append(new Value(this.output, FORM.getState().role));
     this.append(role, this.action);
     this.element.addEventListener('submit', (e:Event) => {
       e.preventDefault();
     });
   }
 
-  informForm = (role:string | null):void => {
-    this.action.removeAll();
-    this.action.append(new Value(
-      this.output, role
-    ));
+  informForm = (state: IFormState):void => {
+    if (state.role !== this.role) {
+      this.role = state.role;
+      this.action.removeAll();
+      this.action.append(new Value(
+        this.output, state.role
+      ));
+    }
   };
 }

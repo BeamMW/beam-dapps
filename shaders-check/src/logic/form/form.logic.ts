@@ -4,33 +4,32 @@ import {
 } from 'beamApiProps';
 import {
   AddObsever,
-  FormDispatch
+  FormDispatch,
+  IFormState
 } from 'formProps';
 import BaseComponent from '../../components/shared/base/base.component';
 import { FormActions } from '../../constants/variables';
 import { ActionTypes } from './action_creators';
+
+const initialState: IFormState = {
+  role: null,
+  onload: new Set()
+};
 
 export class FormApi {
   private readonly output: IOutput;
 
   private readonly observers: Set<BaseComponent>;
 
-  role: string | null = null;
+  private state: IFormState = { ...initialState };
 
   constructor(output: IOutput) {
     this.output = output;
     this.observers = new Set();
     if (this.output.roles) {
       const roles = Object.entries(this.output.roles);
-      this.role = roles[0]?.[0] as string;
+      this.state.role = roles[0]?.[0] as string;
     }
-    // const actions = Object.keys(roles[0]?.[1] as IActionOutput;
-    // this.currentAction = actions[0] as string;
-    // this.currentParams = paramsObjectCreator(
-    //   this.output.roles?.[this.currentRole]?.[
-    //     this.currentAction
-    //   ] as IActionParams
-    // );
   }
 
   addObserver: AddObsever = (component): void => {
@@ -47,25 +46,37 @@ export class FormApi {
 
   notifyAll = (): void => this.observers.forEach((subs) => {
     if (subs.informForm) {
-      subs.informForm(this.role);
+      subs.informForm(this.state);
     }
   });
 
   dispatch: FormDispatch = (obj): void => {
-    this.reducer(obj);
+    setTimeout(() => {
+      this.reducer(obj);
+      this.notifyAll();
+    });
   };
 
-  getRole = ():string | null => this.role;
+  getRole = ():IFormState => this.state;
 
   reducer = (obj: ActionTypes): void => {
+    const newState = {
+      ...this.state, onload: new Set(this.state.onload)
+    };
     const { action, payload } = obj;
     switch (action) {
       case FormActions.SET_ROLE:
-        this.role = payload as string;
+        newState.role = payload;
+        break;
+      case FormActions.SET_ONLOAD:
+        newState.onload.add(payload);
+        break;
+      case FormActions.DELETE_ONLOAD:
+        newState.onload.delete(payload);
         break;
       default:
         break;
     }
-    this.notifyAll();
+    this.state = newState;
   };
 }

@@ -26,12 +26,4 @@ export class ParamsInput extends BaseComponent {
       el.value = params[this.param] as string;
     }
   };
-
-  // formInform = ({ formAction, currentParams }:InformArgs):void => {
-  //   if (formAction === FormActions.SET_PARAM_VALUE) {
-  //     this.setAttributes({
-  //       value: currentParams[this.param]
-  //     });
-  //   }
-  // };
 }

@@ -1,29 +1,41 @@
 .header {
-    height: 132px;
     background-color: rgba(255, 255, 255, 0.1);
     border: none;
     display: flex;
     align-items: center;
     border-radius: 10px;
+    padding: 10px;
 
     &__app {
-        width: 300px;
+        width: 100%;
+        padding: 12px;
+        max-width: 300px;
+        display: flex;
         height: 112px;
         background-color: rgba(255, 255, 255, 0.1);
         border-radius: 10px;
-        margin: 0 10px 0 10px;
-        &-icon{
-            position: relative;
-            top: 1px;
-            left: 265px;
+        img{
+            display: block;
+            height: 50%;
+            align-self: center;
+            width: auto;
+            margin: 0 auto;
+        }
+        &-icon, &-fake-icon{
+            align-self: start;
+            display: block;
+            line-height: 0;
+        }
+        &-fake-icon{
+            width: 12px;
+            height: 100%;
         }
     }
     &__info {
         width: 68%;
-        height: 112px;
         // background-color: rgba(255, 255, 255, 0.1);
+        margin-left: 12px;
         border-radius: 10px;
-        margin: 0 10px 0 10px;
         display: flex;
     }
     .info__titles {

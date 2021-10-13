@@ -1,8 +1,11 @@
 import { ResponseResultType } from 'beamApiProps';
 import { Tags, TreeIcons } from '../../../constants/html_elements';
 import BaseComponent from '../base/base.component';
+import './tree_builder.scss';
 
 export class TreeBuilder extends BaseComponent {
+  nextBranch?: TreeBuilder;
+
   constructor(result:ResponseResultType) {
     super(Tags.UL, ['data', 'list']);
     this.getStruct(result);
@@ -15,10 +18,12 @@ export class TreeBuilder extends BaseComponent {
       const li = new BaseComponent(Tags.LI);
       const keySpan = new BaseComponent(Tags.SPAN, ['key']);
       keySpan.element.innerText = `${key}:`;
+
       if (typeof value === 'object') {
-        const nextBranch = new TreeBuilder(value as ResponseResultType);
+        this.nextBranch = new TreeBuilder(value as ResponseResultType);
         const button = new BaseComponent(Tags.BUTTON);
         const type = new BaseComponent(Tags.SPAN, ['type']);
+
         type.element.innerText = Array.isArray(value)
           ? TreeIcons.ARRAY
           : TreeIcons.OBJECT;
@@ -28,14 +33,15 @@ export class TreeBuilder extends BaseComponent {
           target.innerHTML = target.innerHTML === TreeIcons.PLUS
             ? TreeIcons.MINUS
             : TreeIcons.PLUS;
-          nextBranch.element.classList.toggle('visible');
+          this.nextBranch?.element.classList.toggle('visible');
         });
-        li.append(keySpan, type, button, nextBranch);
+        li.append(keySpan, type, button, this.nextBranch);
       } else {
         const valueSpan = new BaseComponent(Tags.SPAN);
         valueSpan.element.innerText = String(value);
         li.append(keySpan, valueSpan);
       }
+
       this.append(li);
     });
   };

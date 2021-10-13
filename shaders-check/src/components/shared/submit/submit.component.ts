@@ -1,8 +1,10 @@
+import { FORM } from '../../../controllers/form.controller';
 import { RC } from '../../../logic/beam/request_creators';
 import { BEAM } from '../../../controllers/beam.controller';
 import BaseComponent from '../base/base.component';
 import { Tags } from '../../../constants/html_elements';
 import { SVG } from '../../../constants/svg.icons';
+import { setOnloadAC } from '../../../logic/form/action_creators';
 
 export class Submit extends BaseComponent {
   constructor(action:string, callback: () => string) {
@@ -12,6 +14,7 @@ export class Submit extends BaseComponent {
     this.element.setAttribute('type', 'submit');
     this.element.addEventListener('click', () => {
       BEAM.callApi(RC.submitResult(action, callback()));
+      FORM.dispatch(setOnloadAC(action));
     });
   }
 }
