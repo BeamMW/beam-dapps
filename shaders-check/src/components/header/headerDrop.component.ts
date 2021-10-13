@@ -5,11 +5,11 @@ import { InnerTexts, Tags } from '../../constants/html_elements';
 import { SVG } from '../../constants/svg.icons';
 import BaseComponent from '../shared/base/base.component';
 
-export default class ButtonDrop extends BaseComponent {
+export default class HeaderDrop extends BaseComponent {
   constructor() {
-    super(Tags.LABEL, ['formUpload']);
+    super(Tags.LABEL, ['header__app']);
     const input = new BaseComponent(Tags.INPUT, ['input']);
-    const label = new BaseComponent(Tags.DIV, ['label']);
+    const label = new BaseComponent(Tags.DIV, ['header__app-label']);
     const icon = new BaseComponent(Tags.DIV, ['icon']);
     const iconArr = new BaseComponent(Tags.DIV, ['iconArr']);
     const labelText = new BaseComponent(Tags.DIV, ['labelText']);
@@ -22,12 +22,12 @@ export default class ButtonDrop extends BaseComponent {
     });
     label.append(input);
     label.setAttributes({ for: 'chooseWasm' });
-    iconArr.element.innerHTML = SVG.iconArrow;
+    iconArr.element.innerHTML = SVG.iconFile;
     labelText.element.textContent = 'load a file';
-    label.append(iconArr, labelText);
+    label.append(iconArr);
     icon.element.innerHTML = SVG.iconDrop;
     span.element.innerText = InnerTexts.DROP_BUTTON_TXT;
-    this.append(label, span, icon);
+    this.append(label, span);
     this.element.addEventListener('dragover', dragoverHandler);
     this.element.addEventListener('dragleave', dragleaveHandler);
     this.element.addEventListener(

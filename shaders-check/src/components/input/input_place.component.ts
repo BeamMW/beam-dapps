@@ -12,7 +12,12 @@ export class InputPlace extends BaseComponent {
   }
 
   inform = (res: APIResponse): void => {
-    if (res.id === ReqID.FORM_GENERATOR) {
+    if (res.error) {
+      console.log(res.error?.code);
+      if (this.element.hasChildNodes()) {
+        this.element.remove();
+      }
+    } else if (res.id === ReqID.FORM_GENERATOR) {
       this.removeAll();
       this.append(new Form(JSON.parse(res.result.output)));
     }

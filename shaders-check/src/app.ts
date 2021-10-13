@@ -3,7 +3,7 @@ import MainPage from './components/drop_page/drop_page.component';
 import './scss/main.scss';
 import { BEAM } from './controllers/beam.controller';
 import Container from './components/main/main.component';
-import Loader from './components/loader/loader.component';
+import Loader from './components/Loader/loader.component';
 
 export class App {
   private readonly rootElement: HTMLElement;

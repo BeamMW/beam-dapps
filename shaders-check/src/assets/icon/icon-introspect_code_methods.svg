@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="39px" viewBox="0 0 30 39" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon-introspect_code_methods</title>
+    <g id="Page-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.3">
+        <g id="introspect_code_methods" transform="translate(-235.000000, -167.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <g id="document" transform="translate(235.000000, 167.000000)">
+                <path d="M20.6923077,11.4257812 C19.2077692,11.4257812 18,10.2298066 18,8.75976562 L18,0 L4.23076923,0 C1.89792308,0 0,1.87938867 0,4.18945312 L0,34.8105469 C0,37.1206113 1.89792308,39 4.23076923,39 L25.7692308,39 C28.1020769,39 30,37.1206113 30,34.8105469 L30,11.4257812 L20.6923077,11.4257812 Z" id="Shape"></path>
+                <path d="M20.5,8.60449644 C20.5,8.8225771 20.6767119,9 20.8939186,9 L29.9,9 C29.6838175,8.59927579 29.405711,8.23122017 29.0715893,7.91378901 L21.4750272,0.69806379 C21.1802186,0.418047267 20.8518481,0.184462862 20.5,0 L20.5,8.60449644 L20.5,8.60449644 Z" id="Path"></path>
+            </g>
+        </g>
+    </g>
+</svg>
