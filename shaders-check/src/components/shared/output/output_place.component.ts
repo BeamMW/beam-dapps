@@ -13,7 +13,7 @@ import { RC } from '../../../logic/beam/request_creators';
 import { BEAM } from '../../../controllers/beam.controller';
 import './output_place.scss';
 import { FORM } from '../../../controllers/form.controller';
-import Loader from '../../loader/loader.component';
+import Loader from '../../Loader/loader.component';
 import { deleteOnloadAC } from '../../../logic/form/action_creators';
 
 export class OutputPlace extends BaseComponent {

@@ -6,12 +6,15 @@ import { BEAM } from '../../controllers/beam.controller';
 import BaseComponent from '../shared/base/base.component';
 import fileImage from '../../assets/icon/file.svg';
 import './header.scss';
+import HeaderDrop from './headerDrop.component';
 
 export default class Header extends BaseComponent {
+  headerDrop: HeaderDrop;
+
   constructor() {
     super(Tags.DIV, ['header']);
     BEAM.addObservers(this);
-    const app = new BaseComponent(Tags.DIV, ['header__app']);
+    this.headerDrop = new HeaderDrop();
     const img = new BaseComponent(Tags.IMG, ['header__img']);
     const info = new BaseComponent(Tags.DIV, ['header__info']);
     const infoTitles = new BaseComponent(Tags.DIV, ['info__titles']);
@@ -34,17 +37,17 @@ export default class Header extends BaseComponent {
     dataStatus.textContent = 'connected';
     dataId.textContent = '38234c93434ebb572a22bab82799f9ffa0ddfcc9e0687a2a9a61ce055bdd5c42';
     dataName.textContent = 'Test DAPP';
-    app.append(fake, img, svgIcon);
+    // app.append(fake, img, svgIcon);
     infoTitles.append(titlesStatus, titlesId, titlesName);
     infoData.append(dataStatus, dataId, dataName);
 
     info.append(infoTitles, infoData);
-    this.append(app, info);
+    this.append(this.headerDrop, info);
   }
 
   inform = (res: APIResponse): void => {
-    if (res.id === ReqID.FORM_GENERATOR) {
-      console.log(JSON.parse(res.result.output));
+    if (res.error) {
+      console.log(res.error.code);
     }
   };
 }

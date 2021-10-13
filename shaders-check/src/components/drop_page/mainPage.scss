@@ -68,9 +68,12 @@
   font-stretch: normal;
   font-style: normal;
   line-height: normal;
-
   .labelText {
     padding: 0 0 4px;
+    user-select: none;
+  }
+  .iconArr{
+    user-select: none;
   }
 }
 
@@ -83,6 +86,7 @@
   line-height: normal;
   letter-spacing: normal;
   font-size: 14px;
+  user-select: none;
 }
 
 // .label .text,
