@@ -37,3 +37,25 @@ export const dropHandler = async (
     span.textContent = uploadDragFiles[0]?.name as string;
   }
 };
+export const inputHandler = async (
+  e:any,
+  span: HTMLElement
+): Promise<void> => {
+  e.preventDefault();
+  const target = (<Element>e.target).closest('.upload');
+  target?.classList.remove('active');
+  target?.classList.add('drop');
+  const uploadDragFiles = e.path[0].files as FileList;
+  const files = (await uploadDragFiles[0]?.arrayBuffer()) as ArrayBuffer;
+  BEAM.callApi(RC.createForm(files));
+  if (
+    uploadDragFiles[0]
+    && uploadDragFiles[0].size > ShaderProps.MAX_FILE_SIZE
+  ) {
+    span.textContent = InnerTexts.DROP_SIZE_ERROR_TXT;
+    target?.classList.add('error');
+  } else {
+    target?.classList.remove('active');
+    span.textContent = uploadDragFiles[0]?.name as string;
+  }
+};
