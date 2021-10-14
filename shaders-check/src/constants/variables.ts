@@ -30,3 +30,8 @@ export enum FormActions {
   SET_ONLOAD = 'SET_ONLOAD',
   DELETE_ONLOAD = 'DELETE_ONLOAD'
 }
+
+export enum ErrorResponses {
+  REJECTED = 'Call is rejected by user',
+  CALL_FAILED = 'Contract call failed'
+}

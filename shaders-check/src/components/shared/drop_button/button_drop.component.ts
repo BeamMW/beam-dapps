@@ -1,33 +1,44 @@
 import {
   dragleaveHandler, dragoverHandler, inputHandler
-} from '../../utils/dragndrop_handlers';
-import { InnerTexts, Tags } from '../../constants/html_elements';
-import { SVG } from '../../constants/svg.icons';
-import BaseComponent from '../shared/base/base.component';
+} from '../../../utils/dragndrop_handlers';
+import { InnerTexts, Tags } from '../../../constants/html_elements';
+import BaseComponent from '../base/base.component';
 
-export default class HeaderDrop extends BaseComponent {
-  constructor() {
-    super(Tags.LABEL, ['header__app']);
+export default class ButtonDrop extends BaseComponent {
+  constructor({
+    mainSelector,
+    labelSelector,
+    iconPic,
+    iconArrow
+  } : {
+    mainSelector: string,
+    labelSelector: string,
+    iconPic?: string,
+    iconArrow?:string }) {
+    super(Tags.LABEL, [mainSelector]);
     const input = new BaseComponent(Tags.INPUT, ['input']);
-    const label = new BaseComponent(Tags.DIV, ['header__app-label']);
+    const label = new BaseComponent(Tags.DIV, [labelSelector]);
     const icon = new BaseComponent(Tags.DIV, ['icon']);
     const iconArr = new BaseComponent(Tags.DIV, ['iconArr']);
     const labelText = new BaseComponent(Tags.DIV, ['labelText']);
     const span = new BaseComponent(Tags.SPAN, ['text']);
+
     input.setAttributes({
       id: 'chooseWasm',
       type: 'file',
       accept: '.wasm',
       readonly: ''
     });
-    label.append(input);
     label.setAttributes({ for: 'chooseWasm' });
-    iconArr.element.innerHTML = SVG.iconFile;
-    labelText.element.textContent = 'load a file';
-    label.append(iconArr);
-    icon.element.innerHTML = SVG.iconDrop;
-    span.element.innerText = InnerTexts.DROP_BUTTON_TXT;
-    this.append(label, span);
+    iconArr.innerHTML = iconArrow || '';
+    icon.innerHTML = iconPic || '';
+    labelText.textContent = iconPic ? 'load a file' : '';
+    span.textContent = InnerTexts.DROP_BUTTON_TXT;
+
+    label.append(input);
+    label.append(iconArr, labelText);
+    this.append(label, span, icon);
+
     this.element.addEventListener('dragover', dragoverHandler);
     this.element.addEventListener('dragleave', dragleaveHandler);
     this.element.addEventListener(

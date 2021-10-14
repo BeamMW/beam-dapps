@@ -37,9 +37,10 @@ export class OutputPlace extends BaseComponent {
 
   informForm = (state: IFormState): void => {
     if (state.onload.has(this.action)) {
-      const loadingBlock = new BaseComponent(
-        Tags.DIV, ['output_inner', 'output_loading-block']
-      );
+      const loadingBlock = new BaseComponent(Tags.DIV, [
+        'output_inner',
+        'output_loading-block'
+      ]);
       loadingBlock.append(new Loader());
       this.child.replace(loadingBlock);
       this.child = loadingBlock;
@@ -50,43 +51,45 @@ export class OutputPlace extends BaseComponent {
     const THIS_ACTION = this.action;
     const THIS_INVOKE_DATA = `${ReqID.INVOKE_DATA}_${THIS_ACTION}`;
     const THIS_TX_STATUS = `${ReqID.TX_STATUS}_${THIS_ACTION}`;
-
-    switch (res.id) {
-      case THIS_ACTION:
-        FORM.dispatch(deleteOnloadAC(THIS_ACTION));
-        if (isJson(res.result.output)) {
-          const treeBlock = new TreeBuilder(JSON.parse(res.result.output));
-          this.child.replace(treeBlock);
-          this.child = treeBlock;
-        } else {
-          const noJsonBlock = new BaseComponent(
-            Tags.DIV, ['output_inner', 'output_json-block']
-          );
-          noJsonBlock.innerHTML = `${InnerTexts.NOT_JSON}
+    if (!res.error) {
+      switch (res.id) {
+        case THIS_ACTION:
+          FORM.dispatch(deleteOnloadAC(THIS_ACTION));
+          if (isJson(res.result.output)) {
+            const treeBlock = new TreeBuilder(JSON.parse(res.result.output));
+            this.child.replace(treeBlock);
+            this.child = treeBlock;
+          } else {
+            const noJsonBlock = new BaseComponent(Tags.DIV, [
+              'output_inner',
+              'output_json-block'
+            ]);
+            noJsonBlock.innerHTML = `${InnerTexts.NOT_JSON}
           ${res.result.output}`;
-          this.child.replace(noJsonBlock);
-          this.child = noJsonBlock;
-        }
-        if (res.result.raw_data) {
-          BEAM.callApi(RC.invokeData(THIS_INVOKE_DATA, res.result.raw_data));
-        }
-        break;
+            this.child.replace(noJsonBlock);
+            this.child = noJsonBlock;
+          }
+          if (res.result.raw_data) {
+            BEAM.callApi(RC.invokeData(THIS_INVOKE_DATA, res.result.raw_data));
+          }
+          break;
 
-      case THIS_INVOKE_DATA:
-        BEAM.callApi(RC.txStatus(THIS_TX_STATUS, res.result.txid));
-        break;
+        case THIS_INVOKE_DATA:
+          BEAM.callApi(RC.txStatus(THIS_TX_STATUS, res.result.txid));
+          break;
 
-      case THIS_TX_STATUS:
-        if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
-          setTimeout(() => {
-            BEAM.callApi(RC.txStatus(THIS_TX_STATUS, res.result.txId));
-          }, ShaderProps.TX_CHECK_INTERVAL);
-        } else {
-          console.log(res);
-        }
-        break;
-      default:
-        break;
+        case THIS_TX_STATUS:
+          if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
+            setTimeout(() => {
+              BEAM.callApi(RC.txStatus(THIS_TX_STATUS, res.result.txId));
+            }, ShaderProps.TX_CHECK_INTERVAL);
+          } else {
+            console.log(res);
+          }
+          break;
+        default:
+          break;
+      }
     }
   };
 }

@@ -62,7 +62,7 @@
 }
 
 .action__request{
-    padding-bottom: 20px 0 20px;
+    padding-bottom: 20px;
     margin-right: 20px;
 }
 
@@ -79,9 +79,13 @@
     font-size: 14px;
     font-weight: bold;
     color: #032e49;
+    user-select: none; 
     svg{
         margin-right: 14px;
     }
+    }
+    .button + .button {
+        margin-left: 20px;
     }
 
 .buttons{
@@ -93,7 +97,6 @@
     background-color: rgba(255, 255, 255, 0.1);
     color: rgba(255, 255, 255, 0.3);
     opacity: .3;
-    pointer-events: none;
     &.active{
         opacity: 1;
         color: #fff;
