@@ -63,20 +63,35 @@ void Method_0() {
     }
 }
 
+#pragma pack (push, 1)
+struct PersonalID {
+    ContractID cid;
+    uint8_t context = 0;
+};
+#pragma pack (pop)
+
+PubKey GetKeyByCID(const ContractID &cid) {
+    PersonalID id;
+    id.cid = cid;
+    PubKey key;
+    Env::DerivePk(key, &id, sizeof(id));
+    return key;
+}
+
 uint64_t MergeNumbers(uint32_t upper, uint32_t lower) {
     return (static_cast<uint64_t>(upper) << 32) + lower;
 }
 
 bool IsSeedAlreadyGenerated(const ContractID &cid, AssetID aid, uint64_t seed) {
-    Env::Key_T <NFTGenerator::ComplexKeyWithSeed> start_key, end_key;
-    _POD_(start_key.m_Prefix.m_Cid) = contract_id;
-    _POD_(start_key.m_KeyInContract.key.cid) = cid;
-    start_key.m_KeyInContract.key.aid = aid;
+    Env::Key_T<NFTGenerator::ComplexKeyWithSeed> start_key, end_key;
+    _POD_(start_key.m_Prefix.m_Cid) = cid;
+    _POD_(start_key.m_KeyInContract.key.key) = GetKeyByCID(cid);
+    start_key.m_KeyInContract.key.asset_id = aid;
     start_key.m_KeyInContract.seed = 0;
     _POD_(end_key) = start_key;
     end_key.m_KeyInContract.seed = static_cast<uint64_t>(-1);
 
-    Env::Key_T <NFTGenerator::ComplexKeyWithSeed> key;
+    Env::Key_T<NFTGenerator::ComplexKeyWithSeed> key;
     PubKey holder;
     for (Env::VarReader reader(start_key, end_key); reader.MoveNext_T(key, holder);) {
         if (key.m_KeyInContract.seed == seed) {
@@ -88,19 +103,19 @@ bool IsSeedAlreadyGenerated(const ContractID &cid, AssetID aid, uint64_t seed) {
 }
 
 void GetAllSeeds(const ContractID &cid) {
-    Env::Key_T <NFTGenerator::ComplexKeyWithSeed> start_key, end_key;
-    _POD_(start_key.m_Prefix.m_Cid) = contract_id;
-    _POD_(start_key.m_KeyInContract.key.cid) = cid;
-    start_key.m_KeyInContract.key.aid = 0;
+    Env::Key_T<NFTGenerator::ComplexKeyWithSeed> start_key, end_key;
+    _POD_(start_key.m_Prefix.m_Cid) = cid;
+    _POD_(start_key.m_KeyInContract.key.key) = GetKeyByCID(cid);
+    start_key.m_KeyInContract.key.asset_id = 0;
     start_key.m_KeyInContract.seed = 0;
     _POD_(end_key) = start_key;
-    end_key.m_KeyInContract.key.aid = static_cast<AssetID>(-1);
+    end_key.m_KeyInContract.key.asset_id = static_cast<AssetID>(-1);
 
-    Env::Key_T <NFTGenerator::ComplexKeyWithSeed> key;
+    Env::Key_T<NFTGenerator::ComplexKeyWithSeed> key;
     PubKey holder;
     Env::DocGroup seeds("seeds");
     for (Env::VarReader reader(start_key, end_key); reader.MoveNext_T(key, holder);) {
-        Env::DocAddNum("AssetID", key.m_KeyInContract.key.aid);
+        Env::DocAddNum("AssetID", key.m_KeyInContract.key.asset_id);
         Env::DocAddNum("Seed", key.m_KeyInContract.seed);
         Env::DocAddBlob_T("Holder", holder);
     }
@@ -108,20 +123,19 @@ void GetAllSeeds(const ContractID &cid) {
 
 uint64_t GenerateSeed(const ContractID &cid, AssetID aid, const PubKey &holder) {
     NFTGenerator::SaveNewSeed request;
-    _POD_(request.key) = cid;
 
     std::random_device rd;
     std::mt19937_64 generator(rd());
-    std::uniform_int_distribution <uint32_t> uniform_distro(0, UINT32_MAX);
+    std::uniform_int_distribution<uint32_t> uniform_distro(0, UINT32_MAX);
     uint64_t seed;
 
     do {
         seed = MergeNumbers(uniform_distro(generator), uniform_distro(generator));
     } while (!IsSeedAlreadyGenerated(cid, aid, seed));  // TODO: More deterministic algorithm
 
-    request.key.aid = aid;
-    request.seed = seed;
-    request.holder = holder;
+    request.nft.nft_asset_id = aid;
+    request.nft.seed = seed;
+    request.nft.holder = holder;
     Env::GenerateKernel(&cid, NFTGenerator::SaveNewSeed::s_iMethod,
                         &request, sizeof(request), nullptr, 0,
                         nullptr, 0, "set new seed to nft-generator", 0);
@@ -143,7 +157,7 @@ void SendSeedFromContract(const ContractID &gallery_cid, uint64_t seed, PubKey a
                         &sig, 0, "send new seed to gallery", 0);
 }
 
-void SetSeedPrice(const ContractID &gallery_cid, uint64_t seed, PubKey holder, Price price, AssetID aid) {
+void SetSeedPrice(const ContractID &gallery_cid, uint64_t seed, PubKey holder, NFTGenerator::Price price, AssetID aid) {
 
     // TODO: Add check if holder can change price of the seed
 
@@ -162,7 +176,7 @@ void SetSeedPrice(const ContractID &gallery_cid, uint64_t seed, PubKey holder, P
                         &sig, 0, "set price for seed in gallery", 0);
 }
 
-void BuySeed(gallery_CID, seed, buyer, price) {
+void BuySeed(ContractID cid, int64_t seed, PubKey buyer, NFTGenerator::Price price) {
 
     // TODO: need to include some checking if seed is available to buy
 //    auto id_ = Utils::FromBE(id);
@@ -183,35 +197,20 @@ void BuySeed(gallery_CID, seed, buyer, price) {
 
     FundsChange fc;
     fc.m_Consume = true;
-    fc.m_Amount = price.m_Amount;
-    fc.m_Aid = price.m_Aid;
+    fc.m_Amount = price.amount;
+    fc.m_Aid = price.asset_id;
 
     Env::GenerateKernel(&cid, args.s_iMethod, &args, sizeof(args), &fc, 1, nullptr, 0, "gallery buy seed", 0);
 }
 
-#pragma pack (push, 1)
-struct PersonalID {
-    ContractID cid;
-    uint8_t context = 0;
-};
-#pragma pack (pop)
-
-PubKey GetKeyByCID(const ContractID &cid) {
-    PersonalID id;
-    id.cid = cid;
-    PubKey key;
-    Env::DerivePk(key, &id, sizeof(id));
-    return key;
-}
-
 void Withdraw(const ContractID &contract_id, Amount amount, AssetID asset_id) {
     NFTGenerator::Withdraw request;
-    request.amount = amount;
+    request.value = amount;
     request.key.asset_id = asset_id;
-    request.key.key = GetKeyByCID(contract_id);
+    request.key.user = GetKeyByCID(contract_id);
 
     FundsChange fc;
-    fc.m_Amount = request.amount;
+    fc.m_Amount = request.value;
     fc.m_Aid = request.key.asset_id;
     fc.m_Consume = true;
 
@@ -231,18 +230,18 @@ void Method_1() {
 
     char role[0x10], method[0x10];
 
-    if (!Env::DocGetText("role", role)) {
+    if (!Env::DocGetText("role", role, sizeof(role))) {
         Env::DocAddText("error", "Not providing role");
         return;
     }
 
-    if (!Env::DocGetText("method", method)) {
+    if (!Env::DocGetText("method", method, sizeof(method))) {
         Env::DocAddText("error", "Not providing method");
         return;
     }
 
     if (Env::Strcmp(role, "manager") == 0) {
-        if (Env::Strcmp(method. "create") == 0) {
+        if (Env::Strcmp(method, "create") == 0) {
             Env::GenerateKernel(nullptr, 0, nullptr, 0, nullptr, 0,
                                 nullptr, 0, "create nft-generator", 0);
         } else if (Env::Strcmp(method, "destroy") == 0) {
@@ -251,7 +250,7 @@ void Method_1() {
             Env::GenerateKernel(&cid, 1, nullptr, 0, nullptr, 0, nullptr, 0,
                                 "destroy nft-generator", 0);
         } else if (Env::Strcmp(method, "view") == 0) {
-            EnumAndDumpContracts(NFTGenerator::SID);
+//            EnumAndDumpContracts(NFTGenerator::s_SID);
         } else if (Env::Strcmp(method, "seeds") == 0) {
             ContractID cid;
             Env::DocGet("cid", cid);
@@ -269,7 +268,7 @@ void Method_1() {
             Env::DocGet("holder", holder);
             Env::DocAddNum("New seed: ", GenerateSeed(cid, aid, holder));
         } else if (Env::Strcmp(method, "gallery_send") == 0) {
-            CID gallery_CID;
+            ContractID gallery_CID;
             AssetID aid;
             uint64_t seed;
             PubKey holder;
@@ -279,26 +278,26 @@ void Method_1() {
             Env::DocGet("aid", aid);
             SendSeedFromContract(gallery_CID, seed, holder, aid);
         } else if (Env::Strcmp(method, "set_price") == 0) {
-            CID gallery_CID;
+            ContractID gallery_CID;
             AssetID aid;
             uint64_t seed;
             PubKey holder;
-            Price price;
+            NFTGenerator::Price price;
             Env::DocGet("cid", gallery_CID);
             Env::DocGet("holder", holder);
             Env::DocGet("seed", seed);
-            Env::DocGet("price", price);
+            Env::DocGetBlob("price", &price, sizeof(price));
             Env::DocGet("aid", aid);
             SetSeedPrice(gallery_CID, seed, holder, price, aid);
         } else if (Env::Strcmp(method, "buy") == 0) {
-            CID gallery_CID;
+            ContractID gallery_CID;
             uint64_t seed;
             PubKey buyer;
-            Price price;
+            NFTGenerator::Price price;
             Env::DocGet("cid", gallery_CID);
             Env::DocGet("seed", seed);
             Env::DocGet("holder", buyer);
-            Env::DocGet("price", price);
+            Env::DocGetBlob("price", &price, sizeof(price));
             BuySeed(gallery_CID, seed, buyer, price);
         } else if (Env::Strcmp(method, "withdraw") == 0) {
             ContractID gallery_CID;

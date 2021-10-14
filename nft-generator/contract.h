@@ -11,6 +11,16 @@ namespace NFTGenerator {
 
 #pragma pack (push, 1)
 
+    struct ComplexKey {
+        PubKey key;
+        AssetID asset_id;
+    };
+
+    struct ComplexKeyWithSeed {
+        ComplexKey key;
+        uint64_t seed;
+    };
+
     struct Price {
         Amount amount;
         AssetID asset_id;
