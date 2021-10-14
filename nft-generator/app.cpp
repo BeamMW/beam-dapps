@@ -1,8 +1,11 @@
 #include <random>
 
+namespace internal {
 #include "contract.h"
+}
 
 void Method_0() {
+    using namespace internal;
     Env::DocGroup root("");
     {
         Env::DocGroup roles("roles");
@@ -65,12 +68,13 @@ void Method_0() {
 
 #pragma pack (push, 1)
 struct PersonalID {
-    ContractID cid;
+    internal::ContractID cid;
     uint8_t context = 0;
 };
 #pragma pack (pop)
 
-PubKey GetKeyByCID(const ContractID &cid) {
+internal::PubKey GetKeyByCID(const internal::ContractID &cid) {
+    using namespace internal;
     PersonalID id;
     id.cid = cid;
     PubKey key;
@@ -82,7 +86,8 @@ uint64_t MergeNumbers(uint32_t upper, uint32_t lower) {
     return (static_cast<uint64_t>(upper) << 32) + lower;
 }
 
-bool IsSeedAlreadyGenerated(const ContractID &cid, AssetID aid, uint64_t seed) {
+bool IsSeedAlreadyGenerated(const internal::ContractID &cid, internal::AssetID aid, uint64_t seed) {
+    using namespace internal;
     Env::Key_T<NFTGenerator::ComplexKeyWithSeed> start_key, end_key;
     _POD_(start_key.m_Prefix.m_Cid) = cid;
     _POD_(start_key.m_KeyInContract.key.key) = GetKeyByCID(cid);
@@ -102,7 +107,8 @@ bool IsSeedAlreadyGenerated(const ContractID &cid, AssetID aid, uint64_t seed) {
     return false;
 }
 
-void GetAllSeeds(const ContractID &cid) {
+void GetAllSeeds(const internal::ContractID &cid) {
+    using namespace internal;
     Env::Key_T<NFTGenerator::ComplexKeyWithSeed> start_key, end_key;
     _POD_(start_key.m_Prefix.m_Cid) = cid;
     _POD_(start_key.m_KeyInContract.key.key) = GetKeyByCID(cid);
@@ -121,8 +127,8 @@ void GetAllSeeds(const ContractID &cid) {
     }
 }
 
-uint64_t GenerateSeed(const ContractID &cid, AssetID aid, const PubKey &holder) {
-    NFTGenerator::SaveNewSeed request;
+uint64_t GenerateSeed(const internal::ContractID &cid, internal::AssetID aid, const internal::PubKey &holder) {
+    internal::NFTGenerator::SaveNewSeed request;
 
     std::random_device rd;
     std::mt19937_64 generator(rd());
@@ -136,13 +142,14 @@ uint64_t GenerateSeed(const ContractID &cid, AssetID aid, const PubKey &holder) 
     request.nft.nft_asset_id = aid;
     request.nft.seed = seed;
     request.nft.holder = holder;
-    Env::GenerateKernel(&cid, NFTGenerator::SaveNewSeed::s_iMethod,
+    internal::Env::GenerateKernel(&cid, internal::NFTGenerator::SaveNewSeed::s_iMethod,
                         &request, sizeof(request), nullptr, 0,
                         nullptr, 0, "set new seed to nft-generator", 0);
     return seed;
 }
 
-void SendSeedFromContract(const ContractID &gallery_cid, uint64_t seed, PubKey artist, AssetID aid) {
+void SendSeedFromContract(const internal::ContractID &gallery_cid, uint64_t seed, internal::PubKey artist, internal::AssetID aid) {
+    using namespace internal;
     NFTGenerator::SaveNewSeed args;
     args.nft.seed = seed;
     args.nft.holder = artist;
@@ -157,8 +164,8 @@ void SendSeedFromContract(const ContractID &gallery_cid, uint64_t seed, PubKey a
                         &sig, 0, "send new seed to gallery", 0);
 }
 
-void SetSeedPrice(const ContractID &gallery_cid, uint64_t seed, PubKey holder, NFTGenerator::Price price, AssetID aid) {
-
+void SetSeedPrice(const internal::ContractID &gallery_cid, uint64_t seed, internal::PubKey holder, internal::NFTGenerator::Price price, internal::AssetID aid) {
+    using namespace internal;
     // TODO: Add check if holder can change price of the seed
 
     NFTGenerator::SetPrice args;
@@ -176,8 +183,8 @@ void SetSeedPrice(const ContractID &gallery_cid, uint64_t seed, PubKey holder, N
                         &sig, 0, "set price for seed in gallery", 0);
 }
 
-void BuySeed(ContractID cid, int64_t seed, PubKey buyer, NFTGenerator::Price price) {
-
+void BuySeed(internal::ContractID cid, int64_t seed, internal::PubKey buyer, internal::NFTGenerator::Price price) {
+    using namespace internal;
     // TODO: need to include some checking if seed is available to buy
 //    auto id_ = Utils::FromBE(id);
 //
@@ -203,7 +210,8 @@ void BuySeed(ContractID cid, int64_t seed, PubKey buyer, NFTGenerator::Price pri
     Env::GenerateKernel(&cid, args.s_iMethod, &args, sizeof(args), &fc, 1, nullptr, 0, "gallery buy seed", 0);
 }
 
-void Withdraw(const ContractID &contract_id, Amount amount, AssetID asset_id) {
+void Withdraw(const internal::ContractID &contract_id, internal::Amount amount, internal::AssetID asset_id) {
+    using namespace internal;
     NFTGenerator::Withdraw request;
     request.value = amount;
     request.key.asset_id = asset_id;
@@ -226,6 +234,7 @@ void Withdraw(const ContractID &contract_id, Amount amount, AssetID asset_id) {
 }
 
 void Method_1() {
+    using namespace internal;
     Env::DocGroup root("");
 
     char role[0x10], method[0x10];
