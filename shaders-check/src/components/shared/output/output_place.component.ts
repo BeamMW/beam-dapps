@@ -13,8 +13,8 @@ import { RC } from '../../../logic/beam/request_creators';
 import { BEAM } from '../../../controllers/beam.controller';
 import './output_place.scss';
 import { FORM } from '../../../controllers/form.controller';
-import Loader from '../../Loader/loader.component';
 import { deleteOnloadAC } from '../../../logic/form/action_creators';
+import Loader from '../../loader/loader.component';
 
 export class OutputPlace extends BaseComponent {
   action: string;
@@ -25,10 +25,14 @@ export class OutputPlace extends BaseComponent {
     super(Tags.DIV, ['output__place']);
     BEAM.addObservers(this);
     FORM.addObserver(this);
-    this.action = action;
+    const wrapper = new BaseComponent(Tags.DIV, ['output__container']);
     this.child = new BaseComponent(Tags.DIV, ['output_inner']);
+
+    this.action = action;
     this.child.innerHTML = 'Fill in the parametres to check the method';
-    this.append(this.child);
+
+    wrapper.append(this.child);
+    this.append(wrapper);
   }
 
   informForm = (state: IFormState): void => {
@@ -46,6 +50,7 @@ export class OutputPlace extends BaseComponent {
     const THIS_ACTION = this.action;
     const THIS_INVOKE_DATA = `${ReqID.INVOKE_DATA}_${THIS_ACTION}`;
     const THIS_TX_STATUS = `${ReqID.TX_STATUS}_${THIS_ACTION}`;
+
     switch (res.id) {
       case THIS_ACTION:
         FORM.dispatch(deleteOnloadAC(THIS_ACTION));
@@ -66,9 +71,11 @@ export class OutputPlace extends BaseComponent {
           BEAM.callApi(RC.invokeData(THIS_INVOKE_DATA, res.result.raw_data));
         }
         break;
+
       case THIS_INVOKE_DATA:
         BEAM.callApi(RC.txStatus(THIS_TX_STATUS, res.result.txid));
         break;
+
       case THIS_TX_STATUS:
         if (res.result.status_string === ResTXStatus.IN_PROGRESS) {
           setTimeout(() => {

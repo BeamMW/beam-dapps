@@ -34,7 +34,8 @@ export class ValueLabel extends BaseComponent {
   constructor(action: [string, IActionParams], index: number) {
     super(Tags.LABEL, ['method__label', 'custom-radio']);
     this.action = action[0];
-    this.params = this.paramsObjectCreator(action[1]);
+    const keys = Object.keys(action[1]);
+    this.params = this.paramsObjectCreator(keys);
     this.observers = new Set();
 
     const title = new BaseComponent(Tags.DIV, ['method__label-title']);
@@ -50,10 +51,11 @@ export class ValueLabel extends BaseComponent {
     arrowDown.innerHTML = `${SVG.iconArrowDown}`;
     this.setAttributes({ for: span.innerHTML });
     this.style.background = <string>actionColors[index];
+    requestBlock.style.paddingTop = keys.length ? '14px' : '46px';
 
     this.element.addEventListener('click', this.actionMenuListener);
     this.clear.element.addEventListener('click', () => {
-      this.params = this.paramsObjectCreator(action[1]);
+      this.params = this.paramsObjectCreator(keys);
       this.setActiveButton(false);
       this.notifyAll();
     });
@@ -109,9 +111,9 @@ export class ValueLabel extends BaseComponent {
     subs.valueChanger(this.params);
   });
 
-  paramsObjectCreator = (params: { [key: string]: string }): IActionParams => {
+  paramsObjectCreator = (params: string[]): IActionParams => {
     const obj = {};
-    Object.keys(params).forEach((param) => {
+    params.forEach((param) => {
       Object.defineProperty(obj, param, {
         enumerable: true,
         configurable: true,

@@ -1,5 +1,6 @@
 .params__input {
-    width: 290px;
+    width: 100%;
+    min-width: 290px;
     height: 32px;
     border-radius: 10px;
     background-color: rgba($color: #fff, $alpha: .05);
@@ -28,3 +29,9 @@
     color: rgba($color: #fff, $alpha: 1.0)
 }
 
+
+@media (max-width: 650px) {
+    .params__input{
+        max-width: unset;
+    }  
+}

@@ -1,10 +1,10 @@
 @import 'font';
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 .loader {
   display: inline-block;
@@ -17,30 +17,31 @@ body {
   height: 100%;
   margin: 0 auto;
   background-color: #042548;
+  overflow-y: scroll;
+  padding-left: 10px;
 }
 
 .main {
-  // position: relative;
   z-index: 1;
   margin: 0 auto;
   max-width: 914px;
 }
 
-.form__controls{
+.form__controls {
   width: 50%;
 }
 
-.form{
+.form {
   display: flex;
   flex-direction: column;
   margin: 5px;
 }
 
-.control{
-display: flex;
+.control {
+  display: flex;
 }
 
-.fieldset_shader{
+.fieldset_shader {
   border: 2px dashed #da68f5;
   padding: 9px 49px;
   border-radius: 6px;
@@ -49,71 +50,44 @@ display: flex;
   color: #da68f5;
 }
 
-.form__info_shaders{
+.form__info_shaders {
   display: flex;
 }
 
 .indicator {
   border: 0.5px solid #00446c;
-  border-radius:50%;
+  border-radius: 50%;
   width: 25px;
   height: 25px;
   background-color: #00f6d2;
 }
 
-.container__content{
+.container__content {
   width: 100%;
   display: flex;
 }
 
-.input__place{
+.input__place {
   width: 100%;
 }
 
-.output__place{
+.output__place {
   width: 60%;
 }
 
-.roles__label{
+.roles__label {
   color: yellow;
 }
 
-.input__methods{
-padding-top: 20px;
+.input__methods {
+  padding-top: 20px;
 }
-.params__label{
+.params__label {
   display: block;
 }
 
-.method__label{
+.method__label {
   display: block;
-}
-
-
-// .action-params{
-//   display: flex;
-//   justify-content:space-between;
-// }
-
-.button {
-  cursor: pointer;
-    width: 139px;
-    height: 38px;
-    margin: 20px 35px 2px 0;
-    padding: 11px 30px;
-    border-radius: 50px;
-    background-color: #00f6d2;
-    border: none;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    font-size: 14px;
-    font-weight: bold;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: normal;
-    color: #032e49;
 }
 
 body::-webkit-scrollbar {
@@ -129,29 +103,30 @@ body::-webkit-scrollbar-thumb {
 }
 
 body::-webkit-scrollbar-track {
-  background: transparent;.output__place::-webkit-scrollbar {
+  background: transparent;
+  .output__place::-webkit-scrollbar {
     width: 11px;
     height: 10px;
   }
-  
+
   .output__place::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background: rgba(255, 255, 255, 0.5);
     border: 3px solid rgba(0, 0, 0, 0);
     background-clip: padding-box;
   }
-  
+
   .output__place::-webkit-scrollbar-track {
     background: transparent;
   }
-  
+
   .output__place::-webkit-scrollbar-button {
     display: none;
   }
   .output__place::-webkit-scrollbar-corner {
     background-color: transparent;
     display: none;
-   }
+  }
 }
 
 body::-webkit-scrollbar-button {
@@ -160,8 +135,7 @@ body::-webkit-scrollbar-button {
 body::-webkit-scrollbar-corner {
   background-color: transparent;
   display: none;
- }
-
+}
 
 @keyframes stripes {
   0% {

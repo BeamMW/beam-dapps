@@ -7,7 +7,11 @@ export enum Tags {
   LABEL = 'label',
   BUTTON = 'button',
   UL = 'ul',
-  LI = 'li'
+  LI = 'li',
+  TABLE = 'table',
+  TR = 'tr',
+  TD = 'td',
+  TH = 'th'
 }
 
 export enum TreeIcons {

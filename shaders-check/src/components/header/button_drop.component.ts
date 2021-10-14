@@ -1,5 +1,5 @@
 import {
-  dragleaveHandler, dropHandler, dragoverHandler, inputHandler
+  dragleaveHandler, dragoverHandler, inputHandler
 } from '../../utils/dragndrop_handlers';
 import { InnerTexts, Tags } from '../../constants/html_elements';
 import { SVG } from '../../constants/svg.icons';
@@ -31,7 +31,7 @@ export default class ButtonDrop extends BaseComponent {
     this.element.addEventListener('dragover', dragoverHandler);
     this.element.addEventListener('dragleave', dragleaveHandler);
     this.element.addEventListener(
-      'drop', (e:DragEvent) => dropHandler(e, span.element)
+      'drop', (e:DragEvent) => inputHandler(e, span.element)
     );
     this.element.addEventListener(
       'change', (e:Event) => inputHandler(e, span.element)
