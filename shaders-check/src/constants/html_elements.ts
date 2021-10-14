@@ -1,4 +1,5 @@
 export enum Tags {
+  BODY = 'body',
   DIV = 'div',
   IMG = 'img',
   SPAN = 'span',

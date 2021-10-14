@@ -1,7 +1,7 @@
-import { setRoleAC } from '../../../logic/form/action_creators';
+import { setRoleAC } from '../../../logic/store/action_creators';
 import BaseComponent from '../base/base.component';
 import { Tags } from '../../../constants/html_elements';
-import { FORM } from '../../../controllers/form.controller';
+import { STORE } from '../../../controllers/store.controller';
 
 export class RoleInput extends BaseComponent {
   constructor(role:[string, unknown], index:number) {
@@ -12,7 +12,7 @@ export class RoleInput extends BaseComponent {
     this.element.setAttribute('name', 'role');
     this.element.addEventListener('change', (e:Event) => {
       if ((e.target as HTMLInputElement).checked) {
-        FORM.dispatch(setRoleAC(this.element.id));
+        STORE.dispatch(setRoleAC(this.element.id));
       }
     });
   }

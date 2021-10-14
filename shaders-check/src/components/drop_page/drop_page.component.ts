@@ -4,7 +4,7 @@ import BaseComponent from '../shared/base/base.component';
 import ButtonDrop from '../shared/drop_button/button_drop.component';
 import './mainPage.scss';
 
-export default class MainPage extends BaseComponent {
+export default class DropPage extends BaseComponent {
   buttonDrop: BaseComponent;
 
   constructor() {

@@ -12,9 +12,9 @@ import { TreeBuilder } from '../tree_builder/tree_builder.component';
 import { RC } from '../../../logic/beam/request_creators';
 import { BEAM } from '../../../controllers/beam.controller';
 import './output_place.scss';
-import { FORM } from '../../../controllers/form.controller';
-import { deleteOnloadAC } from '../../../logic/form/action_creators';
-import Loader from '../../loader/loader.component';
+import { STORE } from '../../../controllers/store.controller';
+import { deleteOnloadAC } from '../../../logic/store/action_creators';
+import Loader from '../loader/loader.component';
 
 export class OutputPlace extends BaseComponent {
   action: string;
@@ -24,7 +24,8 @@ export class OutputPlace extends BaseComponent {
   constructor(action: string) {
     super(Tags.DIV, ['output__place']);
     BEAM.addObservers(this);
-    FORM.addObserver(this);
+    STORE.addObserver(this);
+
     const wrapper = new BaseComponent(Tags.DIV, ['output__container']);
     this.child = new BaseComponent(Tags.DIV, ['output_inner']);
 
@@ -54,7 +55,7 @@ export class OutputPlace extends BaseComponent {
     if (!res.error) {
       switch (res.id) {
         case THIS_ACTION:
-          FORM.dispatch(deleteOnloadAC(THIS_ACTION));
+          STORE.dispatch(deleteOnloadAC(THIS_ACTION));
           if (isJson(res.result.output)) {
             const treeBlock = new TreeBuilder(JSON.parse(res.result.output));
             this.child.replace(treeBlock);

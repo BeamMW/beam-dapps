@@ -32,6 +32,13 @@ export default class BaseComponent {
     this.element.innerHTML = str;
   }
 
+  initDom = (node: BaseComponent): (text: string) => void => {
+    const component = node;
+    return (text: string) => {
+      component.textContent = text;
+    };
+  };
+
   append = (...args: (BaseComponent | HTMLElement)[]):void => {
     const nodes = args.map(
       (component) => {
@@ -48,8 +55,12 @@ export default class BaseComponent {
     );
   };
 
-  replace = (component:BaseComponent):void => {
-    this.element.replaceWith(component.element);
+  replace = (component:BaseComponent | HTMLElement):void => {
+    this.element.replaceWith(
+      component instanceof BaseComponent
+        ? component.element
+        : component
+    );
   };
 
   removeAll = ():void => {

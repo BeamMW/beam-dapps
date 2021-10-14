@@ -56,7 +56,7 @@ declare module 'qwebchannel' {
 declare module 'formProps' {
   import { FormActions } from '../constants/variables';
 
-  export type FormDispatch = (obj: ActionTypes) => void;
+  export type FormDispatch = (obj: ActionTypes, sync?: 'sync') => void;
 
   export type AddObsever = (element: BaseComponent) => void;
 
@@ -70,6 +70,7 @@ declare module 'formProps' {
   export interface IFormState {
     role: string | null;
     onload: Set<string>
+    fileName: string;
   }
 
   export type InformArgs = {

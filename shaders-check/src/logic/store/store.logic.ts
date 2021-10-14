@@ -1,5 +1,4 @@
 import {
-  IOutput,
   DeleteObserverType
 } from 'beamApiProps';
 import {
@@ -13,23 +12,17 @@ import { ActionTypes } from './action_creators';
 
 const initialState: IFormState = {
   role: null,
-  onload: new Set()
+  onload: new Set(),
+  fileName: ''
 };
 
-export class FormApi {
-  private readonly output: IOutput;
-
+export class Store {
   private readonly observers: Set<BaseComponent>;
 
   private state: IFormState = { ...initialState };
 
-  constructor(output: IOutput) {
-    this.output = output;
+  constructor() {
     this.observers = new Set();
-    if (this.output.roles) {
-      const roles = Object.entries(this.output.roles);
-      this.state.role = roles[0]?.[0] as string;
-    }
   }
 
   addObserver: AddObsever = (component): void => {
@@ -50,11 +43,9 @@ export class FormApi {
     }
   });
 
-  dispatch: FormDispatch = (obj): void => {
-    setTimeout(() => {
-      this.reducer(obj);
-      this.notifyAll();
-    });
+  dispatch: FormDispatch = (obj, sync): void => {
+    if (sync) this.reducer(obj);
+    else setTimeout(() => this.reducer(obj));
   };
 
   getRole = ():IFormState => this.state;
@@ -69,14 +60,18 @@ export class FormApi {
         newState.role = payload;
         break;
       case FormActions.SET_ONLOAD:
-        newState.onload.add(payload);
+        newState.onload.add(payload as string);
         break;
       case FormActions.DELETE_ONLOAD:
-        newState.onload.delete(payload);
+        newState.onload.delete(payload as string);
+        break;
+      case FormActions.SET_FILENAME:
+        newState.fileName = payload as string;
         break;
       default:
         break;
     }
     this.state = newState;
+    this.notifyAll();
   };
 }

@@ -9,7 +9,7 @@ import { SVG } from '../../../constants/svg.icons';
 import {
   Submit
 } from '../submit/submit.component';
-import { FORM } from '../../../controllers/form.controller';
+import { STORE } from '../../../controllers/store.controller';
 import {
   OutputPlace
 } from '../output/output_place.component';
@@ -19,7 +19,7 @@ import { ParamsInput } from '../params/params_input.component';
 import { actionColors } from './action.data';
 
 export class ValueLabel extends BaseComponent {
-  role = FORM.getState().role;
+  role = STORE.getState().role;
 
   private readonly observers: Set<ParamsInput>;
 

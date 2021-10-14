@@ -1,6 +1,6 @@
 import { AddObsever, FormDispatch, IFormState } from 'formProps';
 
-export class FORM {
+export class STORE {
   static addObserver: AddObsever;
 
   static dispatch: FormDispatch;
@@ -12,8 +12,8 @@ export class FORM {
     dispatch: FormDispatch,
     getRole: () => IFormState
   }): void => {
-    FORM.addObserver = obj.addObserver;
-    FORM.dispatch = obj.dispatch;
-    FORM.getState = obj.getRole;
+    STORE.addObserver = obj.addObserver;
+    STORE.dispatch = obj.dispatch;
+    STORE.getState = obj.getRole;
   };
 }

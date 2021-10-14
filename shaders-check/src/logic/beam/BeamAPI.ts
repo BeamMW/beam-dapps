@@ -41,7 +41,7 @@ export class BeamAPI {
     });
   };
 
-  onApiResult = (json: string): void => {
+  private readonly onApiResult = (json: string): void => {
     const parsed = JSON.parse(json);
     console.log('response', parsed);
     this.observers.forEach((element: BaseComponent) => {
@@ -53,7 +53,7 @@ export class BeamAPI {
     this.observers.delete(component);
   };
 
-  readonly loadAPI = async (): Promise<void> => {
+  readonly loadAPI = async (): Promise<BeamAPI> => {
     const { qt } = window;
     const ua = navigator.userAgent;
     if (/QtWebEngine/i.test(ua)) {
@@ -84,16 +84,11 @@ export class BeamAPI {
         }, window.origin);
       });
     }
+    return this;
   };
 
-  initShader = (shader:ArrayBuffer):void => {
+  readonly initShader = (shader:ArrayBuffer):void => {
     this.contract = shader;
-    // if (window.BeamApi) {
-    //   window.BeamApi.initializeShader(
-    //     '50ab294a5ff6cedcfd74860898faf3f00967b9f1296c94f19dec24f2ab55595f',
-    //     'faucet'
-    //   );
-    // }
   };
 
   readonly callApi = (

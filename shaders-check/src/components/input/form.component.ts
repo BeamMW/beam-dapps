@@ -1,11 +1,11 @@
 import { IOutput } from 'beamApiProps';
 import { IFormState } from 'formProps';
-import { FormApi } from '../../logic/form/form.logic';
 import BaseComponent from '../shared/base/base.component';
 import { Tags } from '../../constants/html_elements';
 import { Value } from '../shared/action/action_value.component';
 import { Role } from '../shared/role/role_value.component';
-import { FORM } from '../../controllers/form.controller';
+import { STORE } from '../../controllers/store.controller';
+import { setRoleAC } from '../../logic/store/action_creators';
 
 export class Form extends BaseComponent {
   action: BaseComponent;
@@ -17,16 +17,10 @@ export class Form extends BaseComponent {
   constructor(output: IOutput) {
     super(Tags.FORM, ['form']);
     this.output = output;
-    const formApi = new FormApi(output);
+    STORE.addObserver(this);
 
-    FORM.setApiHandlers({
-      addObserver: formApi.addObserver,
-      dispatch: formApi.dispatch,
-      getRole: formApi.getRole
-    });
-    FORM.addObserver(this);
-
-    this.roleValue = FORM.getState().role;
+    this.roleValue = this.setRole(output);
+    STORE.dispatch(setRoleAC(this.roleValue), 'sync');
 
     this.action = new BaseComponent(Tags.DIV, ['action-params']);
     const role = new Role(this.output);
@@ -35,9 +29,16 @@ export class Form extends BaseComponent {
       e.preventDefault();
     });
 
-    this.action.append(new Value(this.output, FORM.getState().role));
+    this.action.append(new Value(this.output, STORE.getState().role));
     this.append(role, this.action);
   }
+
+  setRole = (output:IOutput):string | null => {
+    if (output.roles) {
+      const roles = Object.entries(output.roles);
+      return roles[0]?.[0] as string;
+    } return null;
+  };
 
   informForm = (state: IFormState):void => {
     if (state.role !== this.roleValue) {
