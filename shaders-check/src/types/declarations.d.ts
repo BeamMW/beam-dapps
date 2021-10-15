@@ -69,8 +69,9 @@ declare module 'formProps' {
 
   export interface IFormState {
     role: string | null;
-    onload: Set<string>
+    onload: Set<string>;
     fileName: string;
+    txs: Map<string, string>;
   }
 
   export type InformArgs = {

@@ -8,12 +8,10 @@ import { STORE } from './controllers/store.controller';
 
 export class App {
   constructor(rootElement: HTMLElement) {
-    const beam = new BeamAPI();
-    const store = new Store();
     const loader = new Loader();
     rootElement.append(loader.element);
-
-    beam.loadAPI().then((data:BeamAPI) => {
+    new BeamAPI().loadAPI().then((data:BeamAPI) => {
+      const store = new Store();
       STORE.setApiHandlers({
         addObserver: store.addObserver,
         dispatch: store.dispatch,

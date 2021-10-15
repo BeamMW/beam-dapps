@@ -63,7 +63,6 @@ export default class ButtonDrop extends BaseComponent {
   setContract = (files: ArrayBuffer, fileName: string):void => {
     BEAM.callApi(RC.createForm(files));
     STORE.dispatch(setFileNameAC(fileName));
-    console.log(fileName);
   };
 
   informForm = (state: IFormState):void => {

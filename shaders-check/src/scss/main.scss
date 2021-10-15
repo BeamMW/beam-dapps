@@ -6,9 +6,8 @@
   box-sizing: border-box;
 }
 
-.loader {
-  display: inline-block;
-  margin: 0 auto;
+html {
+  height: 100%;
 }
 
 body {
@@ -21,7 +20,15 @@ body {
   padding-left: 10px;
 }
 
+.loader {
+  display: inline-block;
+  margin: 0 auto;
+}
+
+
+
 .main {
+  height: 100%;
   z-index: 1;
   margin: 0 auto;
   max-width: 914px;

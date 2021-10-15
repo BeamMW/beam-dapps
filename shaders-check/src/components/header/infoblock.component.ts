@@ -16,7 +16,7 @@ export default class InfoBlock extends BaseComponent {
     const dataName = new BaseComponent(Tags.TD, ['info__data']);
 
     const trStatus = new BaseComponent(Tags.TR);
-    const trId = new BaseComponent(Tags.TR);
+    // const trId = new BaseComponent(Tags.TR);
     const trName = new BaseComponent(Tags.TR);
 
     titlesStatus.textContent = 'Connect to contract status:';
@@ -27,14 +27,14 @@ export default class InfoBlock extends BaseComponent {
     dataName.textContent = 'Test DAPP';
 
     trStatus.append(titlesStatus, dataStatus);
-    trId.append(titlesId, dataId);
+    // trId.append(titlesId, dataId);
     trName.append(titlesName, dataName);
-    this.append(trStatus, trId, trName);
+    this.append(trStatus, trName);
   }
 
   inform = (res: APIResponse): void => {
     if (res.error) {
-      console.log(res.error.code);
+      // TODO
     }
   };
 }

@@ -6,3 +6,6 @@ export const isJson = (str:unknown):boolean => {
   }
   return true;
 };
+
+export const toDOMParser = (str: string): HTMLElement => new DOMParser()
+  .parseFromString(str, 'application/xml').documentElement;

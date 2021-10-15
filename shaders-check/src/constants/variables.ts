@@ -1,6 +1,7 @@
 export enum ShaderProps {
   MAX_FILE_SIZE = 5000000,
-  TX_CHECK_INTERVAL = 3000
+  TX_CHECK_INTERVAL = 3000,
+  MAX_TX_COUNT = 3
 }
 
 export enum ReqID {
@@ -29,7 +30,9 @@ export enum FormActions {
   UNSUBSCRIBE = 'UNSUBSCRIBE',
   SET_ONLOAD = 'SET_ONLOAD',
   DELETE_ONLOAD = 'DELETE_ONLOAD',
-  SET_FILENAME = 'SET_FILENAME'
+  SET_FILENAME = 'SET_FILENAME',
+  SET_TXS = 'SET_TXS',
+  REMOVE_TXS = 'REMOVE_TXS'
 }
 
 export enum ErrorResponses {
