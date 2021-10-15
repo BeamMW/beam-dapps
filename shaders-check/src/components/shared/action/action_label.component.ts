@@ -31,6 +31,8 @@ export class ValueLabel extends BaseComponent {
 
   private readonly submit: Submit;
 
+  methodAction: BaseComponent;
+
   constructor(action: [string, IActionParams], index: number) {
     super(Tags.LABEL, ['method__label', 'custom-radio']);
     this.action = action[0];
@@ -40,7 +42,7 @@ export class ValueLabel extends BaseComponent {
 
     const title = new BaseComponent(Tags.DIV, ['method__label-title']);
     const arrowDown = new BaseComponent(Tags.DIV, ['arrowDown']);
-    const methodAction = new BaseComponent(Tags.DIV, ['action__place']);
+    this.methodAction = new BaseComponent(Tags.DIV, ['action__place']);
     const requestBlock = new BaseComponent(Tags.DIV, ['action__request']);
     const span = new BaseComponent(Tags.SPAN);
     const buttons = new BaseComponent(Tags.DIV, ['buttons']);
@@ -67,7 +69,7 @@ export class ValueLabel extends BaseComponent {
         this.addObserver
       ), buttons
     );
-    methodAction.append(
+    this.methodAction.append(
       requestBlock,
       new OutputPlace(this.action)
     );
@@ -75,13 +77,19 @@ export class ValueLabel extends BaseComponent {
       new ValueInput(action),
       span, arrowDown
     );
-    this.append(title, methodAction);
+    this.append(title, this.methodAction);
   }
 
   actionMenuListener = (e: Event):void => {
     const target = e.target as HTMLElement;
     if (target.closest('.method__label-title')) {
       this.classList.toggle('active');
+      const panel = this.methodAction.element;
+      if (panel.style.maxHeight) {
+        panel.style.maxHeight = '';
+      } else {
+        panel.style.maxHeight = `${panel.scrollHeight + 25}px`;
+      }
     }
   };
 
