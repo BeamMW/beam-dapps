@@ -1,4 +1,7 @@
 .output__place {
+   * {
+      user-select: text;
+    }
   .bracket {
     color: #ffffff;
   }

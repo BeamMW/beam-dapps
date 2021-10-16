@@ -23,7 +23,7 @@ export class Params extends BaseComponent {
       params as IActionParams
     );
     const valuesList = list.map(
-      (el) => new ParamsLabel(el[0], addObserver)
+      (el) => new ParamsLabel(el, addObserver)
     );
     if (valuesList.length) this.append(...valuesList);
   };

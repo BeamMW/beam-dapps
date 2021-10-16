@@ -3,16 +3,27 @@ import BaseComponent from '../base/base.component';
 import { ParamsInput } from './params_input.component';
 
 export class ParamsLabel extends BaseComponent {
-  input: ParamsInput;
-
   constructor(
-    role:string,
+    param:[string, string],
     addObserver: (component: ParamsInput) => void
   ) {
     super(Tags.LABEL, ['params__label']);
-    this.input = new ParamsInput(role, addObserver);
-    this.textContent = `${role}`;
-    this.setAttributes({ for: role });
-    this.append(this.input);
+    const [key, value] = param;
+    this.setAttributes({ for: key });
+    this.append(
+      this.createParamName(key, value), new ParamsInput(key, addObserver)
+    );
   }
+
+  createParamName = (
+    key: string, value: string
+  ):BaseComponent => {
+    const nameComponent = new BaseComponent(Tags.DIV, ['name']);
+    const keyComponent = new BaseComponent(Tags.SPAN);
+    const valueComponent = new BaseComponent(Tags.SPAN);
+    keyComponent.innerHTML = `${key}:`;
+    valueComponent.innerHTML = value;
+    nameComponent.append(keyComponent, valueComponent);
+    return nameComponent;
+  };
 }
