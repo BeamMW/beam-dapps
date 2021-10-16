@@ -39,6 +39,13 @@ export default class BaseComponent {
     };
   };
 
+  insertFirst = (component:BaseComponent | HTMLElement):void => {
+    const { firstChild } = this.element;
+    if (component instanceof BaseComponent) {
+      this.element.insertBefore(component.element, firstChild);
+    } else this.element.insertBefore(component, firstChild);
+  };
+
   append = (...args: (BaseComponent | HTMLElement)[]):void => {
     const nodes = args.map(
       (component) => {

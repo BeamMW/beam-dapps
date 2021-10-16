@@ -51,7 +51,7 @@ export class OutputPlace extends BaseComponent {
   reqHandler = (output: string):void => {
     STORE.dispatch(deleteOnloadAC(this.action));
     if (isJson(output)) {
-      const treeBlock = new TreeBuilder(JSON.parse(output));
+      const treeBlock = new TreeBuilder(JSON.parse(output), false);
       this.child.replace(treeBlock);
       this.child = treeBlock;
     } else {

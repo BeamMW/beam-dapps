@@ -25,7 +25,12 @@ export enum TreeIcons {
 export enum InnerTexts {
   DROP_BUTTON_TXT = 'or just drop it here',
   DROP_SIZE_ERROR_TXT = 'The size exceeds the allowable value!',
-  NOT_JSON = 'result.output in not JSON.'
+  NOT_JSON = 'result.output is not JSON.'
+}
+
+export enum Colors {
+  LIGHTGREEN = '#73ff7c',
+  LIGHTRED = '#ff746b'
 }
 
 export enum ActionColor {

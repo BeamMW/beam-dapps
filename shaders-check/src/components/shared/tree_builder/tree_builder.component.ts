@@ -1,48 +1,96 @@
 import { ResponseResultType } from 'beamApiProps';
-import { Tags, TreeIcons } from '../../../constants/html_elements';
+import { Colors, Tags, TreeIcons } from '../../../constants/html_elements';
 import BaseComponent from '../base/base.component';
 import './tree_builder.scss';
 
-export class TreeBuilder extends BaseComponent {
-  nextBranch?: TreeBuilder;
+type TreeValue = string | number | ResponseResultType;
 
-  constructor(result:ResponseResultType) {
+export class TreeBuilder extends BaseComponent {
+  constructor(result:ResponseResultType, isArray: boolean) {
     super(Tags.UL, ['data', 'list']);
-    this.getStruct(result);
+    this.getStruct(result, isArray);
   }
 
-  getStruct = (result:ResponseResultType):void => {
+  branchButtonHandler = (
+    e: MouseEvent, component: BaseComponent
+  ):void => {
+    const target = e.target as HTMLElement;
+    if (target.classList.contains('active')) target.classList.remove('active');
+    else target.classList.add('active');
+    component.classList.toggle('visible');
+  };
+
+  nextBranchAttributes = (
+    nextBranch: TreeBuilder, value: TreeValue
+  ):BaseComponent[] => {
+    const button = new BaseComponent(Tags.BUTTON);
+    const type = new BaseComponent(Tags.SPAN, ['type']);
+    type.innerHTML = Array.isArray(value)
+      ? TreeIcons.ARRAY
+      : TreeIcons.OBJECT;
+    button.element.addEventListener('click',
+      (e: MouseEvent) => this.branchButtonHandler(e, nextBranch));
+    return [type, button];
+  };
+
+  createNewBranch = (value: TreeValue):BaseComponent => {
+    const component = new BaseComponent(Tags.LI);
+    const isNextValueArray = Array.isArray(value);
+    const nextBranch = new TreeBuilder(
+      value as ResponseResultType, isNextValueArray
+    );
+    const attributes = this.nextBranchAttributes(nextBranch, value);
+    component.append(...attributes, nextBranch);
+    return component;
+  };
+
+  createNewValue = (value: TreeValue):BaseComponent => {
+    const component = new BaseComponent(Tags.LI);
+    const valueSpan = new BaseComponent(Tags.SPAN);
+    valueSpan.innerHTML = typeof value === 'number'
+      ? String(value)
+      : `"${value}"`;
+    component.append(valueSpan);
+    component.style.color = typeof value === 'number'
+      ? Colors.LIGHTGREEN
+      : Colors.LIGHTRED;
+    return component;
+  };
+
+  convertValue = (value: TreeValue):BaseComponent => (
+    typeof value === 'object'
+      ? this.createNewBranch(value)
+      : this.createNewValue(value)
+  );
+
+  createKey = (key: string, isArray: boolean):BaseComponent => {
+    const component = new BaseComponent(Tags.SPAN, ['key']);
+    component.innerHTML = isArray
+      ? `${key}:`
+      : `"${key}":`;
+    return component;
+  };
+
+  createBracket = (isArray: boolean, isOpen?: boolean):BaseComponent => {
+    const component = new BaseComponent(Tags.DIV, ['bracket']);
+    if (isOpen) {
+      component.innerHTML = isArray ? '[' : '{';
+    } else component.innerHTML = isArray ? ']' : '}';
+    return component;
+  };
+
+  getStruct = (result:ResponseResultType, isArray: boolean):void => {
+    const openBracket = this.createBracket(isArray, true);
+    const closeBracket = this.createBracket(isArray);
     const output = Object.entries(result);
     output.forEach((param) => {
       const [key, value] = param;
-      const li = new BaseComponent(Tags.LI);
-      const keySpan = new BaseComponent(Tags.SPAN, ['key']);
-      keySpan.element.innerText = `${key}:`;
-
-      if (typeof value === 'object') {
-        this.nextBranch = new TreeBuilder(value as ResponseResultType);
-        const button = new BaseComponent(Tags.BUTTON);
-        const type = new BaseComponent(Tags.SPAN, ['type']);
-
-        type.element.innerText = Array.isArray(value)
-          ? TreeIcons.ARRAY
-          : TreeIcons.OBJECT;
-        button.element.innerHTML = TreeIcons.PLUS;
-        button.element.addEventListener('click', (e:Event) => {
-          const target = e.target as HTMLElement;
-          target.innerHTML = target.innerHTML === TreeIcons.PLUS
-            ? TreeIcons.MINUS
-            : TreeIcons.PLUS;
-          this.nextBranch?.element.classList.toggle('visible');
-        });
-        li.append(keySpan, type, button, this.nextBranch);
-      } else {
-        const valueSpan = new BaseComponent(Tags.SPAN);
-        valueSpan.element.innerText = String(value);
-        li.append(keySpan, valueSpan);
-      }
-
-      this.append(li);
+      const keyComponent = this.createKey(key, isArray);
+      const valueComponent = this.convertValue(<TreeValue>value);
+      valueComponent.insertFirst(keyComponent);
+      this.append(valueComponent);
     });
+    this.insertFirst(openBracket);
+    this.append(closeBracket);
   };
 }
