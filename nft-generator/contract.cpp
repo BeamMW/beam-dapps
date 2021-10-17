@@ -1,6 +1,6 @@
 #include "contract.h"
-#include "../common.h"
-#include "../Math.h"
+#include "Shaders/common.h"
+#include "Shaders/Math.h"
 
 BEAM_EXPORT void Ctor(void *) {
 
