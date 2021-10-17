@@ -7,21 +7,21 @@ BEAM_EXPORT void Method_0() {
         {
             Env::DocGroup role("user");
             {
-                Env::DocGroup method("generate");
+                Env::DocGroup action("generate");
                 Env::DocAddText("cid", "ContractID");
                 Env::DocAddText("aid", "AssetID");
                 Env::DocAddText("seed", "Seed");
                 Env::DocAddText("holder", "Holder PubKey");
             }
             {
-                Env::DocGroup method("gallery_send");
+                Env::DocGroup action("gallery_send");
                 Env::DocAddText("cid", "ContractID");
                 Env::DocAddText("aid", "AssetID");
                 Env::DocAddText("holder", "Holder PubKey");
                 Env::DocAddText("seed", "Seed to send");
             }
             {
-                Env::DocGroup method("set_price");
+                Env::DocGroup action("set_price");
                 Env::DocAddText("cid", "ContractID");
                 Env::DocAddText("aid", "AssetID");
                 Env::DocAddText("holder", "Holder PubKey");
@@ -29,14 +29,14 @@ BEAM_EXPORT void Method_0() {
                 Env::DocAddText("price", "New price");
             }
             {
-                Env::DocGroup method("buy");
+                Env::DocGroup action("buy");
                 Env::DocAddText("cid", "ContractID");
                 Env::DocAddText("holder", "Holder PubKey");
                 Env::DocAddText("seed", "Seed to send");
                 Env::DocAddText("price", "New price");
             }
             {
-                Env::DocGroup method("withdraw");
+                Env::DocGroup action("withdraw");
                 Env::DocAddText("cid", "ContractID");
                 Env::DocAddText("amount", "Amount");
                 Env::DocAddText("aid", "AssetID");
@@ -45,17 +45,17 @@ BEAM_EXPORT void Method_0() {
         {
             Env::DocGroup role("manager");
             {
-                Env::DocGroup method("create");
+                Env::DocGroup action("create");
             }
             {
-                Env::DocGroup method("destroy");
+                Env::DocGroup action("destroy");
                 Env::DocAddText("cid", "ContractID");
             }
             {
-                Env::DocGroup method("view");
+                Env::DocGroup action("view");
             }
             {
-                Env::DocGroup method("seeds");
+                Env::DocGroup action("seeds");
                 Env::DocAddText("cid", "ContractID");
             }
         }
@@ -224,38 +224,38 @@ void Withdraw(const ContractID &contract_id, Amount amount, AssetID asset_id) {
 BEAM_EXPORT void Method_1() {
     Env::DocGroup root("");
 
-    char role[0x10], method[0x10];
+    char role[0x10], action[0x10];
 
     if (!Env::DocGetText("role", role, sizeof(role))) {
         Env::DocAddText("error", "Not providing role");
         return;
     }
 
-    if (!Env::DocGetText("method", method, sizeof(method))) {
-        Env::DocAddText("error", "Not providing method");
+    if (!Env::DocGetText("action", action, sizeof(action))) {
+        Env::DocAddText("error", "Not providing action");
         return;
     }
 
     if (Env::Strcmp(role, "manager") == 0) {
-        if (Env::Strcmp(method, "create") == 0) {
+        if (Env::Strcmp(action, "create") == 0) {
             Env::GenerateKernel(nullptr, 0, nullptr, 0, nullptr, 0,
                                 nullptr, 0, "create nft-generator", 0);
-        } else if (Env::Strcmp(method, "destroy") == 0) {
+        } else if (Env::Strcmp(action, "destroy") == 0) {
             ContractID cid;
             Env::DocGet("cid", cid);
             Env::GenerateKernel(&cid, 1, nullptr, 0, nullptr, 0, nullptr, 0,
                                 "destroy nft-generator", 0);
-        } else if (Env::Strcmp(method, "view") == 0) {
+        } else if (Env::Strcmp(action, "view") == 0) {
 //            EnumAndDumpContracts(NFTGenerator::s_SID);
-        } else if (Env::Strcmp(method, "seeds") == 0) {
+        } else if (Env::Strcmp(action, "seeds") == 0) {
             ContractID cid;
             Env::DocGet("cid", cid);
             GetAllSeeds(cid);
         } else {
-            Env::DocAddText("error", "Invalid method");
+            Env::DocAddText("error", "Invalid action");
         }
     } else if (Env::Strcmp(role, "user") == 0) {
-        if (Env::Strcmp(method, "generate") == 0) {
+        if (Env::Strcmp(action, "generate") == 0) {
             ContractID cid;
             AssetID aid;
             PubKey holder;
@@ -265,7 +265,7 @@ BEAM_EXPORT void Method_1() {
             Env::DocGet("holder", holder);
             Env::DocGet("seed", seed);
             Env::DocAddNum("New seed: ", GenerateSeed(cid, aid, holder, seed));
-        } else if (Env::Strcmp(method, "gallery_send") == 0) {
+        } else if (Env::Strcmp(action, "gallery_send") == 0) {
             ContractID gallery_CID;
             AssetID aid;
             uint64_t seed;
@@ -275,7 +275,7 @@ BEAM_EXPORT void Method_1() {
             Env::DocGet("seed", seed);
             Env::DocGet("aid", aid);
             SendSeedFromContract(gallery_CID, seed, holder, aid);
-        } else if (Env::Strcmp(method, "set_price") == 0) {
+        } else if (Env::Strcmp(action, "set_price") == 0) {
             ContractID gallery_CID;
             AssetID aid;
             uint64_t seed;
@@ -287,7 +287,7 @@ BEAM_EXPORT void Method_1() {
             Env::DocGetBlob("price", &price, sizeof(price));
             Env::DocGet("aid", aid);
             SetSeedPrice(gallery_CID, seed, holder, price, aid);
-        } else if (Env::Strcmp(method, "buy") == 0) {
+        } else if (Env::Strcmp(action, "buy") == 0) {
             ContractID gallery_CID;
             uint64_t seed;
             PubKey buyer;
@@ -297,7 +297,7 @@ BEAM_EXPORT void Method_1() {
             Env::DocGet("holder", buyer);
             Env::DocGetBlob("price", &price, sizeof(price));
             BuySeed(gallery_CID, seed, buyer, price);
-        } else if (Env::Strcmp(method, "withdraw") == 0) {
+        } else if (Env::Strcmp(action, "withdraw") == 0) {
             ContractID gallery_CID;
             Amount amount;
             AssetID aid;
@@ -306,7 +306,7 @@ BEAM_EXPORT void Method_1() {
             Env::DocGet("aid", aid);
             Withdraw(gallery_CID, amount, aid);
         } else {
-            Env::DocAddText("error", "Invalid method");
+            Env::DocAddText("error", "Invalid action");
         }
     } else {
         Env::DocAddText("error", "Invalid role");
