@@ -114,6 +114,7 @@ declare module 'beamApiProps' {
     error?: {
       code:number;
       message: string;
+      data: string;
     }
   };
 
