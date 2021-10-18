@@ -24,6 +24,9 @@
 
   &:hover,
   &.hover {
+    *{
+      pointer-events: none;
+    }
     background-color: rgba(26, 246, 214, 0.2);
     cursor: pointer;
 

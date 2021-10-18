@@ -56,11 +56,16 @@ declare module 'qwebchannel' {
 declare module 'formProps' {
   import { FormActions } from '../constants/variables';
 
+  export type PropertiesType<T> = T extends { [key: string]: infer U }
+    ? U : never;
+
   export type FormDispatch = (obj: ActionTypes, sync?: 'sync') => void;
 
   export type AddObsever = (element: BaseComponent) => void;
 
   export type ParamPayloadArgsType = { key:string, value: string };
+
+  export type IsObserverType = (element: BaseComponent) => boolean;
 
   export type ActionPayloadArgsType = {
     action: string,

@@ -89,7 +89,6 @@ export class BeamAPI {
 
   readonly initShader = (shader:ArrayBuffer):void => {
     this.contract = shader;
-    console.log('contract', this.contract);
   };
 
   readonly callApi = (

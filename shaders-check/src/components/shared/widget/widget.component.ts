@@ -1,5 +1,5 @@
 import { APIResponse } from 'beamApiProps';
-import { removeTxsAC } from '../../../logic/store/action_creators';
+import { AC } from '../../../logic/store/action_creators';
 import { Tags } from '../../../constants/html_elements';
 import { SVG } from '../../../constants/svg.icons';
 import { ResTXStatus, ShaderProps } from '../../../constants/variables';
@@ -67,7 +67,7 @@ export default class Widget extends BaseComponent {
       }, ShaderProps.TX_CHECK_INTERVAL);
     } else {
       this.removeThis();
-      STORE.dispatch(removeTxsAC(this.action));
+      STORE.dispatch(AC.removeTxs(this.action));
     }
   };
 

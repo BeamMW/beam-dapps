@@ -12,8 +12,7 @@ import { BEAM } from '../../../controllers/beam.controller';
 import './output_place.scss';
 import { STORE } from '../../../controllers/store.controller';
 import {
-  deleteOnloadAC,
-  setTxsAC
+  AC
 } from '../../../logic/store/action_creators';
 import Loader from '../loader/loader.component';
 
@@ -49,7 +48,7 @@ export class OutputPlace extends BaseComponent {
   };
 
   reqHandler = (output: string):void => {
-    STORE.dispatch(deleteOnloadAC(this.action));
+    STORE.dispatch(AC.deleteOnload(this.action));
     if (isJson(output)) {
       const treeBlock = new TreeBuilder(JSON.parse(output), false);
       this.child.replace(treeBlock);
@@ -74,7 +73,7 @@ export class OutputPlace extends BaseComponent {
   invokeData = (reqId: string, txId: string):void => {
     const uid = `${reqId}${Date.now()}`;
     BEAM.callApi(RC.txStatus(uid, txId));
-    STORE.dispatch(setTxsAC({ key: uid, value: txId }));
+    STORE.dispatch(AC.setTxs({ key: uid, value: txId }));
   };
 
   inform = (res: APIResponse): void => {

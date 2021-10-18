@@ -36,6 +36,10 @@ export class Store {
       );
   };
 
+  readonly isStoreObserver = (
+    component: BaseComponent
+  ):boolean => this.observers.has(component);
+
   deleteObserver:DeleteObserverType = (component: BaseComponent) => {
     this.observers.delete(component);
   };

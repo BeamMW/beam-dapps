@@ -5,7 +5,7 @@ import { Tags } from '../../constants/html_elements';
 import { Value } from '../shared/action/action_value.component';
 import { Role } from '../shared/role/role_value.component';
 import { STORE } from '../../controllers/store.controller';
-import { setRoleAC } from '../../logic/store/action_creators';
+import { AC } from '../../logic/store/action_creators';
 
 export class Form extends BaseComponent {
   action: BaseComponent;
@@ -16,16 +16,16 @@ export class Form extends BaseComponent {
 
   constructor(output: IOutput) {
     super(Tags.FORM, ['form']);
+    console.log('output:', output);
     this.output = output;
     STORE.addObserver(this);
 
     this.roleValue = this.setRole(output);
-    STORE.dispatch(setRoleAC(this.roleValue), 'sync');
-
+    STORE.dispatch(AC.setRole(this.roleValue), 'sync');
     this.action = new BaseComponent(Tags.DIV, ['action-params']);
     const role = new Role(this.output);
 
-    this.element.addEventListener('submit', (e:Event) => {
+    this.element.addEventListener('submit', (e: Event) => {
       e.preventDefault();
     });
 
@@ -33,20 +33,21 @@ export class Form extends BaseComponent {
     this.append(role, this.action);
   }
 
-  setRole = (output:IOutput):string | null => {
-    if (output.roles) {
-      const roles = Object.entries(output.roles);
-      return roles[0]?.[0] as string;
-    } return null;
+  setRole = (output: IOutput | string | null): string | null => {
+    if (output && typeof output === 'object') {
+      if (output.roles) {
+        const roles = Object.entries(output.roles);
+        return roles[0]?.[0] as string;
+      }
+      return null;
+    } return output;
   };
 
-  informForm = (state: IFormState):void => {
+  informForm = (state: IFormState): void => {
     if (state.role !== this.roleValue) {
-      this.roleValue = state.role;
+      this.roleValue = this.setRole(state.role);
       this.action.removeAll();
-      this.action.append(new Value(
-        this.output, state.role
-      ));
+      this.action.append(new Value(this.output, state.role));
     }
   };
 }

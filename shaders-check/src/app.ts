@@ -10,19 +10,23 @@ export class App {
   constructor(rootElement: HTMLElement) {
     const loader = new Loader();
     rootElement.append(loader.element);
+
     new BeamAPI().loadAPI().then((data:BeamAPI) => {
       const store = new Store();
       STORE.setApiHandlers({
         addObserver: store.addObserver,
         dispatch: store.dispatch,
-        getRole: store.getRole
+        getRole: store.getRole,
+        isStoreObserver: store.isStoreObserver
       });
+
       BEAM.setApiHandlers({
         addObservers: data.addObservers,
         callApi: data.callApi,
         initShader: data.initShader,
         deleteObserver: data.deleteObserver
       });
+
       loader.replace(new Main());
     });
   }

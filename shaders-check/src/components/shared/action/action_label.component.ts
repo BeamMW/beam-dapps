@@ -34,7 +34,7 @@ export class ValueLabel extends BaseComponent {
   methodAction: BaseComponent;
 
   constructor(action: [string, IActionParams], index: number) {
-    super(Tags.LABEL, ['method__label', 'custom-radio']);
+    super(Tags.LABEL, ['method__label', `action-${action[0]}`]);
     this.action = action[0];
     const keys = Object.keys(action[1]);
     this.params = this.paramsObjectCreator(keys);
@@ -46,13 +46,20 @@ export class ValueLabel extends BaseComponent {
     const requestBlock = new BaseComponent(Tags.DIV, ['action__request']);
     const span = new BaseComponent(Tags.SPAN);
     const buttons = new BaseComponent(Tags.DIV, ['buttons']);
-    this.clear = new Clear();
+    this.clear = new Clear(this.action);
     this.submit = new Submit(this.action, this.getArgs);
 
     span.innerHTML = this.action;
     arrowDown.innerHTML = `${SVG.iconArrowDown}`;
     this.setAttributes({ for: span.innerHTML });
-    this.style.background = <string>actionColors[index];
+
+    this.style.background = index < actionColors.length
+      ? <string>actionColors[index]
+      : <string>actionColors[
+        (index - actionColors.length) / (
+          Math.floor(index / actionColors.length)
+        )
+      ];
     requestBlock.style.paddingTop = keys.length ? '14px' : '46px';
 
     this.element.addEventListener('click', this.actionMenuListener);
@@ -82,6 +89,7 @@ export class ValueLabel extends BaseComponent {
 
   actionMenuListener = (e: Event):void => {
     const target = e.target as HTMLElement;
+
     if (target.closest('.method__label-title')) {
       this.classList.toggle('active');
       const panel = this.methodAction.element;

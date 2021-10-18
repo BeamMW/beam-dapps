@@ -1,5 +1,5 @@
 import { IFormState } from 'formProps';
-import { setFileNameAC } from '../../../logic/store/action_creators';
+import { AC } from '../../../logic/store/action_creators';
 import { STORE } from '../../../controllers/store.controller';
 import {
   dragleaveHandler, dragoverHandler, inputHandler
@@ -62,7 +62,7 @@ export default class ButtonDrop extends BaseComponent {
 
   setContract = (files: ArrayBuffer, fileName: string):void => {
     BEAM.callApi(RC.createForm(files));
-    STORE.dispatch(setFileNameAC(fileName));
+    STORE.dispatch(AC.setFileName(fileName));
   };
 
   informForm = (state: IFormState):void => {

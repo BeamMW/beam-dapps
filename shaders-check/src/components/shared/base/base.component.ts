@@ -32,7 +32,7 @@ export default class BaseComponent {
     this.element.innerHTML = str;
   }
 
-  initDom = (node: BaseComponent): (text: string) => void => {
+  protected initDom = (node: BaseComponent): (text: string) => void => {
     const component = node;
     return (text: string) => {
       component.textContent = text;
@@ -82,4 +82,8 @@ export default class BaseComponent {
       this.element.setAttribute(attribute[0], attribute[1]);
     });
   };
+
+  querySelector = (
+    selector: string
+  ):HTMLElement | null => this.element.querySelector(selector);
 }

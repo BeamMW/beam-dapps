@@ -1,4 +1,6 @@
-import { AddObsever, FormDispatch, IFormState } from 'formProps';
+import {
+  AddObsever, FormDispatch, IFormState, IsObserverType
+} from 'formProps';
 
 export class STORE {
   static addObserver: AddObsever;
@@ -7,13 +9,17 @@ export class STORE {
 
   static getState: () => IFormState;
 
+  static isStoreObserver: IsObserverType;
+
   static setApiHandlers = (obj: {
     addObserver: AddObsever,
     dispatch: FormDispatch,
-    getRole: () => IFormState
+    getRole: () => IFormState,
+    isStoreObserver: IsObserverType
   }): void => {
     STORE.addObserver = obj.addObserver;
     STORE.dispatch = obj.dispatch;
     STORE.getState = obj.getRole;
+    STORE.isStoreObserver = obj.isStoreObserver;
   };
 }

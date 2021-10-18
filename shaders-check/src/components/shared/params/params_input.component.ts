@@ -7,9 +7,9 @@ export class ParamsInput extends BaseComponent {
 
   constructor(
     param: string,
-    addObserver: (component: ParamsInput) => void
+    addObserver: (component: ParamsInput,) => void
   ) {
-    super(Tags.INPUT, ['params__input']);
+    super(Tags.INPUT, ['params__input', `param-${param}`]);
     this.param = param;
     this.setAttributes(
       {
