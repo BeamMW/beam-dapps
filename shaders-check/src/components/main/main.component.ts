@@ -19,7 +19,11 @@ export default class Main extends BaseComponent {
     if (res.error) {
       switch (res.error.message) {
         case ErrorResponses.CALL_FAILED:
-          document.location.reload();
+          this.removeAll();
+          this.append(new Header());
+          setTimeout(() => {
+            document.location.reload();
+          }, 3000);
           // TODO
           break;
         case ErrorResponses.REJECTED:
