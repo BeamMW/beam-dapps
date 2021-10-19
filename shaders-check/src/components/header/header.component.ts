@@ -30,7 +30,7 @@ export default class Header extends BaseComponent {
 
   inform = (res: APIResponse): void => {
     if (res.error) {
-      console.log(res.error.code);
+      console.log(res);
     }
   };
 }

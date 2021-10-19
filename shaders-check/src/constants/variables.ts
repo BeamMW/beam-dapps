@@ -32,7 +32,10 @@ export enum FormActions {
   DELETE_ONLOAD = 'DELETE_ONLOAD',
   SET_FILENAME = 'SET_FILENAME',
   SET_TXS = 'SET_TXS',
-  REMOVE_TXS = 'REMOVE_TXS'
+  REMOVE_TXS = 'REMOVE_TXS',
+  SET_ERRMSG = 'SET_ERRMSG',
+  SET_ERRCODE = 'SET_ERRCODE',
+  SET_ERRDATA = 'SET_ERRDATA',
 }
 
 export enum ErrorResponses {

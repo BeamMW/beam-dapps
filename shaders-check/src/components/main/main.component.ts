@@ -23,7 +23,7 @@ export default class Main extends BaseComponent {
           this.append(new Header());
           setTimeout(() => {
             document.location.reload();
-          }, 3000);
+          }, 2000);
           // TODO
           break;
         case ErrorResponses.REJECTED:

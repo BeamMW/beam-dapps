@@ -16,7 +16,10 @@ const initialState: IFormState = {
   role: null,
   onload: new Set(),
   fileName: '',
-  txs: txs ? new Map(JSON.parse(txs)) : new Map()
+  txs: txs ? new Map(JSON.parse(txs)) : new Map(),
+  errMsg: '',
+  errCode: null,
+  errData: ''
 };
 
 export class Store {
@@ -92,6 +95,17 @@ export class Store {
         newState.txs.delete(
           payload as string
         );
+        break;
+      case FormActions.SET_ERRMSG:
+        newState.errMsg = payload as string;
+        break;
+
+      case FormActions.SET_ERRCODE:
+        newState.errCode = payload as number;
+        break;
+
+      case FormActions.SET_ERRDATA:
+        newState.errData = payload as string;
         break;
 
       default:
