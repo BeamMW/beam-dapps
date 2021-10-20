@@ -49,6 +49,11 @@ BEAM_EXPORT void Method_0() {
                 Env::DocAddText("amount", "Amount");
                 Env::DocAddText("aid", "AssetID");
             }
+            {
+                Env::DocGroup action("get_key");
+                Env::DocAddText("cid", "ContractID");
+                Env::DocAddText("seed", "seed");
+            }
         }
         {
             Env::DocGroup role("manager");
@@ -229,15 +234,16 @@ void Withdraw(const ContractID &contract_id, Amount amount, AssetID asset_id) {
                         &fc, 1, &sig, 1, "withdraw", 0);
 }
 
-PubKey GetKey(const ContactID &cid, int64_t seed) {
+PubKey GetKey(const ContractID &cid, int64_t seed) {
     struct SeedAndCid {
         ContractID cid;
         int64_t seed;
     };
-    SeedAndCid.cid = cid;
-    SeedAndCid.seed = seed;
+    SeedAndCid id;
+    id.cid = cid;
+    id.seed = seed;
     PubKey key;
-    Env::DerivePk(key, &SeedAndCid, sizeof(SeedAndCid));
+    Env::DerivePk(key, &id, sizeof(SeedAndCid));
     return key;
 }
 
@@ -327,10 +333,11 @@ BEAM_EXPORT void Method_1() {
             Withdraw(gallery_CID, amount, aid);
         } else if (Env::Strcmp(action, "get_key") == 0) {
             ContractID gallery_CID;
-            int64_t seed;
+            uint64_t seed;
             Env::DocGet("cid", gallery_CID);
             Env::DocGet("seed", seed);
-            GetKey(gallery_CID, seed);
+            PubKey pk = GetKey(gallery_CID, seed);
+            Env::DocAddBlob("key", &pk, sizeof(pk));
         } else {
             Env::DocAddText("error", "Invalid action");
         }
