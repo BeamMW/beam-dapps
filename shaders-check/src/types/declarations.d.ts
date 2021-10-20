@@ -77,9 +77,11 @@ declare module 'formProps' {
     onload: Set<string>;
     fileName: string;
     txs: Map<string, string>;
-    errMsg: string;
-    errCode: number | null;
-    errData: string;
+    error: {
+      msg: string;
+      code: number | null;
+      data: string;
+    }
   }
 
   export type InformArgs = {

@@ -20,7 +20,7 @@ export default class InfoBlock extends BaseComponent {
     const titlesId = new BaseComponent(Tags.TD, ['info__titles']);
     const titlesName = new BaseComponent(Tags.TD, ['info__titles']);
     this.dataStatus = new BaseComponent(Tags.TD, ['info__data']);
-    const dataId = new BaseComponent(Tags.TD, ['info__data']);
+    // const dataId = new BaseComponent(Tags.TD, ['info__data']);
     this.dataName = new BaseComponent(Tags.TD, ['info__data']);
 
     const trStatus = new BaseComponent(Tags.TR);
@@ -45,25 +45,23 @@ export default class InfoBlock extends BaseComponent {
       this.dataName.textContent = state.fileName;
       console.log(state);
     }
-    if (state.errMsg !== '') {
+    if (state.error.msg !== '') {
       setTimeout(() => {
         this.dataName.textContent = state.fileName;
         this.dataStatus.textContent = 'connected';
-        STORE.dispatch(AC.setErrMsg(''));
-        STORE.dispatch(AC.setErrCode(null));
-        STORE.dispatch(AC.setErrData(''));
+        STORE.dispatch(AC.setError({ msg: '', code: null, data: '' }));
       }, 5000);
-      this.dataName.textContent = state.errMsg;
-      this.dataStatus.textContent = !state.errData ? `
-      CODE: ${state.errCode}` : state.errData;
+      this.dataName.textContent = state.error.msg;
+      this.dataStatus.textContent = !state.error.data ? `
+      CODE: ${state.error.code}` : state.error.data;
     }
   };
 
   inform = (res: APIResponse): void => {
     if (res.error) {
-      STORE.dispatch(AC.setErrMsg(res.error.message));
-      STORE.dispatch(AC.setErrData(res.error.data));
-      STORE.dispatch(AC.setErrCode(res.error.code));
+      STORE.dispatch(AC.setError({
+        msg: res.error.message, code: res.error.code, data: res.error.data
+      }));
     }
   };
 }

@@ -20,14 +20,8 @@ export const AC = {
   removeTxs: (payload: string) => (
     { action: FormActions.REMOVE_TXS, payload } as const
   ),
-  setErrMsg: (payload: string) => (
-    { action: FormActions.SET_ERRMSG, payload } as const
-  ),
-  setErrCode: (payload: number | null) => (
-    { action: FormActions.SET_ERRCODE, payload } as const
-  ),
-  setErrData: (payload: string) => (
-    { action: FormActions.SET_ERRDATA, payload } as const
+  setError: (payload: { msg: string; code: number | null; data: string }) => (
+    { action: FormActions.SET_ERROR, payload } as const
   )
 };
 

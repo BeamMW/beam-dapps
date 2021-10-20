@@ -33,9 +33,7 @@ export enum FormActions {
   SET_FILENAME = 'SET_FILENAME',
   SET_TXS = 'SET_TXS',
   REMOVE_TXS = 'REMOVE_TXS',
-  SET_ERRMSG = 'SET_ERRMSG',
-  SET_ERRCODE = 'SET_ERRCODE',
-  SET_ERRDATA = 'SET_ERRDATA',
+  SET_ERROR = 'SET_ERROR',
 }
 
 export enum ErrorResponses {
