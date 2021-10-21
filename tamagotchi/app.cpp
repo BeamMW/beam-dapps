@@ -38,7 +38,7 @@ void On_action_new_game(const ContractID& cid)
 	nNameSize = Env::DocGetText("tamagotchi_name", tamagotchiName, sizeof(tamagotchiName));
 	if (nNameSize < 2)
 	{
-		On_error("Name should be non-empty");
+		On_error("tamagotchi_name should be non-empty");
 	}
 
 	Tamagotchi::BaseTamagothiParameters params;
@@ -104,7 +104,7 @@ void On_action_get_current_tamagotchi_state(const ContractID& cid)
 	{
 		Env::DocGroup root("");
 		{
-			//Env::DocAddText("name:", tamagotchi.baseTamagothiParameters.baseTamagothiParameters);
+			Env::DocAddText("name:", tamagotchi.getBaseTamagothiParameters().tamagotchiName.data());
 			Env::DocAddNum32("currentBlock", Env::get_Height());
 			Env::DocAddNum32("numberOfTamagotchiBirthBlock", tamagotchi.getBaseTamagothiParameters().numberOfTamagotchiBirthBlock);
 			Env::DocAddNum32("satiety", tamagotchi.getSatiety().getPercentageOfSatisfactionOfTheAttribute());
@@ -136,7 +136,6 @@ void On_action_get_current_tamagotchi_state(const ContractID& cid)
 	{
 		On_error("cann't get state");
 	}
-
 
 	Tamagotchi::GetCurrentTamagotchiStateParameters params;
 	Env::DerivePk(params.playerPublicKey, &cid, sizeof(cid));

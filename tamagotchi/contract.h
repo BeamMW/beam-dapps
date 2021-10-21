@@ -4,8 +4,8 @@
 #include <string_view>
 
 namespace Tamagotchi {
-	// SID: 6953aec94fd3f4b4168fffab7985562452944ea4ebca047a0f26e69d37000c5e
-	static const ShaderID s_SID = { 0x69,0x53,0xae,0xc9,0x4f,0xd3,0xf4,0xb4,0x16,0x8f,0xff,0xab,0x79,0x85,0x56,0x24,0x52,0x94,0x4e,0xa4,0xeb,0xca,0x04,0x7a,0x0f,0x26,0xe6,0x9d,0x37,0x00,0x0c,0x5e };
+	// SID: 72242baa80c85e8f039ee79aac0fc1610d5d7fd700076042798cc75d198f7e74
+	static const ShaderID s_SID = { 0x72,0x24,0x2b,0xaa,0x80,0xc8,0x5e,0x8f,0x03,0x9e,0xe7,0x9a,0xac,0x0f,0xc1,0x61,0x0d,0x5d,0x7f,0xd7,0x00,0x07,0x60,0x42,0x79,0x8c,0xc7,0x5d,0x19,0x8f,0x7e,0x74 };
 
 #pragma pack(push, 1)
 	struct BaseTamagothiParameters
@@ -110,15 +110,15 @@ namespace Tamagotchi {
 	};
 	struct Sleeping : State
 	{
-		Sleeping() : State(State::States::Sleeping, 10) {}
+		Sleeping() : State(State::States::Sleeping, 100) {}
 	};
 	struct Playing : State
 	{
-		Playing() : State(State::States::Playing, 3) {}
+		Playing() : State(State::States::Playing, 50) {}
 	};
 	struct Stroking : State
 	{
-		Stroking() : State(State::States::Stroking, 2) {}
+		Stroking() : State(State::States::Stroking, 20) {}
 	};
 	struct Eating : State
 	{
@@ -206,6 +206,7 @@ namespace Tamagotchi {
 			}
 
 			//если все на нуле - смерть
+			// state
 			if (this->satiety.getPercentageOfSatisfactionOfTheAttribute() == 0 &&
 				this->mood.getPercentageOfSatisfactionOfTheAttribute() == 0 &&
 				this->liveliness.getPercentageOfSatisfactionOfTheAttribute() == 0)
@@ -229,7 +230,7 @@ namespace Tamagotchi {
 			if (currentHeight == heightOfChangingAttributeValues) return;
 
 			if (state.getCurrentState() != State::States::Inactivity) {
-				// если с момента измения состояния прошло столько блоков сколько оно должно было длится
+				//если с момента измения состояния прошло столько блоков сколько оно должно было длится
 				// то колво блоков в активном состоянии = колво оставшихся блоков на которых не было изменено состояние
 				if (state.getHeightOfTransitionToState() + state.getStateDuration() == currentHeight)
 				{
