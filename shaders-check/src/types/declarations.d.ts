@@ -56,16 +56,33 @@ declare module 'qwebchannel' {
 declare module 'formProps' {
   import { FormActions } from '../constants/variables';
 
-  export type FormDispatch = (obj: ActionTypes) => void;
+  export type PropertiesType<T> = T extends { [key: string]: infer U }
+    ? U : never;
+
+  export type FormDispatch = (obj: ActionTypes, sync?: 'sync') => void;
 
   export type AddObsever = (element: BaseComponent) => void;
 
   export type ParamPayloadArgsType = { key:string, value: string };
 
+  export type IsObserverType = (element: BaseComponent) => boolean;
+
   export type ActionPayloadArgsType = {
     action: string,
     params: IActionParams
   };
+
+  export interface IFormState {
+    role: string | null;
+    onload: Set<string>;
+    fileName: string;
+    txs: Map<string, string>;
+    error: {
+      msg: string;
+      code: number | null;
+      data: string;
+    }
+  }
 
   export type InformArgs = {
     formAction: FormActions
@@ -107,6 +124,7 @@ declare module 'beamApiProps' {
     error?: {
       code:number;
       message: string;
+      data: string;
     }
   };
 
@@ -126,9 +144,9 @@ declare module 'beamApiProps' {
     [key:string | number]: never | string | number | ResponseResultType
   };
 
-  export interface IOutput {
-    roles: IRoleOutput;
-  }
+  export type IOutput = {
+    [key: string]: IRoleOutput | IActionOutput;
+  } | IActionOutput;
 
   export type CallApiType =
   (obj:ApiArgs) => void;

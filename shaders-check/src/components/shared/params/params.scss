@@ -1,0 +1,51 @@
+.params__input {
+    width: 100%;
+    min-width: 290px;
+    height: 32px;
+    border-radius: 10px;
+    background-color: rgba($color: #fff, $alpha: .05);
+    border: none;
+    outline: none;
+    font-family: SFProDisplay;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    margin-top: 10px;
+    padding: 0 0 0 14px;
+
+    color:rgba($color: #fff, $alpha: 1.0);
+     &::placeholder {
+        // color: rgba($color: #fff, $alpha: 1.0)
+    }
+}
+
+.params__label {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    color: rgba($color: #fff, $alpha: 1.0);
+    .name{
+        padding-left: 14px;
+        font-family: SFProDisplay;
+        font-size: 14px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        span + span{
+            opacity: 0.5;
+            margin-left: 4px;
+        }
+    }
+}
+
+
+@media (max-width: 650px) {
+    .params__input{
+        max-width: unset;
+    }  
+}

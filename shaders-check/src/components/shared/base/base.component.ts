@@ -1,4 +1,5 @@
 import { APIResponse } from 'beamApiProps';
+import { IFormState } from 'formProps';
 import { Tags } from '../../../constants/html_elements';
 
 type HTMLAttributes = {
@@ -10,7 +11,7 @@ export default class BaseComponent {
 
   inform?: (res:APIResponse) => void;
 
-  informForm?: (obj: string) => void;
+  informForm?: (obj: IFormState) => void;
 
   constructor(tag:Tags, styles: string[] = []) {
     this.element = document.createElement(tag);
@@ -31,6 +32,20 @@ export default class BaseComponent {
     this.element.innerHTML = str;
   }
 
+  protected initDom = (node: BaseComponent): (text: string) => void => {
+    const component = node;
+    return (text: string) => {
+      component.textContent = text;
+    };
+  };
+
+  insertFirst = (component:BaseComponent | HTMLElement):void => {
+    const { firstChild } = this.element;
+    if (component instanceof BaseComponent) {
+      this.element.insertBefore(component.element, firstChild);
+    } else this.element.insertBefore(component, firstChild);
+  };
+
   append = (...args: (BaseComponent | HTMLElement)[]):void => {
     const nodes = args.map(
       (component) => {
@@ -47,8 +62,12 @@ export default class BaseComponent {
     );
   };
 
-  replace = (component:BaseComponent):void => {
-    this.element.replaceWith(component.element);
+  replace = (component:BaseComponent | HTMLElement):void => {
+    this.element.replaceWith(
+      component instanceof BaseComponent
+        ? component.element
+        : component
+    );
   };
 
   removeAll = ():void => {
@@ -63,4 +82,8 @@ export default class BaseComponent {
       this.element.setAttribute(attribute[0], attribute[1]);
     });
   };
+
+  querySelector = (
+    selector: string
+  ):HTMLElement | null => this.element.querySelector(selector);
 }
