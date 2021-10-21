@@ -12,7 +12,8 @@ export enum Tags {
   TABLE = 'table',
   TR = 'tr',
   TD = 'td',
-  TH = 'th'
+  TH = 'th',
+  P = 'p'
 }
 
 export enum TreeIcons {

@@ -1,10 +1,10 @@
 export const isJson = (str:unknown):boolean => {
   try {
-    JSON.parse(str as string);
+    const parsed = JSON.parse(str as string);
+    return typeof parsed === 'object';
   } catch (e) {
     return false;
   }
-  return true;
 };
 
 export const toDOMParser = (str: string): HTMLElement => new DOMParser()

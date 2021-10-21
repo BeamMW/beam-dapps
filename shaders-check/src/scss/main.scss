@@ -22,13 +22,12 @@ body {
 }
 
 .loader {
-  display: inline-block;
+  display: block;
   margin: 0 auto;
 }
 
-
-
 .main {
+  padding-top: 5px;
   height: 100%;
   z-index: 1;
   margin: 0 auto;

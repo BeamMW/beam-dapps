@@ -33,7 +33,7 @@ export class Store {
     this.observers = new Set();
   }
 
-  addObserver: AddObsever = (component): void => {
+  subscribe: AddObsever = (component): void => {
     this.observers.add(component);
     component.element
       .addEventListener(
@@ -99,7 +99,11 @@ export class Store {
         );
         break;
       case FormActions.SET_ERROR:
-        newState.error = payload as { msg: string; code: number | null; data: string };
+        newState.error = {
+          ...payload as {
+            msg: string; code: number | null; data: string
+          }
+        };
         break;
 
       default:

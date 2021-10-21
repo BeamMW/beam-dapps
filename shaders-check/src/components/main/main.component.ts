@@ -7,11 +7,14 @@ import Header from '../header/header.component';
 import { ErrorResponses, ReqID } from '../../constants/variables';
 import { Form } from '../input/form.component';
 import Transactions from '../transactions/transactions.component';
+import { STORE } from '../../controllers/store.controller';
+import { AC } from '../../logic/store/action_creators';
+import FailPage from '../fail_page/fail_page.component';
 
 export default class Main extends BaseComponent {
   constructor() {
     super(Tags.DIV, ['main']);
-    BEAM.addObservers(this);
+    BEAM.subscribe(this);
     this.append(new DropPage());
   }
 
@@ -20,16 +23,12 @@ export default class Main extends BaseComponent {
       switch (res.error.message) {
         case ErrorResponses.CALL_FAILED:
           this.removeAll();
-          this.append(new Header());
-          setTimeout(() => {
-            document.location.reload();
-          }, 2000);
-          // TODO
-          break;
-        case ErrorResponses.REJECTED:
-          // TODO
+          this.append(new FailPage(res.error));
           break;
         default:
+          STORE.dispatch(AC.setError({
+            msg: res.error.message, code: res.error.code, data: res.error.data
+          }));
           break;
       }
     } else if (res.id === ReqID.FORM_GENERATOR) {

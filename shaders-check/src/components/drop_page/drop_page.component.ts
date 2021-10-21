@@ -1,4 +1,3 @@
-import { SVG } from '../../constants/svg.icons';
 import { Tags } from '../../constants/html_elements';
 import BaseComponent from '../shared/base/base.component';
 import ButtonDrop from '../shared/drop_button/button_drop.component';
@@ -12,8 +11,7 @@ export default class DropPage extends BaseComponent {
     this.buttonDrop = new ButtonDrop({
       mainSelector: 'formUpload',
       labelSelector: 'label',
-      iconPic: SVG.iconDrop,
-      iconArrow: SVG.iconArrow
+      preload: true
     });
     this.append(this.buttonDrop);
   }

@@ -7,7 +7,7 @@ export class ParamsLabel extends BaseComponent {
     param:[string, string],
     addObserver: (component: ParamsInput) => void
   ) {
-    super(Tags.LABEL, ['params__label']);
+    super(Tags.DIV, ['params__label']);
     const [key, value] = param;
     this.setAttributes({ for: key });
     this.append(
@@ -21,8 +21,8 @@ export class ParamsLabel extends BaseComponent {
     const nameComponent = new BaseComponent(Tags.DIV, ['name']);
     const keyComponent = new BaseComponent(Tags.SPAN);
     const valueComponent = new BaseComponent(Tags.SPAN);
-    keyComponent.innerHTML = `${key}:`;
-    valueComponent.innerHTML = value;
+    keyComponent.textContent = `${key}:`;
+    valueComponent.textContent = value;
     nameComponent.append(keyComponent, valueComponent);
     return nameComponent;
   };

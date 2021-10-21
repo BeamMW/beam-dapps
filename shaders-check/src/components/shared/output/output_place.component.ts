@@ -23,14 +23,14 @@ export class OutputPlace extends BaseComponent {
 
   constructor(action: string) {
     super(Tags.DIV, ['output__place']);
-    BEAM.addObservers(this);
-    STORE.addObserver(this);
+    BEAM.subscribe(this);
+    STORE.subscribe(this);
 
     const wrapper = new BaseComponent(Tags.DIV, ['output__container']);
     this.child = new BaseComponent(Tags.DIV, ['output_inner']);
 
     this.action = action;
-    this.child.innerHTML = 'Fill in the parametres to check the method';
+    this.child.textContent = 'Fill in the parametres to check the method';
 
     wrapper.append(this.child);
     this.append(wrapper);
@@ -57,7 +57,7 @@ export class OutputPlace extends BaseComponent {
       const noJsonBlock = new BaseComponent(Tags.DIV, [
         'output_inner', 'output_json-block'
       ]);
-      noJsonBlock.innerHTML = `${InnerTexts.NOT_JSON}
+      noJsonBlock.textContent = `${InnerTexts.NOT_JSON}
     ${output}`;
       this.child.replace(noJsonBlock);
       this.child = noJsonBlock;

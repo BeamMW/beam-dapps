@@ -31,12 +31,12 @@ export class BeamAPI {
     this.observers = new Set();
   }
 
-  readonly addObservers = (...components: BaseComponent[]): void => {
+  readonly subscribe = (...components: BaseComponent[]): void => {
     components.forEach((component) => {
       this.observers.add(component);
       component.element
         .addEventListener(
-          'DOMNodeRemovedFromDocument', () => this.deleteObserver(component)
+          'DOMNodeRemovedFromDocument', () => this.deleteSubscriber(component)
         );
     });
   };
@@ -49,7 +49,7 @@ export class BeamAPI {
     });
   };
 
-  deleteObserver = (component: BaseComponent):void => {
+  deleteSubscriber = (component: BaseComponent):void => {
     this.observers.delete(component);
   };
 

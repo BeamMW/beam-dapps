@@ -1,109 +1,76 @@
 import { IActionParams } from 'beamApiProps';
 import { ParamPayloadArgsType } from 'formProps';
-import {
-  Params
-} from '../params/params_value.component';
+import { Params } from '../params/params_value.component';
 import BaseComponent from '../base/base.component';
 import { Tags } from '../../../constants/html_elements';
 import { SVG } from '../../../constants/svg.icons';
-import {
-  Submit
-} from '../submit/submit.component';
 import { STORE } from '../../../controllers/store.controller';
-import {
-  OutputPlace
-} from '../output/output_place.component';
+import { OutputPlace } from '../output/output_place.component';
 import { ValueInput } from './action_input.component';
-import { Clear } from '../clear/clear.component';
 import { ParamsInput } from '../params/params_input.component';
 import { actionColors } from './action.data';
+import { toDOMParser } from '../../../utils/json_handlers';
+import { Button } from '../button/button.component';
+import { BEAM } from '../../../controllers/beam.controller';
+import { RC } from '../../../logic/beam/request_creators';
+import { AC } from '../../../logic/store/action_creators';
+
+const buttonsData = [
+  {
+    name: 'clear',
+    classes: (action:string) => ['clear', `clear-${action}`],
+    icon: SVG.iconCancel
+  },
+  {
+    name: 'execute',
+    classes: (action: string) => ['submit', `submit-${action}`],
+    icon: SVG.iconDone,
+    type: 'submit'
+  }];
 
 export class ValueLabel extends BaseComponent {
   role = STORE.getState().role;
 
-  private readonly observers: Set<ParamsInput>;
+  private readonly observers: Set<ParamsInput> = new Set();
+
+  private readonly activeListeners: Button[] = [];
 
   private readonly action: string;
 
   private params: IActionParams;
 
-  private readonly clear: Clear;
+  constructor([action, params]: [string, IActionParams], index: number) {
+    super(Tags.DIV, ['method__label', `action-${action}`]);
+    this.action = action;
+    this.params = this.paramsObjectCreator(Object.keys(params));
+    const title = this.createTitleBlock([action, params]);
+    const inner = this.createActionBlock([action, params]);
 
-  private readonly submit: Submit;
+    this.style.background = this.actionColor(index);
 
-  methodAction: BaseComponent;
-
-  constructor(action: [string, IActionParams], index: number) {
-    super(Tags.LABEL, ['method__label', `action-${action[0]}`]);
-    this.action = action[0];
-    const keys = Object.keys(action[1]);
-    this.params = this.paramsObjectCreator(keys);
-    this.observers = new Set();
-
-    const title = new BaseComponent(Tags.DIV, ['method__label-title']);
-    const arrowDown = new BaseComponent(Tags.DIV, ['arrowDown']);
-    this.methodAction = new BaseComponent(Tags.DIV, ['action__place']);
-    const requestBlock = new BaseComponent(Tags.DIV, ['action__request']);
-    const span = new BaseComponent(Tags.SPAN);
-    const buttons = new BaseComponent(Tags.DIV, ['buttons']);
-    this.clear = new Clear(this.action);
-    this.submit = new Submit(this.action, this.getArgs);
-
-    span.innerHTML = this.action;
-    arrowDown.innerHTML = `${SVG.iconArrowDown}`;
-    this.setAttributes({ for: span.innerHTML });
-
-    this.style.background = index < actionColors.length
-      ? <string>actionColors[index]
-      : <string>actionColors[
-        (index - actionColors.length) / (
-          Math.floor(index / actionColors.length)
-        )
-      ];
-    requestBlock.style.paddingTop = keys.length ? '14px' : '46px';
-
-    this.element.addEventListener('click', this.actionMenuListener);
-    this.clear.element.addEventListener('click', () => {
-      this.params = this.paramsObjectCreator(keys);
-      this.setActiveButton(false);
-      this.notifyAll();
-    });
-
-    buttons.append(this.clear, this.submit);
-    requestBlock.append(
-      new Params(
-        action[1],
-        this.addObserver
-      ), buttons
+    this.element.addEventListener(
+      'click', (e:Event) => this.actionMenuHandler(e, inner)
     );
-    this.methodAction.append(
-      requestBlock,
-      new OutputPlace(this.action)
-    );
-    title.append(
-      new ValueInput(action),
-      span, arrowDown
-    );
-    this.append(title, this.methodAction);
+
+    this.append(title, inner);
   }
 
-  actionMenuListener = (e: Event):void => {
-    const target = e.target as HTMLElement;
+  readonly actionColor = (index:number): string => (index < actionColors.length
+    ? <string>actionColors[index]
+    : <string>(
+        actionColors[
+          (index - actionColors.length)
+            / Math.floor(index / actionColors.length)
+        ]
+      ));
 
-    if (target.closest('.method__label-title')) {
-      this.classList.toggle('active');
-      const panel = this.methodAction.element;
-      if (panel.style.maxHeight) {
-        panel.style.maxHeight = '';
-      } else {
-        panel.style.maxHeight = `${panel.scrollHeight + 25}px`;
-      }
-    }
-  };
+  private readonly notifyAll = (): void => this.observers.forEach((subs) => {
+    subs.valueChanger(this.params);
+  });
 
-  addObserver = (component: ParamsInput): void => {
+  private readonly subscribe = (component: ParamsInput): void => {
     this.observers.add(component);
-    component.element.addEventListener('input', (e:Event) => {
+    component.element.addEventListener('input', (e: Event) => {
       const target = e.target as HTMLInputElement;
       this.setParamsValue({
         key: component.param,
@@ -115,19 +82,7 @@ export class ValueLabel extends BaseComponent {
     });
   };
 
-  setActiveButton = (isActive: boolean):void => {
-    if (isActive) {
-      this.clear.classList.add('active');
-    } else {
-      this.clear.classList.remove('active');
-    }
-  };
-
-  notifyAll = (): void => this.observers.forEach((subs) => {
-    subs.valueChanger(this.params);
-  });
-
-  paramsObjectCreator = (params: string[]): IActionParams => {
+  private readonly paramsObjectCreator = (params: string[]): IActionParams => {
     const obj = {};
     params.forEach((param) => {
       Object.defineProperty(obj, param, {
@@ -140,18 +95,8 @@ export class ValueLabel extends BaseComponent {
     return obj;
   };
 
-  setParamsValue = (payload: ParamPayloadArgsType): void => {
-    this.params[payload.key] = payload.value;
-  };
-
-  argsStringify = (args: {
-    [key: string]: string
-  }): string => Object.entries(args)
-    .filter((arg) => arg[1].length)
-    .map((arg) => arg.join('=')).join(',');
-
-  getArgs = (): string => {
-    const args: { [key:string]:string } = {
+  readonly getArgs = (): string => {
+    const args: { [key: string]: string } = {
       action: this.action,
       ...this.params
     };
@@ -159,5 +104,101 @@ export class ValueLabel extends BaseComponent {
       args.role = this.role;
     }
     return this.argsStringify(args);
+  };
+
+  private readonly argsStringify = (
+    args: { [key: string]: string }
+  ): string => Object.entries(args)
+    .filter((arg) => arg[1].length)
+    .map((arg) => arg.join('='))
+    .join(',');
+
+  private readonly setParamsValue = (payload: ParamPayloadArgsType): void => {
+    this.params[payload.key] = payload.value;
+  };
+
+  private readonly clearParamsHandler = (keys: string[]):void => {
+    this.params = this.paramsObjectCreator(keys);
+    this.setActiveButton(false);
+    this.notifyAll();
+  };
+
+  private readonly submitHandler = (action: string):void => {
+    BEAM.callApi(RC.submitResult(action, this.getArgs()));
+    STORE.dispatch(AC.setOnload(action));
+  };
+
+  private readonly actionMenuHandler = (
+    e: Event, component: BaseComponent
+  ): void => {
+    const target = e.target as HTMLElement;
+    if (target.closest('.method__label-title')) {
+      this.classList.toggle('active');
+      if (component.style.maxHeight) {
+        component.style.maxHeight = '';
+      } else {
+        component.style.maxHeight = `${component.element.scrollHeight + 25}px`;
+      }
+    }
+  };
+
+  private readonly setActiveButton = (isActive: boolean): void => {
+    this.activeListeners.forEach((button) => {
+      if (isActive) {
+        button.classList.add('active');
+      } else {
+        button.classList.remove('active');
+      }
+    });
+  };
+
+  private readonly createTitleBlock = (
+    [action, params]:[string, IActionParams]
+  ):BaseComponent => {
+    const component = new BaseComponent(Tags.DIV, ['method__label-title']);
+    const span = new BaseComponent(Tags.SPAN);
+    const arrowDown = new BaseComponent(Tags.DIV, ['arrowDown']);
+    span.textContent = action;
+    arrowDown.append(toDOMParser(SVG.iconArrowDown));
+    component.append(new ValueInput([action, params]), span, arrowDown);
+    return component;
+  };
+
+  private readonly createActionBlock = (
+    [action, params]: [string, IActionParams]
+  ):BaseComponent => {
+    const component = new BaseComponent(Tags.DIV, ['action__place']);
+    component.append(
+      this.createRequestBlock([action, params]), new OutputPlace(action)
+    );
+    return component;
+  };
+
+  private readonly createRequestBlock = (
+    [key, value]: [string, IActionParams]
+  ):BaseComponent => {
+    const component = new BaseComponent(Tags.DIV, ['action__request']);
+    const params = Object.keys(value);
+    component.style.paddingTop = params.length ? '14px' : '46px';
+    component.append(
+      new Params(value, this.subscribe),
+      this.createButtonsBlock(key, params)
+    );
+    return component;
+  };
+
+  private readonly createButtonsBlock = (
+    action: string, keys: string[]
+  ): BaseComponent => {
+    const component = new BaseComponent(Tags.DIV, ['buttons']);
+    const [clear, submit] = buttonsData.map((btn) => new Button({
+      ...btn,
+      action
+    }));
+    clear?.addEventListener('click', () => this.clearParamsHandler(keys));
+    submit?.addEventListener('click', () => this.submitHandler(action));
+    this.activeListeners.push(clear as Button);
+    if (clear && submit) component.append(clear, submit);
+    return component;
   };
 }

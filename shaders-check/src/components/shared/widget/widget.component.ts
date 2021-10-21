@@ -12,66 +12,90 @@ import { RC } from '../../../logic/beam/request_creators';
 import { toDOMParser } from '../../../utils/json_handlers';
 import { STORE } from '../../../controllers/store.controller';
 
+const txData = [
+  {
+    value: '...',
+    key: 'txId',
+    title: 'ID:'
+  },
+  {
+    value: '...',
+    key: 'comment',
+    title: 'COMMENT:'
+  },
+  {
+    value: ResTXStatus.IN_PROGRESS,
+    key: 'status_string',
+    title: 'STATUS:'
+  }
+];
+
 export default class Widget extends BaseComponent {
   action: string;
 
+  loader: Loader;
+
   removeFromDom: (...args: BaseComponent[]) => void;
 
+  private canRemoveFromStore = false;
+
   constructor(
-    action: [string, string],
+    [actionKey, tx]: [string, string],
     callback: (...args: BaseComponent[]) => void
   ) {
     super(Tags.TABLE, ['widget']);
-    BEAM.callApi(RC.txStatus(...action));
-    this.action = action[0];
+    this.action = actionKey;
     this.removeFromDom = callback;
+    BEAM.callApi(RC.txStatus(actionKey, tx));
+    BEAM.subscribe(this);
 
-    BEAM.addObservers(this);
-    const infoBlocks = new BaseComponent(Tags.DIV, ['infoblock-wrapp']);
+    const infoBlocks = this.createInfoblocks(actionKey);
     const loader = new Loader();
+    this.loader = loader;
     const closeIcon = toDOMParser(SVG.iconCancel);
-
-    const transactionId = new WidgetProps({
-      value: '...',
-      key: 'txId',
-      title: 'ID:',
-      action: this.action
-    });
-    const comment = new WidgetProps({
-      value: '...',
-      key: 'comment',
-      title: 'COMMENT:',
-      action: this.action
-    });
-    const status = new WidgetProps({
-      value: ResTXStatus.IN_PROGRESS,
-      key: 'status_string',
-      title: 'STATUS:',
-      action: this.action
-    });
 
     closeIcon.addEventListener('click', this.removeThis);
 
-    infoBlocks.append(transactionId, comment, status);
     this.append(loader, infoBlocks, closeIcon);
   }
 
-  removeThis = ():void => {
-    this.removeFromDom(this);
+  private readonly createInfoblocks = (action: string):BaseComponent => {
+    const component = new BaseComponent(Tags.DIV, ['infoblock-wrapp']);
+    const txProperties = txData.map((element) => new WidgetProps(
+      { ...element, action }
+    ));
+    component.append(...txProperties);
+    return component;
   };
 
-  getTxStatus = (status: string, reqId: string, txId: string): void => {
-    if (status === ResTXStatus.IN_PROGRESS) {
-      setTimeout(() => {
-        BEAM.callApi(RC.txStatus(reqId, txId));
-      }, ShaderProps.TX_CHECK_INTERVAL);
-    } else {
-      this.removeThis();
+  removeThis = ():void => {
+    this.removeFromDom(this);
+    if (this.canRemoveFromStore) {
       STORE.dispatch(AC.removeTxs(this.action));
     }
   };
 
-  inform = (res: APIResponse): void => {
+  getTxStatus = (status: string, reqId: string, txId: string): void => {
+    switch (status) {
+      case ResTXStatus.IN_PROGRESS:
+        setTimeout(() => {
+          BEAM.callApi(RC.txStatus(reqId, txId));
+        }, ShaderProps.TX_CHECK_INTERVAL);
+        break;
+
+      case ResTXStatus.COMPLETED:
+        this.loader.setOK(true);
+        this.canRemoveFromStore = true;
+        break;
+
+      default:
+        this.loader.setOK(false);
+        this.canRemoveFromStore = true;
+        break;
+    }
+  };
+
+  public inform = (res: APIResponse): void => {
     const { result } = res;
     if (res.id === this.action) {
       this.getTxStatus(result.status_string, this.action, result.txId);

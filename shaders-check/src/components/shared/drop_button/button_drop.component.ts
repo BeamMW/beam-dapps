@@ -8,6 +8,9 @@ import { InnerTexts, Tags } from '../../../constants/html_elements';
 import BaseComponent from '../base/base.component';
 import { BEAM } from '../../../controllers/beam.controller';
 import { RC } from '../../../logic/beam/request_creators';
+import { Button } from '../button/button.component';
+import { toDOMParser } from '../../../utils/json_handlers';
+import { SVG } from '../../../constants/svg.icons';
 
 export default class ButtonDrop extends BaseComponent {
   setFilename: (text: string) => void;
@@ -17,52 +20,50 @@ export default class ButtonDrop extends BaseComponent {
   constructor({
     mainSelector,
     labelSelector,
-    iconPic,
-    iconArrow
+    preload = false
   } : {
     mainSelector: string,
     labelSelector: string,
-    iconPic?: string,
-    iconArrow?:string }) {
-    super(Tags.LABEL, [mainSelector]);
-    STORE.addObserver(this);
-    const input = new BaseComponent(Tags.INPUT, ['input']);
-    const label = new BaseComponent(Tags.DIV, [labelSelector]);
+    preload?: boolean
+  }) {
+    super(preload
+      ? Tags.DIV
+      : Tags.LABEL, [mainSelector]);
+    STORE.subscribe(this);
+    const label = this.createLabel(labelSelector, preload);
     const icon = new BaseComponent(Tags.DIV, ['icon']);
-    const iconArr = new BaseComponent(Tags.DIV, ['iconArr']);
-    const labelText = new BaseComponent(Tags.DIV, ['labelText']);
     const text = new BaseComponent(Tags.SPAN, ['text']);
-    this.setFilename = this.initDom(text);
 
-    input.setAttributes({
-      id: 'chooseWasm',
-      type: 'file',
-      accept: '.wasm',
-      readonly: ''
-    });
-
+    this.setFilename = this.initTextDom(text);
     this.setFilename(this.fileName);
-    label.setAttributes({ for: 'chooseWasm' });
-    iconArr.innerHTML = iconArrow || '';
-    icon.innerHTML = iconPic || '';
-    labelText.textContent = iconPic ? 'load a file' : '';
-
-    label.append(input, iconArr, labelText);
-    this.append(label, text, icon);
+    if (preload) icon.append(toDOMParser(SVG.iconDrop));
 
     this.element.addEventListener('dragover', dragoverHandler);
     this.element.addEventListener('dragleave', dragleaveHandler);
     this.element.addEventListener(
       'drop', (e: DragEvent) => inputHandler(e, this.setContract)
     );
-    this.element.addEventListener(
+    (preload ? label : this).element.addEventListener(
       'change', (e: Event) => inputHandler(e, this.setContract)
     );
+
+    this.append(label, text, icon);
   }
 
   setContract = (files: ArrayBuffer, fileName: string):void => {
     BEAM.callApi(RC.createForm(files));
     STORE.dispatch(AC.setFileName(fileName));
+  };
+
+  createInput = ():BaseComponent => {
+    const component = new BaseComponent(Tags.INPUT, ['input']);
+    component.setAttributes({
+      accept: '.wasm',
+      readonly: '',
+      type: 'file'
+    });
+    component.style.display = 'none';
+    return component;
   };
 
   informForm = (state: IFormState):void => {
@@ -71,4 +72,29 @@ export default class ButtonDrop extends BaseComponent {
       this.setFilename(state.fileName);
     }
   };
+
+  beforeLoad = (iconArrow:string):Button => {
+    const component = new Button({
+      tag: Tags.LABEL,
+      name: 'load a file',
+      action: 'beforeload',
+      icon: iconArrow
+    });
+    component.append(this.createInput());
+    return component;
+  };
+
+  afterLoad = (labelSelector: string, iconSvg:string):BaseComponent => {
+    const component = new BaseComponent(Tags.DIV, [labelSelector]);
+    const icon = new BaseComponent(Tags.DIV, ['iconArr']);
+    icon.append(toDOMParser(iconSvg));
+    component.append(icon, this.createInput());
+    return component;
+  };
+
+  createLabel = (
+    labelSelector: string, preload:boolean
+  ):BaseComponent | Button => (preload
+    ? this.beforeLoad(SVG.iconArrow)
+    : this.afterLoad(labelSelector, SVG.iconFile));
 }

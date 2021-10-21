@@ -3,7 +3,7 @@ import {
 } from 'formProps';
 
 export class STORE {
-  static addObserver: AddObsever;
+  static subscribe: AddObsever;
 
   static dispatch: FormDispatch;
 
@@ -12,12 +12,12 @@ export class STORE {
   static isStoreObserver: IsObserverType;
 
   static setApiHandlers = (obj: {
-    addObserver: AddObsever,
+    subscribe: AddObsever,
     dispatch: FormDispatch,
     getRole: () => IFormState,
     isStoreObserver: IsObserverType
   }): void => {
-    STORE.addObserver = obj.addObserver;
+    STORE.subscribe = obj.subscribe;
     STORE.dispatch = obj.dispatch;
     STORE.getState = obj.getRole;
     STORE.isStoreObserver = obj.isStoreObserver;

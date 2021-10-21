@@ -17,7 +17,7 @@ export class Value extends BaseComponent {
   }
 
   render = (output: IOutput):void => {
-    this.element.innerHTML = '';
+    this.removeAll();
     const actions = Object.entries(
       this.role
         ? output?.roles?.[this.role] as IActionOutput

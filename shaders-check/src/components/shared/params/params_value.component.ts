@@ -8,22 +8,22 @@ import './params.scss';
 export class Params extends BaseComponent {
   constructor(
     params:IActionParams,
-    addObserver: (component: ParamsInput) => void
+    subscribe: (component: ParamsInput) => void
   ) {
     super(Tags.DIV, ['input__params']);
-    this.render(params, addObserver);
+    this.render(params, subscribe);
   }
 
   render = (
     params:IActionParams,
-    addObserver: (component: ParamsInput) => void
+    subscribe: (component: ParamsInput) => void
   ):void => {
-    this.element.innerHTML = '';
+    this.removeAll();
     const list = Object.entries(
       params as IActionParams
     );
     const valuesList = list.map(
-      (el) => new ParamsLabel(el, addObserver)
+      (el) => new ParamsLabel(el, subscribe)
     );
     if (valuesList.length) this.append(...valuesList);
   };

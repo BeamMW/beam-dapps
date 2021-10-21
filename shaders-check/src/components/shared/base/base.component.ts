@@ -9,9 +9,9 @@ type HTMLAttributes = {
 export default class BaseComponent {
   readonly element: HTMLElement;
 
-  inform?: (res:APIResponse) => void;
+  public inform?: (res:APIResponse) => void;
 
-  informForm?: (obj: IFormState) => void;
+  public informForm?: (obj: IFormState) => void;
 
   constructor(tag:Tags, styles: string[] = []) {
     this.element = document.createElement(tag);
@@ -32,10 +32,19 @@ export default class BaseComponent {
     this.element.innerHTML = str;
   }
 
-  protected initDom = (node: BaseComponent): (text: string) => void => {
+  protected initTextDom = (node: BaseComponent): (text: string) => void => {
     const component = node;
     return (text: string) => {
       component.textContent = text;
+    };
+  };
+
+  protected initImageDom = (node: BaseComponent): (src:string) => void => {
+    const component = node;
+    return (src: string) => {
+      component.setAttributes({
+        src
+      });
     };
   };
 

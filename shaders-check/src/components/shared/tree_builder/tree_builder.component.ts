@@ -25,7 +25,7 @@ export class TreeBuilder extends BaseComponent {
   ):BaseComponent[] => {
     const button = new BaseComponent(Tags.BUTTON);
     const type = new BaseComponent(Tags.SPAN, ['type']);
-    type.innerHTML = Array.isArray(value)
+    type.textContent = Array.isArray(value)
       ? TreeIcons.ARRAY
       : TreeIcons.OBJECT;
     button.element.addEventListener('click',
@@ -47,7 +47,7 @@ export class TreeBuilder extends BaseComponent {
   createNewValue = (value: TreeValue):BaseComponent => {
     const component = new BaseComponent(Tags.LI);
     const valueSpan = new BaseComponent(Tags.SPAN);
-    valueSpan.innerHTML = typeof value === 'number'
+    valueSpan.textContent = typeof value === 'number'
       ? String(value)
       : `"${value}"`;
     component.append(valueSpan);
@@ -65,7 +65,7 @@ export class TreeBuilder extends BaseComponent {
 
   createKey = (key: string, isArray: boolean):BaseComponent => {
     const component = new BaseComponent(Tags.SPAN, ['key']);
-    component.innerHTML = isArray
+    component.textContent = isArray
       ? `${key}:`
       : `"${key}":`;
     return component;
@@ -74,8 +74,8 @@ export class TreeBuilder extends BaseComponent {
   createBracket = (isArray: boolean, isOpen?: boolean):BaseComponent => {
     const component = new BaseComponent(Tags.DIV, ['bracket']);
     if (isOpen) {
-      component.innerHTML = isArray ? '[' : '{';
-    } else component.innerHTML = isArray ? ']' : '}';
+      component.textContent = isArray ? '[' : '{';
+    } else component.textContent = isArray ? ']' : '}';
     return component;
   };
 
@@ -87,6 +87,8 @@ export class TreeBuilder extends BaseComponent {
       const [key, value] = param;
       const keyComponent = this.createKey(key, isArray);
       const valueComponent = this.convertValue(<TreeValue>value);
+      const comma = new BaseComponent(Tags.SPAN);
+      comma.textContent = ',';
       valueComponent.insertFirst(keyComponent);
       this.append(valueComponent);
     });

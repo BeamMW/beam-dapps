@@ -18,7 +18,7 @@ export class Form extends BaseComponent {
     super(Tags.FORM, ['form']);
     console.log('output:', output);
     this.output = output;
-    STORE.addObserver(this);
+    STORE.subscribe(this);
 
     this.roleValue = this.setRole(output);
     STORE.dispatch(AC.setRole(this.roleValue), 'sync');

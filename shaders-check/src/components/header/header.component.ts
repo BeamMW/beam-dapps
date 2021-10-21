@@ -1,7 +1,4 @@
-import { APIResponse } from 'beamApiProps';
-import { SVG } from '../../constants/svg.icons';
 import { Tags } from '../../constants/html_elements';
-import { BEAM } from '../../controllers/beam.controller';
 import BaseComponent from '../shared/base/base.component';
 import fileImage from '../../assets/icon/file.svg';
 import './header.scss';
@@ -13,11 +10,9 @@ export default class Header extends BaseComponent {
 
   constructor() {
     super(Tags.DIV, ['header']);
-    BEAM.addObservers(this);
     this.headerDrop = new ButtonDrop({
       mainSelector: 'header__app',
-      labelSelector: 'header__app-label',
-      iconArrow: SVG.iconFile
+      labelSelector: 'header__app-label'
     });
     const img = new BaseComponent(Tags.IMG, ['header__img']);
 
@@ -27,10 +22,4 @@ export default class Header extends BaseComponent {
 
     this.append(this.headerDrop, new InfoBlock());
   }
-
-  inform = (res: APIResponse): void => {
-    if (res.error) {
-      console.log(res);
-    }
-  };
 }

@@ -159,7 +159,7 @@ declare module 'beamApiProps' {
 
   export type BeamApiHandlers = {
     callApi: CallApiType;
-    addObservers: AddObserversType;
+    subscribe: AddObserversType;
     deleteObserver: DeleteObserverType;
     initShader: InitShaderType;
   };

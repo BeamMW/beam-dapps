@@ -55,16 +55,16 @@ describe('test actions', () => {
     const data = new BeamAPI();
     const store = new Store();
     STORE.setApiHandlers({
-      addObserver: store.addObserver,
+      subscribe: store.subscribe,
       dispatch: store.dispatch,
       getRole: store.getRole,
       isStoreObserver: store.isStoreObserver
     });
     BEAM.setApiHandlers({
-      addObservers: data.addObservers,
+      subscribe: data.subscribe,
       callApi: data.callApi,
       initShader: data.initShader,
-      deleteObserver: data.deleteObserver
+      deleteObserver: data.subscribe
     });
     BEAM.initShader(new ArrayBuffer(20000));
   });
@@ -162,7 +162,7 @@ describe('test actions', () => {
   it('Remove component from observers list(store)', () => {
     component = new BaseComponent(Tags.DIV);
     document.body.append(component.element);
-    STORE.addObserver(component);
+    STORE.subscribe(component);
     component.element.remove();
     setTimeout(() => {
       expect(STORE.isStoreObserver(component)).toBe(false);

@@ -6,7 +6,7 @@ import { RoleLabel } from './role_label.component';
 
 export class Role extends BaseComponent {
   constructor(obj: IOutput) {
-    super(Tags.DIV, ['input__role']);
+    super(Tags.DIV, ['roles']);
     if (obj.roles) {
       const roles = Object.entries(obj.roles);
       roles.forEach((el, i) => {

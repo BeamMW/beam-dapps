@@ -14,17 +14,17 @@ export class App {
     new BeamAPI().loadAPI().then((data:BeamAPI) => {
       const store = new Store();
       STORE.setApiHandlers({
-        addObserver: store.addObserver,
+        subscribe: store.subscribe,
         dispatch: store.dispatch,
         getRole: store.getRole,
         isStoreObserver: store.isStoreObserver
       });
 
       BEAM.setApiHandlers({
-        addObservers: data.addObservers,
+        subscribe: data.subscribe,
         callApi: data.callApi,
         initShader: data.initShader,
-        deleteObserver: data.deleteObserver
+        deleteObserver: data.subscribe
       });
 
       loader.replace(new Main());
