@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2020",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "incremental": true,
+    "noImplicitReturns": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "typeRoots": ["./node_modules/@types", "./src/types/declarations"],
+
+    "allowJs": false,
+    "rootDir": "./src",
+    "downlevelIteration": false,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "strictPropertyInitialization":true,
+  },
+  "exclude": [
+    "node_modules/"
+  ],
+  "include": [
+    "./src/**/*.ts", "src/tests/sum.test.ts"]
+}

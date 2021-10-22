@@ -1,0 +1,39 @@
+.roles {
+  display: flex;
+  padding: 30px 20px 20px;
+  // height: 70px;
+}
+.roles__label {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  cursor: pointer;
+  font-family: SFProDisplay;
+  font-size: 12px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-transform: uppercase;
+  color: #fff;
+  margin: 0 32px 0 0;
+  padding-bottom: 4px;
+
+  span {
+    padding-bottom: 4px;
+    padding-bottom: 4px;
+    width: 100px;
+    text-align: center;
+  }
+  & > input:checked + span + .active {
+    width: 91px;
+    height: 2px;
+    box-shadow: 0 0 5px 0 rgba(0, 246, 210, 0.7);
+    background: rgba(0, 246, 210, 0.7);
+  }
+  .roles__input {
+    position: absolute;
+    left: -9999px;
+  }
+}
