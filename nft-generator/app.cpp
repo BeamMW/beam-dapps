@@ -136,12 +136,39 @@ void GetAllSeeds(const ContractID &cid) {
 
     Env::Key_T <uint64_t> key;
     NFTGenerator::NFT nft;
-    Env::DocGroup seeds("seeds");
+    Env::DocArray gr("seeds");
     for (Env::VarReader reader(start_key, end_key); reader.MoveNext_T(key, nft);) {
+        Env::DocGroup seeds("");
         Env::DocAddNum("aid", nft.price.asset_id);
         Env::DocAddNum("amount", nft.price.amount);
         Env::DocAddNum("seed", nft.seed);
         Env::DocAddBlob_T("holder", nft.holder);
+    }
+}
+
+void GetUserSeeds(const ContractID &cid) {
+    Env::Key_T <uint64_t> start_key, end_key;
+    _POD_(start_key.m_Prefix.m_Cid) = cid;
+    start_key.m_KeyInContract = 0;
+    _POD_(end_key) = start_key;
+    end_key.m_KeyInContract = static_cast<uint64_t>(-1);
+
+    Env::Key_T <uint64_t> key;
+    NFTGenerator::NFT nft;
+    Env::DocArray gr("seeds");
+    for (Env::VarReader reader(start_key, end_key); reader.MoveNext_T(key, nft);) {
+        PubKey this_user_pk = GetKey(cid, nft.seed);
+        Secp_point *p;
+        Env::Secp_Point_Import(*p, nft.holder);
+        Secp_point *p2;
+        Env::Secp_Point_Import(*p2, this_user_pk);
+        if (p2 == p) {
+            Env::DocGroup seeds("");
+            Env::DocAddNum("aid", nft.price.asset_id);
+            Env::DocAddNum("amount", nft.price.amount);
+            Env::DocAddNum("seed", nft.seed);
+            Env::DocAddBlob_T("holder", nft.holder);
+        }
     }
 }
 
@@ -226,31 +253,6 @@ void Withdraw(const ContractID &contract_id, Amount amount, AssetID asset_id) {
 
     Env::GenerateKernel(&contract_id, NFTGenerator::Withdraw::s_iMethod, &request, sizeof(request),
                         &fc, 1, &sig, 1, "withdraw", 0);
-}
-
-void GetUserSeeds(const ContractID &cid) {
-    Env::Key_T <uint64_t> start_key, end_key;
-    _POD_(start_key.m_Prefix.m_Cid) = cid;
-    start_key.m_KeyInContract = 0;
-    _POD_(end_key) = start_key;
-    end_key.m_KeyInContract = static_cast<uint64_t>(-1);
-
-    Env::Key_T <uint64_t> key;
-    NFTGenerator::NFT nft;
-    Env::DocGroup seeds("seeds");
-    for (Env::VarReader reader(start_key, end_key); reader.MoveNext_T(key, nft);) {
-        PubKey this_user_pk = GetKey(cid, nft.seed);
-        Secp_point *p;
-        Env::Secp_Point_Import(*p, nft.holder);
-        Secp_point *p2;
-        Env::Secp_Point_Import(*p2, this_user_pk);
-        if (p2 == p) {
-            Env::DocAddNum("aid", nft.price.asset_id);
-            Env::DocAddNum("amount", nft.price.amount);
-            Env::DocAddNum("seed", nft.seed);
-            Env::DocAddBlob_T("holder", nft.holder);
-        }
-    }
 }
 
 BEAM_EXPORT void Method_1() {
