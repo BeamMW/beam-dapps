@@ -157,18 +157,27 @@ void GetUserSeeds(const ContractID &cid) {
     NFTGenerator::NFT nft;
     Env::DocArray gr("seeds");
     for (Env::VarReader reader(start_key, end_key); reader.MoveNext_T(key, nft);) {
-        PubKey this_user_pk = GetKey(cid, nft.seed);
-        Secp_point *p;
+        PubKey this_user_pk;
+        _POD_(this_user_pk) = GetKey(cid, nft.seed);
+
+        Secp_point *p = Env::Secp_Point_alloc(), *p2 = Env::Secp_Point_alloc();
         Env::Secp_Point_Import(*p, nft.holder);
-        Secp_point *p2;
         Env::Secp_Point_Import(*p2, this_user_pk);
-        if (p2 == p) {
+
+        Secp_point_data pd, pd2;
+        Env::Secp_Point_Export(*p, pd);
+        Env::Secp_Point_Export(*p2, pd2);
+
+        if (_POD_(pd) == pd2) {
             Env::DocGroup seeds("");
             Env::DocAddNum("aid", nft.price.asset_id);
             Env::DocAddNum("amount", nft.price.amount);
             Env::DocAddNum("seed", nft.seed);
             Env::DocAddBlob_T("holder", nft.holder);
         }
+
+        Env::Secp_Point_free(*p);
+        Env::Secp_Point_free(*p2);
     }
 }
 
@@ -342,7 +351,7 @@ BEAM_EXPORT void Method_1() {
         } else if (Env::Strcmp(action, "get_user_seeds") == 0) {
             ContractID cid;
             Env::DocGet("cid", cid);
-
+            GetUserSeeds(cid);
         } else {
             Env::DocAddText("error", "Invalid action");
         }

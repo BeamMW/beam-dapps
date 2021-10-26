@@ -14,22 +14,6 @@ BEAM_EXPORT void Method_2(const NFTGenerator::SaveNewSeed &request) {
     Env::SaveVar_T(request.nft.seed, request.nft);
 }
 
-#ifndef HOST_BUILD
-
-namespace {
-    bool operator==(const Secp_point_data& lhs, const Secp_point_data& rhs) {
-        for (uint32_t i = 0; i < 32; ++i) {
-            if (lhs.X.m_p[i] != rhs.X.m_p[i]) {
-                return false;
-            }
-        }
-
-        return lhs.Y == rhs.Y;
-    }
-}
-
-#endif
-
 BEAM_EXPORT void Method_3(const NFTGenerator::SetPrice &r) {
     NFTGenerator::NFT m;
     Env::Halt_if(!Env::LoadVar_T(r.updated_nft.seed, m));
