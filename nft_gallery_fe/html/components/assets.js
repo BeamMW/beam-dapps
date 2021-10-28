@@ -29,6 +29,7 @@ export default {
                     v-bind:owned="item.owned"
 										v-bind:price="item.price"
                     v-bind:in_tx="item.in_tx"
+                    v-on:buy="onBuyAsset"
                 />
             </div>
         </div>    
@@ -84,8 +85,8 @@ export default {
 
     onBuyAsset(id) {
       utils.invokeContract(
-        `role=user,action=buy,id=${id},cid=${this.cid}`,
-        (...args) => this.makeTx(...args)
+        `role=user,action=buy,cid=${this.cid},seed=${id}, aid='5'`,
+        (...args) => this.onMakeTx(...args)
       );
     },
 
@@ -106,29 +107,29 @@ export default {
     },
 
     onMakeTx(err, sres, full, id) {
-      if (err)
-        return this.$root.setError(
-          err,
-          'Failed to generate transaction request'
-        );
-      utils.ensureField(full.result, 'raw_data', 'array');
-      utils.callApi(
-        'process_invoke_data',
-        { data: full.result.raw_data },
+        if (err)
+          return this.$root.setError(
+            err,
+            'Failed to generate transaction request'
+          );
+        utils.ensureField(full.result, 'raw_data', 'array');
+        utils.callApi(
+          'process_invoke_data',
+          { data: full.result.raw_data },
         (err, res, full) => this.onSendToChain(err, res, full, id)
-      );
-    },
+        );
+      },
 
-    onSendToChain(err, res, full, id) {
-      if (err) {
-        if (utils.isUserCancelled(err)) return;
-        return this.$root.setError(err, 'Failed to create transaction');
-      }
-      for (let item of this.items) {
-        if (item.id == id) {
-          item.in_tx = true;
+      onSendToChain(err, res, full, id) {
+        if (err) {
+          if (utils.isUserCancelled(err)) return;
+          return this.$root.setError(err, 'Failed to create transaction');
         }
-      }
+        for (let item of this.items) {
+          if (item.id == id) {
+            item.in_tx = true;
+          }
+        }
     },
   },
 };

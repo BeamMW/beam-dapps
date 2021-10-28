@@ -5,6 +5,10 @@ import { parseToBeam } from '../utils/string-handlers.js';
 
 export default {
   props: {
+    id: {
+      type: Number,
+      required: true
+    },
     holder: {
       type: String,
       default: '',
@@ -136,12 +140,13 @@ export default {
 
     onBuy(ev) {
       ev.preventDefault();
-      this.$emit('buy', this.seed);
+      this.$emit('buy', this.id);
+      console.log(this.id);
     },
 
     onSell(ev) {
       ev.preventDefault();
-      this.$emit('sell', this.seed);
+      this.$emit('sell', this.id);
     },
   },
 };
