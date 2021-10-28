@@ -92,16 +92,14 @@ namespace NFTGenerator {
 
 #ifndef HOST_BUILD
 
-namespace {
-    bool operator==(const Secp_point_data& lhs, const Secp_point_data& rhs) {
-        for (uint32_t i = 0; i < 32; ++i) {
-            if (lhs.X.m_p[i] != rhs.X.m_p[i]) {
-                return false;
-            }
+bool operator==(const Secp_point_data& lhs, const Secp_point_data& rhs) {
+    for (uint32_t i = 0; i < 32; ++i) {
+        if (lhs.X.m_p[i] != rhs.X.m_p[i]) {
+            return false;
         }
-
-        return lhs.Y == rhs.Y;
     }
+
+    return lhs.Y == rhs.Y;
 }
 
 #endif
