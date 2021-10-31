@@ -1,11 +1,11 @@
-.output__place {
+.output__container  {
    * {
       user-select: text;
     }
   .bracket {
     color: #ffffff;
   }
-  button {
+  button.arrow {
     display: inline-block;
     width: 0;
     height: 0;
@@ -13,9 +13,8 @@
     vertical-align:middle;
     background: transparent;
     cursor: pointer;
-
   }
-  button.active {
+  button.arrow.active {
     border: 5px solid transparent; border-top: 5px solid #ffffff;
   }
   li {

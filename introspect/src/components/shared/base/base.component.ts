@@ -13,6 +13,8 @@ export default class BaseComponent {
 
   public informForm?: (obj: IFormState) => void;
 
+  private _listener: ((e: Event) => void) | null = null;
+
   constructor(tag:Tags, styles: string[] = []) {
     this.element = document.createElement(tag);
     this.element.classList.add(...styles);
@@ -26,6 +28,14 @@ export default class BaseComponent {
 
   public set textContent(str : string) {
     this.element.textContent = str;
+  }
+
+  public set listener(callback: ((e: Event) => void) | null) {
+    this._listener = callback;
+  }
+
+  public get listener(): (((e: Event) => void) | null) {
+    return this._listener;
   }
 
   public set innerHTML(str : string) {

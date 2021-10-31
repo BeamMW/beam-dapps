@@ -8,7 +8,7 @@ import {
 } from 'formProps';
 import BaseComponent from '../../components/shared/base/base.component';
 import { FormActions } from '../../constants/variables';
-import { ActionTypes } from './action_creators';
+import { ActionTypes } from './action-creators';
 
 const txs = localStorage.getItem('txs');
 

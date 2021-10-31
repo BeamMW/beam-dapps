@@ -5,7 +5,7 @@ import { Tags } from '../../constants/html_elements';
 import { Value } from '../shared/action/action_value.component';
 import { Role } from '../shared/role/role_value.component';
 import { STORE } from '../../controllers/store.controller';
-import { AC } from '../../logic/store/action_creators';
+import { AC } from '../../logic/store/action-creators';
 
 export class Form extends BaseComponent {
   action: BaseComponent;

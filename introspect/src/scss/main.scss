@@ -78,10 +78,6 @@ body {
   width: 100%;
 }
 
-.output__place {
-  width: 60%;
-}
-
 .roles__label {
   color: yellow;
 }
@@ -111,29 +107,29 @@ body::-webkit-scrollbar-thumb {
 
 body::-webkit-scrollbar-track {
   background: transparent;
-  .output__place::-webkit-scrollbar {
-    width: 11px;
-    height: 10px;
-  }
+  // .output__place::-webkit-scrollbar {
+  //   width: 11px;
+  //   height: 10px;
+  // }
 
-  .output__place::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.5);
-    border: 3px solid rgba(0, 0, 0, 0);
-    background-clip: padding-box;
-  }
+  // .output__place::-webkit-scrollbar-thumb {
+  //   border-radius: 10px;
+  //   background: rgba(255, 255, 255, 0.5);
+  //   border: 3px solid rgba(0, 0, 0, 0);
+  //   background-clip: padding-box;
+  // }
 
-  .output__place::-webkit-scrollbar-track {
-    background: transparent;
-  }
+  // .output__place::-webkit-scrollbar-track {
+  //   background: transparent;
+  // }
 
-  .output__place::-webkit-scrollbar-button {
-    display: none;
-  }
-  .output__place::-webkit-scrollbar-corner {
-    background-color: transparent;
-    display: none;
-  }
+  // .output__place::-webkit-scrollbar-button {
+  //   display: none;
+  // }
+  // .output__place::-webkit-scrollbar-corner {
+  //   background-color: transparent;
+  //   display: none;
+  // }
 }
 
 body::-webkit-scrollbar-button {

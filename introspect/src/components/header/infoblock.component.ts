@@ -1,7 +1,7 @@
 import { IFormState } from 'formProps';
 import { Tags } from '../../constants/html_elements';
 import { STORE } from '../../controllers/store.controller';
-import { AC } from '../../logic/store/action_creators';
+import { AC } from '../../logic/store/action-creators';
 import BaseComponent from '../shared/base/base.component';
 import './header.scss';
 

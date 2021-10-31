@@ -8,7 +8,7 @@ import { ErrorResponses, ReqID } from '../../constants/variables';
 import { Form } from '../input/form.component';
 import Transactions from '../transactions/transactions.component';
 import { STORE } from '../../controllers/store.controller';
-import { AC } from '../../logic/store/action_creators';
+import { AC } from '../../logic/store/action-creators';
 import FailPage from '../fail_page/fail_page.component';
 
 export default class Main extends BaseComponent {
