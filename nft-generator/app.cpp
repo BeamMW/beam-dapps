@@ -38,6 +38,7 @@ BEAM_EXPORT void Method_0() {
                 Env::DocAddText("cid", "ContractID");
                 Env::DocAddText("amount", "Amount");
                 Env::DocAddText("aid", "AssetID");
+                Env::DocAddText("seed", "Seed to get money for");
             }
             {
                 Env::DocGroup action("get_key");
@@ -76,7 +77,7 @@ struct PersonalID {
 };
 struct SeedAndCid {
     ContractID cid;
-    int64_t seed;
+    uint64_t seed;
 };
 #pragma pack (pop)
 
@@ -112,7 +113,7 @@ bool IsSeedAlreadyGenerated(const ContractID &cid, AssetID aid, uint64_t seed) {
     return false;
 }
 
-PubKey GetKey(const ContractID &cid, int64_t seed) {
+PubKey GetKey(const ContractID &cid, uint64_t seed) {
     SeedAndCid id;
     id.cid = cid;
     id.seed = seed;
@@ -210,7 +211,7 @@ void SetSeedPrice(const ContractID &cid, uint64_t seed, NFTGenerator::Price pric
     Env::DocAddBlob_T("holder", holder);
 }
 
-void BuySeed(ContractID cid, int64_t seed, NFTGenerator::Price price) {
+void BuySeed(ContractID cid, uint64_t seed, NFTGenerator::Price price) {
     NFTGenerator::Buy args;
     args.seed = seed;
     args.buyer = GetKey(cid, seed);
@@ -227,11 +228,12 @@ void BuySeed(ContractID cid, int64_t seed, NFTGenerator::Price price) {
     Env::DocAddNum("price.asset_id", price.asset_id);
 }
 
-void Withdraw(const ContractID &contract_id, Amount amount, AssetID asset_id) {
+void Withdraw(const ContractID &contract_id, Amount amount, AssetID asset_id, uint64_t seed) {
     NFTGenerator::Withdraw request;
     request.value = amount;
     request.key.asset_id = asset_id;
-    request.key.user = GetKeyByCID(contract_id);
+    request.key.user = GetKey(contract_id, seed);
+    request.key.seed = seed;
 
     FundsChange fc;
     fc.m_Amount = request.value;
@@ -315,10 +317,12 @@ BEAM_EXPORT void Method_1() {
             ContractID gallery_CID;
             Amount amount;
             AssetID aid;
+            uint64_t seed;
             Env::DocGet("cid", gallery_CID);
             Env::DocGet("amount", amount);
             Env::DocGet("aid", aid);
-            Withdraw(gallery_CID, amount, aid);
+            Env::DocGet("seed", seed);
+            Withdraw(gallery_CID, amount, aid, seed);
         } else if (Env::Strcmp(action, "get_key") == 0) {
             ContractID cid;
             uint64_t seed;

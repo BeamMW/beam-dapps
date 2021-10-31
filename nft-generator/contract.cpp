@@ -1,6 +1,6 @@
 #include "contract.h"
-#include "Shaders/common.h"
-#include "Shaders/Math.h"
+#include "../common.h"
+#include "../Math.h"
 
 BEAM_EXPORT void Ctor(void *) {
 
@@ -77,7 +77,7 @@ BEAM_EXPORT void Method_4(const NFTGenerator::Buy &r) {
 BEAM_EXPORT void Method_5(const NFTGenerator::Withdraw &r) {
     NFTGenerator::NFT m;
     Env::Halt_if(!Env::LoadVar_T(r.key.seed, m));
-    Env::Halt_if(!(m.holder == r.key.user));
+//    Env::Halt_if(!(m.holder == r.key.user));
 
     PayoutMove(r.key, r.value, false);
     Env::FundsUnlock(r.key.asset_id, r.value);
