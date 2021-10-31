@@ -15,6 +15,7 @@ declare global {
   interface Window {
     qt: QWebChannelTransport;
     BeamApi: QObject;
+    clipboardData: any;
   }
 }
 

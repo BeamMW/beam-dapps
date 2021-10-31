@@ -1,7 +1,6 @@
 import { APIResponse } from 'beamApiProps';
 import { AC } from '../../../logic/store/action-creators';
 import { Tags } from '../../../constants/html_elements';
-import { SVG } from '../../../constants/svg.icons';
 import { ResTXStatus, ShaderProps } from '../../../constants/variables';
 import { BEAM } from '../../../controllers/beam.controller';
 import BaseComponent from '../base/base.component';
@@ -11,6 +10,7 @@ import WidgetProps from './widget.info.component';
 import { RC } from '../../../logic/beam/request-creators';
 import { toDOMParser } from '../../../utils/json_handlers';
 import { STORE } from '../../../controllers/store.controller';
+import { SVG } from '../../../constants/svg.icons';
 
 const txData = [
   {

@@ -28,9 +28,21 @@ export default class ReqJson extends BaseComponent {
     const input = this.inputDecorator(ParamsInput, subscribe);
     button.addEventListener('click', () => {
       const element = <HTMLInputElement>input.element;
-      navigator.clipboard.writeText(element.value);
+      navigator.clipboard.writeText(element.value)
+        .catch(() => this.copy(element));
     });
     return [input, button];
+  };
+
+  copy = (node: HTMLInputElement):void => {
+    const aux = document.createElement('div');
+    aux.setAttribute('contentEditable', 'true');
+    aux.innerHTML = node.value;
+    aux.setAttribute('onfocus', "document.execCommand('selectAll',false,null)");
+    document.body.appendChild(aux);
+    aux.focus();
+    document.execCommand('copy');
+    document.body.removeChild(aux);
   };
 
   inputDecorator = (

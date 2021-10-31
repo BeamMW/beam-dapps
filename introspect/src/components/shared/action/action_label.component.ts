@@ -3,30 +3,17 @@ import { ParamPayloadArgsType } from 'formProps';
 import { Params } from '../params/params_value.component';
 import BaseComponent from '../base/base.component';
 import { Tags } from '../../../constants/html_elements';
-import { SVG } from '../../../constants/svg.icons';
 import { STORE } from '../../../controllers/store.controller';
 import { OutputPlace } from '../output/output_place.component';
 import { ParamsInput } from '../params/params_input.component';
-import { actionColors } from './action.data';
+import { actionColors } from '../../../locales/action.data';
 import { argsStringify, toDOMParser } from '../../../utils/json_handlers';
 import { Button } from '../button/button.component';
 import { BEAM } from '../../../controllers/beam.controller';
 import { RC } from '../../../logic/beam/request-creators';
 import { AC } from '../../../logic/store/action-creators';
-
-const buttonsData = [
-  {
-    name: 'clear',
-    classes: (action: string) => ['clear', `clear-${action}`],
-    icon: SVG.iconCancel
-  },
-  {
-    name: 'execute',
-    classes: (action: string) => ['submit', `submit-${action}`],
-    icon: SVG.iconDone,
-    type: 'submit'
-  }
-];
+import { buttonsData } from '../../../locales/buttons.data';
+import { SVG } from '../../../constants/svg.icons';
 
 export class ValueLabel extends BaseComponent {
   role = STORE.getState().role;

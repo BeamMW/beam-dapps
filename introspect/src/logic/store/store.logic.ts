@@ -16,6 +16,7 @@ const initialState: IFormState = {
   role: null,
   onload: new Set(),
   fileName: '',
+  defaultCid: null,
   txs: txs ? new Map(JSON.parse(txs)) : new Map(),
   error: {
     msg: '',
@@ -91,6 +92,10 @@ export class Store {
           (<{ key:string, value:string }>payload).key,
           (<{ key:string, value:string }>payload).value
         );
+        break;
+
+      case FormActions.SET_DEFAULT_CID:
+        newState.defaultCid = <string>payload;
         break;
 
       case FormActions.REMOVE_TXS:
