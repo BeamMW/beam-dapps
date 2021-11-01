@@ -39,7 +39,6 @@ namespace NFTGenerator {
         struct Key {
             PubKey user;
             AssetID asset_id;
-            uint64_t seed;
         };
 
         Amount amount;

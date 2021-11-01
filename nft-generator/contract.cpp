@@ -74,9 +74,6 @@ BEAM_EXPORT void Method_4(const NFTGenerator::Buy &r) {
 }
 
 BEAM_EXPORT void Method_5(const NFTGenerator::Withdraw &r) {
-    NFTGenerator::NFT m;
-    Env::Halt_if(!Env::LoadVar_T(r.key.seed, m));
-
     PayoutMove(r.key, r.value, false);
     Env::FundsUnlock(r.key.asset_id, r.value);
     Env::AddSig(r.key.user);
