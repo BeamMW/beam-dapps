@@ -1,6 +1,6 @@
 #include "contract.h"
-#include "../common.h"
-#include "../Math.h"
+#include "Shaders/common.h"
+#include "Shaders/Math.h"
 
 BEAM_EXPORT void Ctor(void *) {
 
@@ -60,7 +60,6 @@ BEAM_EXPORT void Method_4(const NFTGenerator::Buy &r) {
     Env::FundsLock(m.price.asset_id, r.price.amount);
 
     NFTGenerator::Payout::Key pok;
-    pok.seed = r.seed;
     pok.asset_id = m.price.asset_id;
 
     _POD_(pok.user) = m.holder;
@@ -77,52 +76,8 @@ BEAM_EXPORT void Method_4(const NFTGenerator::Buy &r) {
 BEAM_EXPORT void Method_5(const NFTGenerator::Withdraw &r) {
     NFTGenerator::NFT m;
     Env::Halt_if(!Env::LoadVar_T(r.key.seed, m));
-//    Env::Halt_if(!(m.holder == r.key.user));
 
     PayoutMove(r.key, r.value, false);
     Env::FundsUnlock(r.key.asset_id, r.value);
     Env::AddSig(r.key.user);
-}
-
-BEAM_EXPORT void Method_6(const NFTGenerator::CheckPrepare &r) {
-    NFTGenerator::NFT m;
-    Env::Halt_if(!Env::LoadVar_T(r.seed, m));
-    Env::AddSig(m.holder);
-
-    if (m.nft_asset_id) {
-        // destroy it
-        Env::Halt_if(!Env::AssetDestroy(m.nft_asset_id));
-        m.nft_asset_id = 0;
-    } else {
-        // 1st call. Don't checkout, only prepare
-        static const char szMeta[] = "STD:SCH_VER=1;N=NFT-Gallery NFT;SN=Gall;UN=GALL;NTHUN=unique";
-        m.nft_asset_id = Env::AssetCreate(szMeta, sizeof(szMeta) - 1);
-    }
-
-    Env::SaveVar_T(r.seed, m);
-}
-
-BEAM_EXPORT void Method_7(const NFTGenerator::CheckOut &r) {
-    NFTGenerator::NFT m;
-    Env::Halt_if(!Env::LoadVar_T(r.seed, m) || !m.nft_asset_id);
-    Env::AddSig(m.holder);
-
-    Env::Halt_if(!Env::AssetEmit(m.nft_asset_id, 1, 1));
-    Env::FundsUnlock(m.nft_asset_id, 1);
-
-    _POD_(m.holder).SetZero();
-    _POD_(m.price).SetZero();
-
-    Env::SaveVar_T(r.seed, m);
-}
-
-BEAM_EXPORT void Method_8(const NFTGenerator::CheckIn &r) {
-    NFTGenerator::NFT m;
-    Env::Halt_if(!Env::LoadVar_T(r.seed, m) || !_POD_(m.holder).IsZero());
-
-    Env::FundsLock(m.nft_asset_id, 1);
-    Env::Halt_if(!Env::AssetEmit(m.nft_asset_id, 1, 0));
-
-    _POD_(m.holder) = r.user;
-    Env::SaveVar_T(r.seed, m);
 }

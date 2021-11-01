@@ -1,11 +1,11 @@
 #include "contract.h"
 
-#include "../app_common_impl.h"
+#include "Shaders/app_common_impl.h"
 
 namespace NFTGenerator {
-    static const ShaderID s_SID = {0x04, 0xb6, 0xb9, 0xd8, 0x23, 0x23, 0xf1, 0x7e, 0x79, 0x85, 0x58, 0xc9, 0xdb, 0x4c,
-                                   0x33, 0x66, 0x99, 0xc9, 0x21, 0xe1, 0x84, 0x28, 0xf5, 0x69, 0x47, 0xad, 0x99, 0xc3,
-                                   0xbd, 0xde, 0x4c, 0xc5};
+    static const ShaderID s_SID = {0xc9, 0x4c, 0x07, 0x82, 0x9d, 0xe7, 0xb2, 0xf1, 0x8d, 0xe4, 0x2c, 0x1d, 0xcd, 0x75,
+                                   0xcf, 0x8d, 0x5e, 0xcc, 0xdb, 0xf3, 0xa5, 0x98, 0x81, 0xc7, 0x69, 0x71, 0x40, 0xd4,
+                                   0x83, 0x93, 0xf5, 0x06};
 }
 
 BEAM_EXPORT void Method_0() {
@@ -77,7 +77,6 @@ struct PersonalID {
 };
 struct SeedAndCid {
     ContractID cid;
-    uint64_t seed;
 };
 #pragma pack (pop)
 
@@ -94,7 +93,7 @@ uint64_t MergeNumbers(uint32_t upper, uint32_t lower) {
 }
 
 bool IsSeedAlreadyGenerated(const ContractID &cid, AssetID aid, uint64_t seed) {
-    Env::Key_T<NFTGenerator::ComplexKeyWithSeed> start_key, end_key;
+    Env::Key_T <NFTGenerator::ComplexKeyWithSeed> start_key, end_key;
     _POD_(start_key.m_Prefix.m_Cid) = cid;
     _POD_(start_key.m_KeyInContract.key.key) = GetKeyByCID(cid);
     start_key.m_KeyInContract.key.asset_id = aid;
@@ -102,7 +101,7 @@ bool IsSeedAlreadyGenerated(const ContractID &cid, AssetID aid, uint64_t seed) {
     _POD_(end_key) = start_key;
     end_key.m_KeyInContract.seed = static_cast<uint64_t>(-1);
 
-    Env::Key_T<NFTGenerator::ComplexKeyWithSeed> key;
+    Env::Key_T <NFTGenerator::ComplexKeyWithSeed> key;
     PubKey holder;
     for (Env::VarReader reader(start_key, end_key); reader.MoveNext_T(key, holder);) {
         if (key.m_KeyInContract.seed == seed) {
@@ -116,20 +115,19 @@ bool IsSeedAlreadyGenerated(const ContractID &cid, AssetID aid, uint64_t seed) {
 PubKey GetKey(const ContractID &cid, uint64_t seed) {
     SeedAndCid id;
     id.cid = cid;
-    id.seed = seed;
     PubKey key;
     Env::DerivePk(key, &id, sizeof(SeedAndCid));
     return key;
 }
 
 void GetAllSeeds(const ContractID &cid) {
-    Env::Key_T<uint64_t> start_key, end_key;
+    Env::Key_T <uint64_t> start_key, end_key;
     _POD_(start_key.m_Prefix.m_Cid) = cid;
     start_key.m_KeyInContract = 0;
     _POD_(end_key) = start_key;
     end_key.m_KeyInContract = static_cast<uint64_t>(-1);
 
-    Env::Key_T<uint64_t> key;
+    Env::Key_T <uint64_t> key;
     NFTGenerator::NFT nft;
     Env::DocArray gr("seeds");
     for (Env::VarReader reader(start_key, end_key); reader.MoveNext_T(key, nft);) {
@@ -142,13 +140,13 @@ void GetAllSeeds(const ContractID &cid) {
 }
 
 void GetUserSeeds(const ContractID &cid) {
-    Env::Key_T<uint64_t> start_key, end_key;
+    Env::Key_T <uint64_t> start_key, end_key;
     _POD_(start_key.m_Prefix.m_Cid) = cid;
     start_key.m_KeyInContract = 0;
     _POD_(end_key) = start_key;
     end_key.m_KeyInContract = static_cast<uint64_t>(-1);
 
-    Env::Key_T<uint64_t> key;
+    Env::Key_T <uint64_t> key;
     NFTGenerator::NFT nft;
     Env::DocArray gr("seeds");
     for (Env::VarReader reader(start_key, end_key); reader.MoveNext_T(key, nft);) {
@@ -200,7 +198,6 @@ void SetSeedPrice(const ContractID &cid, uint64_t seed, NFTGenerator::Price pric
 
     SeedAndCid id;
     id.cid = cid;
-    id.seed = seed;
     SigRequest sig;
     sig.m_pID = &id;
     sig.m_nID = sizeof(id);

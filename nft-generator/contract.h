@@ -1,7 +1,7 @@
 #ifndef BEAM_CONTRACT_H
 #define BEAM_CONTRACT_H
 
-#include "../common.h"
+#include "Shaders/common.h"
 
 namespace NFTGenerator {
 
@@ -64,25 +64,6 @@ namespace NFTGenerator {
 
         Payout::Key key;
         Amount value;
-    };
-
-    struct CheckPrepare {
-        static const uint32_t s_iMethod = 6;
-
-        uint64_t seed;
-    };
-
-    struct CheckOut {
-        static const uint32_t s_iMethod = 7;
-
-        uint64_t seed;
-    };
-
-    struct CheckIn {
-        static const uint32_t s_iMethod = 8;
-
-        uint64_t seed;
-        PubKey user;
     };
 
 #pragma pack (pop)
