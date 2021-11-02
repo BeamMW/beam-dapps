@@ -1,13 +1,13 @@
 #include "../common.h"
 #include "../app_common_impl.h"
 #include "contract.h"
-
 #include <vector>
 
 void On_error(const char* msg)
 {
 	Env::DocGroup root("");
 	{
+		Env::DocAddText("error", msg);
 		Env::DocAddText("error", msg);
 	}
 }
@@ -46,6 +46,11 @@ void On_action_new_game(const ContractID& cid)
 	params.numberOfTamagotchiBirthBlock = Env::get_Height();
 	Env::DerivePk(params.playerPublicKey, &cid, sizeof(cid));
 	
+
+	Tamagotchi::Tamagotchi tamagotchi(params);
+	Env::DocAddText("name", tamagotchi.getBaseTamagothiParameters().tamagotchiName.data());
+
+
 	Env::GenerateKernel(&cid, Tamagotchi::BaseTamagothiParameters::s_iMethod, &params, sizeof(params), nullptr, 0, nullptr, 0, "Create new game and new Tamagotchi", 0);
 }
 
@@ -55,7 +60,6 @@ void On_action_feed_tamagotchi(const ContractID& cid)
 	Env::DerivePk(params.playerPublicKey, &cid, sizeof(cid));
 
 	Env::GenerateKernel(&cid, Tamagotchi::FeedTamagotchiParameters::s_iMethod, &params, sizeof(params), nullptr, 0, nullptr, 0, "Feed tamagotchi", 0);
-	Env::DocAddText("", "eating");
 }
 
 void On_action_stroke_tamagotchi(const ContractID& cid)
@@ -102,9 +106,11 @@ void On_action_get_current_tamagotchi_state(const ContractID& cid)
 
 	if (Env::VarReader::Read_T(k, tamagotchi))
 	{
+		tamagotchi.changeStateAndAttributes();
+
 		Env::DocGroup root("");
 		{
-			Env::DocAddText("name:", tamagotchi.getBaseTamagothiParameters().tamagotchiName.data());
+			Env::DocAddText("name", tamagotchi.getBaseTamagothiParameters().tamagotchiName.data());
 			Env::DocAddNum32("currentBlock", Env::get_Height());
 			Env::DocAddNum32("numberOfTamagotchiBirthBlock", tamagotchi.getBaseTamagothiParameters().numberOfTamagotchiBirthBlock);
 			Env::DocAddNum32("satiety", tamagotchi.getSatiety().getPercentageOfSatisfactionOfTheAttribute());
@@ -139,6 +145,7 @@ void On_action_get_current_tamagotchi_state(const ContractID& cid)
 
 	Tamagotchi::GetCurrentTamagotchiStateParameters params;
 	Env::DerivePk(params.playerPublicKey, &cid, sizeof(cid));
+	params.tamagotchi = tamagotchi;
 
 	Env::GenerateKernel(&cid, Tamagotchi::GetCurrentTamagotchiStateParameters::s_iMethod, &params, sizeof(params), nullptr, 0, nullptr, 0, "Get current tamagotchi state", 0);
 }

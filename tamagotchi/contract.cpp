@@ -1,7 +1,7 @@
 ﻿#include "../common.h"
 #include "../app_common_impl.h"
 #include "contract.h"
-#include <string>
+#include <string_view>
 
 BEAM_EXPORT void Ctor(void*) {}
 
@@ -43,7 +43,6 @@ BEAM_EXPORT void Method_5(const Tamagotchi::PlayWithPutTamagotchiToBedParameters
 	Tamagotchi::Tamagotchi tamagotchi;
 	Env::LoadVar_T(params.playerPublicKey, tamagotchi);
 
-	tamagotchi.play();
 	Env::Halt_if(!tamagotchi.play());
 
 	Env::SaveVar_T(params.playerPublicKey, tamagotchi);
@@ -80,7 +79,11 @@ BEAM_EXPORT void Method_8(const Tamagotchi::GetCurrentTamagotchiStateParameters&
 	Tamagotchi::Tamagotchi tamagotchi;
 	Env::LoadVar_T(params.playerPublicKey, tamagotchi);
 	
-	tamagotchi.changeStateAndAttributes();
+	tamagotchi = params.tamagotchi;
+	
+	Env::get_Height();
+	Env::get_Height();
+	Env::get_Height();
 
 	Env::SaveVar_T(params.playerPublicKey, tamagotchi);
 }
