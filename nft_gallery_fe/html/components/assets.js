@@ -2,6 +2,8 @@ import utils from '../utils/utils.js';
 import upload from './upload.js';
 import asset from './asset.js';
 import drawing from './nft-generator/app.js';
+import { store } from '../store.js';
+import generate from './generate.js';
 
 export default {
   props: {
@@ -9,18 +11,16 @@ export default {
       type: Array,
       default: [],
     },
-    cid: {
-      type: String,
-      required: true,
-    },
   },
 
   components: {
     asset,
     upload,
+    generate
   },
 
   template: `
+        <generate></generate>
         <div class="vertical-container">
             <div class="items">
                 <asset v-for="item in items"
@@ -51,7 +51,7 @@ export default {
 
   mounted() {
     utils.invokeContract(
-      `role=manager,action=seeds,cid=${this.cid}`,
+      `role=manager,action=seeds,cid=${store.state.cid}`,
       (...args) => this.onLoadSeeds(...args)
     );
   },

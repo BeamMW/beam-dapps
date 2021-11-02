@@ -85,6 +85,7 @@ export default class Utils {
         }
 
         Utils.BEAM.api.callWalletApi(JSON.stringify(request))
+        console.log(this.formatJSON(request))
     }
 
     static invokeContract(args, cback, bytes) {

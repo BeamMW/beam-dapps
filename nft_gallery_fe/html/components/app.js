@@ -1,8 +1,11 @@
 import html from '../utils/html.js';
 import utils from '../utils/utils.js';
 import assets from './assets.js';
-import loading from './loading.js';
-import error from './error.js';
+import Loading from './loading.js';
+import ErrView from './error.js';
+import generate from './generate.js';
+import { store } from '../store.js';
+import { router } from '../router.js';
 
 export default {
 	props: {
@@ -15,7 +18,7 @@ export default {
 	created() {
 		this.shader = undefined;
 		this.cid =
-			'30a547a38101b725a10442beaf6acb4a02a7ee8c3923cddbcebf29ca869bba3b';
+			'19bda81c54f0e578cffe31b369067ff3f4581f96f6d4c43cc61d43fb8a8d49e2';
 	},
 
 	data() {
@@ -34,29 +37,28 @@ export default {
 		api() {
 			return this.beam ? this.beam.api : undefined;
 		},
+		loading () {
+            return  store.state.loading
+        },
+        error () {
+            return store.state.error
+        }
 	},
 
-	render() {
-		if (this.error) {
-			return html` <${error}
-				error=${this.error.error}
-				context=${this.error.context}
-				onClearError=${this.clearError}
-			/>`;
-		}
+	components: {
+        loading: Loading,
+        error: ErrView
+    },
 
-		if (this.loading) {
-			return html`<${loading} />`;
-		}
-
-		return html`
-			<${assets}
-				cid=${this.cid}
-				artist_key=${this.artist_key}
-				changed_txs=${this.changed_txs}
-			/>
-		`;
-	},
+	template: `
+	<error v-if="error" 
+	v-bind:error="error.error"
+	v-bind:context="error.context"
+>
+</error>
+<loading v-else-if='loading'></loading>
+<router-view v-else></router-view>
+	`,
 
 	methods: {
 		setError(error, context) {
@@ -81,7 +83,6 @@ export default {
 			style.innerHTML = `.error {color: ${this.style.validator_error};}`;
 			document.head.appendChild(style);
 			document.body.style.color = this.style.content_main;
-
 			// Start real thing
 			utils.download('./app.wasm', (err, bytes) => {
 				if (err) return this.setError(err, 'Shader download');
@@ -130,7 +131,15 @@ export default {
 				throw `Failed to verify cid '${this.cid}'`;
 			}
 			this.loading = false;
+			utils.invokeContract(
+				`role=manager,action=seeds,cid=${store.state.cid}`,
+				(...args) => this.onLoadSeeds(...args)
+			  );
 		},
+
+		onLoadSeeds(err, res) {
+			store.LoadSeeds(err, res)
+		   },
 
 		onShowMethods(err, res) {
 			if (err) return this.setError(err);
