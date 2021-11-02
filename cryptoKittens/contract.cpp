@@ -6,73 +6,59 @@
 
 BEAM_EXPORT void Ctor(CryptoKittens::StartGameParams& params)
 {
-	CryptoKittens::CurrentGameState st;
+	CryptoKittens::CurrentGameState currentGameState;
 
-	st.heightOfNextGiveaway = Env::get_Height() + params.periodOfGiveaway;
-	st.kittensAndOwners = {};
+	currentGameState.numberOfLastKittensOfZeroGeneration = params.numberOfAllKittenOfZeroGeneration;
+	currentGameState.numberOfLastKittensForGiveAway = params.numberOfKittensForGiveAway;
+	currentGameState.heightOfNextGiveaway = Env::get_Height() + params.periodOfGiveaway;
 
-	// generating Zero kittens
-	for (size_t i = 0; i < params.numberOfAllKittens; ++i)
-	{
-		st.allKittens.push(Kitten());
-	}
-
-	// generating kittens for giveaway
-	for (size_t i = 0; i < params.numberOfKittensForGiveAway || !st.allKittens.empty(); ++i)
-	{
-		st.kittensForGiveaway.insert(std::make_pair(st.allKittens.front().id, st.allKittens.front()));
-		st.allKittens.pop();
-	}
-
-	Env::SaveVar_T("StartGameParams", params);
-	Env::SaveVar_T("CurrentGameState", st);
+	Env::SaveVar_T((uint8_t) CryptoKittens::StartGameParams::s_iMethod, params);
+	Env::SaveVar_T((uint8_t) CryptoKittens::CurrentGameState::s_iMethod, currentGameState);
 }
 
 BEAM_EXPORT void Dtor(void*)
 {
-	Env::DelVar_T("CurrentGameState");
-	Env::DelVar_T("StartGameParams");
+	Env::DelVar_T((uint8_t)CryptoKittens::StartGameParams::s_iMethod);
+	Env::DelVar_T((uint8_t)CryptoKittens::CurrentGameState::s_iMethod);
 }
 
-BEAM_EXPORT void Method_2(const CryptoKittens::WithdrawKitten& r)
+BEAM_EXPORT void Method_2(const CryptoKittens::Play& params)
 {
-	CryptoKittens::CurrentGameState st;
-	
-	bool isLoaded = Env::LoadVar_T("CurrentGameState", st);
-	Env::Halt_if(!isLoaded);
-	
-	//checking height
-	Env::Halt_if(st.heightOfNextGiveaway != Env::get_Height());
+	std::deque<Kitten> kittens;
+	Env::SaveVar_T(params.pubKey, kittens);
+}
 
-	// checking if there are kittens for giveaway
-	if (!st.kittensForGiveaway.empty())
+BEAM_EXPORT void Method_3(const CryptoKittens::WithdrawKitten& params)
+{
+	std::deque<Kitten> kittens;
+	Env::LoadVar_T(params.pubKey, kittens);
+	kittens.push_back(Kitten());
+	Env::SaveVar_T(params.pubKey, kittens);
+
+	CryptoKittens::CurrentGameState currentGameState;
+	Env::LoadVar_T((uint8_t)CryptoKittens::CurrentGameState::s_iMethod, currentGameState);
+	--currentGameState.numberOfLastKittensOfZeroGeneration;
+	--currentGameState.numberOfLastKittensForGiveAway;
+
+	if (currentGameState.numberOfLastKittensForGiveAway == 0)
 	{
-		// checking if the kitten (by id) is a part of kittens for giveaway
-		auto kittenIt = st.kittensForGiveaway.find(r.kittenId);
-		Env::Halt_if(kittenIt == st.kittensForGiveaway.end());
-
-		// giving the kitten for player
-		st.kittensAndOwners[1/*r.m_Account*/].push_back(st.kittensForGiveaway[r.kittenId]); 
+		CryptoKittens::StartGameParams startGameParams;
+		Env::LoadVar_T((uint8_t)CryptoKittens::StartGameParams::s_iMethod, startGameParams);
 		
-		//deleting the kitten from kittens for giveaway
-		st.kittensForGiveaway.erase(r.kittenId);
-	}
+		currentGameState.heightOfNextGiveaway = Env::get_Height() + startGameParams.periodOfGiveaway;
 
-	CryptoKittens::StartGameParams params;
-	isLoaded = Env::LoadVar_T("StartGameParams", params);
-	Env::Halt_if(!isLoaded);
-
-	// generating new kittens for giveaway
-	if (st.kittensForGiveaway.empty())
-	{
-		st.heightOfNextGiveaway = Env::get_Height() + params.periodOfGiveaway;
-		
-		for (size_t i = 0; i < params.numberOfKittensForGiveAway || !st.allKittens.empty(); ++i)
+		if (currentGameState.numberOfLastKittensOfZeroGeneration != 0)
 		{
-			st.kittensForGiveaway.insert(std::make_pair(st.allKittens.front().id, st.allKittens.front()));
-			st.allKittens.pop();
+			if (currentGameState.numberOfLastKittensOfZeroGeneration < startGameParams.numberOfKittensForGiveAway)
+			{
+				currentGameState.numberOfLastKittensForGiveAway = currentGameState.numberOfLastKittensOfZeroGeneration;
+			}
+			else
+			{
+				currentGameState.numberOfLastKittensForGiveAway = startGameParams.numberOfKittensForGiveAway;
+			}
 		}
 	}
 
-	Env::SaveVar_T("CurrentGameState", st);
+	Env::SaveVar_T((uint8_t)CryptoKittens::CurrentGameState::s_iMethod, currentGameState);
 }

@@ -1,6 +1,5 @@
 #pragma once
 #include <functional>
-
 #include "ICharacter.h"
 
 #pragma pack (push, 1)
@@ -22,16 +21,17 @@ public:
 				childGenotypeIt != childGenotype.end();
 				++firstParentGenotypeIt, ++secondParentGenotypeIt, ++childGenotypeIt)
 			{
+				/*
 				(mersenne() % 2) ? childGenotypeIt->firstGene = firstParentGenotypeIt->firstGene : secondParentGenotypeIt->firstGene;
-				(mersenne() % 2) ? childGenotypeIt->secondGene = secondParentGenotypeIt->secondGene : firstParentGenotypeIt->secondGene;
+				(mersenne() % 2) ? childGenotypeIt->secondGene = secondParentGenotypeIt->secondGene : firstParentGenotypeIt->secondGene;*/
 
 				mutate(*childGenotypeIt);
 			}
 		}
-		else
+		/*else
 		{
 			childGenotype.reserve(0);
-		}
+		}*/
 		return childGenotype;
 	}
 
@@ -41,12 +41,12 @@ private:
 	{
 		static constexpr int mutationProbability = 1; // 1 per sent
 
-		if (mersenne() <= mersenne.max() * mutationProbability / 100)
-			(chromosome.firstGene == GeneState::Dominant)
-			? chromosome.firstGene = GeneState::Recessive : chromosome.firstGene = GeneState::Dominant;
-		if (mersenne() <= mersenne.max() * mutationProbability / 100)
-			(chromosome.secondGene == GeneState::Dominant)
-			? chromosome.secondGene = GeneState::Recessive : chromosome.secondGene = GeneState::Dominant;
+		// if (mersenne() <= mersenne.max() * mutationProbability / 100)
+			// (chromosome.firstGene == GeneState::Dominant)
+			// ? chromosome.firstGene = GeneState::Recessive : chromosome.firstGene = GeneState::Dominant;
+		// if (mersenne() <= mersenne.max() * mutationProbability / 100)
+			// (chromosome.secondGene == GeneState::Dominant)
+			// ? chromosome.secondGene = GeneState::Recessive : chromosome.secondGene = GeneState::Dominant;
 	}
 
 
