@@ -22,7 +22,9 @@ export const AC = {
   ),
   setError: (payload: { msg: string; code: number | null; data: string }) => (
     { action: FormActions.SET_ERROR, payload } as const
-  )
+  ),
+  setDefaultCid: (payload: string) => (
+    { action: FormActions.SET_DEFAULT_CID, payload } as const)
 };
 
 export type ActionTypes = ReturnType<PropertiesType<typeof AC>>;

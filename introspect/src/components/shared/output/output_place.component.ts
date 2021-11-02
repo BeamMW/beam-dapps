@@ -6,22 +6,24 @@ import {
   ReqID, ShaderProps
 } from '../../../constants/variables';
 import BaseComponent from '../base/base.component';
-import { TreeBuilder } from '../tree_builder/tree_builder.component';
-import { RC } from '../../../logic/beam/request_creators';
+import { TreeBuilder } from '../tree-builder/tree_builder.component';
+import { RC } from '../../../logic/beam/request-creators';
 import { BEAM } from '../../../controllers/beam.controller';
 import './output_place.scss';
 import { STORE } from '../../../controllers/store.controller';
 import {
   AC
-} from '../../../logic/store/action_creators';
+} from '../../../logic/store/action-creators';
 import Loader from '../loader/loader.component';
+import ReqJson from '../req-json/req-json.component';
+import { ParamsInput } from '../params/params_input.component';
 
 export class OutputPlace extends BaseComponent {
   action: string;
 
   child: BaseComponent;
 
-  constructor(action: string) {
+  constructor(action: string, subscribe: (component: ParamsInput) => void) {
     super(Tags.DIV, ['output__place']);
     BEAM.subscribe(this);
     STORE.subscribe(this);
@@ -33,7 +35,7 @@ export class OutputPlace extends BaseComponent {
     this.child.textContent = 'Fill in the parametres to check the method';
 
     wrapper.append(this.child);
-    this.append(wrapper);
+    this.append(new ReqJson(action, subscribe), wrapper);
   }
 
   informForm = (state: IFormState): void => {

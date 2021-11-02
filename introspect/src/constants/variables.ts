@@ -34,6 +34,7 @@ export enum FormActions {
   SET_TXS = 'SET_TXS',
   REMOVE_TXS = 'REMOVE_TXS',
   SET_ERROR = 'SET_ERROR',
+  SET_DEFAULT_CID = 'SET_DEFAULT_CID'
 }
 
 export enum ErrorResponses {

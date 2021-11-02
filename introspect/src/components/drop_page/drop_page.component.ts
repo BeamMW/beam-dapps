@@ -1,6 +1,6 @@
 import { Tags } from '../../constants/html_elements';
 import BaseComponent from '../shared/base/base.component';
-import ButtonDrop from '../shared/drop_button/button_drop.component';
+import ButtonDrop from '../shared/drop-button/button_drop.component';
 import './mainPage.scss';
 
 export default class DropPage extends BaseComponent {

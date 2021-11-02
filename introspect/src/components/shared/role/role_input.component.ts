@@ -1,4 +1,4 @@
-import { AC } from '../../../logic/store/action_creators';
+import { AC } from '../../../logic/store/action-creators';
 import BaseComponent from '../base/base.component';
 import { Tags } from '../../../constants/html_elements';
 import { STORE } from '../../../controllers/store.controller';

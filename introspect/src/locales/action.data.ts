@@ -1,4 +1,4 @@
-import { ActionColor } from '../../../constants/html_elements';
+import { ActionColor } from '../constants/html_elements';
 
 export const actionColors = [
   `linear-gradient(93deg, ${ActionColor.BRIGHT_TEAL} 2%, ${ActionColor.DARKISH_BLUE} 99%)`,

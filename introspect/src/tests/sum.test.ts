@@ -1,19 +1,15 @@
 /**
  * @jest-environment jsdom
  */
-import { APIResponse, IActionParams } from 'beamApiProps';
+import { IActionParams } from 'beamApiProps';
 import { Tags } from '../constants/html_elements';
-import { AC } from '../logic/store/action_creators';
+import { AC } from '../logic/store/action-creators';
 import { Form } from '../components/input/form.component';
 import { ValueLabel } from '../components/shared/action/action_label.component';
 import { BEAM } from '../controllers/beam.controller';
 import { STORE } from '../controllers/store.controller';
 import { BeamAPI } from '../logic/beam/BeamAPI';
 import { Store } from '../logic/store/store.logic';
-import {
-  OutputPlace
-} from '../components/shared/output/output_place.component';
-import { ReqID } from '../constants/variables';
 import BaseComponent from '../components/shared/base/base.component';
 
 const obj = {
@@ -33,22 +29,22 @@ const obj = {
   }
 };
 
-const apiObj: APIResponse = {
-  id: 'dogs',
-  jsonrpc: '1',
-  result: {
-    output: '111',
-    txid: '111',
-    txId: '111',
-    raw_data: [1, 2, 3, 4],
-    comment: 'some comment',
-    status_string: 'in progress',
-    failure_reason: 'hz',
-    metadata_pairs: 'some metadata'
-  }
-};
+// const apiObj: APIResponse = {
+//   id: 'dogs',
+//   jsonrpc: '1',
+//   result: {
+//     output: '111',
+//     txid: '111',
+//     txId: '111',
+//     raw_data: [1, 2, 3, 4],
+//     comment: 'some comment',
+//     status_string: 'in progress',
+//     failure_reason: 'hz',
+//     metadata_pairs: 'some metadata'
+//   }
+// };
 
-let component: Form | ValueLabel | OutputPlace | BaseComponent;
+let component: Form | ValueLabel | BaseComponent;
 
 describe('test actions', () => {
   beforeEach(() => {
@@ -146,16 +142,6 @@ describe('test actions', () => {
     button.click();
     setTimeout(() => {
       expect(STORE.getState().onload.has(currentAction)).toBe(true);
-    });
-  });
-
-  it('Transaction check', () => {
-    const action = 'dogs';
-    const data = `${ReqID.INVOKE_DATA}_${action}`;
-    component = new OutputPlace(action);
-    (<OutputPlace>component).inform(apiObj);
-    setTimeout(() => {
-      expect(STORE.getState().txs.has(data)).toBe(true);
     });
   });
 

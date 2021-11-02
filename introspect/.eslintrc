@@ -19,6 +19,7 @@
     ],
     "ignorePatterns": ["*.config.js", "node_modules/", "dist/"],
     "rules": {
+    "no-underscore-dangle": 0,
       "prefer-destructuring": ["error", {
         "array": false,
         "object": true

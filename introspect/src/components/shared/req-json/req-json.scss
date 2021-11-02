@@ -1,0 +1,10 @@
+.json-request{
+	padding: 9px 0;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	.params__input {
+		margin-top: unset;
+		width: 75%;
+	}
+}

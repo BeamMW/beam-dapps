@@ -1,5 +1,5 @@
 import { IFormState } from 'formProps';
-import { AC } from '../../../logic/store/action_creators';
+import { AC } from '../../../logic/store/action-creators';
 import { STORE } from '../../../controllers/store.controller';
 import {
   dragleaveHandler, dragoverHandler, inputHandler
@@ -7,7 +7,7 @@ import {
 import { InnerTexts, Tags } from '../../../constants/html_elements';
 import BaseComponent from '../base/base.component';
 import { BEAM } from '../../../controllers/beam.controller';
-import { RC } from '../../../logic/beam/request_creators';
+import { RC } from '../../../logic/beam/request-creators';
 import { Button } from '../button/button.component';
 import { toDOMParser } from '../../../utils/json_handlers';
 import { SVG } from '../../../constants/svg.icons';

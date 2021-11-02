@@ -9,12 +9,13 @@ import {
   ApiResultWeb
 } from 'qwebchannel';
 import BaseComponent from '../../components/shared/base/base.component';
-import { RC } from './request_creators';
+import { RC } from './request-creators';
 
 declare global {
   interface Window {
     qt: QWebChannelTransport;
     BeamApi: QObject;
+    clipboardData: any;
   }
 }
 

@@ -77,6 +77,7 @@ declare module 'formProps' {
     onload: Set<string>;
     fileName: string;
     txs: Map<string, string>;
+    defaultCid: null | string;
     error: {
       msg: string;
       code: number | null;

@@ -23,7 +23,7 @@ export class TreeBuilder extends BaseComponent {
   nextBranchAttributes = (
     nextBranch: TreeBuilder, value: TreeValue
   ):BaseComponent[] => {
-    const button = new BaseComponent(Tags.BUTTON);
+    const button = new BaseComponent(Tags.BUTTON, ['arrow']);
     const type = new BaseComponent(Tags.SPAN, ['type']);
     type.textContent = Array.isArray(value)
       ? TreeIcons.ARRAY
