@@ -1,7 +1,7 @@
 #pragma once
 #include "ChromosomeMask.h"
 
-using PhenotypeMask = std::deque<ChromosomeMask>;
+using PhenotypeMask = std::list<ChromosomeMask>;
 
 #pragma pack (push, 1)
 /*
@@ -13,15 +13,32 @@ public:
 	PhenotypeMask phenotypeMask; // set of general characteristics of each chromosome 
 	uint16_t size; // size of phenotypeMask = number of all chromosomes
 
-	Mask() noexcept;
+	Mask() noexcept : size(0) {}
 	~Mask() noexcept = default;
 
-	uint16_t getSize() noexcept;
+	uint16_t getSize() noexcept
+	{
+		setSize(phenotypeMask);
+		return size;
+	}
 
 	friend bool operator==(const Mask& lhs, const Mask& rhs);
 
 private:
-	void setSize(const PhenotypeMask& mask) noexcept;
+	void setSize(const PhenotypeMask& mask) noexcept
+	{
+		for (auto maskIt = mask.cbegin(); maskIt != mask.cend(); ++maskIt)
+		{
+			++size;
+			if (!(maskIt->dependentSigns.signs.empty()))
+				setSize(maskIt->dependentSigns.signs);
+		}
+	}
+
 };
+
+bool operator==(const Mask& lhs, const Mask& rhs) {
+	return lhs.phenotypeMask == rhs.phenotypeMask;
+}
 
 #pragma pack (pop)

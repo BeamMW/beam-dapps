@@ -4,8 +4,8 @@
 #include <string_view>
 
 namespace Tamagotchi {
-	// SID: 6953aec94fd3f4b4168fffab7985562452944ea4ebca047a0f26e69d37000c5e
-	static const ShaderID s_SID = { 0x69,0x53,0xae,0xc9,0x4f,0xd3,0xf4,0xb4,0x16,0x8f,0xff,0xab,0x79,0x85,0x56,0x24,0x52,0x94,0x4e,0xa4,0xeb,0xca,0x04,0x7a,0x0f,0x26,0xe6,0x9d,0x37,0x00,0x0c,0x5e };
+	// SID: 7c5bf766257f79da721a6c0d47438621641ac363df562368be65a5977ccb322d
+	static const ShaderID s_SID = { 0x7c,0x5b,0xf7,0x66,0x25,0x7f,0x79,0xda,0x72,0x1a,0x6c,0x0d,0x47,0x43,0x86,0x21,0x64,0x1a,0xc3,0x63,0xdf,0x56,0x23,0x68,0xbe,0x65,0xa5,0x97,0x7c,0xcb,0x32,0x2d };
 
 #pragma pack(push, 1)
 	struct BaseTamagothiParameters
@@ -110,15 +110,15 @@ namespace Tamagotchi {
 	};
 	struct Sleeping : State
 	{
-		Sleeping() : State(State::States::Sleeping, 10) {}
+		Sleeping() : State(State::States::Sleeping, 100) {}
 	};
 	struct Playing : State
 	{
-		Playing() : State(State::States::Playing, 3) {}
+		Playing() : State(State::States::Playing, 50) {}
 	};
 	struct Stroking : State
 	{
-		Stroking() : State(State::States::Stroking, 2) {}
+		Stroking() : State(State::States::Stroking, 20) {}
 	};
 	struct Eating : State
 	{
@@ -206,6 +206,7 @@ namespace Tamagotchi {
 			}
 
 			//если все на нуле - смерть
+			// state
 			if (this->satiety.getPercentageOfSatisfactionOfTheAttribute() == 0 &&
 				this->mood.getPercentageOfSatisfactionOfTheAttribute() == 0 &&
 				this->liveliness.getPercentageOfSatisfactionOfTheAttribute() == 0)
@@ -229,7 +230,7 @@ namespace Tamagotchi {
 			if (currentHeight == heightOfChangingAttributeValues) return;
 
 			if (state.getCurrentState() != State::States::Inactivity) {
-				// если с момента измения состояния прошло столько блоков сколько оно должно было длится
+				//если с момента измения состояния прошло столько блоков сколько оно должно было длится
 				// то колво блоков в активном состоянии = колво оставшихся блоков на которых не было изменено состояние
 				if (state.getHeightOfTransitionToState() + state.getStateDuration() == currentHeight)
 				{
@@ -363,6 +364,7 @@ namespace Tamagotchi {
 	{
 		static const uint32_t s_iMethod = 8;
 		PubKey playerPublicKey;
+		Tamagotchi tamagotchi;
 	};
 
 #pragma pack(pop)

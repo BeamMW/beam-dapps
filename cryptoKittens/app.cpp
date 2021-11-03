@@ -1,7 +1,7 @@
 #include "../common.h"
 #include "../app_common_impl.h"
 #include "contract.h"
-#include "shader_lib.cpp"
+#include <vector>
 
 void On_error(const char* msg)
 {
@@ -16,22 +16,22 @@ void On_action_create_contract(const ContractID& cid)
 {
     CryptoKittens::StartGameParams params;
 
-    Env::DocGetNum64("numberOfAllKittens", &params.numberOfAllKittens);
-    if (params.numberOfAllKittens < 1)
+    Env::DocGetNum64("numberOfAllKittenOfZeroGeneration", &params.numberOfAllKittenOfZeroGeneration);
+    if (params.numberOfAllKittenOfZeroGeneration < 1)
     {
-        return On_error("numberOfAllKittens must at least 1 kitten");
+        return On_error("numberOfAllKittenOfZeroGeneration must at least 1 kitten");
     }
 
     Env::DocGetNum64("numberOfKittensForGiveAway", &params.numberOfKittensForGiveAway);
-    if (params.numberOfAllKittens <= params.numberOfKittensForGiveAway)
+    if (params.numberOfAllKittenOfZeroGeneration <= params.numberOfKittensForGiveAway)
     {
-        return On_error("numberOfAllKittens must be greater than or equal to numberOfKittensForGiveAway");
+        return On_error("numberOfAllKittenOfZeroGeneration must be greater than or equal to numberOfKittensForGiveAway");
     }
 
-    Env::DocGetNum32("periodOfGiveaway", &params.periodOfGiveaway);
+    Env::DocGetNum32("periodOfGiveAway", &params.periodOfGiveaway);
     if (params.periodOfGiveaway < 1) // counted in blocks
     {
-        return On_error("periodOfGiveaway must be at least 1 block");
+        return On_error("periodOfGiveAway must be at least 1 block");
     }
 
     Env::GenerateKernel(nullptr, CryptoKittens::StartGameParams::s_iMethod, &params, sizeof(params), nullptr, 0, nullptr, 0, "Create Cryptokittens contract", 0);
@@ -49,100 +49,128 @@ void On_action_view_contracts(const ContractID& cid)
 
 void On_action_view_contract_params(const ContractID& cid)
 {
-    Env::Key_T<const char*> k;
+    Env::Key_T<uint8_t> k;
     k.m_Prefix.m_Cid = cid;
-    k.m_KeyInContract = "StartGameParams";
+    k.m_KeyInContract = (uint8_t) CryptoKittens::StartGameParams::s_iMethod;
 
     CryptoKittens::StartGameParams params;
     if (!Env::VarReader::Read_T(k, params))
         return On_error("Failed to read contract's initial params");
 
     Env::DocGroup gr("params");
-    Env::DocAddNum64("numberOfAllKittens", params.numberOfAllKittens);
+    Env::DocAddNum64("numberOfAllKittenOfZeroGeneration", params.numberOfAllKittenOfZeroGeneration);
     Env::DocAddNum64("numberOfKittensForGiveAway", params.numberOfKittensForGiveAway);
     Env::DocAddNum32("periodOfGiveaway", params.periodOfGiveaway);
 }
 
 // PLAYER
-void On_action_withdraw_kitten(const ContractID& cid, const CharacterId kittenId)
+void On_action_play(const ContractID& cid)
 {
-    if (kittenId < 0)
+    CryptoKittens::Play params;
+    Env::DerivePk(params.pubKey, &cid, sizeof(cid));
+
+    Env::GenerateKernel(nullptr, CryptoKittens::Play::s_iMethod, &params, sizeof(params), nullptr, 0, nullptr, 0, "Start game", 0);
+}
+
+void On_action_withdraw_kitten(const ContractID& cid)
+{
+    CryptoKittens::WithdrawKitten params;
+    Env::DerivePk(params.pubKey, &cid, sizeof(cid));
+
+    Env::Key_T<uint8_t> k;
+    k.m_Prefix.m_Cid = cid;
+    k.m_KeyInContract = (uint8_t)CryptoKittens::CurrentGameState::s_iMethod;
+
+    CryptoKittens::CurrentGameState currentParams;
+    if (!Env::VarReader::Read_T(k, currentParams))
     {
-        return On_error("kittenId must be positive");
+        return On_error("Cann't read current game state");
     }
 
-    CryptoKittens::WithdrawKitten params;
-    Env::DerivePk(params.m_Account, &cid, sizeof(cid));
-    params.kittenId = kittenId;
- 
-    Env::GenerateKernel(nullptr, CryptoKittens::StartGameParams::s_iMethod, &params, sizeof(params), nullptr, 0, nullptr, 0, "Withdraw kitten from giveaway", 0);
+    if (Env::get_Height() < currentParams.heightOfNextGiveaway)
+    {
+        return On_error("Sorry it's time of giveaway");
+    }
+
+    if (currentParams.numberOfLastKittensForGiveAway == 0)
+    {
+        return On_error("Sorry all kittens were distributed");
+    }
+
+    Env::GenerateKernel(nullptr, CryptoKittens::WithdrawKitten::s_iMethod, &params, sizeof(params), nullptr, 0, nullptr, 0, "Withdraw kitten from giveaway", 0);
 }
 
 void On_action_view_my_kittens(const ContractID& cid)
 {
-    Env::Key_T<const char*> k;
-    k.m_Prefix.m_Cid = cid;
-    k.m_KeyInContract = "CurrentGameState";
+    //Kitten k;
 
-    CryptoKittens::CurrentGameState params;
-    if (!Env::VarReader::Read_T(k, params))
-        return On_error("Failed to read contract's params");
+    //std::deque<Kitten> l;
+    //l.push_back(k);
+    //l.push_back(k);
 
-    Env::DocGroup gr("myKittens");
 
-    for (auto kittenIt = params.kittensAndOwners[1/*r.m_Account*/].cbegin();
-        kittenIt != params.kittensAndOwners[1/*r.m_Account*/].cend();
-        ++kittenIt)
+    //Env::DocGroup gr("params");
+    //Env::DocAddNum64("size", l.size());
+
+    Kitten k;
+    Env::DocGroup gr("kitten");
+
+    for (auto phenotypeIt = k.phenotype.setOfSigns.cbegin(); phenotypeIt != k.phenotype.setOfSigns.cend(); ++phenotypeIt)
     {
-        Env::DocGroup kitten("");
+        Env::DocGroup gr("allele");
 
-        for (auto phenotypeIt = kittenIt->phenotype.setOfSigns.cbegin();
-            phenotypeIt != kittenIt->phenotype.setOfSigns.cend(); ++phenotypeIt)
-        {
-         //   Env::DocAddText(phenotypeIt->first.c_str(), phenotypeIt->second.c_str());
-        }
+        Env::DocAddText("first", phenotypeIt->first.data());
+        Env::DocAddText("second", phenotypeIt->second.data());
     }
+
+    //Env::Key_T<const char*> k;
+    //k.m_Prefix.m_Cid = cid;
+    //k.m_KeyInContract = "CurrentGameState";
+
+    //CryptoKittens::CurrentGameState params;
+    //if (!Env::VarReader::Read_T(k, params))
+    //    return On_error("Failed to read contract's params");
+
+    //Env::DocGroup gr("myKittens");
+
+    //for (auto kittenIt = params.kittensAndOwners[1/*r.m_Account*/].cbegin();
+    //    kittenIt != params.kittensAndOwners[1/*r.m_Account*/].cend();
+    //    ++kittenIt)
+    //{
+    //    Env::DocGroup kitten("");
+
+    //    for (auto phenotypeIt = kittenIt->phenotype.setOfSigns.cbegin();
+    //        phenotypeIt != kittenIt->phenotype.setOfSigns.cend(); ++phenotypeIt)
+    //    {
+    //        Env::DocAddText(phenotypeIt->first.c_str(), phenotypeIt->second.c_str());
+    //    }
+    //}
 
 }
 
-void On_action_view_kittens_for_giveaway(const ContractID& cid)
+void On_action_view_number_kittens_for_giveaway(const ContractID& cid)
 {
-    Env::Key_T<const char*> k;
+    Env::Key_T<uint8_t> k;
     k.m_Prefix.m_Cid = cid;
-    k.m_KeyInContract = "CurrentGameState";
+    k.m_KeyInContract = (uint8_t)CryptoKittens::StartGameParams::s_iMethod;
 
-    CryptoKittens::CurrentGameState params;
+    CryptoKittens::StartGameParams params;
     if (!Env::VarReader::Read_T(k, params))
-        return On_error("Failed to read contract's params");
+        return On_error("Failed to read contract's initial params");
 
-    Env::DocGroup gr("kittensForGiveaway");
-
-    for (auto kittenIt = params.kittensForGiveaway.cbegin();
-        kittenIt != params.kittensForGiveaway.cend();
-        ++kittenIt)
-    {
-       // std::string_view tmp = std::to_string_view(kittenIt->first);
-       // Env::DocGroup kitten(tmp.c_str());
-
-       // for (auto phenotypeIt = kittenIt->second.phenotype.setOfSigns.cbegin(); 
-       //     phenotypeIt != kittenIt->second.phenotype.setOfSigns.cend(); ++phenotypeIt)
-       // {
-           // Env::DocAddText(phenotypeIt->first.c_str(), phenotypeIt->second.c_str());
-       // }
-    }
+    Env::DocAddNum64("heightOfNextGiveaway", params.periodOfGiveaway);
 }
 
 void On_action_view_number_of_next_giveaway_block(const ContractID& cid)
 {
-    Env::Key_T<const char*> k;
+    Env::Key_T<uint8_t> k;
     k.m_Prefix.m_Cid = cid;
-    k.m_KeyInContract = "CurrentGameState";
+    k.m_KeyInContract = (uint8_t)CryptoKittens::CurrentGameState::s_iMethod;
 
     CryptoKittens::CurrentGameState params;
     if (!Env::VarReader::Read_T(k, params))
-        return On_error("Failed to read contract's initial params");
+        return On_error("Failed to read contract's current params");
 
-    Env::DocGroup gr("");
     Env::DocAddNum64("heightOfNextGiveaway", params.heightOfNextGiveaway);
 }
 
@@ -162,11 +190,12 @@ BEAM_EXPORT void Method_0()
     {
         Env::DocGroup gr("roles");
         {
-            Env::DocGroup grRole("manager");
             {
+                Env::DocGroup grRole("manager");
+
                 {
                     Env::DocGroup grMethod("create_contract");
-                    Env::DocAddText("numberOfAllKittens", "uin64");
+                    Env::DocAddText("numberOfAllKittenOfZeroGeneration", "uin64");
                     Env::DocAddText("numberOfKittensForGiveAway", "uin64");
                     Env::DocAddText("periodOfGiveaway", "uin32");
                 }
@@ -182,12 +211,17 @@ BEAM_EXPORT void Method_0()
                     Env::DocAddText("cid", "ContractID");
                 }
             }
+
             {
                 Env::DocGroup grRole("player");
+
+                {
+                    Env::DocGroup grMethod("play");
+                    Env::DocAddText("cid", "ContractID");
+                }
                 {
                     Env::DocGroup grMethod("withdraw_kitten");
                     Env::DocAddText("cid", "ContractID");
-                    Env::DocAddText("kittenId", "CharacterId");
                 }
                 {
                     Env::DocGroup grMethod("view_my_kittens");
@@ -216,23 +250,28 @@ constexpr size_t ROLE_BUF_SIZE = 16;
 using Action_func_t = void (*)(const ContractID&);
 
 template <typename T>
-auto find_if_contains(const char* str, const std::deque<std::pair<const char*, T>>& v) {
-    return std::find_if(v.begin(), v.end(), [&str](const auto& p) {
-        return !strcmp(str, p.first);
-        });
+auto find_if_contains(const char* str, const std::vector<std::pair<const char*, T>>& v) 
+{
+    return std::find_if(v.begin(), v.end(), [&str](const auto& p) 
+        {
+            return !strcmp(str, p.first);
+        }
+    );
 }
 
 BEAM_EXPORT void Method_1()
 {
-    const std::deque<std::pair<const char*, Action_func_t>> VALID_PLAYER_ACTIONS = {
-        //{"withdraw_kitten", On_action_withdraw_kitten},
+    const std::vector<std::pair<const char*, Action_func_t>> VALID_PLAYER_ACTIONS = 
+    {
+        {"play", On_action_play},
+        {"withdraw_kitten", On_action_withdraw_kitten},
         {"view_my_kittens", On_action_view_my_kittens},
-        {"view_kittens_for_giveaway", On_action_view_kittens_for_giveaway},
+        {"view_kittens_for_giveaway", On_action_view_number_kittens_for_giveaway},
         {"view_number_of_next_giveaway_block", On_action_view_number_of_next_giveaway_block},
-        {"get_my_pkey", On_action_get_my_pkey},
+        {"get_my_pkey", On_action_get_my_pkey}
     };
 
-    const std::deque<std::pair<const char*, Action_func_t>> VALID_MANAGER_ACTIONS = 
+    const std::vector<std::pair<const char*, Action_func_t>> VALID_MANAGER_ACTIONS = 
     {
         {"create_contract", On_action_create_contract},
         {"destroy_contract", On_action_destroy_contract},
@@ -240,36 +279,41 @@ BEAM_EXPORT void Method_1()
         {"view_contract_params", On_action_view_contract_params}
     };
 
-    const std::deque<std::pair<const char*, const std::deque<std::pair<const char*, Action_func_t>>&>> 
-        VALID_ROLES = {
+    const std::vector<std::pair<const char*, const std::vector<std::pair<const char*, Action_func_t>>&>> VALID_ROLES = 
+    {
         {"player", VALID_PLAYER_ACTIONS},
         {"manager", VALID_MANAGER_ACTIONS}
     };
 
     char action[ACTION_BUF_SIZE], role[ROLE_BUF_SIZE];
 
-    if (!Env::DocGetText("role", role, sizeof(role))) {
+    if (!Env::DocGetText("role", role, sizeof(role))) 
+    {
         return On_error("Role not specified");
     }
 
     auto it_role = find_if_contains(role, VALID_ROLES);
 
-    if (it_role == VALID_ROLES.end()) {
+    if (it_role == VALID_ROLES.end()) 
+    {
         return On_error("Invalid role");
     }
 
-    if (!Env::DocGetText("action", action, sizeof(action))) {
+    if (!Env::DocGetText("action", action, sizeof(action))) 
+    {
         return On_error("Action not specified");
     }
 
     auto it_action = find_if_contains(action, it_role->second);
 
-    if (it_action != it_role->second.end()) {
+    if (it_action != it_role->second.end()) 
+    {
         ContractID cid;
         Env::DocGet("cid", cid);
         it_action->second(cid);
     }
-    else {
+    else 
+    {
         On_error("Invalid action");
     }
 }

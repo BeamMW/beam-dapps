@@ -18,6 +18,10 @@ public:
 	~Chromosome() noexcept = default;
 
 	// method for setting gene states in chromosome
-	void setGenes(const GeneState firstGeneValue, const GeneState secondGeneValue) noexcept;
+	void setGenes(const GeneState firstGeneValue, const GeneState secondGeneValue) noexcept
+	{
+		firstGene = firstGeneValue;
+		secondGene = secondGeneValue;
+	}
 };
 #pragma pack (pop)
