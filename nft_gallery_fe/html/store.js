@@ -17,8 +17,8 @@ export const store = {
   getSeed() {
     const seedNum = Date.parse(new Date());
     utils.invokeContract(
-      `role=user,action=generate,cid=${this.cid},seed=${seedNum}`,
-      (...args) => this.onMakeTx(...args),
+      `role=user,action=generate,cid=${this.state.cid},seed=${seedNum}`,
+      (...args) => this.makeTx(...args),
     );
   },
   LoadSeeds(err, res) {
@@ -45,17 +45,17 @@ export const store = {
     }));
     this.items = updated;
   },
-  onMakeTx(err, sres, full, id) {
+  makeTx(err, sres, full, id) {
     if (err)
       return this.$root.setError(err, "Failed to generate transaction request");
     utils.ensureField(full.result, "raw_data", "array");
     console.log(full);
     utils.callApi("process_invoke_data",
       { data: full.result.raw_data },
-      (err, res, full) => this.onSendToChain(err, res, full, id),
+      (err, res, full) => this.sendToChain(err, res, full, id),
     );
   },
-  onSendToChain(err, res, full, id) {
+  sendToChain(err, res, full, id) {
     if (err) {
       if (utils.isUserCancelled(err)) return;
       return this.$root.setError(err, "Failed to create transaction");

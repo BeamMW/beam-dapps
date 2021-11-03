@@ -68,7 +68,7 @@ export default {
         bytes: drawing(el.seed)
       }));
       utils.invokeContract(
-        `role=user,action=get_user_seeds,cid=${this.cid}`,
+        `role=user,action=get_user_seeds,cid=${store.state.cid}`,
         (...args) => this.onLoadYourSeeds(items, ...args)
       );
     },
@@ -90,46 +90,37 @@ export default {
       );
     },
 
-    onSellAsset(id) {
-      try {
-        // TODO: show custom dialog and suport float values
-        let price = prompt('Enter the price in BEAM');
-        if (price == null) return;
-        price = parseInt(price) * 100000000;
+  //   onSellAsset(id) {
+  //     try {
+  //       // TODO: show custom dialog and suport float values
+  //       let price = prompt('Enter the price in BEAM');
+  //       if (price == null) return;
+  //       price = parseInt(price) * 100000000;
 
-        utils.invokeContract(
-          `role=user,action=set_price,id=${id},amount=${price},aid=0,cid=${this.cid}`,
-          (err, sres, fres) => this.onMakeTx(err, sres, fres, id)
-        );
-      } catch (err) {
-        this.$root.setError(err, 'Failed to sell an item');
-      }
-    },
+  //       utils.invokeContract(
+  //         `role=user,action=set_price,id=${id},amount=${price},aid=0,cid=${this.cid}`,
+  //         (err, sres, fres) => this.onMakeTx(err, sres, fres, id)
+  //       );
+  //     } catch (err) {
+  //       this.$root.setError(err, 'Failed to sell an item');
+  //     }
+  //   },
 
     onMakeTx(err, sres, full, id) {
-        if (err)
-          return this.$root.setError(
-            err,
-            'Failed to generate transaction request'
-          );
-        utils.ensureField(full.result, 'raw_data', 'array');
-        utils.callApi(
-          'process_invoke_data',
-          { data: full.result.raw_data },
-        (err, res, full) => this.onSendToChain(err, res, full, id)
-        );
+      store.makeTx(err, sres, full, id);
       },
 
-      onSendToChain(err, res, full, id) {
-        if (err) {
-          if (utils.isUserCancelled(err)) return;
-          return this.$root.setError(err, 'Failed to create transaction');
-        }
-        for (let item of this.items) {
-          if (item.id == id) {
-            item.in_tx = true;
-          }
-        }
-    },
-  },
-};
+  //     onSendToChain(err, res, full, id) {
+  //       if (err) {
+  //         if (utils.isUserCancelled(err)) return;
+  //         return this.$root.setError(err, 'Failed to create transaction');
+  //       }
+  //       for (let item of this.items) {
+  //         if (item.id == id) {
+  //           item.in_tx = true;
+  //         }
+  //       }
+  //   },
+  // },
+}
+}
