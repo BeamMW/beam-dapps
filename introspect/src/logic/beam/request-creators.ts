@@ -1,6 +1,6 @@
 import { ApiArgs } from 'beamApiProps';
 import { ReqID, ReqMethods } from '../../constants/variables';
-import { BEAM } from '../../controllers/beam.controller';
+import { BEAM } from '../../controllers';
 
 export const RC = {
   submitResult: (id:string, args: string): ApiArgs => ({

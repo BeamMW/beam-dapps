@@ -1,1 +1,2 @@
 ./src/constants/svgs.ts
+*.data.ts

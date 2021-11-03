@@ -1,13 +1,11 @@
 import {
-  DeleteObserverType
-} from 'beamApiProps';
-import {
   AddObsever,
   FormDispatch,
   IFormState
 } from 'formProps';
 import BaseComponent from '../../components/shared/base/base.component';
 import { FormActions } from '../../constants/variables';
+import Observer from '../observer';
 import { ActionTypes } from './action-creators';
 
 const txs = localStorage.getItem('txs');
@@ -25,36 +23,27 @@ const initialState: IFormState = {
   }
 };
 
-export class Store {
-  private readonly observers: Set<BaseComponent>;
-
+export class Store extends Observer<IFormState> {
   private state: IFormState = { ...initialState };
 
-  constructor() {
-    this.observers = new Set();
-  }
-
-  subscribe: AddObsever = (component): void => {
-    this.observers.add(component);
-    component.element
-      .addEventListener(
-        'DOMNodeRemovedFromDocument', () => this.deleteObserver(component)
-      );
+  subscribe: AddObsever = (component: BaseComponent): void => {
+    if (component.informForm) {
+      this.attach(component.informForm);
+      component.element
+        .addEventListener(
+          'DOMNodeRemovedFromDocument',
+          () => component.informForm
+          && this.deleteSubscriber(component.informForm)
+        );
+    }
   };
 
   readonly isStoreObserver = (
     component: BaseComponent
-  ):boolean => this.observers.has(component);
-
-  deleteObserver:DeleteObserverType = (component: BaseComponent) => {
-    this.observers.delete(component);
+  ):boolean => {
+    if (component.informForm) return this.observers.has(component.informForm);
+    return false;
   };
-
-  notifyAll = (): void => this.observers.forEach((subs) => {
-    if (subs.informForm) {
-      subs.informForm(this.state);
-    }
-  });
 
   dispatch: FormDispatch = (obj, sync): void => {
     if (sync) this.reducer(obj);
@@ -117,6 +106,6 @@ export class Store {
 
     localStorage.setItem('txs', JSON.stringify(Array.from(newState.txs)));
     this.state = newState;
-    this.notifyAll();
+    this.notifyAll(this.state);
   };
 }

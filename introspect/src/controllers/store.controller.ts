@@ -2,7 +2,7 @@ import {
   AddObsever, FormDispatch, IFormState, IsObserverType
 } from 'formProps';
 
-export class STORE {
+export default class STORE {
   static subscribe: AddObsever;
 
   static dispatch: FormDispatch;

@@ -1,34 +1,15 @@
 import { APIResponse } from 'beamApiProps';
-import { AC } from '../../../logic/store/action-creators';
+import { RC } from '../../../logic/beam/request-creators';
 import { Tags } from '../../../constants/html_elements';
 import { ResTXStatus, ShaderProps } from '../../../constants/variables';
-import { BEAM } from '../../../controllers/beam.controller';
 import BaseComponent from '../base/base.component';
 import Loader from '../loader/loader.component';
 import './widget.scss';
-import WidgetProps from './widget.info.component';
-import { RC } from '../../../logic/beam/request-creators';
-import { toDOMParser } from '../../../utils/json_handlers';
-import { STORE } from '../../../controllers/store.controller';
-import { SVG } from '../../../constants/svg.icons';
-
-const txData = [
-  {
-    value: '...',
-    key: 'txId',
-    title: 'ID:'
-  },
-  {
-    value: '...',
-    key: 'comment',
-    title: 'COMMENT:'
-  },
-  {
-    value: ResTXStatus.IN_PROGRESS,
-    key: 'status_string',
-    title: 'STATUS:'
-  }
-];
+import WidgetProps from './widget-info.component';
+import { toDOMParser } from '../../../utils/string-handlers';
+import { BEAM, STORE } from '../../../controllers';
+import { svgData, widgetData } from '../../../locales';
+import { AC } from '../../../logic/store/action-creators';
 
 export default class Widget extends BaseComponent {
   action: string;
@@ -52,7 +33,7 @@ export default class Widget extends BaseComponent {
     const infoBlocks = this.createInfoblocks(actionKey);
     const loader = new Loader();
     this.loader = loader;
-    const closeIcon = toDOMParser(SVG.iconCancel);
+    const closeIcon = toDOMParser(svgData.iconCancel);
 
     closeIcon.addEventListener('click', this.removeThis);
 
@@ -61,7 +42,7 @@ export default class Widget extends BaseComponent {
 
   private createInfoblocks = (action: string):BaseComponent => {
     const component = new BaseComponent(Tags.DIV, ['infoblock-wrapp']);
-    const txProperties = txData.map((element) => new WidgetProps(
+    const txProperties = widgetData.map((element) => new WidgetProps(
       { ...element, action }
     ));
     component.append(...txProperties);

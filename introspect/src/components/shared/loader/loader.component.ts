@@ -5,7 +5,7 @@ import fail from '../../../assets/fail.svg';
 import { Tags } from '../../../constants/html_elements';
 import './loader.scss';
 
-export default class Loader extends BaseComponent {
+class Loader extends BaseComponent {
   private setImage: (src: string) => void;
 
   constructor() {
@@ -23,3 +23,5 @@ export default class Loader extends BaseComponent {
     this.setImage(isComplete ? ok : fail);
   };
 }
+
+export default Loader;

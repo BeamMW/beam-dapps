@@ -1,0 +1,11 @@
+export { default as BaseComponent } from './base/base.component';
+export { default as Button } from './button/button.component';
+export { default as Loader } from './loader/loader.component';
+export { default as ParamsInput } from './input/input.component';
+export { default as Input } from './input/input.component';
+export { default as RoleInput } from './role/role-input.component';
+export { default as TreeBuilder } from './tree-builder/tree-builder.component';
+export { default as Widget } from './widget/widget.component';
+export { default as HeaderInfo } from './header-info/infoblock.component';
+export { default as DropButton } from './drop-button/drop-button.component';
+export { default as FlexContainer } from './flex-container/flex.component';

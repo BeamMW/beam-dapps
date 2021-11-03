@@ -1,6 +1,6 @@
-import { SVG } from '../constants/svg.icons';
+import SVG from './svg.data';
 
-export const buttonsData = [
+export default [
   {
     name: 'clear',
     classes: (action: string):[string, string] => ['clear', `clear-${action}`],

@@ -1,0 +1,113 @@
+import { APIResponse, PropertiesType } from 'beamApiProps';
+import {
+  QWebChannel,
+  QWebChannelTransport,
+  QObject,
+  ApiResult,
+  ApiResultWeb
+} from 'qwebchannel';
+import BaseComponent from '../../components/shared/base/base.component';
+import Observer from '../observer';
+import { RC } from './request-creators';
+
+declare global {
+  interface Window {
+    qt: QWebChannelTransport;
+    BeamApi: QObject;
+  }
+}
+
+export class BeamAPI extends Observer<APIResponse> {
+  private API: null | QObject;
+
+  private contract: ArrayBuffer | null;
+
+  constructor() {
+    super();
+    this.API = null;
+    this.contract = null;
+  }
+
+  readonly subscribe = (...components: BaseComponent[]): void => {
+    components.forEach((component) => {
+      this.attach(component.inform!);
+      component.element
+        .addEventListener(
+          'DOMNodeRemovedFromDocument',
+          () => this.deleteSubscriber(component.inform!)
+        );
+    });
+  };
+
+  private readonly onApiResult = (json: string): void => {
+    const parsed = JSON.parse(json) as APIResponse;
+    console.log('response', parsed);
+    this.notifyAll(parsed);
+  };
+
+  readonly loadAPI = async (): Promise<BeamAPI> => {
+    const { qt } = window;
+    const ua = navigator.userAgent;
+    if (/QtWebEngine/i.test(ua)) {
+      this.API = await new Promise<QObject>(
+        (resolve) => new QWebChannel(qt.webChannelTransport, (channel) => {
+          resolve(channel.objects.BEAM.api);
+        })
+      );
+      (this.API?.callWalletApiResult as ApiResult).connect(this.onApiResult);
+    } else {
+      this.API = await new Promise<QObject>((resolve) => {
+        window.addEventListener(
+          'message',
+          async (ev) => {
+            if (window.BeamApi) {
+              const webApiResult = window.BeamApi
+                .callWalletApiResult as ApiResultWeb;
+              if (ev.data === 'apiInjected') {
+                await webApiResult(this.onApiResult);
+                resolve(window.BeamApi);
+              }
+            }
+          },
+          { once: false }
+        );
+        window.postMessage(
+          {
+            type: 'create_beam_api',
+            apiver: 'current',
+            apivermin: '',
+            appname: 'BEAM INTROSPECTR'
+          },
+          window.origin
+        );
+      });
+    }
+    return this;
+  };
+
+  readonly initShader = (shader: ArrayBuffer): void => {
+    this.contract = shader;
+  };
+
+  readonly callApi = ({
+    callID,
+    method,
+    params
+  }: ReturnType<PropertiesType<typeof RC>>): void => {
+    if (this.contract) {
+      const contract = Array.from(new Uint8Array(this.contract));
+      const request = {
+        jsonrpc: '2.0',
+        id: callID,
+        method,
+        params: { ...params, contract }
+      };
+      console.log('request: ', request);
+      if (window.BeamApi) {
+        window.BeamApi.callWalletApi(callID, method, { ...params, contract });
+      } else {
+        this.API?.callWalletApi(JSON.stringify(request));
+      }
+    }
+  };
+}

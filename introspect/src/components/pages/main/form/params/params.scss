@@ -1,0 +1,20 @@
+.params__label {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 20px;
+	color: rgba($color: #fff, $alpha: 1.0);
+	.name{
+			padding-left: 14px;
+			font-family: SFProDisplay;
+			font-size: 14px;
+			font-weight: normal;
+			font-stretch: normal;
+			font-style: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			span + span{
+					opacity: 0.5;
+					margin-left: 4px;
+			}
+	}
+}

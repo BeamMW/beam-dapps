@@ -1,9 +1,10 @@
 import { IFormState } from 'formProps';
 import BaseComponent from '../components/shared/base/base.component';
-import { STORE } from '../controllers/store.controller';
+import { STORE } from '../controllers';
 import { AC } from '../logic/store/action-creators';
+import { makeDotted } from '../utils/string-handlers';
 
-export const headerData = [
+export default [
   {
     title: 'Connect to contract status',
     data: 'connected',
@@ -16,15 +17,6 @@ export const headerData = [
         component.textContent = !state.error.data
           ? state.error.msg
           : state.error.data;
-      }
-    }
-  },
-  {
-    title: 'Name:',
-    data: '',
-    callback(state: IFormState, component: BaseComponent):void {
-      if (state.fileName !== component.textContent) {
-        component.textContent = state.fileName;
       }
     }
   },
@@ -42,7 +34,7 @@ export const headerData = [
     callback: (state: IFormState, component: BaseComponent):void => {
       if (state.defaultCid !== null
       && component.textContent !== state.defaultCid) {
-        component.textContent = state.defaultCid;
+        component.textContent = makeDotted(state.defaultCid);
       }
     }
   }

@@ -1,10 +1,9 @@
-import { BeamAPI } from './logic/beam/BeamAPI';
+import { BeamAPI } from './logic/beam/beam.logic';
 import './scss/main.scss';
-import { BEAM } from './controllers/beam.controller';
-import Main from './components/main/main.component';
+import Main from './components/pages/main/main.component';
 import Loader from './components/shared/loader/loader.component';
 import { Store } from './logic/store/store.logic';
-import { STORE } from './controllers/store.controller';
+import { BEAM, STORE } from './controllers';
 
 export class App {
   constructor(rootElement: HTMLElement) {
@@ -26,7 +25,6 @@ export class App {
         initShader: data.initShader,
         deleteObserver: data.subscribe
       });
-
       loader.replace(new Main());
     });
   }

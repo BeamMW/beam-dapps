@@ -1,16 +1,14 @@
 /**
  * @jest-environment jsdom
  */
-import { IActionParams } from 'beamApiProps';
 import { Tags } from '../constants/html_elements';
 import { AC } from '../logic/store/action-creators';
-import { Form } from '../components/input/form.component';
-import { ValueLabel } from '../components/shared/action/action_label.component';
-import { BEAM } from '../controllers/beam.controller';
-import { STORE } from '../controllers/store.controller';
-import { BeamAPI } from '../logic/beam/BeamAPI';
+import { BeamAPI } from '../logic/beam/beam.logic';
 import { Store } from '../logic/store/store.logic';
 import BaseComponent from '../components/shared/base/base.component';
+import { Form } from '../components/pages/main/form/form.component';
+import Action from '../components/pages/main/form/action/action.component';
+import { BEAM, STORE } from '../controllers';
 
 const obj = {
   roles: {
@@ -29,22 +27,7 @@ const obj = {
   }
 };
 
-// const apiObj: APIResponse = {
-//   id: 'dogs',
-//   jsonrpc: '1',
-//   result: {
-//     output: '111',
-//     txid: '111',
-//     txId: '111',
-//     raw_data: [1, 2, 3, 4],
-//     comment: 'some comment',
-//     status_string: 'in progress',
-//     failure_reason: 'hz',
-//     metadata_pairs: 'some metadata'
-//   }
-// };
-
-let component: Form | ValueLabel | BaseComponent;
+let component: Form | Action | BaseComponent;
 
 describe('test actions', () => {
   beforeEach(() => {
@@ -110,39 +93,6 @@ describe('test actions', () => {
     const button = component.element.querySelector('.submit') as HTMLElement;
     button.click();
     setTimeout(() => expect(STORE.getState().onload.has('cats')).toBe(true));
-  });
-
-  it('Cats in onload list from action form', () => {
-    const action = Object.entries(obj.roles.manager)[0] as [
-      string,
-      IActionParams
-    ];
-    const currentAction = action[0];
-    STORE.dispatch(AC.setRole('manager'), 'sync');
-    component = new ValueLabel(action, 5);
-    document.body.append(component.element);
-    const button = component
-      .element.querySelector(`.submit-${currentAction}`) as HTMLElement;
-    const clear = component
-      .element.querySelector(`.clear-${currentAction}`) as HTMLElement;
-    const input = component.element.querySelector(
-      '.params__input'
-    ) as HTMLInputElement;
-
-    input.value = '1';
-    const event = new window.Event('input');
-    input.dispatchEvent(event);
-    expect((<ValueLabel>component)
-      .getArgs()).toBe(`action=${currentAction},cats_ammount=1,role=manager`);
-
-    clear.click();
-    expect((<ValueLabel>component).getArgs())
-      .toBe(`action=${currentAction},role=manager`);
-
-    button.click();
-    setTimeout(() => {
-      expect(STORE.getState().onload.has(currentAction)).toBe(true);
-    });
   });
 
   it('Remove component from observers list(store)', () => {

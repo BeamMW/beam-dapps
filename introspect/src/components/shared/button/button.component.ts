@@ -1,8 +1,8 @@
-import { toDOMParser } from '../../../utils/json_handlers';
+import { toDOMParser } from '../../../utils/string-handlers';
 import { Tags } from '../../../constants/html_elements';
 import BaseComponent from '../base/base.component';
 
-export class Button extends BaseComponent {
+class Button extends BaseComponent {
   constructor({
     name,
     action,
@@ -14,9 +14,9 @@ export class Button extends BaseComponent {
     name: string;
     action: string;
     tag?: Tags,
-    classes?: (action:string) => string[];
     icon?: string;
     type?: string;
+    classes?: (action:string) => string[];
   }) {
     super(tag, ['button', ...classes(action)]);
     const svg = icon && toDOMParser(icon);
@@ -33,3 +33,5 @@ export class Button extends BaseComponent {
     this.element.addEventListener(type, callback);
   };
 }
+
+export default Button;

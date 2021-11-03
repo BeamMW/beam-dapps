@@ -1,6 +1,6 @@
 import { ActionColor } from '../constants/html_elements';
 
-export const actionColors = [
+export default [
   `linear-gradient(93deg, ${ActionColor.BRIGHT_TEAL} 2%, ${ActionColor.DARKISH_BLUE} 99%)`,
   `linear-gradient(93deg, ${ActionColor.LIGHTGREEN} 2%, ${ActionColor.DARKISH_BLUE} 99%)`,
   `linear-gradient(93deg, ${ActionColor.SMTH_RED} 2%, ${ActionColor.DARKISH_BLUE} 99%)`,

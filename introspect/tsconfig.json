@@ -31,5 +31,5 @@
     "node_modules/"
   ],
   "include": [
-    "./src/**/*.ts", "src/tests/sum.test.ts"]
+    "./src/**/*.ts", "src/tests/sum.test.ts", "src/components/pages/main/form/action/mixintts"]
 }

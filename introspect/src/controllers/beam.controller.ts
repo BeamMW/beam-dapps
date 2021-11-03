@@ -5,7 +5,7 @@ import {
   InitShaderType
 } from 'beamApiProps';
 
-export class BEAM {
+export default class BEAM {
   static subscribe: AddObserversType;
 
   static callApi: CallApiType;
