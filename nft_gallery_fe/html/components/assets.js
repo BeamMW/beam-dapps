@@ -6,11 +6,11 @@ import { store } from '../store.js';
 import generate from './generate.js';
 
 export default {
-  props: {
-    changed_txs: {
-      type: Array,
-      default: [],
-    },
+  computed: {
+    items() {
+      console.log(store.state.items);
+      return store.state.items
+    }
   },
 
   components: {
@@ -35,11 +35,11 @@ export default {
         </div>    
     `,
 
-  data() {
-    return {
-      items: [],
-    };
-  },
+  // data() {
+  //   return {
+  //     items: [],
+  //   };
+  // },
 
   watch: {
     changed_txs: {
@@ -50,16 +50,16 @@ export default {
   },
 
   mounted() {
-    utils.invokeContract(
-      `role=manager,action=seeds,cid=${store.state.cid}`,
-      (...args) => this.onLoadSeeds(...args)
-    );
+    // utils.invokeContract(
+    //   `role=manager,action=seeds,cid=${store.state.cid}`,
+    //   (...args) => this.onLoadSeeds(...args)
+    // );
   },
 
   methods: {
 
     onLoadSeeds(err, res) {
-      if (err) return this.$root.setError(err);
+      if (err) return store.setError(err, 'Error get seeds');
       const items = res.seeds.map(el => ({
         ...el,
         price: 1,
@@ -74,7 +74,7 @@ export default {
     },
 
     onLoadYourSeeds(items, err, { seeds }) {
-      if (err) return this.$root.setError(err);
+      if (err) return store.setError(err, 'error load your seed');
       const mapedOwnerSeeds = seeds.map(seed => seed.holder);
       const updated = items.map(seed => ({
         ...seed,
@@ -85,7 +85,7 @@ export default {
 
     onBuyAsset(id) {
       utils.invokeContract(
-        `role=user,action=buy,cid=${this.cid},seed=${id}, aid='5'`,
+        `role=user,action=buy,cid=${store.state.cid},seed=${id}, aid='5'`,
         (...args) => this.onMakeTx(...args)
       );
     },
