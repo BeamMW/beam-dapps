@@ -1,7 +1,7 @@
 #ifndef BEAM_CONTRACT_H
 #define BEAM_CONTRACT_H
 
-#include "Shaders/common.h"
+#include "../common.h"
 
 namespace NFTGenerator {
 
