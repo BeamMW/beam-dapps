@@ -55,9 +55,9 @@ BEAM_EXPORT void Method_4(const NFTGenerator::Buy &r) {
     NFTGenerator::NFT m;
     Env::Halt_if(!Env::LoadVar_T(r.seed, m));
 
-    Env::Halt_if(!m.price.amount || (r.price.amount < m.price.amount));
+    Env::Halt_if(!m.price.amount || (r.price < m.price.amount));
 
-    Env::FundsLock(m.price.asset_id, r.price.amount);
+    Env::FundsLock(m.price.asset_id, r.price);
 
     NFTGenerator::Payout::Key pok;
     pok.asset_id = m.price.asset_id;
@@ -66,7 +66,7 @@ BEAM_EXPORT void Method_4(const NFTGenerator::Buy &r) {
     PayoutMove(pok, m.price.amount, true);
 
     _POD_(pok.user) = r.buyer;
-    PayoutMove(pok, r.price.amount - m.price.amount, true);
+    PayoutMove(pok, r.price - m.price.amount, true);
 
     _POD_(m.holder) = r.buyer;
     _POD_(m.price.amount).SetZero(); // not for sale until new owner sets the price

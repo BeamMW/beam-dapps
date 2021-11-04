@@ -1,7 +1,7 @@
 #ifndef BEAM_CONTRACT_H
 #define BEAM_CONTRACT_H
 
-#include "../common.h"
+#include "Shaders/common.h"
 
 namespace NFTGenerator {
 
@@ -26,7 +26,6 @@ namespace NFTGenerator {
         uint64_t seed;
         PubKey holder;
         Price price;
-        AssetID nft_asset_id;
     };
 
     struct SaveNewSeed {
@@ -55,7 +54,7 @@ namespace NFTGenerator {
 
         uint64_t seed;
         PubKey buyer;
-        Price price;
+        Amount price;
     };
 
     struct Withdraw {

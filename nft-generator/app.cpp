@@ -1,6 +1,6 @@
 #include "contract.h"
 
-#include "../app_common_impl.h"
+#include "Shaders/app_common_impl.h"
 
 namespace NFTGenerator {
     static const ShaderID s_SID = {0xc4, 0x9b, 0xd7, 0xc8, 0x36, 0x47, 0xa0, 0x84, 0x59, 0x32, 0x87, 0x79, 0x1f, 0x39,
@@ -32,6 +32,7 @@ BEAM_EXPORT void Method_0() {
                 Env::DocAddText("cid", "ContractID");
                 Env::DocAddText("seed", "Seed to send");
                 Env::DocAddText("price", "New price");
+                Env::DocAddText("aid", "AssetID");
             }
             {
                 Env::DocGroup action("withdraw");
@@ -173,12 +174,11 @@ void GetUserSeeds(const ContractID &cid) {
     }
 }
 
-uint64_t GenerateSeed(const ContractID &cid, AssetID aid, uint64_t seed) {
+uint64_t GenerateSeed(const ContractID &cid, uint64_t seed) {
     NFTGenerator::SaveNewSeed request;
 
 // TODO: Contract-based seed generation
 
-    request.nft.nft_asset_id = aid;
     request.nft.seed = seed;
     request.nft.holder = GetKey(cid);
     Env::GenerateKernel(&cid, NFTGenerator::SaveNewSeed::s_iMethod,
@@ -187,13 +187,12 @@ uint64_t GenerateSeed(const ContractID &cid, AssetID aid, uint64_t seed) {
     return seed;
 }
 
-void SetSeedPrice(const ContractID &cid, uint64_t seed, NFTGenerator::Price price, AssetID aid) {
+void SetSeedPrice(const ContractID &cid, uint64_t seed, NFTGenerator::Price price) {
     PubKey holder = GetKey(cid);
     NFTGenerator::SetPrice args;
     args.updated_nft.seed = seed;
     args.updated_nft.holder = holder;
     _POD_(args.updated_nft.price) = price;
-    _POD_(args.updated_nft.nft_asset_id) = aid;
 
     SeedAndCid id;
     id.cid = cid;
@@ -207,7 +206,7 @@ void SetSeedPrice(const ContractID &cid, uint64_t seed, NFTGenerator::Price pric
     Env::DocAddBlob_T("holder", holder);
 }
 
-void BuySeed(ContractID cid, uint64_t seed, NFTGenerator::Price price) {
+void BuySeed(ContractID cid, uint64_t seed, Amount price, AssetID asset_id) {
     NFTGenerator::Buy args;
     args.seed = seed;
     args.buyer = GetKey(cid);
@@ -215,13 +214,13 @@ void BuySeed(ContractID cid, uint64_t seed, NFTGenerator::Price price) {
 
     FundsChange fc;
     fc.m_Consume = true;
-    fc.m_Amount = price.amount;
-    fc.m_Aid = price.asset_id;
+    fc.m_Amount = price;
+    fc.m_Aid = asset_id;
 
     Env::GenerateKernel(&cid, args.s_iMethod, &args, sizeof(args), &fc, 1, nullptr, 0, "gallery buy seed", 0);
 
-    Env::DocAddNum("price.amount", price.amount);
-    Env::DocAddNum("price.asset_id", price.asset_id);
+    Env::DocAddNum("price.amount", price);
+    Env::DocAddNum("price.asset_id", asset_id);
 }
 
 void Withdraw(const ContractID &contract_id, Amount amount, AssetID asset_id) {
@@ -282,32 +281,35 @@ BEAM_EXPORT void Method_1() {
     } else if (Env::Strcmp(role, "user") == 0) {
         if (Env::Strcmp(action, "generate") == 0) {
             ContractID cid;
-            AssetID aid;
             uint64_t seed;
             Env::DocGet("cid", cid);
-            Env::DocGet("aid", aid);
             Env::DocGet("seed", seed);
-            Env::DocAddNum("New seed: ", GenerateSeed(cid, aid, seed));
+            Env::DocAddNum("New seed: ", GenerateSeed(cid, seed));
         } else if (Env::Strcmp(action, "set_price") == 0) {
             ContractID gallery_CID;
             uint64_t seed;
-            NFTGenerator::Price price;
             AssetID aid;
+            Amount price;
             Env::DocGet("cid", gallery_CID);
             Env::DocGet("seed", seed);
-            Env::DocGetBlob("price", &price, sizeof(price));
+            Env::DocGet("price", price);
             Env::DocGet("aid", aid);
-            SetSeedPrice(gallery_CID, seed, price, aid);
+            NFTGenerator::Price nft_price;
+            nft_price.amount = price;
+            nft_price.asset_id = aid;
+            SetSeedPrice(gallery_CID, seed, nft_price);
         } else if (Env::Strcmp(action, "buy") == 0) {
             ContractID gallery_CID;
             uint64_t seed;
-            NFTGenerator::Price price;
+            Amount price;
+            AssetID aid;
             Env::DocGet("cid", gallery_CID);
             Env::DocGet("seed", seed);
-            Env::DocGetBlob("price", &price, sizeof(price));
-            Env::DocAddNum("right from js: price.amount", price.amount);
-            Env::DocAddNum("right from js: price.asset_id", price.asset_id);
-            BuySeed(gallery_CID, seed, price);
+            Env::DocGet("price", price);
+            Env::DocGet("aid", aid);
+            Env::DocAddNum("right from js: price.amount", price);
+            Env::DocAddNum("right from js: price.asset_id", aid);
+            BuySeed(gallery_CID, seed, price, aid);
         } else if (Env::Strcmp(action, "withdraw") == 0) {
             ContractID gallery_CID;
             Amount amount;
