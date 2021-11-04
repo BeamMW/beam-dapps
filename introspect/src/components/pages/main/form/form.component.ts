@@ -47,14 +47,13 @@ export class Form extends BaseComponent {
   actionsRender = (output: IOutput): Action[] => {
     const actions = Object.entries(
       this.roleValue
-        ? <IActionOutput>output?.roles?.[this.roleValue]
+        ? <IActionOutput>output.roles?.[this.roleValue]
         : output
     );
     return actions.map((el, i) => new Action(el, i));
   };
 
   informForm = (state: IFormState): void => {
-    console.log('informForm', state.role);
     if (state.role !== this.roleValue) {
       this.roleValue = this.setRole(state.role);
       this.action.removeAll();

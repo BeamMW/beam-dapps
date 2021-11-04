@@ -10,11 +10,13 @@ export default class FlexContainer extends BaseComponent {
 
   setJustify = (
     str: 'space-between' | 'space-around' | 'flex-start' | 'flex-end' | 'center'
-  ):void => {
+  ):FlexContainer => {
     this.style.justifyContent = str;
+    return this;
   };
 
-  setAlign = (str: 'flex-start' | 'flex-end' | 'center'):void => {
+  setAlign = (str: 'flex-start' | 'flex-end' | 'center'):FlexContainer => {
     this.style.alignItems = str;
+    return this;
   };
 }

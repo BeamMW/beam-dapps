@@ -42,30 +42,39 @@ export default class BaseComponent {
     this.element.innerHTML = str;
   }
 
-  protected initTextDom = (node: BaseComponent): (text: string) => void => {
+  protected initTextDom = (
+    node: BaseComponent
+  ): (text: string
+    ) => BaseComponent => {
     const component = node;
     return (text: string) => {
       component.textContent = text;
+      return this;
     };
   };
 
-  protected initImageDom = (node: BaseComponent): (src:string) => void => {
+  protected initImageDom = (
+    node: BaseComponent
+  ): (src:string
+    ) => BaseComponent => {
     const component = node;
     return (src: string) => {
       component.setAttributes({
         src
       });
+      return this;
     };
   };
 
-  insertFirst = (component:BaseComponent | HTMLElement):void => {
+  insertFirst = (component:BaseComponent | HTMLElement):BaseComponent => {
     const { firstChild } = this.element;
     if (component instanceof BaseComponent) {
       this.element.insertBefore(component.element, firstChild);
     } else this.element.insertBefore(component, firstChild);
+    return this;
   };
 
-  append = (...args: (BaseComponent | HTMLElement)[]):void => {
+  append = (...args: (BaseComponent | HTMLElement)[]):BaseComponent => {
     const nodes = args.map(
       (component) => {
         if (component instanceof BaseComponent) return component.element;
@@ -73,33 +82,38 @@ export default class BaseComponent {
       }
     );
     this.element.append(...nodes);
+    return this;
   };
 
-  remove = (...args: BaseComponent[]):void => {
+  remove = (...args: BaseComponent[]):BaseComponent => {
     args.forEach(
       (component) => this.element.removeChild(component.element)
     );
+    return this;
   };
 
-  replace = (component:BaseComponent | HTMLElement):void => {
+  replace = (component:BaseComponent | HTMLElement):BaseComponent => {
     this.element.replaceWith(
       component instanceof BaseComponent
         ? component.element
         : component
     );
+    return this;
   };
 
-  removeAll = ():void => {
+  removeAll = ():BaseComponent => {
     while (this.element.firstChild) {
       this.element.removeChild(this.element.firstChild);
     }
+    return this;
   };
 
-  setAttributes = (obj:HTMLAttributes):void => {
+  setAttributes = (obj:HTMLAttributes):BaseComponent => {
     const attr = Object.entries(obj);
     attr.forEach((attribute) => {
       this.element.setAttribute(attribute[0], attribute[1]);
     });
+    return this;
   };
 
   querySelector = (

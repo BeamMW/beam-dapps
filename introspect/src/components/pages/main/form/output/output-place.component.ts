@@ -5,7 +5,7 @@ import { AC } from '../../../../../logic/store/action-creators';
 import { InnerTexts, Tags } from '../../../../../constants/html_elements';
 import { isJson } from '../../../../../utils/string-handlers';
 import {
-  ReqID, ShaderProps
+  ReqID
 } from '../../../../../constants/variables';
 import ReqJson from '../req-json/req-json.component';
 import {
@@ -24,14 +24,14 @@ class OutputPlace extends BaseComponent {
     BEAM.subscribe(this);
     STORE.subscribe(this);
 
-    const wrapper = new BaseComponent(Tags.DIV, ['output__container']);
     this.child = new BaseComponent(Tags.DIV, ['output_inner']);
 
     this.action = action;
     this.child.textContent = 'Fill in the parametres to check the method';
-
-    wrapper.append(this.child);
-    this.append(new ReqJson(action, subscribe), wrapper);
+    this.append(
+      new ReqJson(action, subscribe),
+      new BaseComponent(Tags.DIV, ['output__container']).append(this.child)
+    );
   }
 
   informForm = (state: IFormState): void => {
@@ -63,9 +63,7 @@ class OutputPlace extends BaseComponent {
   };
 
   createTx = (reqId: string, data: number[]):void => {
-    if (STORE.getState().txs.size < ShaderProps.MAX_TX_COUNT) {
-      BEAM.callApi(RC.invokeData(reqId, data));
-    }
+    BEAM.callApi(RC.invokeData(reqId, data));
   };
 
   invokeData = (reqId: string, txId: string):void => {

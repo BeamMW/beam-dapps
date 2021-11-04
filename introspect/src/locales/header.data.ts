@@ -22,10 +22,10 @@ export default [
   },
   {
     title: 'Active transactions:',
-    data: '0/3',
+    data: '0',
     callback: (state: IFormState, component: BaseComponent):void => {
       const txCount = state.txs.size;
-      component.textContent = `${txCount}/3`;
+      component.textContent = `${txCount}`;
     }
   },
   {
