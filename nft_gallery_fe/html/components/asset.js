@@ -5,6 +5,10 @@ import { parseToBeam } from '../utils/string-handlers.js';
 
 export default {
   props: {
+    seed: {
+      type: Number,
+      default: 0
+    },
     id: {
       type: Number,
       required: true
@@ -17,7 +21,7 @@ export default {
       type: Number,
       default: 0,
     },
-    ammount: {
+    amount: {
       type: Number,
       default: 0,
     },
@@ -114,12 +118,13 @@ export default {
         }
 
         // if not owned can only buy
-        return html`
+        if(!this.owned){
+          return html`
           <span>
             <a href="#" onclick=${this.onBuy} class="buy">BUY</a>
             <span class="normal bold ml-hem">${amount} BEAM</span>
           </span>
-        `;
+        `;}
       }
 
       // // doesn't have price and is own image
@@ -140,13 +145,14 @@ export default {
 
     onBuy(ev) {
       ev.preventDefault();
-      this.$emit('buy', this.id);
-      console.log(this.id);
+      this.$emit('buy', this.id, this.seed);
+      console.log(this.id, this.seed);
     },
 
     onSell(ev) {
       ev.preventDefault();
-      this.$emit('sell', this.id);
+      this.$emit('sell', this.seed);
+      console.log(this.id, this.seed);
     },
   },
 };

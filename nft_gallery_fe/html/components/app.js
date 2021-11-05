@@ -1,5 +1,6 @@
 import Loading from './loading.js'
 import ErrView from './error.js'
+import Generate from './generate.js'
 
 export default {
     computed: {
@@ -13,7 +14,8 @@ export default {
 
     components: {
         loading: Loading,
-        error: ErrView
+        error: ErrView,
+		generate: Generate
     },
 
     template: `
@@ -23,6 +25,15 @@ export default {
         >
         </error>
         <loading v-else-if='loading'></loading>
-        <router-view v-else></router-view>
+		
+        <div class="app"  v-else>
+		<div class="nav-container">
+    	<div class="nav"><router-link to="/">Home</router-link> 
+    	<router-link to="/myseeds">My Pic</router-link> 
+    	<generate></generate> 
+		</div>
+  		</div>
+		<router-view></router-view>
+		</div>
     `
 }

@@ -5,7 +5,7 @@ import utils  from './utils/utils.js'
 
 utils.initialize(
     {
-        "appname": "BEAM Gallery",
+        "appname": "BEAM NFT Gallery",
         "min_api_version": "6.1",
         "apiResultHandler": (...args) => store.onApiResult(...args)
     }, 
@@ -25,7 +25,8 @@ utils.initialize(
         } = utils.getStyles();
 
         if (utils.isWeb()) {
-            document.body.style.padding = '5%';
+            // document.body.style.margin = '5px';
+            // document.body.style.overflow = 'scroll';
         }
         
         const topColor =  [appsGradientOffset, "px,"].join('');
