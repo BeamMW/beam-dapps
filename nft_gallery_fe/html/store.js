@@ -222,6 +222,5 @@ onSendToChain(err, res) {
           `role=user,action=set_price,cid=${store.state.cid},aid=0,seed=${seed},price=${price}`,
           (...args) => this.makeTx(...args)
         );
-
     },
 }
