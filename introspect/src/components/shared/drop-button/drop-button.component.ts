@@ -9,7 +9,7 @@ import { toDOMParser } from '../../../utils/string-handlers';
 import { BEAM, STORE } from '../../../controllers';
 import BaseComponent from '../base/base.component';
 import Button from '../button/button.component';
-import { svgData } from '../../../locales';
+import { svgData } from '../../../data';
 
 export default class DropButton extends BaseComponent {
   setFilename: (text: string) => void;

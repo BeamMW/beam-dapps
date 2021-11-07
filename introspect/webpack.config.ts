@@ -1,11 +1,14 @@
 import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
+
 // import ESLintPlugin from 'eslint-webpack-plugin';
 // import HtmlWebpackTagsPlugin from 'html-webpack-tags-plugin';
 
 export default {
-  devtool: 'eval-source-map',
   entry: './src/index.ts',
   devServer: {
     inline: true,
@@ -16,6 +19,16 @@ export default {
   },
   experiments: {
     asyncWebAssembly: true
+  },
+  optimization: {
+		nodeEnv: 'production',
+    minimize: true,
+    minimizer: [new UglifyJsPlugin({ sourceMap: false })],
+    // splitChunks: {
+    //   minSize: 30000,
+    //   chunks: 'all',
+    //   automaticNameDelimiter: '_'
+    // }
   },
   module: {
     rules: [
@@ -48,6 +61,7 @@ export default {
     extensions: ['.ts', '.js']
   },
   plugins: [
+
     // new ESLintPlugin({
     //   files: 'src/**/*.ts'
     // }),
@@ -62,6 +76,10 @@ export default {
     // }),
     new MiniCssExtractPlugin({
       filename: 'styles/[name].[contenthash].css'
+    }),
+		new CompressionPlugin({
+      include: /\/includes/,
+      deleteOriginalAssets: true
     })
   ],
   mode: process.env.NODE_ENV === 'production' ? 'production' : 'development'

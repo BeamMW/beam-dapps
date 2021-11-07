@@ -14,7 +14,8 @@ export enum ReqID {
 export enum ReqMethods {
   INVOKE_CONTRACT = 'invoke_contract',
   PROCESS_INVOKE_DATA = 'process_invoke_data',
-  TX_STATUS = 'tx_status'
+  TX_STATUS = 'tx_status',
+  GET_UTXO = 'get_utxo'
 }
 
 export enum ResTXStatus {

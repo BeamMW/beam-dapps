@@ -27,6 +27,8 @@ export default class ReqJson extends BaseComponent {
     const input = this.inputDecorator(Input, subscribe);
     button.addEventListener('click', () => {
       const element = <HTMLInputElement>input.element;
+      element.focus();
+      element.select();
       navigator.clipboard
         .writeText(element.value)
         .catch(() => this.copy(element));

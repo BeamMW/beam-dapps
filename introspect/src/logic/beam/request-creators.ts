@@ -3,6 +3,23 @@ import { ReqID, ReqMethods } from '../../constants/variables';
 import { BEAM } from '../../controllers';
 
 export const RC = {
+  getUtxo: ():ApiArgs => {
+    const obj = {
+      count: 10,
+      skip: 0,
+      sort: {
+        field: 'amount',
+        direction: 'asc'
+      }
+    };
+    return {
+      callID: 'Get Utxo',
+      method: ReqMethods.GET_UTXO,
+      params: {
+        ...obj
+      }
+    };
+  },
   submitResult: (id:string, args: string): ApiArgs => ({
     callID: id,
     method: ReqMethods.INVOKE_CONTRACT,

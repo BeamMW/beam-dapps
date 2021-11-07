@@ -8,7 +8,7 @@ import './widget.scss';
 import WidgetProps from './widget-info.component';
 import { toDOMParser } from '../../../utils/string-handlers';
 import { BEAM, STORE } from '../../../controllers';
-import { svgData, widgetData } from '../../../locales';
+import { svgData, widgetData } from '../../../data';
 import { AC } from '../../../logic/store/action-creators';
 
 export default class Widget extends BaseComponent {
@@ -31,13 +31,12 @@ export default class Widget extends BaseComponent {
     BEAM.subscribe(this);
 
     const infoBlocks = this.createInfoblocks(actionKey);
-    const loader = new Loader();
-    this.loader = loader;
+    this.loader = new Loader();
     const closeIcon = toDOMParser(svgData.iconCancel);
 
     closeIcon.addEventListener('click', this.removeThis);
 
-    this.append(loader, infoBlocks, closeIcon);
+    this.append(this.loader, infoBlocks, closeIcon);
   }
 
   private createInfoblocks = (action: string):BaseComponent => {

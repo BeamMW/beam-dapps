@@ -7,7 +7,7 @@ import ActionLogic from '../../../../../logic/actions/actions.logic';
 import OutputPlace from '../output/output-place.component';
 import Params from '../params/params-value.component';
 import { BEAM, STORE } from '../../../../../controllers';
-import { actionColorsData, buttonsData, svgData } from '../../../../../locales';
+import { actionColorsData, buttonsData, svgData } from '../../../../../data';
 import { BaseComponent, Button, ParamsInput } from '../../../../shared';
 import './action.scss';
 

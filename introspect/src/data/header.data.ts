@@ -25,7 +25,7 @@ export default [
     data: '0',
     callback: (state: IFormState, component: BaseComponent):void => {
       const txCount = state.txs.size;
-      component.textContent = `${txCount}`;
+      component.innerText(`${txCount}`);
     }
   },
   {

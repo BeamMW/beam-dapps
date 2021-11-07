@@ -8,14 +8,14 @@ export default class RoleInput extends BaseComponent {
     [role]:[string, unknown], index:number
   ) {
     super(Tags.LABEL, ['roles__label', `role-${role}`]);
-    const span = new BaseComponent(Tags.SPAN);
-    span.textContent = <string>role;
-    this.element.setAttribute('for', <string>role);
-    this.append(
-      this.createRoleInput(role, index),
-      span,
-      new BaseComponent(Tags.DIV, ['active'])
-    );
+    const span = new BaseComponent(Tags.SPAN)
+      .innerText(<string>role);
+    this.setAttributes({ for: <string>role })
+      .append(
+        this.createRoleInput(role, index),
+        span,
+        new BaseComponent(Tags.DIV, ['active'])
+      );
   }
 
   createRoleInput = (

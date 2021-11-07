@@ -30,6 +30,11 @@ export default class BaseComponent {
     this.element.textContent = str;
   }
 
+  public innerText(str : string):BaseComponent {
+    this.element.textContent = str;
+    return this;
+  }
+
   public set listener(callback: ((e: Event) => void) | null) {
     this._listener = callback;
   }

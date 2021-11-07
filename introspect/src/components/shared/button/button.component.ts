@@ -1,6 +1,7 @@
 import { toDOMParser } from '../../../utils/string-handlers';
 import { Tags } from '../../../constants/html_elements';
 import BaseComponent from '../base/base.component';
+import './button.scss';
 
 class Button extends BaseComponent {
   constructor({
