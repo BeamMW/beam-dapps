@@ -146,13 +146,11 @@ export default {
     onBuy(ev) {
       ev.preventDefault();
       this.$emit('buy', this.id, this.seed);
-      console.log(this.id, this.seed);
     },
 
     onSell(ev) {
       ev.preventDefault();
       this.$emit('sell', this.seed);
-      console.log(this.id, this.seed);
     },
   },
 };

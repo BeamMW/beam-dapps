@@ -4,14 +4,17 @@ import { store } from '../store.js';
 export default {
   computed: {
     items() {
-      console.log(store.state.items);
       return store.state.items
-    }
+    },
+    in_tx () {
+      return this.$state.in_tx;
+  },
   },
 
   components: {
     asset,
   },
+
 
   template: `
   <div class="vertical-container">
@@ -32,7 +35,6 @@ export default {
 
   methods: {
     onBuyAsset(id, seed) {
-      console.log(id, seed)
      store.buyAsset(id, seed)
     },
 

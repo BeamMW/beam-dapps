@@ -73,7 +73,7 @@ export default class Utils {
             "params":  params
         }
 
-        console.log(Utils.formatJSON(request))
+        // console.log(Utils.formatJSON(request))
 
         if (Utils.isWeb()) {
             BEAM.callWalletApi(callid, method, params);

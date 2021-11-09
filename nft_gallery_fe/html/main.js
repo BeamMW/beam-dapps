@@ -6,8 +6,8 @@ import utils  from './utils/utils.js'
 utils.initialize(
     {
         "appname": "BEAM NFT Gallery",
-        "min_api_version": "6.1",
-        "apiResultHandler": (...args) => store.onApiResult(...args)
+        "min_api_version": "6.2",
+        "apiResultHandler": (...args) => {store.onApiResult(...args)}
     }, 
     (err) => {
         const vueApp = Vue.createApp(App);

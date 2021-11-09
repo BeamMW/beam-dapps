@@ -1,20 +1,24 @@
 import asset from './asset.js';
 import { store } from '../store.js';
+import loading from './loading.js';
 
 export default {
   computed: {
     items() {
-      console.log(store.state.myItems);
       return store.state.myItems
+    },
+    loading(){
+      return store.state.loading
     }
   },
 
   components: {
-    asset,
+    asset, loading
   },
 
   template: `
-  <div class="vertical-container">
+  <loading v-if="!items"></loading>
+  <div v-else class="vertical-container">
             <div class="items">
                 <asset v-for="item in items"
                 v-bind:id="item.seed"
@@ -22,7 +26,6 @@ export default {
                 v-bind:owned="item.owned"
                 v-bind:price="item.amount"
                 v-bind:in_tx="item.in_tx"
-                v-on:buy="onBuyAsset"
                 v-on:sell="onSellAsset"
                 />
             </div>
@@ -30,7 +33,6 @@ export default {
     `,
 
     methods: {
-    
         onSellAsset(seed) {
          store.sellAsset(seed)
         },
