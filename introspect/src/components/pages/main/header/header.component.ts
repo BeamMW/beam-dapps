@@ -24,14 +24,6 @@ export default class Header extends BaseComponent {
         STORE.dispatch(AC.setDefaultCid(selectedText));
       }
     });
-    // const utxo = new Button({
-    //   name: 'utxo',
-    //   action: 'cid-setter',
-    //   classes: (action:string) => [action]
-    // });
-    // utxo.element.addEventListener('click', () => {
-    //   BEAM.callApi(RC.getUtxo());
-    // });
     const infoFlex = new FlexContainer(headerDrop, new HeaderInfo());
     const btnFlex = new FlexContainer(btn);
     infoFlex.classList.add('header-information');

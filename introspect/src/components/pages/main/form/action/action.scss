@@ -77,7 +77,8 @@
         flex-direction: column;
         width: 100%;
         .action__request{
-            margin: 0 auto;
+						padding-left: unset;
+						padding-right: unset;
         }
     }
 }

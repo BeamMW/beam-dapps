@@ -27,7 +27,7 @@ class Action extends BaseComponent {
     this.element.addEventListener(
       'click', (e: Event) => this.actionMenuHandler(e, component)
     );
-
+    window.addEventListener('resize', () => this.resizer(component));
     this.append(title, component);
   }
 
@@ -68,6 +68,12 @@ class Action extends BaseComponent {
       } else {
         component.style.maxHeight = `${component.element.scrollHeight + 20}px`;
       }
+    }
+  };
+
+  resizer = (component: BaseComponent):void => {
+    if (this.classList.contains('active')) {
+      component.style.maxHeight = `${component.element.scrollHeight + 20}px`;
     }
   };
 
