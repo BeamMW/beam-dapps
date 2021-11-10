@@ -7,7 +7,7 @@ const defaultState = () => {
   return {
     cid: "1c168d0ff0de97163c4075a3b8a2ffacc3bce2510447b41113aad3cd77697c5f",
     items: [],
-    loading: false,
+    loading: true,
     artist_key: "",
     changed_txs: [],
     error: undefined,
@@ -177,6 +177,7 @@ export const store = {
 
     this.state.myItems = mySeeds;
     this.state.items = updated;
+    this.changeLoading()
   },
 
   //   transaction
@@ -272,4 +273,7 @@ export const store = {
       (...args) => this.makeTx(...args),
     );
   },
+  changeLoading() {
+    this.state.loading = false
+  }
 };

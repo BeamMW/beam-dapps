@@ -25,8 +25,7 @@ export default {
         >
         </error>
         <loading v-else-if='loading'></loading>
-		
-        <div class="app"  v-else>
+        <div v-else class="app">
 		<div class="nav-container">
     	<div class="nav"><router-link to="/">Home</router-link> 
     	<router-link to="/myseeds">My Pic</router-link> 
