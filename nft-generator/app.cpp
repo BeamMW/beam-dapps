@@ -3,9 +3,9 @@
 #include "Shaders/app_common_impl.h"
 
 namespace NFTGenerator {
-    static const ShaderID s_SID = {0xc4, 0x9b, 0xd7, 0xc8, 0x36, 0x47, 0xa0, 0x84, 0x59, 0x32, 0x87, 0x79, 0x1f, 0x39,
-                                   0x49, 0xa1, 0xd8, 0x84, 0xfa, 0x77, 0x34, 0x84, 0x26, 0xc1, 0xc0, 0x96, 0x25, 0xb8,
-                                   0x6e, 0x53, 0x6f, 0xeb};
+    static const ShaderID s_SID = {0x0f, 0xb7, 0x45, 0xde, 0x2f, 0x7a, 0x27, 0xc0, 0xed, 0x98, 0x65, 0x61, 0x80, 0x8c,
+                                   0x19, 0x11, 0x2e, 0x75, 0x97, 0x4a, 0x75, 0xc3, 0x6b, 0xa5, 0x95, 0xe3, 0x36, 0xda,
+                                   0x13, 0x20, 0x74, 0x5b};
 }
 
 BEAM_EXPORT void Method_0() {
@@ -48,6 +48,11 @@ BEAM_EXPORT void Method_0() {
             {
                 Env::DocGroup action("get_user_seeds");
                 Env::DocAddText("cid", "ContractID");
+            }
+            {
+                Env::DocGroup action("balance");
+                Env::DocAddText("cid", "ContractID");
+                Env::DocAddText("aid", "AssetID");
             }
         }
         {
@@ -181,6 +186,7 @@ uint64_t GenerateSeed(const ContractID &cid, uint64_t seed) {
 
     request.nft.seed = seed;
     request.nft.holder = GetKey(cid);
+    _POD_(request.nft.price).SetZero();
     Env::GenerateKernel(&cid, NFTGenerator::SaveNewSeed::s_iMethod,
                         &request, sizeof(request), nullptr, 0,
                         nullptr, 0, "set new seed to nft-generator", 0);
@@ -230,8 +236,8 @@ void Withdraw(const ContractID &contract_id, Amount amount, AssetID asset_id) {
     request.key.user = GetKey(contract_id);
 
     FundsChange fc;
-    fc.m_Amount = request.value;
-    fc.m_Aid = request.key.asset_id;
+    fc.m_Amount = amount;
+    fc.m_Aid = asset_id;
     fc.m_Consume = false;
 
     SeedAndCid id;
@@ -243,6 +249,24 @@ void Withdraw(const ContractID &contract_id, Amount amount, AssetID asset_id) {
 
     Env::GenerateKernel(&contract_id, NFTGenerator::Withdraw::s_iMethod, &request, sizeof(request),
                         &fc, 1, &sig, 1, "withdraw", 0);
+}
+
+Amount GetBalance(const ContractID& cid, AssetID aid) {
+    Env::Key_T<NFTGenerator::Payout::Key> start, end;
+    _POD_(start.m_KeyInContract.user) = GetKey(cid);
+    start.m_KeyInContract.asset_id = aid;
+    _POD_(end) = start;
+    end.m_KeyInContract.asset_id = static_cast<AssetID>(-1);
+
+    Env::Key_T<NFTGenerator::Payout::Key> key;
+    NFTGenerator::Payout payout;
+    _POD_(payout).SetZero();
+    for (Env::VarReader reader(start, end); reader.MoveNext_T(key, payout);) {
+        if (key.m_KeyInContract.asset_id == aid) {
+            break;
+        }
+    }
+    return payout.amount;
 }
 
 BEAM_EXPORT void Method_1() {
@@ -330,6 +354,12 @@ BEAM_EXPORT void Method_1() {
             ContractID cid;
             Env::DocGet("cid", cid);
             GetUserSeeds(cid);
+        } else if (Env::Strcmp(action, "balance") == 0) {
+            ContractID cid;
+            AssetID aid;
+            Env::DocGet("cid", cid);
+            Env::DocGet("aid", aid);
+            Env::DocAddNum("balance", GetBalance(cid, aid));
         } else {
             Env::DocAddText("error", "Invalid action");
         }
