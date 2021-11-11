@@ -1,5 +1,8 @@
 #pragma once
 
+#include "../common.h"
+
+#include "../common.h"
 namespace oracle {
 
     constexpr uint32_t kFeeInGroth = 1; // TODO: set real fee
@@ -11,7 +14,7 @@ namespace oracle {
         uint32_t id_in_requester; // Request id of given user
     };
 
-    using OracleValue = uint64_t; // Always returns 64-byte number. If need more, send multiple requests
+    using OracleValue = uint64_t; // Always returns 8-byte number. If need more, send multiple requests
 
 	struct Request {
         static constexpr uint32_t METHOD = 2;
@@ -33,6 +36,16 @@ namespace oracle {
 
         RequestID request_id;
         OracleValue value;
+    };
+
+    enum class KeyType {
+        REQUEST,
+        VALUE
+    };
+
+    struct InternalKey {
+        KeyType key_type;
+        oracle::RequestID request_id;
     };
 
 #pragma pack(pop)

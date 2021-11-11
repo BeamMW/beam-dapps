@@ -16,20 +16,6 @@ namespace {
             .id_in_requester = requester_id
         };
     }
-
-#pragma pack(push, 1)
-
-    enum class KeyType {
-        REQUEST,
-        VALUE
-    };
-
-    struct InternalKey {
-        KeyType key_type;
-        oracle::RequestID request_id;
-    };
-
-#pragma pack(pop)
 }
 
 BEAM_EXPORT void Ctor(void*) {
