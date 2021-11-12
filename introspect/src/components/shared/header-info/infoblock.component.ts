@@ -1,7 +1,7 @@
-import { IFormState } from 'formProps';
-import { Tags } from '../../../constants/html_elements';
-import { STORE } from '../../../controllers';
-import { headerData } from '../../../data';
+import { IFormState } from '@alltypes';
+import { Tags } from '@constants/html-elements';
+import { headerData } from '@lib/data';
+import { STORE } from '@logic/controllers';
 import BaseComponent from '../base/base.component';
 
 export default class InfoBlock extends BaseComponent {

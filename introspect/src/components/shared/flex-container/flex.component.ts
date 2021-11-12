@@ -1,4 +1,4 @@
-import { Tags } from '../../../constants/html_elements';
+import { Tags } from '@constants/html-elements';
 import BaseComponent from '../base/base.component';
 
 export default class FlexContainer extends BaseComponent {

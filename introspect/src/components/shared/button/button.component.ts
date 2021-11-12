@@ -1,5 +1,5 @@
-import { toDOMParser } from '../../../utils/string-handlers';
-import { Tags } from '../../../constants/html_elements';
+import { Tags } from '@constants/html-elements';
+import { toDOMParser } from '@utils/string-handlers';
 import BaseComponent from '../base/base.component';
 import './button.scss';
 

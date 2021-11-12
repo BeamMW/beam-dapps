@@ -1,0 +1,137 @@
+@import 'font';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  font-family: 'SFProDisplay', sans-serif;
+  font-weight: normal;
+  height: 100%;
+  margin: 0 auto;
+  background-color: #042548;
+  overflow-y: scroll;
+  padding-left: 10px;
+}
+
+.loader {
+  display: block;
+  margin: 0 auto;
+}
+
+.main {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  min-height: 100%;
+  z-index: 1;
+  margin: 0 auto;
+  max-width: 914px;
+}
+
+.control {
+  display: flex;
+}
+
+.fieldset_shader {
+  border: 2px dashed #da68f5;
+  padding: 9px 49px;
+  border-radius: 6px;
+  margin-left: 5px;
+  width: 50%;
+  color: #da68f5;
+}
+
+.form__info_shaders {
+  display: flex;
+}
+
+.indicator {
+  border: 0.5px solid #00446c;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  background-color: #00f6d2;
+}
+
+.container__content {
+  width: 100%;
+  display: flex;
+}
+
+.input__place {
+  width: 100%;
+}
+
+.input__methods {
+  padding-top: 20px;
+}
+.params__label {
+  display: block;
+}
+
+.method__label {
+  display: block;
+}
+
+body::-webkit-scrollbar {
+  width: 11px;
+  height: 10px;
+}
+
+body::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 3px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
+}
+
+body::-webkit-scrollbar-track {
+  background: transparent;
+  // .output__place::-webkit-scrollbar {
+  //   width: 11px;
+  //   height: 10px;
+  // }
+
+  // .output__place::-webkit-scrollbar-thumb {
+  //   border-radius: 10px;
+  //   background: rgba(255, 255, 255, 0.5);
+  //   border: 3px solid rgba(0, 0, 0, 0);
+  //   background-clip: padding-box;
+  // }
+
+  // .output__place::-webkit-scrollbar-track {
+  //   background: transparent;
+  // }
+
+  // .output__place::-webkit-scrollbar-button {
+  //   display: none;
+  // }
+  // .output__place::-webkit-scrollbar-corner {
+  //   background-color: transparent;
+  //   display: none;
+  // }
+}
+
+body::-webkit-scrollbar-button {
+  display: none;
+}
+body::-webkit-scrollbar-corner {
+  background-color: transparent;
+  display: none;
+}
+
+@keyframes stripes {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 0;
+  }
+}

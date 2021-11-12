@@ -1,5 +1,5 @@
-import { ResponseResultType } from 'beamApiProps';
-import { Colors, Tags, TreeIcons } from '../../../constants/html_elements';
+import { ResponseResultType } from '@alltypes';
+import { Colors, Tags, TreeIcons } from '@constants/html-elements';
 import BaseComponent from '../base/base.component';
 import './tree-builder.scss';
 

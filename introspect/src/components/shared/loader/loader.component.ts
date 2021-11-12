@@ -1,8 +1,8 @@
+import loader from '@assets/loader.svg';
+import ok from '@assets/ok.svg';
+import fail from '@assets/fail.svg';
+import { Tags } from '@constants/html-elements';
 import BaseComponent from '../base/base.component';
-import loader from '../../../assets/loader.svg';
-import ok from '../../../assets/ok.svg';
-import fail from '../../../assets/fail.svg';
-import { Tags } from '../../../constants/html_elements';
 import './loader.scss';
 
 class Loader extends BaseComponent {

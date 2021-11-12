@@ -1,15 +1,14 @@
-import { IFormState } from 'formProps';
-import { AC } from '../../../logic/store/action-creators';
+import { IFormState } from '@alltypes';
+import { InnerTexts, Tags } from '@constants/html-elements';
+import { svgData } from '@lib/data';
+import { RC, AC } from '@logic/action-creators';
+import { STORE, BEAM } from '@logic/controllers';
 import {
-  dragleaveHandler, dragoverHandler, inputHandler
-} from '../../../utils/dragndrop_handlers';
-import { InnerTexts, Tags } from '../../../constants/html_elements';
-import { RC } from '../../../logic/beam/request-creators';
-import { toDOMParser } from '../../../utils/string-handlers';
-import { BEAM, STORE } from '../../../controllers';
+  dragoverHandler, dragleaveHandler, inputHandler
+} from '@utils/dragndrop_handlers';
+import { toDOMParser } from '@utils/string-handlers';
 import BaseComponent from '../base/base.component';
 import Button from '../button/button.component';
-import { svgData } from '../../../data';
 
 export default class DropButton extends BaseComponent {
   setFilename: (text: string) => void;

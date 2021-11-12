@@ -11,12 +11,28 @@
 		"outDir": "./ts",
     "incremental": true,
     "noImplicitReturns": true,
+		"noImplicitAny": false,
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "typeRoots": ["./node_modules/@types", "./src/types/declarations"],
-
+		"types": ["node",
+			"jasmine",
+      "jasminewd2"
+		],
+		"baseUrl": "src/",
+		"typeRoots": [
+      "node_modules/@types", "./src/types/declarations"
+    ],
+		"paths": {
+			"@assets/*" :["assets/*"],
+			"@components/*": ["components/*"],
+			"@logic/*": ["lib/logic/*"],
+			"@utils/*": ["lib/utils/*"],
+			"@constants/*": ["lib/constants/*"],
+			"@lib/*": ["lib/*"],
+			"@apptypes/*": ["types/*"]		
+			
+		},
     "allowJs": false,
-    "rootDir": "./src",
     "downlevelIteration": false,
     "strict": true,
     "noUnusedLocals": true,
@@ -28,8 +44,8 @@
     "strictPropertyInitialization":true,
   },
   "exclude": [
-    "node_modules/"
+    "node_modules"
   ],
-  "include": [
-    "./src/**/*.ts", "src/tests/sum.test.ts", "src/components/pages/main/form/action/mixintts"]
+	"include": ["**/*.ts", "tests/*", "src/types/declarations.d.ts"],
+	
 }

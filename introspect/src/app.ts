@@ -1,17 +1,16 @@
-import { BeamAPI } from './logic/beam/beam.logic';
-import './scss/main.scss';
-import Main from './components/pages/main/main.component';
-import Loader from './components/shared/loader/loader.component';
-import { Store } from './logic/store/store.logic';
-import { BEAM, STORE } from './controllers';
+import { Main } from '@components/page';
+import { Loader } from '@components/shared';
+import { BEAM, STORE } from '@logic/controllers';
+import { BeamObserver, StoreObserver } from '@logic/observers';
+import './styles/main.scss';
 
 export class App {
   constructor(rootElement: HTMLElement) {
     const loader = new Loader();
     rootElement.append(loader.element);
 
-    new BeamAPI().loadAPI().then((data:BeamAPI) => {
-      const store = new Store();
+    new BeamObserver().loadAPI().then((data:BeamObserver) => {
+      const store = new StoreObserver();
       STORE.setApiHandlers({
         subscribe: store.subscribe,
         dispatch: store.dispatch,

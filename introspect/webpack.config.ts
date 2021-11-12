@@ -1,15 +1,12 @@
 import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const CompressionPlugin = require('compression-webpack-plugin');
-
-// import ESLintPlugin from 'eslint-webpack-plugin';
-// import HtmlWebpackTagsPlugin from 'html-webpack-tags-plugin';
+import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
+import CompressionPlugin from 'compression-webpack-plugin';
+import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 
 export default {
-  entry: './src/index.ts',
+  entry: path.resolve(__dirname, './src/index.ts'),
   devServer: {
     inline: true,
     open: true,
@@ -21,14 +18,14 @@ export default {
     asyncWebAssembly: true
   },
   optimization: {
-		nodeEnv: 'production',
+    nodeEnv: 'production',
     minimize: true,
     minimizer: [new UglifyJsPlugin({ sourceMap: false })],
-    // splitChunks: {
-    //   minSize: 30000,
-    //   chunks: 'all',
-    //   automaticNameDelimiter: '_'
-    // }
+    splitChunks: (() => (process.env.NODE_ENV === 'production' ? {
+      minSize: 30000,
+      chunks: 'all',
+      automaticNameDelimiter: '_'
+    } : {}))()
   },
   module: {
     rules: [
@@ -57,8 +54,19 @@ export default {
     filename: 'bundle.js',
     assetModuleFilename: 'assets/[hash][ext]'
   },
+  resolveLoader: {
+    modules: [
+      path.join(__dirname, './src/types'),
+      path.join(__dirname, 'node_modules')
+    ]
+  },
   resolve: {
-    extensions: ['.ts', '.js']
+    extensions: ['.ts', '.js'],
+    plugins: [new TsconfigPathsPlugin()],
+    modules: [
+      path.join(__dirname, './src/types'),
+      path.join(__dirname, 'node_modules')
+    ]
   },
   plugins: [
 
@@ -77,7 +85,7 @@ export default {
     new MiniCssExtractPlugin({
       filename: 'styles/[name].[contenthash].css'
     }),
-		new CompressionPlugin({
+    new CompressionPlugin({
       include: /\/includes/,
       deleteOriginalAssets: true
     })

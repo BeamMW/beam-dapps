@@ -1,5 +1,5 @@
-import { IActionParams } from 'beamApiProps';
-import { Tags } from '../../../constants/html_elements';
+import { IActionParams } from '@alltypes';
+import { Tags } from '@constants/html-elements';
 import BaseComponent from '../base/base.component';
 import './input.scss';
 

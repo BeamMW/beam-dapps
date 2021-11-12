@@ -1,6 +1,5 @@
-import { APIResponse } from 'beamApiProps';
-import { IFormState } from 'formProps';
-import { Tags } from '../../../constants/html_elements';
+import { APIResponse, IFormState } from '@alltypes';
+import { Tags } from '@constants/html-elements';
 
 type HTMLAttributes = {
   [key:string]: string;

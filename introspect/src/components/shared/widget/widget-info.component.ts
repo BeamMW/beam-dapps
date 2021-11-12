@@ -1,7 +1,7 @@
-import { APIResponse } from 'beamApiProps';
-import { Tags } from '../../../constants/html_elements';
-import { BEAM } from '../../../controllers';
-import { makeDotted } from '../../../utils/string-handlers';
+import { APIResponse } from '@alltypes';
+import { Tags } from '@constants/html-elements';
+import { BEAM } from '@logic/controllers';
+import { makeDotted } from '@utils/string-handlers';
 import BaseComponent from '../base/base.component';
 
 export default class WidgetProps extends BaseComponent {
@@ -29,7 +29,7 @@ export default class WidgetProps extends BaseComponent {
 
   inform = (res: APIResponse): void => {
     if (res.id === this.action) {
-      this.value.textContent = makeDotted(res.result[this.key]);
+      this.value.textContent = makeDotted(<string>res.result[this.key]);
     }
   };
 }

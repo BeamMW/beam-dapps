@@ -1,15 +1,14 @@
-import { APIResponse } from 'beamApiProps';
-import { RC } from '../../../logic/beam/request-creators';
-import { Tags } from '../../../constants/html_elements';
-import { ResTXStatus, ShaderProps } from '../../../constants/variables';
+import { APIResponse } from '@alltypes';
+import { ResTXStatus, ShaderProps } from '@constants/app-shader';
+import { Tags } from '@constants/html-elements';
+import { svgData, widgetData } from '@lib/data';
+import { RC, AC } from '@logic/action-creators';
+import { BEAM, STORE } from '@logic/controllers';
+import { toDOMParser } from '@utils/string-handlers';
 import BaseComponent from '../base/base.component';
 import Loader from '../loader/loader.component';
-import './widget.scss';
 import WidgetProps from './widget-info.component';
-import { toDOMParser } from '../../../utils/string-handlers';
-import { BEAM, STORE } from '../../../controllers';
-import { svgData, widgetData } from '../../../data';
-import { AC } from '../../../logic/store/action-creators';
+import './widget.scss';
 
 export default class Widget extends BaseComponent {
   action: string;

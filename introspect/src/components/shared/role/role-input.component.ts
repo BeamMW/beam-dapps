@@ -1,6 +1,6 @@
-import { Tags } from '../../../constants/html_elements';
-import { STORE } from '../../../controllers';
-import { AC } from '../../../logic/store/action-creators';
+import { Tags } from '@constants/html-elements';
+import { AC } from '@logic/action-creators';
+import { STORE } from '@logic/controllers';
 import BaseComponent from '../base/base.component';
 
 export default class RoleInput extends BaseComponent {
