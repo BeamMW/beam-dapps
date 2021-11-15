@@ -28,8 +28,7 @@ export type CallApiWeb = (
   callid: string, method: string, params: BeamApiParams) => void;
 export type QObject = {
   callWalletApi: CallApiDesktop | CallApiWeb,
-  callWalletApiResult: ApiResult
-  | ApiResultWeb;
+  callWalletApiResult: ApiResult | ApiResultWeb;
   callApi: (callid: string, method: string, params: BeamApiParams) => void;
   initializeShader: (contract: string, name: string) => void;
 };

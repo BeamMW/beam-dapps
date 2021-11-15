@@ -4,7 +4,7 @@ import {
   ApiResultWeb,
   CallApiDesktop,
   PropertiesType,
-  QObject, QWebChannel, QWebChannelTransport
+  QObject, QWebChannelTransport
 } from '@alltypes';
 import { BaseComponent } from '@components/shared';
 import { RC } from '@logic/action-creators';

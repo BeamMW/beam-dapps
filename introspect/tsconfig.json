@@ -29,7 +29,7 @@
 			"@utils/*": ["lib/utils/*"],
 			"@constants/*": ["lib/constants/*"],
 			"@lib/*": ["lib/*"],
-			"@apptypes/*": ["types/*"]		
+			"@alltypes": ["types"]		
 			
 		},
     "allowJs": false,
