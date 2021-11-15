@@ -2,7 +2,6 @@
 
 #include "../common.h"
 
-#include "../common.h"
 namespace oracle {
 
     constexpr uint32_t kFeeInGroth = 1; // TODO: set real fee

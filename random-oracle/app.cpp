@@ -15,17 +15,15 @@ BEAM_EXPORT void Method_0() {
         {
             Env::DocGroup role("user");
             {
-                Env::DocGroup action("generate");
+                Env::DocGroup action("get_requests");
                 Env::DocAddText("cid", "ContractID");
-                Env::DocAddText("aid", "AssetID");
-                Env::DocAddText("seed", "Seed");
             }
             {
-                Env::DocGroup action("set_price");
+                Env::DocGroup action("save_value");
                 Env::DocAddText("cid", "ContractID");
-                Env::DocAddText("aid", "AssetID");
-                Env::DocAddText("seed", "Seed to send");
-                Env::DocAddText("price", "New price");
+                Env::DocAddText("value", "Requested value");
+                Env::DocAddText("key", "User key");
+                Env::DocAddText("id", "Request id");
             }
         }
         {
@@ -106,8 +104,8 @@ BEAM_EXPORT void Method_1() {
         } else {
             Env::DocAddText("error", "Invalid action");
         }
-    } else if (Env::Strcmp(role, "get_requests") == 0) {
-        if (Env::Strcmp(action, "generate") == 0) {
+    } else if (Env::Strcmp(role, "user") == 0) {
+        if (Env::Strcmp(action, "get_requests") == 0) {
             ContractID cid;
             Env::DocGet("cid", cid);
             GetRequests(cid);
