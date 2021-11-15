@@ -9,14 +9,20 @@ export default class FlexContainer extends BaseComponent {
   }
 
   setJustify = (
-    str: 'space-between' | 'space-around' | 'flex-start' | 'flex-end' | 'center'
-  ):FlexContainer => {
-    this.style.justifyContent = str;
+    justifyContent: 'space-between'
+    | 'space-around' | 'flex-start' | 'flex-end' | 'center'
+  ):this => {
+    this.style.justifyContent = justifyContent;
     return this;
   };
 
-  setAlign = (str: 'flex-start' | 'flex-end' | 'center'):FlexContainer => {
-    this.style.alignItems = str;
+  setAlign = (alignItems: 'flex-start' | 'flex-end' | 'center'):this => {
+    this.style.alignItems = alignItems;
+    return this;
+  };
+
+  flexWrap = (flexWrap: 'wrap' | 'nowrap' | 'wrap-reverse'):this => {
+    this.style.flexWrap = flexWrap;
     return this;
   };
 }

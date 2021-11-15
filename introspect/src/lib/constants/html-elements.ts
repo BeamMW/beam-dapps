@@ -13,7 +13,10 @@ export enum Tags {
   TR = 'tr',
   TD = 'td',
   TH = 'th',
-  P = 'p'
+  P = 'p',
+  H1 = 'h1',
+  H2 = 'h2',
+  H3 = 'h3'
 }
 
 export enum TreeIcons {

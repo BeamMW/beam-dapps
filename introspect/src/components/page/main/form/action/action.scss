@@ -1,43 +1,42 @@
 .method__label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 10px;
+  border-radius: 10px;
+
+  &-title {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-bottom: 10px;
-    border-radius: 10px;
-
-    &-title {
-        display: flex;
-        justify-content: space-between;
-        padding: 0 20px 0 22px;
-        height: 56px;
-        align-items: center;
-        cursor: pointer;
-        span {
-            color: #fff;
-            text-transform: uppercase;
-        }
+    justify-content: space-between;
+    padding: 0 20px 0 22px;
+    height: 56px;
+    align-items: center;
+    cursor: pointer;
+    span {
+      color: #fff;
+      text-transform: uppercase;
     }
+  }
 
-    .action__place {
-        display: flex;
-        padding: 0 18px;
-        background-color: rgba($color: #fff, $alpha: .05);
-        overflow:hidden;
+  .action__place {
+    display: flex;
+    padding: 0 18px;
+    background-color: rgba($color: #fff, $alpha: 0.05);
+    overflow: hidden;
 
-				max-height: 0;
-        transition: max-height 0.2s ease-out;
-        border-radius: 0 0 10px 10px;
-        justify-content: space-between;
-    }
-}
+    max-height: 0;
+    transition: max-height 0.2s ease-out;
+    border-radius: 0 0 10px 10px;
+    justify-content: space-between;
+  }
 
-.method__input {
+  .method__input {
     position: absolute;
     left: -9999px;
-}
+  }
 
-.action__request{
-		padding-top: 34px;
+  .action__request {
+    padding-top: 34px;
     padding-left: 20px;
     padding-right: 30px;
     padding-bottom: 40px;
@@ -46,39 +45,40 @@
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-}
+  }
 
-    .button + .button {
-        margin-left: 20px;
-    }
+  .button + .button {
+    margin-left: 20px;
+  }
 
-.buttons{
+  .buttons {
     display: flex;
     justify-content: space-between;
-}
+  }
 
-.clear{
+  .clear {
     background-color: rgba(255, 255, 255, 0.1);
     color: rgba(255, 255, 255, 0.3);
-    opacity: .3;
+    opacity: 0.3;
     pointer-events: none;
-    &.active{
+    &.active {
+      opacity: 1;
+      color: #fff;
+      pointer-events: all;
+      #iconCancel {
         opacity: 1;
-        color: #fff;
-        pointer-events: all;
-    #iconCancel{
-            opacity: 1;
-        }
+      }
     }
-}
+  }
 
-@media (max-width: 650px) {
-    .action__place{
-        flex-direction: column;
-        width: 100%;
-        .action__request{
-						padding-left: unset;
-						padding-right: unset;
-        }
+  @media (max-width: 650px) {
+    .action__place {
+      flex-direction: column;
+      width: 100%;
+      .action__request {
+        padding-left: unset;
+        padding-right: unset;
+      }
     }
+  }
 }

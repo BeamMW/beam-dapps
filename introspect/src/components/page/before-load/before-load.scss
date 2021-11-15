@@ -1,0 +1,20 @@
+.beforeLoad {
+  padding-top: 60px;
+  &_loadContainer {
+    margin: 0 auto;
+    text-align: center;
+    max-width: 500px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    color: #fff;
+  }
+  .container {
+    margin-top: 10px;
+    .button {
+			@media (max-width: 476px) {
+				margin: 0 auto 10px;
+			}
+    }
+  }
+}

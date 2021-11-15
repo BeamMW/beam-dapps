@@ -47,9 +47,8 @@ export default class BeamAPI extends Observer<APIResponse> {
     this.notifyAll(parsed);
   };
 
-  readonly loadAPI = async (): Promise<BeamAPI> => {
+  readonly loadAPI = async (ua:string): Promise<BeamAPI> => {
     const { qt } = window;
-    const ua = navigator.userAgent;
     if (/QtWebEngine/i.test(ua)) {
       this.API = await new Promise<QObject>(
         (resolve) => new QWebChannel(qt.webChannelTransport, (channel) => {

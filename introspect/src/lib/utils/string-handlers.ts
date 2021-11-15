@@ -7,6 +7,11 @@ export const isJson = (str:unknown):boolean => {
   }
 };
 
+export const beforeLoadMessage = (appname: string):string => `
+To use ${
+  appname
+} you should have BEAM Web Wallet installed and allow connection.`;
+
 export const toDOMParser = (str: string): HTMLElement => new DOMParser()
   .parseFromString(str, 'application/xml').documentElement;
 

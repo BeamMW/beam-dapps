@@ -1,4 +1,4 @@
-import { Main } from '@components/page';
+import { Main, BeforLoad } from '@components/page';
 import { Loader } from '@components/shared';
 import { BEAM, STORE } from '@logic/controllers';
 import { BeamObserver, StoreObserver } from '@logic/observers';
@@ -6,10 +6,12 @@ import './styles/main.scss';
 
 export class App {
   constructor(rootElement: HTMLElement) {
-    const loader = new Loader();
-    rootElement.append(loader.element);
+    const ua = navigator.userAgent;
+    const beforeLoad = /QtWebEngine/i.test(ua)
+      ? new Loader() : new BeforLoad('Introspect');
+    rootElement.append(beforeLoad.element);
 
-    new BeamObserver().loadAPI().then((data:BeamObserver) => {
+    new BeamObserver().loadAPI(ua).then((data:BeamObserver) => {
       const store = new StoreObserver();
       STORE.setApiHandlers({
         subscribe: store.subscribe,
@@ -24,7 +26,7 @@ export class App {
         initShader: data.initShader,
         deleteObserver: data.subscribe
       });
-      loader.replace(new Main());
+      beforeLoad.replace(new Main());
     });
   }
 }

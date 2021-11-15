@@ -1,7 +1,8 @@
 export enum ShaderProps {
   MAX_FILE_SIZE = 5000000,
   TX_CHECK_INTERVAL = 3000,
-  MAX_TX_COUNT = 3
+  MAX_TX_COUNT = 3,
+  EXT_URL = 'https://chrome.google.com/webstore/detail/beam-web-wallet/ilhaljfiglknggcoegeknjghdgampffk'
 }
 
 export enum ReqID {
