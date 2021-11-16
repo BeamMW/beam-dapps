@@ -47,12 +47,12 @@ void GetRequests(const ContractID &cid) {
     _POD_(start_key.m_Prefix.m_Cid) = cid;
     start_key.m_KeyInContract.key_type = oracle::KeyType::REQUEST;
     start_key.m_KeyInContract.request_id.id_in_requester = 0;
-	_POD_(start_key.m_KeyInContract.request_id.requester_key).SetZero();
+    _POD_(start_key.m_KeyInContract.request_id.requester_key).SetZero();
 
     _POD_(end_key) = start_key;
     end_key.m_KeyInContract.key_type = oracle::KeyType::VALUE;
     end_key.m_KeyInContract.request_id.id_in_requester = static_cast<uint32_t>(-1);
-	_POD_(end_key.m_KeyInContract.request_id.requester_key).SetObject(0xff);
+    _POD_(end_key.m_KeyInContract.request_id.requester_key).SetObject(0xff);
 
     Env::Key_T <oracle::InternalKey> key;
     oracle::OracleValue value;

@@ -4,7 +4,8 @@
 
 namespace oracle {
 
-    constexpr uint32_t kFeeInGroth = 1; // TODO: set real fee
+    constexpr uint32_t
+    kFeeInGroth = 1; // TODO: set real fee
 
 #pragma pack(push, 1)
 
@@ -15,8 +16,9 @@ namespace oracle {
 
     using OracleValue = uint64_t; // Always returns 8-byte number. If need more, send multiple requests
 
-	struct Request {
-        static constexpr uint32_t METHOD = 2;
+    struct Request {
+        static constexpr uint32_t
+        METHOD = 2;
 
         uint32_t value_type; // see mapping
         char value_details[1024]; // Maybe some details about value we need to send to oracle. 1 Kb
@@ -24,14 +26,16 @@ namespace oracle {
     };
 
     struct TryGetValue { // Will be halted, if value for request_id does not exists
-        static constexpr uint32_t METHOD = 3;
+        static constexpr uint32_t
+        METHOD = 3;
 
         RequestID request_id;
         OracleValue value;
     };
 
     struct SaveValue {
-        static constexpr uint32_t METHOD = 4;
+        static constexpr uint32_t
+        METHOD = 4;
 
         RequestID request_id;
         OracleValue value;
