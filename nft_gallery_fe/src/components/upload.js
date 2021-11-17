@@ -1,4 +1,5 @@
-import html from '../utils/html.js'
+/* eslint-disable no-unused-vars */
+// import from '../utils/html.js'
 import utils from '../utils/utils.js'
 
 export default {
@@ -11,14 +12,14 @@ export default {
 
     render () {
         if (this.is_artist) {
-            return html`
+            return`
                 <div class="upload">
                     <input type="file" accept="image/png, image/jpeg" onChange=${this.previewFile}></input>
                 </div>
             `
         }
         
-        return html`
+        return`
             <div class="upload darker">
                 <i>You should become an artist to upload images</i>
             </div>
@@ -57,7 +58,7 @@ export default {
             utils.callApi('process_invoke_data', {data: full.result.raw_data}, (...args) => this.onSendToChain(...args))
         },
 
-        onSendToChain (err, resp) {
+        onSendToChain (err, _resp) {
             if (err) {
                 if (utils.isUserCancelled(err)) return
                 return this.$root.setError(err, "Failed to upload image")

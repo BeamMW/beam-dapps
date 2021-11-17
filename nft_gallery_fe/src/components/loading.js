@@ -1,8 +1,8 @@
-import html from '../utils/html.js'
+// import html from '../utils/html.js'
 
 export default {
     render () {
-        return html`
+        return `
             <div class="loading darker">
                 Loading...
             </div>

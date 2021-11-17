@@ -1,24 +1,24 @@
-import Loading from './loading.js'
-import ErrView from './error.js'
-import Generate from './generate.js'
+import Loading from './loading.js';
+import ErrView from './error.js';
+import Generate from './generate.js';
 
 export default {
-    computed: {
-        loading () {
-            return  this.$state.loading
-        },
-        error () {
-            return this.$state.error
-        }
+  computed: {
+    loading() {
+      return this.$state.loading;
     },
-
-    components: {
-        loading: Loading,
-        error: ErrView,
-		generate: Generate
+    error() {
+      return this.$state.error;
     },
+  },
 
-    template: `
+  components: {
+    loading: Loading,
+    error: ErrView,
+    generate: Generate,
+  },
+
+  template: `
         <error v-if="error" 
             v-bind:error="error.error"
             v-bind:context="error.context"
@@ -34,5 +34,5 @@ export default {
   		</div>
 		<router-view></router-view>
 		</div>
-    `
-}
+    `,
+};
