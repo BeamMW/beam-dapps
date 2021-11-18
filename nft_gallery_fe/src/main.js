@@ -1,8 +1,8 @@
-import { createApp, h } from 'vue';
+import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store/index.js';
-import start from './utils/beamAPI';
+import { Beam } from './utils/beamApi/beamAPI';
 // import start from './utils/beamAPI';
 import utils from './utils/utils';
 // import start from './utils/beamAPI.js';
@@ -18,7 +18,6 @@ utils.initialize(
   (err) => {
     const vueApp = createApp(App);
     vueApp.use(store);
-    vueApp.use(h);
     vueApp.use(router);
     vueApp.mount('body');
 
@@ -57,9 +56,9 @@ utils.initialize(
     if (err) {
       return store.dispatch('GET_ERR', err);
     }
-    store.dispatch('GET_SHADER').then(()=>{
-      start()
-    })
+    store.dispatch('GET_SHADER').then(() => {
+      Beam.start();
+    });
     // start();
   }
 );

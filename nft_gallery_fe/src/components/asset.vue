@@ -15,26 +15,26 @@
     <div class="info-row">
       <span>
         <span v-if="!this.owned">
-          <span class="dot red"></span
-          ><span class="normal bolder">{{ this.holder }}</span>
+          <span class="dot red"></span>
+          <span class="normal bolder">{{ this.holder }}</span>
         </span>
-        <span v-else
-          ><span class="dot green"></span
-          ><span class="normal bolder">{{ this.holder }}</span></span
-        >
+        <span v-else>
+          <span class="dot green"></span>
+          <span class="normal bolder">{{ this.holder }}</span>
+        </span>
       </span>
       <span v-if="this.in_tx" class="small darker"
         >Transaction in progress</span
       >
       <span v-if="this.price && this.owned" class="normal bold"
-        >{{ this.price }} BEAM</span
+        >{{ this.priceBeam }} BEAM</span
       >
       <span v-else-if="this.price && !this.owned">
-        <a href="#" onclick="${this.onBuy}" class="buy">BUY</a>
-        <span class="normal bold ml-hem"> {{ this.price }} BEAM</span>
+        <a href="#" @click="this.onBuy" class="buy">BUY</a>
+        <span class="normal bold ml-hem">{{ this.priceBeam }} BEAM</span>
       </span>
       <span v-else-if="this.owned">
-        <a href="#" class="buy" onclick="${this.onSell}">SELL</a>
+        <a href="#" class="buy" @click="this.onSell">SELL</a>
       </span>
       <span v-else class="small darker">Not on sale</span>
     </div>
@@ -47,6 +47,8 @@
 // import Dot from "./dot.js";
 // import { parseToBeam } from "../utils/string-handlers.js";
 // import  html  from 'vue';
+
+import { parseToBeam } from '../utils/string-handlers';
 
 export default {
   props: {
@@ -87,9 +89,12 @@ export default {
       default: 0,
     },
   },
-
   emits: ['buy', 'sell'],
-
+  data() {
+    return {
+      priceBeam: parseToBeam(this.price),
+    };
+  },
   computed: {
     ownerText() {
       // if (this.artist) return this.artist
@@ -97,9 +102,16 @@ export default {
       return 'Somebody';
     },
   },
+  methods: {
+    onBuy(ev) {
+      ev.preventDefault();
+      this.$emit('buy', this.id, this.seed);
+    },
 
-  // components: {
-  //   dot: Dot,
-  // },
+    onSell(ev) {
+      ev.preventDefault();
+      this.$emit('sell', this.seed);
+    },
+  },
 };
 </script>

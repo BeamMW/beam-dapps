@@ -1,8 +1,14 @@
 <template>
-  <div class="nav-container">
+  <error
+    v-if="error"
+    v-bind:error="error.error"
+    v-bind:context="error.context"
+  ></error>
+  <loading v-else-if="loading"></loading>
+  <div v-else class="nav-container">
     <div class="nav">
       <router-link to="/">Home</router-link>
-      <router-link to="/about">MySeeds</router-link>
+      <router-link to="/userpics">MySeeds</router-link>
       <generate></generate>
     </div>
   </div>
@@ -10,11 +16,24 @@
 </template>
 
 <script>
-import Generate from '@/components/generate.vue';
+import Generate from '@/components/Generate.vue';
+import Loading from '@/components/loading.vue';
+import ErrView from '@/components/error.js';
 
 export default {
+  computed: {
+    loading() {
+      return this.$store.state.loading;
+    },
+    error() {
+      return this.$store.state.error;
+    },
+  },
+
   components: {
     generate: Generate,
+    loading: Loading,
+    error: ErrView,
   },
 };
 </script>

@@ -1,16 +1,15 @@
 <template>
-  <assets></assets>
+  <gallery></gallery>
 </template>
 
 <script>
 // @ is an alias to /src
-import Assets from '@/components/assets.vue';
+import Gallery from '@/components/Gallery.vue';
 
 export default {
   name: 'Home',
   components: {
-    assets: Assets,
+    gallery: Gallery,
   },
 };
 </script>
-

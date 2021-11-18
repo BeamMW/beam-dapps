@@ -1,12 +1,12 @@
 <template>
-  <myseeds/>
+  <myseeds />
 </template>
 
 <script>
 import Myseeds from '@/components/myseeds.vue';
-export default{
+export default {
   components: {
     myseeds: Myseeds,
-  }
-}
+  },
+};
 </script>

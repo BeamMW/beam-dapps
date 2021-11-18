@@ -19,6 +19,7 @@
 
 <script>
 import store from '../store/index.js';
+import { Beam } from '../utils/beamApi/beamAPI.js';
 import Asset from './asset.vue';
 
 export default {
@@ -34,10 +35,12 @@ export default {
   components: { asset: Asset },
   methods: {
     onBuyAsset(id, seed) {
-      this.dispatch.buyAsset(id, seed);
+      console.log('buy');
+      Beam.buyAsset(id, seed);
     },
-    onSellAsset(seed, id) {
-      this.dispatch.sellAsset(seed, id);
+    onSellAsset(seed) {
+      console.log('sell');
+      Beam.sellAsset(seed);
     },
   },
 };
