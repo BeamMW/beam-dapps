@@ -1,6 +1,6 @@
 #include "contract.h"
 
-#include "Shaders/app_common_impl.h"
+#include "../app_common_impl.h"
 
 namespace NFTGenerator {
     static const ShaderID s_SID = {0x0f, 0xb7, 0x45, 0xde, 0x2f, 0x7a, 0x27, 0xc0, 0xed, 0x98, 0x65, 0x61, 0x80, 0x8c,
@@ -253,19 +253,33 @@ void Withdraw(const ContractID &contract_id, Amount amount, AssetID asset_id) {
 
 Amount GetBalance(const ContractID& cid, AssetID aid) {
     Env::Key_T<NFTGenerator::Payout::Key> start, end;
-    _POD_(start.m_KeyInContract.user) = GetKey(cid);
-    start.m_KeyInContract.asset_id = aid;
+//    _POD_(start.m_KeyInContract.user) = GetKey(cid);
+    _POD_(start.m_KeyInContract.user).SetZero();
+    start.m_KeyInContract.asset_id = 0;
+
     _POD_(end) = start;
-    end.m_KeyInContract.asset_id = static_cast<AssetID>(-1);
+    _POD_(end.m_KeyInContract.user).SetObject(0xff);
+    end.m_KeyInContract.asset_id = static_cast<AssetID>(2'000'000'000);
 
     Env::Key_T<NFTGenerator::Payout::Key> key;
     NFTGenerator::Payout payout;
     _POD_(payout).SetZero();
-    for (Env::VarReader reader(start, end); reader.MoveNext_T(key, payout);) {
-        if (key.m_KeyInContract.asset_id == aid) {
-            break;
-        }
+
+    _POD_(key.m_KeyInContract.user) = GetKey(cid);
+    _POD_(key.m_KeyInContract.asset_id) = aid;
+    Env::DocAddNum("before cycle", aid);
+    if (!Env::VarReader::Read_T(key, payout)) {
+//        OnError("no such payment");
+        Env::DocAddNum("Unsuccessfully entered if", aid);
+        return 0;
     }
+//    for (Env::VarReader reader(start, end); reader.MoveNext_T(key, payout);) {
+//        Env::DocAddNum("successfully entered cycle", aid);
+//        if (key.m_KeyInContract.asset_id == aid) {
+//    		Env::DocAddNum("successfully entered if in cycle", aid);
+//            break;
+//        }
+//    }
     return payout.amount;
 }
 
@@ -359,6 +373,7 @@ BEAM_EXPORT void Method_1() {
             AssetID aid;
             Env::DocGet("cid", cid);
             Env::DocGet("aid", aid);
+            Env::DocAddNum("aid", aid);
             Env::DocAddNum("balance", GetBalance(cid, aid));
         } else {
             Env::DocAddText("error", "Invalid action");
