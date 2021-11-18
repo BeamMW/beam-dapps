@@ -9,6 +9,7 @@ type CardElemProps = {
   id: number,
   pic: string | null,
   name: string,
+  cid: string,
   dispatch: AppThunkDispatch,
   Preloader: () => JSX.Element
 };
@@ -24,10 +25,10 @@ const preloaderCss = {
 };
 
 const CardElem = ({
-  id, pic, name, dispatch, Preloader
+  id, pic, name, cid, dispatch, Preloader
 }:CardElemProps) => {
   useEffect(() => {
-    dispatch(thunks.callApi(RC.getPic(id), onResponse.getPic(id)));
+    dispatch(thunks.callApi(RC.getPic(id, cid), onResponse.getPic(id)));
   }, []);
 
   return (

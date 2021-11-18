@@ -2,6 +2,7 @@ import { ActionCreators } from '../action-creators/action-creators';
 import { ACTIONS } from '../constants';
 
 interface IApp {
+  cid: string
   pKey: string | null,
   loading: boolean,
   error: {
@@ -12,6 +13,7 @@ interface IApp {
 }
 
 const initialState:IApp = {
+  cid: '',
   loading: true,
   error: null,
   pKey: null
@@ -22,6 +24,10 @@ const reducer = (
 ):IApp => {
   const newState = JSON.parse(JSON.stringify(state)) as IApp;
   switch (action.type) {
+    case ACTIONS.SET_CID: {
+      newState.cid = action.payload as string;
+      break;
+    }
     case ACTIONS.LOADING: {
       newState.loading = action.payload as boolean;
       break;

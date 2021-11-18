@@ -8,9 +8,10 @@ import { useEffect } from 'react';
 import { connect } from 'react-redux';
 
 type GalleryType = {
+  cid: string,
   items: { id: number, pic: string | null, name: string } [];
   dispatch: AppThunkDispatch;
-  getItems: () => void
+  getItems: (cid: string) => void
 };
 
 const resetMargin = {
@@ -26,9 +27,11 @@ const colStyle = {
   justifyContent: 'center'
 };
 
-const Gallery = ({ items, dispatch, getItems }:GalleryType) => {
+const Gallery = ({
+  items, cid, dispatch, getItems
+}:GalleryType) => {
   useEffect(() => {
-    if (!items.length) getItems();
+    if (!items.length) getItems(cid);
   }, []);
 
   const itemsPics = items.map(
@@ -44,6 +47,7 @@ const Gallery = ({ items, dispatch, getItems }:GalleryType) => {
       >
         <CardElem
           {...el}
+          cid={cid}
           Preloader={Preloader}
           dispatch={dispatch}
         />
@@ -58,14 +62,17 @@ const Gallery = ({ items, dispatch, getItems }:GalleryType) => {
   );
 };
 
-const mapState = ({ gallery: { items } }: RootState) => ({
-  items
+const mapState = ({
+  gallery: { items },
+  app: { cid }
+}: RootState) => ({
+  items, cid
 });
 
 const mapDispatch = (dispatch: AppThunkDispatch) => ({
   dispatch,
-  getItems: () => {
-    dispatch(thunks.callApi(RC.getAllItems(), onResponse.getItems()));
+  getItems: (cid: string) => {
+    dispatch(thunks.callApi(RC.getAllItems(cid), onResponse.getItems()));
   }
 });
 

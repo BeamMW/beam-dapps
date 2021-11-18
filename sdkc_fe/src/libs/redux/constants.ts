@@ -3,5 +3,6 @@ export enum ACTIONS {
   ERROR = 'ERROR',
   SET_ITEMS = 'SET_ITEMS',
   SET_PIC = 'SET_PIC',
-  SET_PKEY = 'SET_PKEY'
+  SET_PKEY = 'SET_PKEY',
+  SET_CID = 'SET_CID'
 }

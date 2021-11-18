@@ -1,42 +1,66 @@
+import { argsStringify } from '@libs/utils';
 import { PropertiesType } from '@types';
-import { CONTRACT } from '../../constants/contract';
 
 export const RC = {
-  getAllItems: () => ({
+  getAllItems: (cid: string) => ({
     callID: 'view_all',
     method: 'invoke_contract',
     params: {
-      args: `role=user,action=view_all,cid=${CONTRACT.CID}`,
+      args: argsStringify({
+        role: 'user',
+        action: 'view_all',
+        cid
+      }),
       create_tx: false
     }
   } as const),
 
-  getPic: (id: number) => ({
+  getPic: (id: number, cid: string) => ({
     callID: 'get_pic',
     method: 'invoke_contract',
     params: {
-      args: `role=user,action=download,cid=${CONTRACT.CID},id=${id}`,
+      args: argsStringify({
+        role: 'user',
+        action: 'download',
+        cid,
+        id: String(id)
+      }),
       create_tx: false
     }
   } as const),
 
-  getPKey: () => ({
+  getPKey: (cid: string) => ({
     callID: 'get_key',
     method: 'invoke_contract',
     params: {
-      args: `role=artist,action=get_key,cid=${CONTRACT.CID}`,
+      args: argsStringify({
+        role: 'artist',
+        action: 'get_key',
+        cid
+      }),
       create_tx: false
     }
   }),
 
-  uploadImage: (data: string) => ({
+  uploadImage: (data: string, key: string, cid: string) => ({
     callID: 'upload',
     method: 'invoke_contract',
     params: {
-      args: `role=manager,action=upload,pkArtist=${
-        1},data=${data}cid=${CONTRACT.CID}`,
+      args: argsStringify({
+        role: 'manager',
+        action: 'upload',
+        cid,
+        pkArtist: key,
+        data
+      }),
       create_tx: false
     }
-  } as const)
+  } as const),
+
+  startTx: (data: number[]) => ({
+    callID: 'start_tx',
+    method: 'process_invoke_data',
+    params: { data }
+  })
 };
 export type RequestCreators = ReturnType<PropertiesType<typeof RC>>;

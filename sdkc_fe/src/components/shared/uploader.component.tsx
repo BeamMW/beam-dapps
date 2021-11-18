@@ -1,7 +1,7 @@
-import { message, Upload, Button } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import { RcFile, UploadChangeParam } from 'antd/lib/upload';
+import { Upload, Button, message } from 'antd';
+import { RcFile } from 'antd/lib/upload';
 import { uploadArtwork } from '@libs/utils';
+import { UploadChangeParam } from 'antd/lib/upload/interface';
 
 type UploaderProps = {
   uploadImage: (hex: string) => void
@@ -9,21 +9,25 @@ type UploaderProps = {
 
 const Uploader = ({ uploadImage }: UploaderProps) => {
   const props = {
-    beforeUpload: (file:RcFile) => {
+    withCredentials: false,
+    showUploadList: false,
+    beforeUpload: async (file:RcFile) => {
       if (file.type !== 'image/png') {
         message.error(`${file.name} is not a png file`);
       }
       return file.type === 'image/png' ? true : Upload.LIST_IGNORE;
     },
-    onChange: (info:UploadChangeParam) => {
-      const hex = uploadArtwork(info.fileList);
-      console.log(hex);
-      if (hex) uploadImage(hex);
+    customRequest: () => {},
+    onChange: (info: UploadChangeParam) => {
+      if (info.fileList[0].originFileObj) {
+        uploadArtwork(info.fileList[0].originFileObj, uploadImage);
+        info.fileList.slice(0, 1);
+      }
     }
   };
   return (
     <Upload {...props}>
-      <Button icon={<UploadOutlined />}>Upload png only</Button>
+      <Button>Upload png only</Button>
     </Upload>
   );
 };

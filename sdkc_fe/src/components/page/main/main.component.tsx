@@ -7,6 +7,7 @@ import Header from '../header/header.component';
 import Loading from '../loading/loading.component';
 
 type MainProps = {
+  cid: string;
   loading: boolean;
   error: {
     code: number;
@@ -16,10 +17,12 @@ type MainProps = {
   beamLoading: () => void;
 };
 
-const Main = ({ loading, beamLoading, error }: MainProps) => {
+const Main = ({
+  cid, loading, beamLoading, error
+}: MainProps) => {
   useEffect(() => {
     if (loading) beamLoading();
-  }, [loading]);
+  }, [loading, cid]);
 
   return (
     <>
@@ -28,15 +31,18 @@ const Main = ({ loading, beamLoading, error }: MainProps) => {
         ? <Err {...error} />
         : loading
           ? <Loading />
-          : <Gallery />}
+          : cid
+            ? <Gallery />
+            : ''}
 
     </>
   );
 };
 
-const mapState = ({ gallery }: RootState) => {
-  const { loading, error } = gallery;
+const mapState = ({ app }: RootState) => {
+  const { loading, error, cid } = app;
   return {
+    cid,
     loading,
     error
   };

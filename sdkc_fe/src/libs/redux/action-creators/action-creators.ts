@@ -2,6 +2,11 @@ import { PropertiesType } from '@types';
 import { ACTIONS } from '../constants';
 
 const AC = {
+  setCID: (payload: string) => ({
+    type: ACTIONS.SET_CID,
+    payload
+  }),
+
   setLoading: (payload: boolean) => ({
     type: ACTIONS.LOADING,
     payload

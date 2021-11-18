@@ -1,11 +1,12 @@
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import wasm from '@assets/galleryManager.wasm';
+import wasm from '@assets/app.wasm';
 import { BeamApiRes } from '@types';
 import { BeamAPI } from '@libs/beam';
 import { AppThunkDispatch, RootState } from '../store';
 import AC from './action-creators';
 import { RequestCreators } from './request-creators';
+import { errorHandler } from './error-handlers';
 
 type ThunkActionT = ThunkAction<Promise<void>, RootState, unknown, AnyAction>;
 
@@ -47,9 +48,7 @@ export const thunks = {
   ):ThunkActionT => async (dispatch:AppThunkDispatch) => {
     beam?.callApi(
       reqCreator,
-      (response: BeamApiRes) => {
-        callback(dispatch)(response);
-      }
+      errorHandler(dispatch)(callback(dispatch))
     );
   }
 };
