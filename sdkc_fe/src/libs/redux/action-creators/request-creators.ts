@@ -61,6 +61,14 @@ export const RC = {
     callID: 'start_tx',
     method: 'process_invoke_data',
     params: { data }
+  }),
+
+  getTxStatus: (txId: string) => ({
+    callID: `tx_status_${txId}`,
+    method: 'tx_status',
+    params: {
+      txId
+    }
   })
 };
 export type RequestCreators = ReturnType<PropertiesType<typeof RC>>;

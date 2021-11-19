@@ -5,6 +5,7 @@ import Err from '../error/error.component';
 import Gallery from '../gallery/gallery.component';
 import Header from '../header/header.component';
 import Loading from '../loading/loading.component';
+// import Notifications from '../notifications/notifications.component';
 
 type MainProps = {
   cid: string;
@@ -34,7 +35,7 @@ const Main = ({
           : cid
             ? <Gallery />
             : ''}
-
+      {/* <Notifications /> */}
     </>
   );
 };

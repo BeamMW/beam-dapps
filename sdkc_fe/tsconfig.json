@@ -14,7 +14,7 @@
 			"@components/*": ["components/*"],
 			"@libs/*": ["libs/*"],
 			"@assets/*": ["assets/*"],
-			"@types": ["types"],
+			"@types": ["types"]
 		},
 		"sourceMap": true,
 		"types": [

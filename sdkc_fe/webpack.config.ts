@@ -4,35 +4,21 @@ import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
+import MomentTimezoneDataPlugin from 'moment-timezone-data-webpack-plugin';
+import * as webpack from 'webpack';
 
 export default {
-  devtool: 'eval-source-map',
+  devtool: 'source-map',
   entry: './src/index.tsx',
   output: {
     path: path.join(__dirname, 'build'),
     filename: 'bundle.js',
     assetModuleFilename: 'assets/[name][ext]'
   },
-  mode: (() => {
-    console.log(process.env.NODE_ENV === 'production');
-    return process.env.NODE_ENV === 'production' ? 'production' : 'development';
-  })(),
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   optimization: {
     nodeEnv: 'production',
-    minimize: true,
-    minimizer: [
-      new UglifyJsPlugin({
-        sourceMap: false,
-        uglifyOptions: {
-          compress: true,
-          output: {
-            beautify: false,
-            comments: false
-          }
-        }
-      })
-    ]
+    minimize: true
   },
   resolve: {
     extensions: ['.ts', '.js', '.tsx'],
@@ -48,20 +34,34 @@ export default {
     open: true,
     hot: true
   },
-  experiments: {
-    asyncWebAssembly: true
-  },
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(js|jsx|tsx|ts)$/,
         exclude: /node_modules/,
-        use: ['babel-loader']
-      },
-      {
-        test: /\.(ts|tsx)$/,
-        exclude: /node_modules/,
-        use: ['ts-loader']
+        loader: 'babel-loader',
+        options: {
+          plugins: [
+            [
+              'import',
+              { libraryName: 'antd', libraryDirectory: 'lib' },
+              'antd'
+            ],
+            // modularly import the JS that we use from ‘@ant-design/icons’
+            [
+              'import',
+              {
+                libraryName: '@ant-design/icons',
+                libraryDirectory: 'es/icons'
+              },
+              'antd-icons'
+            ],
+            'lodash'
+          ],
+          presets: [
+            ['@babel/env', { targets: { node: 6 } }]
+          ]
+        }
       },
       {
         test: /\.css$/,
@@ -72,7 +72,7 @@ export default {
           {
             loader: 'css-loader',
             options: {
-              url: false
+              url: true
             }
           }
         ]
@@ -86,6 +86,15 @@ export default {
   },
   plugins: [
     new BundleAnalyzerPlugin(),
+    new webpack.ProvidePlugin({
+      React: 'react'
+    }),
+    new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /(en)$/),
+    new MomentTimezoneDataPlugin({
+      startYear: 1950,
+      endYear: 2100,
+      matchZones: /^America\//
+    }),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'src', 'index.html')
     }),
