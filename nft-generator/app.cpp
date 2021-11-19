@@ -252,34 +252,17 @@ void Withdraw(const ContractID &contract_id, Amount amount, AssetID asset_id) {
 }
 
 Amount GetBalance(const ContractID& cid, AssetID aid) {
-    Env::Key_T<NFTGenerator::Payout::Key> start, end;
-//    _POD_(start.m_KeyInContract.user) = GetKey(cid);
-    _POD_(start.m_KeyInContract.user).SetZero();
-    start.m_KeyInContract.asset_id = 0;
-
-    _POD_(end) = start;
-    _POD_(end.m_KeyInContract.user).SetObject(0xff);
-    end.m_KeyInContract.asset_id = static_cast<AssetID>(2'000'000'000);
-
     Env::Key_T<NFTGenerator::Payout::Key> key;
+    _POD_(key.m_Prefix.m_Cid) = cid;
+    _POD_(key.m_KeyInContract.user) = GetKey(cid);
+    _POD_(key.m_KeyInContract.asset_id) = aid;
+
     NFTGenerator::Payout payout;
     _POD_(payout).SetZero();
 
-    _POD_(key.m_KeyInContract.user) = GetKey(cid);
-    _POD_(key.m_KeyInContract.asset_id) = aid;
-    Env::DocAddNum("before cycle", aid);
     if (!Env::VarReader::Read_T(key, payout)) {
-//        OnError("no such payment");
-        Env::DocAddNum("Unsuccessfully entered if", aid);
         return 0;
     }
-//    for (Env::VarReader reader(start, end); reader.MoveNext_T(key, payout);) {
-//        Env::DocAddNum("successfully entered cycle", aid);
-//        if (key.m_KeyInContract.asset_id == aid) {
-//    		Env::DocAddNum("successfully entered if in cycle", aid);
-//            break;
-//        }
-//    }
     return payout.amount;
 }
 
@@ -373,7 +356,6 @@ BEAM_EXPORT void Method_1() {
             AssetID aid;
             Env::DocGet("cid", cid);
             Env::DocGet("aid", aid);
-            Env::DocAddNum("aid", aid);
             Env::DocAddNum("balance", GetBalance(cid, aid));
         } else {
             Env::DocAddText("error", "Invalid action");
