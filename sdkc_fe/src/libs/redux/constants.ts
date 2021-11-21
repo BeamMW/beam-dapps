@@ -5,11 +5,14 @@ export enum ACTIONS {
   SET_PIC = 'SET_PIC',
   SET_PKEY = 'SET_PKEY',
   SET_CID = 'SET_CID',
-  SET_TX = 'SET_TX'
+  SET_TX = 'SET_TX',
+  REMOVE_TX = 'REMOVE_TX',
+  SET_TX_NOTIFY = 'SET_TX_NOTIFY'
 }
 
 export enum STATUS {
   IN_PROGRESS = 'in progress',
   FAILED = 'failed',
-  COMPLETED = 'completed'
+  COMPLETED = 'completed',
+  PENDING = 'pending'
 }

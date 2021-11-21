@@ -1,8 +1,5 @@
 import { parseToUrl } from '@libs/utils';
-import { BeamApiRes } from '@types';
-import { notification } from 'antd';
-import { NotificationPlacement } from 'antd/lib/notification';
-import { STATUS } from '../constants';
+import { BeamApiRes, setPropertiesType, TxResponse } from '@types';
 import { thunks } from './thunks';
 import { AppThunkDispatch } from '../store';
 import AC from './action-creators';
@@ -17,37 +14,17 @@ export const onResponse = {
       .map((el) => ({ id: el.id, pic: null, name: '' }))));
   },
 
-  checkTxStatus: () => (dispatch: AppThunkDispatch) => (res: BeamApiRes) => {
-    const props = {
+  checkTxStatus: (
+    callback: setPropertiesType<TxResponse>
+  ) => () => (res: BeamApiRes) => {
+    callback({
       message: res.result.comment,
-      description: res.result.status_string as React.ReactNode,
-      placement: 'bottomRight' as NotificationPlacement
-    };
-    if (res.result.status_string === STATUS.IN_PROGRESS) {
-      notification.open(props);
-    } else if (res.result.status_string === STATUS.FAILED) {
-      notification.error(props);
-    } else if (res.result.status_string === STATUS.COMPLETED) {
-      notification.success(props);
-    }
-    if (res.result.status_string !== STATUS.FAILED
-    && res.result.status_string !== STATUS.COMPLETED) {
-      setTimeout(() => {
-        dispatch(
-          thunks.callApi(
-            RC.getTxStatus(res.result.txId), onResponse.checkTxStatus()
-          )
-        );
-      }, 2000);
-    }
+      status_string: res.result.status_string
+    });
   },
 
   startTx: () => (dispatch: AppThunkDispatch) => (res: BeamApiRes) => {
-    dispatch(
-      thunks.callApi(
-        RC.getTxStatus(res.result.txid), onResponse.checkTxStatus()
-      )
-    );
+    dispatch(AC.setTx(res.result.txid));
   },
 
   getPic: (

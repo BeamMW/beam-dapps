@@ -1,34 +1,51 @@
-import { RootState } from '@libs/redux';
-// import {
-//   notification
-// } from 'antd';
+import { NotificationElement } from '@components/shared';
+import {
+  AppThunkDispatch, onResponse, RC, RootState, thunks
+} from '@libs/redux';
+import AC from '@libs/redux/action-creators/action-creators';
+import { setPropertiesType, TxItem, TxResponse } from '@types';
 import { connect } from 'react-redux';
 
 type NotificationProps = {
-  txs: Map<string, string>
+  txs: TxItem[],
+  checkTxStatus:(txId: string, callback: setPropertiesType<TxResponse>) => void
+  removeTx: (txItem: TxItem) => void,
+  setNotifiedTrue: (txItem: TxItem) => void
 };
 
-const Notifications = ({ txs }: NotificationProps) => {
-  // const [api, contextHolder] = notification.useNotification();
-
-  txs.forEach((el) => {
-    console.log(el);
-    // api.info({
-    //   message: `Notification ${el}`,
-    //   placement: 'bottomRight',
-    //   duration: null
-    // });
-  });
-
-  return (
-    <>
-      sdfsdf
-    </>
+const Notifications = ({
+  txs, checkTxStatus, removeTx, setNotifiedTrue
+}: NotificationProps) => {
+  const maped = txs.map(
+    (el) => (
+      <NotificationElement
+        key={el.id}
+        txItem={el}
+        checkTxStatus={checkTxStatus}
+        removeTx={removeTx}
+        setNotifiedTrue={setNotifiedTrue}
+      />
+    )
   );
+  return <>{maped}</>;
 };
 
 const MapState = ({ app: { txs } }: RootState) => ({
-  txs
+  txs: Array.from(txs)
 });
 
-export default connect(MapState)(Notifications);
+const MapDispatch = (dispatch: AppThunkDispatch) => ({
+  checkTxStatus: (txId: string, callback: setPropertiesType<TxResponse>) => {
+    dispatch(
+      thunks.callApi(RC.getTxStatus(txId), onResponse.checkTxStatus(callback))
+    );
+  },
+  removeTx: (txItem: TxItem) => {
+    dispatch(AC.removeTx(txItem));
+  },
+  setNotifiedTrue: (txItem: TxItem) => {
+    dispatch(AC.setTxNotifyTrue(txItem));
+  }
+});
+
+export default connect(MapState, MapDispatch)(Notifications);

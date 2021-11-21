@@ -1,9 +1,19 @@
-import { PropertiesType } from '@types';
+import { PropertiesType, TxItem } from '@types';
 import { ACTIONS } from '../constants';
 
 const AC = {
-  setTx: (payload: [string, string]) => ({
+  setTx: (payload: string) => ({
     type: ACTIONS.SET_TX,
+    payload
+  }),
+
+  removeTx: (payload: TxItem) => ({
+    type: ACTIONS.REMOVE_TX,
+    payload
+  }),
+
+  setTxNotifyTrue: (payload: TxItem) => ({
+    type: ACTIONS.SET_TX_NOTIFY,
     payload
   }),
 

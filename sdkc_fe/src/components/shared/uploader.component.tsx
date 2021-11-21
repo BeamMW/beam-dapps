@@ -18,9 +18,10 @@ const Uploader = ({ uploadImage }: UploaderProps) => {
       return file.type === 'image/png' ? true : Upload.LIST_IGNORE;
     },
     customRequest: () => {},
-    onChange: (info: UploadChangeParam) => {
+    onChange: async (info: UploadChangeParam) => {
       if (info.fileList[0].originFileObj) {
-        uploadArtwork(info.fileList[0].originFileObj, uploadImage);
+        const hex = await uploadArtwork(info.fileList[0].originFileObj);
+        if (hex)uploadImage(hex);
         info.fileList.slice(0, 1);
       }
     }

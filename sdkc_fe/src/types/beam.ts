@@ -25,3 +25,17 @@ export interface BeamApiRes {
     message: string;
   }
 }
+
+export type TxResponse = {
+  message: string;
+  status_string: string;
+};
+
+export type TxItem = {
+  id: string,
+  notified: boolean
+};
+
+export type setPropertiesType<T> = React.Dispatch<
+React.SetStateAction<T>
+>;

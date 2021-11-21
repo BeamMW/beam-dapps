@@ -7,20 +7,22 @@ export class BeamAPI {
 
   private contract: ArrayBuffer | null;
 
-  private readonly callbacks: ((res: BeamApiRes) => void)[];
+  private readonly callbacks: Map<string, ((res: BeamApiRes) => void)>;
 
   constructor() {
     this.API = null;
     this.contract = null;
-    this.callbacks = [];
+    this.callbacks = new Map();
   }
 
   private readonly onApiResult = (json: string): void => {
     const parsed = JSON.parse(json) as BeamApiRes;
     console.log('response', parsed);
-    if (this.callbacks.length) {
-      const cb = this.callbacks.shift();
-      if (cb) cb(parsed);
+    const { id } = parsed;
+    const cb = this.callbacks.get(id);
+    if (cb) {
+      cb(parsed);
+      this.callbacks.delete(id);
     }
   };
 
@@ -96,18 +98,19 @@ export class BeamAPI {
       [key:string]:string | number | boolean | number[]
     }
   }, callback?: (res:BeamApiRes) => void): void => {
-    if (callback) this.callbacks.push(callback);
     if (this.contract) {
       const contract = Array.from(new Uint8Array(this.contract));
+      const id = `${callID}(${new Date().getTime()})`;
       const request = {
         jsonrpc: '2.0',
-        id: callID,
+        id,
         method,
         params: { ...params, contract }
       };
+      if (callback) this.callbacks.set(id, callback);
       console.log('request: ', request);
       if (window.BeamApi) {
-        window.BeamApi.callWalletApi(callID, method, { ...params, contract });
+        window.BeamApi.callWalletApi(id, method, { ...params, contract });
       } else {
         (this.API?.callWalletApi as CallApiDesktop)(JSON.stringify(request));
       }
