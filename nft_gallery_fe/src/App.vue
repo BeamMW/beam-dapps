@@ -5,11 +5,15 @@
     v-bind:context="error.context"
   ></error>
   <loading v-else-if="loading"></loading>
-  <div v-else class="nav-container">
-    <div class="nav">
-      <router-link to="/">Home</router-link>
-      <router-link to="/userpics">MySeeds</router-link>
-      <generate></generate>
+  <div v-else class="app">
+    <pkey></pkey>
+    <div class="nav-container">
+      <div class="nav">
+        <router-link to="/">Home</router-link>
+        <router-link to="/userpics">MySeeds</router-link>
+        <generate></generate>
+      </div>
+      <balance></balance>
     </div>
   </div>
   <router-view />
@@ -18,7 +22,9 @@
 <script>
 import Generate from '@/components/Generate.vue';
 import Loading from '@/components/loading.vue';
-import ErrView from '@/components/error.js';
+import ErrView from '@/components/Error.vue';
+import Balance from '@/components/Balance.vue';
+import Pkey from '@/components/P_key.vue';
 
 export default {
   computed: {
@@ -34,6 +40,8 @@ export default {
     generate: Generate,
     loading: Loading,
     error: ErrView,
+    balance: Balance,
+    pkey: Pkey,
   },
 };
 </script>
@@ -89,6 +97,7 @@ pre {
 .app {
   width: 100%;
   height: 97%;
+  display: contents;
 }
 
 .nav-container {
@@ -142,7 +151,7 @@ pre {
   flex-wrap: wrap;
   overflow: auto;
   flex-grow: 1;
-  margin-left: -16px;
+  justify-content: center;
 }
 
 .items > .item {

@@ -1,4 +1,13 @@
-// import  from '../utils/.js';
+<template>
+  <div class="error">
+    <div>
+      <pre>{{ this.errorText }}</pre>
+      <span class="restart">Restarting in {{ this.errleft }}</span>
+    </div>
+  </div>
+</template>
+
+<script>import store from '../store';
 
 export default {
   props: {
@@ -32,18 +41,9 @@ export default {
   computed: {
     errorText() {
       // TODO: handle long errors
-      return [this.context, this.error].join('\n');
+      console.log(store.state.error);
+      return [`CODE: ${store.state.error.code},\n DATA: ${store.state.error.data},\n MSG: ${store.state.error.message}`].join('\n');
     },
   },
-
-  render() {
-    return `
-      <div class="error">
-        <div>
-          <pre>${this.errorText}</pre>
-          <span class="restart">Restarting in ${this.errleft}</span>
-        </div>
-      </div>
-    `;
-  },
 };
+</script>

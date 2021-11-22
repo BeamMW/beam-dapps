@@ -16,7 +16,7 @@ export class Beam {
 
   static onCheckCID = (err, res) => {
     if (err) {
-      return store.dispatch('GET_ERR', 'Failed to verify cid');
+      return store.dispatch('GET_ERR', err.error);
     }
     if (!res.contracts.some((el) => el.cid == store.getters.CID)) {
       throw `CID not found '${store.getters.CID}'`;
@@ -25,6 +25,8 @@ export class Beam {
       `role=manager,action=seeds,cid=${store.getters.CID}`,
       (...args) => this.loadSeeds(...args)
     );
+    this.loadPKey();
+    this.loadBalance();
   };
 
   static getSeed = () => {
@@ -150,5 +152,36 @@ export class Beam {
 
   static changeLoading = () => {
     store.state.loading = false;
+  };
+
+  static loadBalance = () => {
+    Utils.invokeContract(
+      `role=user,action=balance,cid=${store.getters.CID},aid=0`,
+      (...args) => this.setBalance(...args),
+      console.log(store.state.balance)
+    );
+  };
+
+  static setBalance = (err, res) => {
+    if (err) {
+      return store.dispatch('GET_ERR', err);
+    }
+    return store.dispatch('GET_BALANCE', res.balance);
+  };
+
+  static loadPKey = () => {
+    Utils.invokeContract(
+      `role=user,action=get_key,cid=${store.getters.CID},aid=0`,
+      (...args) => this.setPkey(...args),
+      console.log(store.state.balance)
+    );
+  };
+
+  static setPkey = (err, res) => {
+    if (err) {
+      return store.dispatch('GET_ERR', err);
+    }
+    console.log(res);
+    return store.dispatch('GET_P_KEY', res.key);
   };
 }

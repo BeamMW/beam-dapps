@@ -8,12 +8,13 @@ export default createStore({
     cid: '1c168d0ff0de97163c4075a3b8a2ffacc3bce2510447b41113aad3cd77697c5f',
     items: [],
     loading: true,
-    artist_key: '',
+    p_key: '',
     changed_txs: [],
     error: undefined,
     myItems: [],
     in_tx: true,
     shader: undefined,
+    balance: undefined,
   },
   getters: {
     SHADER: (state) => {
@@ -28,16 +29,29 @@ export default createStore({
     ITEMS: (state) => {
       return state.items;
     },
+    BALANCE: (state) => {
+      return state.balance;
+    },
+    P_KEY: (state) => {
+      return state.balance;
+    },
   },
   mutations: {
     SET_SHADER: (state, payload) => {
       state.shader = payload;
     },
     SET_ERR: (state, payload) => {
+      console.log(payload);
       state.error = payload;
     },
     SET_ITEMS: (state, payload) => {
       state.items = payload;
+    },
+    SET_BALANCE: (state, payload) => {
+      state.balance = payload;
+    },
+    SET_P_KEY: (state, payload) => {
+      state.p_key = payload;
     },
   },
   actions: {
@@ -57,6 +71,12 @@ export default createStore({
 
     GET_ERR: (context, payload) => {
       context.commit('SET_ERR', payload);
+    },
+    GET_BALANCE: (context, payload) => {
+      context.commit('SET_BALANCE', payload);
+    },
+    GET_P_KEY: (context, payload) => {
+      context.commit('SET_BALANCE', payload);
     },
     GET_APIRESULT: (err, res, full) => {
       console.log(res, full, err);
