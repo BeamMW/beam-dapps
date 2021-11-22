@@ -181,7 +181,6 @@ export class Beam {
     if (err) {
       return store.dispatch('GET_ERR', err);
     }
-    console.log(res);
     return store.dispatch('GET_P_KEY', res.key);
   };
 }

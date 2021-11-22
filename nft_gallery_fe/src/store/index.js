@@ -33,7 +33,7 @@ export default createStore({
       return state.balance;
     },
     P_KEY: (state) => {
-      return state.balance;
+      return state.p_key;
     },
   },
   mutations: {
@@ -76,7 +76,7 @@ export default createStore({
       context.commit('SET_BALANCE', payload);
     },
     GET_P_KEY: (context, payload) => {
-      context.commit('SET_BALANCE', payload);
+      context.commit('SET_P_KEY', payload);
     },
     GET_APIRESULT: (err, res, full) => {
       console.log(res, full, err);
