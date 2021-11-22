@@ -6,7 +6,10 @@ import drawing from '../nft-generator/app.js';
 import { parseToGroth } from '../string-handlers';
 
 export class Beam {
-  static start = () => {
+  static start = (err) => {
+    if (err) {
+      return store.dispatch('GET_ERR', err.error);
+    }
     Utils.invokeContract(
       'role=manager,action=view',
       (...args) => this.onCheckCID(...args),
@@ -29,7 +32,10 @@ export class Beam {
     this.loadBalance();
   };
 
-  static getSeed = () => {
+  static getSeed = (err) => {
+    if (err) {
+      return store.dispatch('GET_ERR', err.error);
+    }
     const seedNum = Date.parse(new Date());
     Utils.invokeContract(
       `role=user,action=generate,cid=${store.getters.CID},seed=${seedNum}`,
@@ -39,7 +45,7 @@ export class Beam {
 
   //   load all seeds
   static loadSeeds = (err, res) => {
-    if (err) return store.dispatch('GET_ERR', err);
+    if (err) return store.dispatch('GET_ERR', err.error);
     const items = res.seeds.map((el, idx) => ({
       ...el,
       id: idx,
@@ -57,7 +63,7 @@ export class Beam {
   // load your seeds & update seed owned
 
   static loadYourSeeds = (items, err, { seeds }) => {
-    if (err) return store.dispatch('GET_ERR', err);
+    if (err) return store.dispatch('GET_ERR', err.error);
     const mapedOwnerSeeds = seeds.map((seed) => seed.holder);
     const updated = items.map((seed) => ({
       ...seed,
@@ -82,7 +88,7 @@ export class Beam {
   static makeTx = (err, sres, full, store) => {
     console.log(err, sres, full, store);
     if (err) {
-      return store.dispatch('GET_ERR', err);
+      return store.dispatch('GET_ERR', err.error);
     }
     console.log('make');
     Utils.ensureField(full.result, 'raw_data', 'array');
@@ -96,7 +102,7 @@ export class Beam {
   static onSendToChain = (err, res) => {
     if (err) {
       if (Utils.isUserCancelled(err)) return;
-      return this.$store.dispatch('GET_ERR', err);
+      return this.$store.dispatch('GET_ERR', err.error);
     }
     Utils.ensureField(res, 'txid', 'string');
     Utils.callApi(
@@ -111,7 +117,7 @@ export class Beam {
   static checkStatus = (err, full) => {
     // console.log(full.status_string);
     if (err) {
-      console.log(err);
+      return store.dispatch('GET_ERR', err.error);
     }
     if (full.status_string === 'in progress') {
       setTimeout(() => {
@@ -133,14 +139,20 @@ export class Beam {
   };
   //  Buy & sell seeds
 
-  static buyAsset = (id, seed) => {
+  static buyAsset = (err, id, seed) => {
+    if (err) {
+      return store.dispatch('GET_ERR', err.error);
+    }
     Utils.invokeContract(
       `role=user,action=buy,cid=${store.state.cid},seed=${seed},price=${store.state.items[id].amount}`,
       (...args) => this.makeTx(...args)
     );
   };
 
-  static sellAsset = (seed) => {
+  static sellAsset = (err, seed) => {
+    if (err) {
+      return store.dispatch('GET_ERR', err.error);
+    }
     let price = prompt('Enter the price in BEAM');
     if (price == null) return;
     price = parseToGroth(price);
@@ -150,11 +162,17 @@ export class Beam {
     );
   };
 
-  static changeLoading = () => {
+  static changeLoading = (err) => {
+    if (err) {
+      return store.dispatch('GET_ERR', err);
+    }
     store.state.loading = false;
   };
 
-  static loadBalance = () => {
+  static loadBalance = (err) => {
+    if (err) {
+      return store.dispatch('GET_ERR', err);
+    }
     Utils.invokeContract(
       `role=user,action=balance,cid=${store.getters.CID},aid=0`,
       (...args) => this.setBalance(...args),
@@ -164,12 +182,15 @@ export class Beam {
 
   static setBalance = (err, res) => {
     if (err) {
-      return store.dispatch('GET_ERR', err);
+      return store.dispatch('GET_ERR', err.error);
     }
     return store.dispatch('GET_BALANCE', res.balance);
   };
 
-  static loadPKey = () => {
+  static loadPKey = (err) => {
+    if (err) {
+      return store.dispatch('GET_ERR', err.error);
+    }
     Utils.invokeContract(
       `role=user,action=get_key,cid=${store.getters.CID},aid=0`,
       (...args) => this.setPkey(...args),
@@ -179,7 +200,7 @@ export class Beam {
 
   static setPkey = (err, res) => {
     if (err) {
-      return store.dispatch('GET_ERR', err);
+      return store.dispatch('GET_ERR', err.error);
     }
     return store.dispatch('GET_P_KEY', res.key);
   };

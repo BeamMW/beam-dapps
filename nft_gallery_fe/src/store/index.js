@@ -13,7 +13,7 @@ export default createStore({
     error: undefined,
     myItems: [],
     in_tx: true,
-    shader: undefined,
+    shader: [],
     balance: undefined,
   },
   getters: {
@@ -78,10 +78,11 @@ export default createStore({
     GET_P_KEY: (context, payload) => {
       context.commit('SET_P_KEY', payload);
     },
-    GET_APIRESULT: (err, res, full) => {
+    GET_APIRESULT: (store, err, res, full) => {
       console.log(res, full, err);
       if (err) {
-        return this.setError(err, 'API handling error');
+        console.log(err.error);
+        return store.dispatch("GET_ERR", err.error);
       }
 
       // if (full.id == 'ev_txs_changed') {

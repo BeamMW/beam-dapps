@@ -7,7 +7,8 @@
   </div>
 </template>
 
-<script>import store from '../store';
+<script>
+import store from '../store';
 
 export default {
   props: {
@@ -41,8 +42,13 @@ export default {
   computed: {
     errorText() {
       // TODO: handle long errors
-      console.log(store.state.error);
-      return [`CODE: ${store.state.error.code},\n DATA: ${store.state.error.data},\n MSG: ${store.state.error.message}`].join('\n');
+      if (store.state.error.code) {
+        return [
+          `CODE: ${store.state.error.code},\n DATA: ${store.state.error.data},\n MSG: ${store.state.error.message}`,
+        ].join('\n');
+      } else {
+        return [store.state.error].join('');
+      }
     },
   },
 };
