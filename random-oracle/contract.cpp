@@ -19,6 +19,7 @@ namespace {
 }
 
 BEAM_EXPORT void Ctor(void *) {
+
 }
 
 BEAM_EXPORT void Dtor(void *) {
