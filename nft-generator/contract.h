@@ -64,6 +64,21 @@ namespace NFTGenerator {
         Amount value;
     };
 
+    struct RequestNewSeed {
+        static const uint32_t s_iMethod = 6;
+
+        ContractID oracle_cid;
+        PubKey user;
+    };
+
+    struct TryGetSeed {
+        static const uint32_t s_iMethod = 7;
+
+        ContractID oracle_cid;
+        RequestID request_id;
+        OracleValue value;
+    };
+
 #pragma pack (pop)
 }
 

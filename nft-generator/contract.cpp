@@ -1,6 +1,7 @@
 #include "contract.h"
-#include "Shaders/common.h"
-#include "Shaders/Math.h"
+#include "../common.h"
+#include "../Math.h"
+#include "../random-oracle/contract.h"
 
 BEAM_EXPORT void Ctor(void *) {
 
@@ -77,4 +78,25 @@ BEAM_EXPORT void Method_5(const NFTGenerator::Withdraw &r) {
     PayoutMove(r.key, r.value, false);
     Env::FundsUnlock(r.key.asset_id, r.value);
     Env::AddSig(r.key.user);
+}
+
+BEAM_EXPORT void Method_6(const NFTGenerator::RequestNewSeed &r) {
+    oracle::Request get{
+            .value_type = 0,
+            .value_details = ""
+    };
+
+    Env::Halt_if(!Env::RefAdd(r.oracle_cid));
+    Env::CallFar_T(r.oracle_cid, get);
+    Env::Halt_if(!Env::RefRelease(r.oracle_cid));
+}
+
+BEAM_EXPORT void Method_7(const NFTGenerator::TryGetSeed &r) {
+    oracle::TryGetValue try_get{
+            .request_id = r.request_id;
+    };
+
+    Env::Halt_if(!Env::RefAdd(r.oracle_cid));
+    Env::CallFar_T(r.oracle_cid, try_get);
+    Env::Halt_if(!Env::RefRelease(r.oracle_cid));
 }

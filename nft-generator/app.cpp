@@ -54,6 +54,18 @@ BEAM_EXPORT void Method_0() {
                 Env::DocAddText("cid", "ContractID");
                 Env::DocAddText("aid", "AssetID");
             }
+            {
+                Env::DocGroup action("generate_oracle");
+                Env::DocAddText("cid", "ContractID");
+                Env::DocAddText("oracle_cid", "ContractID");
+            }
+            {
+                Env::DocGroup action("try_get_value");
+                Env::DocAddText("cid", "ContractID");
+                Env::DocAddText("oracle_cid", "ContractID");
+                Env::DocAddText("requester_key", "Some unique identifier of user");
+                Env::DocAddText("id_in_requester", "Request id of given user");
+            }
         }
         {
             Env::DocGroup role("manager");
@@ -98,7 +110,7 @@ uint64_t MergeNumbers(uint32_t upper, uint32_t lower) {
 }
 
 bool IsSeedAlreadyGenerated(const ContractID &cid, AssetID aid, uint64_t seed) {
-    Env::Key_T <NFTGenerator::ComplexKeyWithSeed> start_key, end_key;
+    Env::Key_T<NFTGenerator::ComplexKeyWithSeed> start_key, end_key;
     _POD_(start_key.m_Prefix.m_Cid) = cid;
     _POD_(start_key.m_KeyInContract.key.key) = GetKeyByCID(cid);
     start_key.m_KeyInContract.key.asset_id = aid;
@@ -106,7 +118,7 @@ bool IsSeedAlreadyGenerated(const ContractID &cid, AssetID aid, uint64_t seed) {
     _POD_(end_key) = start_key;
     end_key.m_KeyInContract.seed = static_cast<uint64_t>(-1);
 
-    Env::Key_T <NFTGenerator::ComplexKeyWithSeed> key;
+    Env::Key_T<NFTGenerator::ComplexKeyWithSeed> key;
     PubKey holder;
     for (Env::VarReader reader(start_key, end_key); reader.MoveNext_T(key, holder);) {
         if (key.m_KeyInContract.seed == seed) {
@@ -126,13 +138,13 @@ PubKey GetKey(const ContractID &cid) {
 }
 
 void GetAllSeeds(const ContractID &cid) {
-    Env::Key_T <uint64_t> start_key, end_key;
+    Env::Key_T<uint64_t> start_key, end_key;
     _POD_(start_key.m_Prefix.m_Cid) = cid;
     start_key.m_KeyInContract = 0;
     _POD_(end_key) = start_key;
     end_key.m_KeyInContract = static_cast<uint64_t>(-1);
 
-    Env::Key_T <uint64_t> key;
+    Env::Key_T<uint64_t> key;
     NFTGenerator::NFT nft;
     Env::DocArray gr("seeds");
     for (Env::VarReader reader(start_key, end_key); reader.MoveNext_T(key, nft);) {
@@ -145,13 +157,13 @@ void GetAllSeeds(const ContractID &cid) {
 }
 
 void GetUserSeeds(const ContractID &cid) {
-    Env::Key_T <uint64_t> start_key, end_key;
+    Env::Key_T<uint64_t> start_key, end_key;
     _POD_(start_key.m_Prefix.m_Cid) = cid;
     start_key.m_KeyInContract = 0;
     _POD_(end_key) = start_key;
     end_key.m_KeyInContract = static_cast<uint64_t>(-1);
 
-    Env::Key_T <uint64_t> key;
+    Env::Key_T<uint64_t> key;
     NFTGenerator::NFT nft;
     Env::DocArray gr("seeds");
     for (Env::VarReader reader(start_key, end_key); reader.MoveNext_T(key, nft);) {
@@ -251,7 +263,7 @@ void Withdraw(const ContractID &contract_id, Amount amount, AssetID asset_id) {
                         &fc, 1, &sig, 1, "withdraw", 0);
 }
 
-Amount GetBalance(const ContractID& cid, AssetID aid) {
+Amount GetBalance(const ContractID &cid, AssetID aid) {
     Env::Key_T<NFTGenerator::Payout::Key> key;
     _POD_(key.m_Prefix.m_Cid) = cid;
     _POD_(key.m_KeyInContract.user) = GetKey(cid);
@@ -264,6 +276,26 @@ Amount GetBalance(const ContractID& cid, AssetID aid) {
         return 0;
     }
     return payout.amount;
+}
+
+void RequestNewSeed(const ContractID &cid, const ContractID &oracle_cid) {
+    NFTGenerator::RequestNewSeed request;
+    request.oracle_cid = oracle_cid;
+    request.user = GetKey(cid);
+
+    Env::GenerateKernel(&cid, NFTGenerator::RequestNewSeed::s_iMethod, &request, sizeof(request),
+                        nullptr, 0, nullptr, 0, "Request new seed", 0);
+}
+
+void TryGetSeed(const ContractID &cid, const ContractID &oracle_cid, const PubKey &requester_key,
+                 uint32_t id_in_requester) {
+    NFTGenerator::TryGetSeed request;
+    request.oracle_cid = oracle_cid;
+    request.request_id.request_key = GetKey(cid);
+    request.request_id.id_in_requester = id_in_requester;
+
+    Env::GenerateKernel(&cid, NFTGenerator::TryGetSeed::s_iMethod, &request, sizeof(request),
+                        nullptr, 0, nullptr, 0, "Request new seed", 0);
 }
 
 BEAM_EXPORT void Method_1() {
@@ -357,6 +389,22 @@ BEAM_EXPORT void Method_1() {
             Env::DocGet("cid", cid);
             Env::DocGet("aid", aid);
             Env::DocAddNum("balance", GetBalance(cid, aid));
+        } else if (Env::Strcmp(action, "generate_oracle") == 0) {
+            ContractID cid;
+            ContractID oracle_cid;
+            Env::DocGet("cid", cid);
+            Env::DocGet("oracle_cid", oracle_cid);
+            RequestNewSeed(cid, oracle_cid);
+        } else if (Env::Strcmp(action, "try_get_value") == 0) {
+            ContractID cid;
+            ContractID oracle_cid;
+            PubKey requester_key;
+            uint32_t id_in_requester;
+            Env::DocGet("cid", cid);
+            Env::DocGet("oracle_cid", oracle_cid);
+            Env::DocGet("requester_key", requester_key);
+            Env::DocGet("id_in_requester", id_in_requester);
+            TryGetSeed(cid, oracle_cid, requester_key, id_in_requester);
         } else {
             Env::DocAddText("error", "Invalid action");
         }
