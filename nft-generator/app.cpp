@@ -291,7 +291,7 @@ void TryGetSeed(const ContractID &cid, const ContractID &oracle_cid, const PubKe
                  uint32_t id_in_requester) {
     NFTGenerator::TryGetSeed request;
     request.oracle_cid = oracle_cid;
-    request.request_id.request_key = GetKey(cid);
+    request.request_id.requester_key = GetKey(cid);
     request.request_id.id_in_requester = id_in_requester;
 
     Env::GenerateKernel(&cid, NFTGenerator::TryGetSeed::s_iMethod, &request, sizeof(request),

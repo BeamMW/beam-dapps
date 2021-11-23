@@ -93,7 +93,7 @@ BEAM_EXPORT void Method_6(const NFTGenerator::RequestNewSeed &r) {
 
 BEAM_EXPORT void Method_7(const NFTGenerator::TryGetSeed &r) {
     oracle::TryGetValue try_get{
-            .request_id = r.request_id;
+            .request_id = r.request_id
     };
 
     Env::Halt_if(!Env::RefAdd(r.oracle_cid));

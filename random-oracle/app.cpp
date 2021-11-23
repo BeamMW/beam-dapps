@@ -70,7 +70,7 @@ void SaveValue(const ContractID &cid, const oracle::OracleValue &value, const Pu
     request.value = value;
     request.request_id.id_in_requester = id;
     request.request_id.requester_key = key;
-    Env::GenerateKernel(&cid, oracle::SaveValue::METHOD,
+    Env::GenerateKernel(&cid, oracle::SaveValue::s_iMethod,
                         &request, sizeof(request), nullptr, 0,
                         nullptr, 0, "save new value for request id", 0);
 }
@@ -93,12 +93,12 @@ BEAM_EXPORT void Method_1() {
     if (Env::Strcmp(role, "manager") == 0) {
         if (Env::Strcmp(action, "create") == 0) {
             Env::GenerateKernel(nullptr, 0, nullptr, 0, nullptr, 0,
-                                nullptr, 0, "create nft-generator", 0);
+                                nullptr, 0, "create random-oracle", 0);
         } else if (Env::Strcmp(action, "destroy") == 0) {
             ContractID cid;
             Env::DocGet("cid", cid);
             Env::GenerateKernel(&cid, 1, nullptr, 0, nullptr, 0, nullptr, 0,
-                                "destroy nft-generator", 0);
+                                "destroy random-oracle", 0);
         } else if (Env::Strcmp(action, "view") == 0) {
             EnumAndDumpContracts(NFTGenerator::s_SID);
         } else {
