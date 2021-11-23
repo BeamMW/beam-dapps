@@ -6,7 +6,7 @@ export default class DropPage extends BaseComponent {
   buttonDrop: BaseComponent;
 
   constructor() {
-    super(Tags.DIV, ['upload', 'active']);
+    super(Tags.DIV, ['file-upload', 'active']);
     this.buttonDrop = new DropButton({
       mainSelector: 'formUpload',
       labelSelector: 'label',

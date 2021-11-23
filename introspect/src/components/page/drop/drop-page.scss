@@ -1,4 +1,4 @@
-.upload {
+.file-upload {
   z-index: 999;
   height: 98%;
   margin: 0 auto;
@@ -85,59 +85,3 @@
   font-size: 14px;
   user-select: none;
 }
-
-// .label .text,
-// .label .icon path {
-//   transition: .25s ease;
-// }
-
-// .label:hover .text {
-//   color: #00f6d2;
-// }
-
-// .label:hover .icon path {
-//   fill: #00f6d2;
-// }
-
-// .label:hover {
-//   border: 2px dashed #00f6d2;
-// }
-
-// /* drag and drop - "hover" */
-// .label.hover .text {
-//   color: #ffb300;
-// }
-
-// .label.hover .icon path {
-//   fill: #ffb300;
-// }
-
-// .label.hover {
-//   border: 2px dashed #ffb300;
-// }
-
-// /* drag and drop - ошибка */
-// .label.error .text {
-//   color: #d32f2f;
-// }
-
-// .label.error .icon path {
-//   fill: #d32f2f;
-// }
-
-// .label.error {
-//   border: 2px dashed #d32f2f;
-// }
-
-// /* drag and drop - файл(ы) успешно перетянут(ы) */
-// .label.drop .text {
-//   color: #99ff99;
-// }
-
-// .label.drop .icon path {
-//   fill: #99ff99;
-// }
-
-// .label.drop {
-//   border: 2px dashed #99ff99;
-// }

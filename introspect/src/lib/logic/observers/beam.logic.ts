@@ -77,7 +77,7 @@ export default class BeamAPI extends Observer<APIResponse> {
             type: 'create_beam_api',
             apiver: 'current',
             apivermin: '',
-            appname: 'BEAM INTROSPECTR'
+            appname: 'BEAM INTROSPECT'
           },
           window.origin
         );
