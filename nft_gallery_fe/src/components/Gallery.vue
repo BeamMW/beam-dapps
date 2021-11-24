@@ -1,7 +1,7 @@
 <template>
   <div class="vertical-container">
     <div class="items">
-      <asset
+      <item
         v-bind:key="item.id"
         v-for="item in items"
         v-bind:id="item.id"
@@ -10,8 +10,8 @@
         v-bind:owned="item.owned"
         v-bind:price="item.amount"
         v-bind:in_tx="item.in_tx"
-        v-on:buy="onBuyAsset"
-        v-on:sell="onSellAsset"
+        v-on:buy="onBuyItem"
+        v-on:sell="onSellItem"
       />
     </div>
   </div>
@@ -20,7 +20,7 @@
 <script>
 import store from '../store/index.js';
 import { Beam } from '../utils/beamApi/beamAPI.js';
-import Asset from './asset.vue';
+import Item from './Item.vue';
 
 export default {
   computed: {
@@ -32,15 +32,15 @@ export default {
       return store.state.in_tx;
     },
   },
-  components: { asset: Asset },
+  components: { item: Item },
   methods: {
-    onBuyAsset(id, seed) {
+    onBuyItem(id, seed) {
       console.log('buy');
-      Beam.buyAsset(id, seed);
+      Beam.buyItem(id, seed);
     },
-    onSellAsset(seed) {
+    onSellItem(seed) {
       console.log('sell');
-      Beam.sellAsset(seed);
+      Beam.sellItem(seed);
     },
   },
 };

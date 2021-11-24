@@ -3,9 +3,8 @@ import App from './App.vue';
 import router from './router';
 import store from './store/index.js';
 import { Beam } from './utils/beamApi/beamAPI';
-// import start from './utils/beamAPI';
 import utils from './utils/utils';
-// import start from './utils/beamAPI.js';
+import 'material-design-icons-iconfont';
 
 utils.initialize(
   {

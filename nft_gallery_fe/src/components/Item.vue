@@ -1,4 +1,18 @@
 <template>
+<popup
+    v-if="isPopup"
+    @closePopup="closePopup"
+    @getMoney="seedSell"
+    :popupTitle="this.popupTitle"
+  >
+    <span class="popupDescription">Enter your price</span>
+    <input
+      class="inputPopup"
+      type="text"
+      v-model="amountSell"
+      :placeholder="this.balance"
+    />
+  </popup>
   <div class="item">
     <div v-if="`${this.bytes}`" class="preview-container">
       <img :src="this.bytes" />
@@ -42,6 +56,7 @@
 </template>
 
 <script>
+import { Beam } from '../utils/beamApi/beamAPI';
 // import  from '../utils/.js';
 // import Loading from "./loading.js";
 // import Dot from "./dot.js";
@@ -49,6 +64,7 @@
 // import  html  from 'vue';
 
 import { parseToBeam } from '../utils/string-handlers';
+import Popup from './popup/popup.vue'
 
 export default {
   props: {
@@ -92,8 +108,14 @@ export default {
   emits: ['buy', 'sell'],
   data() {
     return {
+      isPopup: false,
       priceBeam: parseToBeam(this.price),
+      amountSell: '',
+      popupTitle: 'SELL',
     };
+  },
+  components: {
+    popup: Popup,
   },
   computed: {
     ownerText() {
@@ -108,9 +130,17 @@ export default {
       this.$emit('buy', this.id, this.seed);
     },
 
-    onSell(ev) {
-      ev.preventDefault();
-      this.$emit('sell', this.seed);
+    onSell() {
+      // ev.preventDefault();
+      // this.$emit('sell', this.seed);
+      this.isPopup = true;
+    },
+     seedSell() {
+      Beam.sellItem(this.seed, this.amount);
+      this.closePopup();
+    },
+     closePopup() {
+      this.isPopup = false;
     },
   },
 };

@@ -10,7 +10,7 @@
     <div class="nav-container">
       <div class="nav">
         <router-link to="/">Home</router-link>
-        <router-link to="/userpics">MySeeds</router-link>
+        <router-link to="/userpics">UserSeeds</router-link>
         <generate></generate>
       </div>
       <balance></balance>

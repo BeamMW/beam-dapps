@@ -69,7 +69,7 @@ export class Beam {
       ...seed,
       owned: mapedOwnerSeeds.includes(seed.holder),
     }));
-    const mySeeds = seeds.map((el, idx) => ({
+    const UserSeeds = seeds.map((el, idx) => ({
       ...el,
       id: idx,
       price: el.amount,
@@ -78,7 +78,7 @@ export class Beam {
       bytes: drawing(el.seed),
     }));
 
-    store.state.myItems = mySeeds;
+    store.state.myItems = UserSeeds;
     store.dispatch('GET_ITEMS', updated);
     this.changeLoading();
   };
@@ -139,8 +139,9 @@ export class Beam {
   };
   //  Buy & sell seeds
 
-  static buyAsset = (err, id, seed) => {
+  static buyItem = (id, seed, err) => {
     if (err) {
+      console.log(err);
       return store.dispatch('GET_ERR', err.error);
     }
     Utils.invokeContract(
@@ -149,15 +150,12 @@ export class Beam {
     );
   };
 
-  static sellAsset = (err, seed) => {
+  static sellItem = (seed, price, err) => {
     if (err) {
       return store.dispatch('GET_ERR', err.error);
     }
-    let price = prompt('Enter the price in BEAM');
-    if (price == null) return;
-    price = parseToGroth(price);
     Utils.invokeContract(
-      `role=user,action=set_price,cid=${store.state.cid},aid=0,seed=${seed},price=${price}`,
+      `role=user,action=set_price,cid=${store.state.cid},aid=0,seed=${seed},price=${parseToGroth(price)}`,
       (...args) => this.makeTx(...args)
     );
   };
@@ -203,5 +201,15 @@ export class Beam {
       return store.dispatch('GET_ERR', err.error);
     }
     return store.dispatch('GET_P_KEY', res.key);
+  };
+
+  static withdrawMoney = (amount, err ) => {
+    if (err) {
+      return store.dispatch('GET_ERR', err.error);
+    }
+    Utils.invokeContract(
+      `role=user,action=withdraw,cid=${store.getters.CID},amount=${parseToGroth(amount)}aid=0`,
+      (...args) => this.makeTx(...args)
+    );
   };
 }
