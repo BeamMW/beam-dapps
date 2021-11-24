@@ -30,7 +30,7 @@ export default class BaseComponent {
 
   public get dataset():DOMStringMap { return this.element.dataset; }
 
-  append = (...args: (BaseComponent | HTMLElement)[]):void => {
+  append = (...args: (BaseComponent | HTMLElement)[]):this => {
     const nodes = args.map(
       (component) => {
         if (component instanceof BaseComponent) return component.element;
@@ -38,28 +38,33 @@ export default class BaseComponent {
       }
     );
     this.element.append(...nodes);
+    return this;
   };
 
-  removeAll = ():void => {
+  removeAll = ():this => {
     while (this.element.firstChild) {
       this.element.removeChild(this.element.firstChild);
     }
+    return this;
   };
 
-  remove = (...args: BaseComponent[]):void => {
+  remove = (...args: BaseComponent[]):this => {
     args.forEach(
       (component) => this.element.removeChild(component.element)
     );
+    return this;
   };
 
-  replace = (component:BaseComponent):void => {
+  replace = (component:BaseComponent):this => {
     this.element.replaceWith(component.element);
+    return this;
   };
 
-  setAttributes = (obj:HTMLAttributes):void => {
+  setAttributes = (obj:HTMLAttributes):this => {
     const attr = Object.entries(obj);
     attr.forEach((attribute) => {
       this.element.setAttribute(attribute[0], attribute[1]);
     });
+    return this;
   };
 }

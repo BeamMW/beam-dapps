@@ -6,6 +6,7 @@ import './style/index.scss';
 import AppState from './logic/store/reducer';
 import Footer from './components/footer/footer.components';
 import { Container } from './components/container/container';
+import LoadingPage from './components/loading-page/loading-page.component';
 
 export class App {
   private readonly rootElement: HTMLElement;
@@ -15,7 +16,14 @@ export class App {
   private readonly AppState: AppState;
 
   constructor(rootElement: HTMLElement) {
-    const loader = new Loader('preGame').element;
+    const ua = navigator.userAgent;
+    const loader = /QtWebEngine/i.test(ua)
+      ? new Loader('preload').element
+      : new LoadingPage(
+        'Gem-Puzzle',
+        // eslint-disable-next-line max-len
+        'https://chrome.google.com/webstore/detail/beam-web-wallet/ilhaljfiglknggcoegeknjghdgampffk'
+      ).element;
 
     this.rootElement = rootElement;
     this.rootElement.append(loader);

@@ -13,7 +13,8 @@ export enum Tags {
   TD = 'td',
   A = 'a',
   H1 = 'h1',
-  P = 'p'
+  P = 'p',
+  H3 = 'h3'
 }
 
 export enum HtmlTexts {

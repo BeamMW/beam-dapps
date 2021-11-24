@@ -1,0 +1,20 @@
+.simple-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 14px 30px;
+  cursor: pointer;
+  border-radius: 50px;
+  background-color: #00f6d2;
+  border: none;
+  font-size: 14px;
+  font-weight: bold;
+  color: #032e49;
+  user-select: none;
+  svg {
+    margin-right: 14px;
+  }
+  &:hover {
+    box-shadow: 0 0 8px white;
+  }
+}
