@@ -85,6 +85,7 @@ BEAM_EXPORT void Method_6(const NFTGenerator::RequestNewSeed &r) {
             .value_type = 0,
             .value_details = ""
     };
+    _POD_(get.request_id.requester_key) = r.user;
 
     Env::Halt_if(!Env::RefAdd(r.oracle_cid));
     Env::CallFar_T(r.oracle_cid, get);
@@ -92,9 +93,8 @@ BEAM_EXPORT void Method_6(const NFTGenerator::RequestNewSeed &r) {
 }
 
 BEAM_EXPORT void Method_7(const NFTGenerator::TryGetSeed &r) {
-    oracle::TryGetValue try_get{
-            .request_id = r.request_id
-    };
+    oracle::TryGetValue try_get;
+    _POD_(try_get.request_id) = r.request_id;
 
     Env::Halt_if(!Env::RefAdd(r.oracle_cid));
     Env::CallFar_T(r.oracle_cid, try_get);
