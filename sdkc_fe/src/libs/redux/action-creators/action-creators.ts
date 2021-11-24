@@ -40,6 +40,9 @@ const AC = {
     id: number, pic: string | null, name: string }) => (
     { type: ACTIONS.SET_PIC, payload } as const),
 
+  setTestPic: (payload:{
+    id: number, pic: string | null, name: string }) => (
+    { type: ACTIONS.SET_TEST_PIC, payload } as const),
   setError: (
     payload: {
       code: number;

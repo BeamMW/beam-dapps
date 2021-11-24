@@ -1,5 +1,7 @@
 import { parseToUrl } from '@libs/utils';
-import { BeamApiRes, setPropertiesType, TxResponse } from '@types';
+import {
+  BeamApiRes, setPropertiesType, TxResponse
+} from '@types';
 import { thunks } from './thunks';
 import { AppThunkDispatch } from '../store';
 import AC from './action-creators';
@@ -43,7 +45,12 @@ export const onResponse = {
     dispatch(AC.setPKey(output.key));
   },
 
-  uploadImage: () => (dispatch: AppThunkDispatch) => (res: BeamApiRes) => {
+  uploadImage: (picture: string) => (
+    dispatch: AppThunkDispatch
+  ) => (res: BeamApiRes) => {
+    dispatch(AC.setTestPic(
+      { id: new Date().getTime(), ...parseToUrl(picture) }
+    ));
     if (res.result.raw_data) {
       dispatch(thunks.callApi(
         RC.startTx(res.result.raw_data), onResponse.startTx()

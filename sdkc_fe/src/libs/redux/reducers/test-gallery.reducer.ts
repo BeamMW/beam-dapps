@@ -3,7 +3,7 @@ import { ActionCreators } from '../action-creators/action-creators';
 import { ACTIONS } from '../constants';
 
 interface IStore {
-  items: Pic []
+  items: Pic[]
 }
 
 const initialState:IStore = {
@@ -15,18 +15,8 @@ const reducer = (
 ):IStore => {
   const newState = JSON.parse(JSON.stringify(state)) as IStore;
   switch (action.type) {
-    case ACTIONS.SET_ITEMS:
-      newState.items = [
-        ...action.payload as Pic[]];
-      break;
-    case ACTIONS.SET_PIC:
-      if ((<Pic>action.payload).pic) {
-        newState.items.splice(
-          newState.items.findIndex(
-            (el) => el.id === (action.payload as Pic).id
-          ), 1, action.payload as Pic
-        );
-      }
+    case ACTIONS.SET_TEST_PIC:
+      newState.items.push(action.payload as Pic);
       break;
     default:
   }

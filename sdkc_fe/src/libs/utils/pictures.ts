@@ -10,8 +10,8 @@ export const hexDecodeU8A = (str:string) => new Uint8Array(
 export const uploadArtwork = (
   file: RcFile
 ):Promise<string> => new Promise((resolve) => {
-  let name = file.name.split('.')[0];
-  name = [name.toUpperCase(), name.substring(1)].join('');
+  const name = file.name.split('.')[0];
+  // name = [name.toUpperCase(), name.substring(1)].join('');
   const reader = new FileReader();
   reader.readAsArrayBuffer(file);
   reader.onload = () => {
@@ -25,6 +25,7 @@ export const uploadArtwork = (
       hexEncodeU8A(asep),
       hexEncodeU8A(aimg)
     ].join('');
+    console.log(hex);
     resolve(hex);
   };
 });

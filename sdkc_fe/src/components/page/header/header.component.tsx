@@ -92,7 +92,9 @@ const MapDispatch = (dispatch: AppThunkDispatch) => ({
   },
   uploadImage: (pKey: string, cid:string) => (hex: string) => {
     dispatch(
-      thunks.callApi(RC.uploadImage(hex, pKey, cid), onResponse.uploadImage())
+      thunks.callApi(
+        RC.uploadImage(hex, pKey, cid), onResponse.uploadImage(hex)
+      )
     );
   }
 });

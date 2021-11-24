@@ -22,7 +22,7 @@ const Uploader = ({ uploadImage }: UploaderProps) => {
       if (info.fileList[0].originFileObj) {
         const hex = await uploadArtwork(info.fileList[0].originFileObj);
         if (hex)uploadImage(hex);
-        info.fileList.slice(0, 1);
+        info.fileList.splice(0, 1);
       }
     }
   };

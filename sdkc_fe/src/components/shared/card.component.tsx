@@ -28,7 +28,11 @@ const CardElem = ({
   id, pic, name, cid, dispatch, Preloader
 }:CardElemProps) => {
   useEffect(() => {
-    dispatch(thunks.callApi(RC.getPic(id, cid), onResponse.getPic(id)));
+    if (!pic) {
+      dispatch(
+        thunks.callApi(RC.getPic(id, cid), onResponse.getPic(id))
+      );
+    }
   }, []);
 
   return (

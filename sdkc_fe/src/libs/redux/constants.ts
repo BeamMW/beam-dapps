@@ -7,7 +7,8 @@ export enum ACTIONS {
   SET_CID = 'SET_CID',
   SET_TX = 'SET_TX',
   REMOVE_TX = 'REMOVE_TX',
-  SET_TX_NOTIFY = 'SET_TX_NOTIFY'
+  SET_TX_NOTIFY = 'SET_TX_NOTIFY',
+  SET_TEST_PIC = 'SET_TEST_PIC'
 }
 
 export enum STATUS {
