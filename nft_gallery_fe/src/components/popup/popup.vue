@@ -12,7 +12,7 @@
       </div>
       <div class="footer">
         <button class="popupBtn cancelBtn" @click="closePopup">Cancel</button>
-        <button class="popupBtn submitBtn" @click="getMoney">OK</button>
+        <button class="popupBtn submitBtn" @click="actionPopup">{{ actionTitle }}</button>
       </div>
     </div>
   </div>
@@ -26,6 +26,10 @@ export default {
       type: String,
       default: 'Popup name',
     },
+    actionTitle: {
+      type: String,
+      default: 'Action Title',
+    },
   },
   data() {
     return {};
@@ -34,18 +38,18 @@ export default {
     closePopup() {
       this.$emit('closePopup');
     },
-    getMoney() {
-      this.$emit('getMoney');
+    actionPopup() {
+      this.$emit('actionPopup');
     },
   },
-  mounted(){
+  mounted() {
     let vm = this;
-    document.addEventListener('click', (item)=>{
-  if(item.target === vm.$refs['popupWrapper']){
-    vm.closePopup()
-  }
-    })
-  }
+    document.addEventListener('click', (item) => {
+      if (item.target === vm.$refs['popupWrapper']) {
+        vm.closePopup();
+      }
+    });
+  },
 };
 </script>
 

@@ -6,14 +6,16 @@
   ></error>
   <loading v-else-if="loading"></loading>
   <div v-else class="app">
-    <pkey></pkey>
     <div class="nav-container">
       <div class="nav">
         <router-link to="/">Home</router-link>
         <router-link to="/userpics">UserSeeds</router-link>
         <generate></generate>
       </div>
-      <balance></balance>
+      <div class="userInfo">
+        <balance></balance>
+        <pkey></pkey>
+      </div>
     </div>
   </div>
   <router-view />
@@ -59,7 +61,7 @@ body {
   margin: 0;
   color: white;
 }
-
+na
 .error {
   display: flex;
   align-items: center;
@@ -105,7 +107,7 @@ pre {
   margin-top: 30px;
   margin-bottom: 20px;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
 }
 .nav {
   display: flex;
@@ -115,7 +117,15 @@ pre {
   color: green;
   align-items: center;
 }
-
+.userInfo{
+  display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+}
+.withdraw{
+  margin-right: 10px;
+}
 .generate {
   padding: 14px;
   border-radius: 10px;

@@ -55,9 +55,7 @@ utils.initialize(
     if (err) {
       return store.dispatch('GET_ERR', err);
     }
-    store.dispatch('GET_SHADER').then(() => {
       Beam.start();
-    });
     // start();
   }
 );

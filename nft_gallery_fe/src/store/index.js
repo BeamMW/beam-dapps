@@ -56,14 +56,6 @@ export default createStore({
   },
   actions: {
     GET_SHADER: (context, payload) => {
-      nextTick(() => {
-        Utils.download('../utils/app.wasm', (err, bytes) => {
-          if (err) return this.setError(err, 'Failed to download shader');
-          payload = Array.from(new Uint8Array(bytes));
-          console.log(payload);
-          context.commit('SET_SHADER', payload);
-        });
-      });
     },
     GET_ITEMS: (context, payload) => {
       context.commit('SET_ITEMS', payload);

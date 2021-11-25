@@ -1,16 +1,17 @@
 <template>
-<popup
+  <popup
     v-if="isPopup"
     @closePopup="closePopup"
-    @getMoney="seedSell"
+    @actionPopup="seedSell"
     :popupTitle="this.popupTitle"
+    :actionTitle="this.actionTitle"
   >
     <span class="popupDescription">Enter your price</span>
     <input
       class="inputPopup"
       type="text"
       v-model="amountSell"
-      :placeholder="this.balance"
+      :placeholder="1"
     />
   </popup>
   <div class="item">
@@ -29,11 +30,11 @@
     <div class="info-row">
       <span>
         <span v-if="!this.owned">
-          <span class="dot red"></span>
+          <span class="dot green"></span>
           <span class="normal bolder">{{ this.holder }}</span>
         </span>
         <span v-else>
-          <span class="dot green"></span>
+          <span class="dot gray"></span>
           <span class="normal bolder">{{ this.holder }}</span>
         </span>
       </span>
@@ -64,7 +65,7 @@ import { Beam } from '../utils/beamApi/beamAPI';
 // import  html  from 'vue';
 
 import { parseToBeam } from '../utils/string-handlers';
-import Popup from './popup/popup.vue'
+import Popup from './popup/popup.vue';
 
 export default {
   props: {
@@ -112,6 +113,7 @@ export default {
       priceBeam: parseToBeam(this.price),
       amountSell: '',
       popupTitle: 'SELL',
+      actionTitle: 'SET PRICE',
     };
   },
   components: {
@@ -135,11 +137,11 @@ export default {
       // this.$emit('sell', this.seed);
       this.isPopup = true;
     },
-     seedSell() {
+    seedSell() {
       Beam.sellItem(this.seed, this.amount);
       this.closePopup();
     },
-     closePopup() {
+    closePopup() {
       this.isPopup = false;
     },
   },

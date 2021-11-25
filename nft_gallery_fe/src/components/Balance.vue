@@ -2,8 +2,9 @@
   <popup
     v-if="isPopup"
     @closePopup="closePopup"
-    @getMoney="getMoney"
+    @actionPopup="actionPopup"
     :popupTitle="this.popupTitle"
+    :actionTitle="this.actionTitle"
   >
     <span class="popupBalance">Your balance: {{ this.balance }} BEAM</span>
     <span class="popupDescription">Enter how much you want to withdraw</span>
@@ -27,12 +28,12 @@ import { parseToBeam } from '../utils/string-handlers';
 import Popup from './popup/popup.vue';
 export default {
   name: 'balance',
-  emits: ['update:amount'],
   data() {
     return {
       isPopup: false,
-      amount: '',
+      amount: parseToBeam(store.getters.BALANCE),
       popupTitle: 'WITHDRAW',
+      actionTitle: 'GET MONEY',
     };
   },
   components: {
@@ -40,7 +41,7 @@ export default {
   },
   computed: {
     balance() {
-      return parseToBeam(store.state.balance);
+      return parseToBeam(store.getters.BALANCE);
     },
   },
   methods: {
@@ -50,7 +51,7 @@ export default {
     closePopup() {
       this.isPopup = false;
     },
-    getMoney() {
+    actionPopup() {
       Beam.withdrawMoney(this.amount);
       this.closePopup();
     },
