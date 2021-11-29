@@ -21,18 +21,15 @@
 import store from '../store/index.js';
 import { Beam } from '../utils/beamApi/beamAPI.js';
 import Item from './Item.vue';
-
 export default {
+  name: 'gallery',
   computed: {
     items() {
       console.log(store.state.items);
       return store.state.items;
     },
-    in_tx() {
-      return store.state.in_tx;
-    },
   },
-  components: { item: Item },
+  components: { item: Item, },
   methods: {
     onBuyItem(id, seed) {
       console.log('buy');

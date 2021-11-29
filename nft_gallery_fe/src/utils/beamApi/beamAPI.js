@@ -41,6 +41,7 @@ export class Beam {
       `role=user,action=generate,cid=${store.getters.CID},seed=${seedNum}`,
       (...args) => this.makeTx(...args)
     );
+    store.dispatch('GET_ACTION_TX', 'Generate new Seed');
   };
 
   //   load all seeds
@@ -115,26 +116,34 @@ export class Beam {
   };
 
   static checkStatus = (err, full) => {
-    // console.log(full.status_string);
+    store.dispatch('GET_POPUP_TX', true);
+    store.dispatch('GET_IN_TX', full.status_string);
     if (err) {
       return store.dispatch('GET_ERR', err.error);
     }
     if (full.status_string === 'in progress') {
       setTimeout(() => {
         Utils.callApi(
-          'tx_status',
-          {
-            txId: full.txId,
-          },
-          (...args) => this.checkStatus(...args)
+            'tx_status',
+            {
+              txId: full.txId,
+            },
+            (...args) => this.checkStatus(...args)
         );
       }, 5000);
     } else if (full.status_string === 'completed') {
-      console.log(full.status_string);
-      Utils.invokeContract(
-        `role=manager,action=seeds,cid=${store.getters.CID}`,
-        (...args) => this.loadSeeds(...args)
-      );
+      store.dispatch('GET_POPUP_TX', true);
+      store.dispatch('GET_ACTION_TX', 'Transaction Completed');
+      store.dispatch('GET_IN_TX', full.status_string);
+      setTimeout(() => {
+        store.dispatch('GET_POPUP_TX', false);
+      }, 5000);
+    } else if (full.status_string === 'failed ') {
+      store.dispatch('GET_POPUP_TX', true);
+      store.dispatch('GET_IN_TX', full.status_string);
+      setTimeout(() => {
+        store.dispatch('GET_POPUP_TX', false);
+      }, 5000);
     }
   };
   //  Buy & sell seeds
@@ -148,6 +157,7 @@ export class Beam {
       `role=user,action=buy,cid=${store.state.cid},seed=${seed},price=${store.state.items[id].amount}`,
       (...args) => this.makeTx(...args)
     );
+    store.dispatch('GET_ACTION_TX', 'Buy new Seed');
   };
 
   static sellItem = (seed, price, err) => {
@@ -155,9 +165,12 @@ export class Beam {
       return store.dispatch('GET_ERR', err.error);
     }
     Utils.invokeContract(
-      `role=user,action=set_price,cid=${store.state.cid},aid=0,seed=${seed},price=${parseToGroth(price)}`,
+      `role=user,action=set_price,cid=${
+        store.state.cid
+      },aid=0,seed=${seed},price=${parseToGroth(price)}`,
       (...args) => this.makeTx(...args)
     );
+    store.dispatch('GET_ACTION_TX', 'Setting new Price');
   };
 
   static changeLoading = (err) => {
@@ -203,12 +216,14 @@ export class Beam {
     return store.dispatch('GET_P_KEY', res.key);
   };
 
-  static withdrawMoney = (amount, err ) => {
+  static withdrawMoney = (amount, err) => {
     if (err) {
       return store.dispatch('GET_ERR', err.error);
     }
     Utils.invokeContract(
-      `role=user,action=withdraw,cid=${store.getters.CID},amount=${parseToGroth(amount)}aid=0`,
+      `role=user,action=withdraw,cid=${store.getters.CID},amount=${parseToGroth(
+        amount
+      )}aid=0`,
       (...args) => this.makeTx(...args)
     );
   };

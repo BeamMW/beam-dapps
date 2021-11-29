@@ -65,7 +65,7 @@ import { Beam } from '../utils/beamApi/beamAPI';
 // import  html  from 'vue';
 
 import { parseToBeam } from '../utils/string-handlers';
-import Popup from './popup/popup.vue';
+import Popup from './popup/Popup.vue';
 
 export default {
   props: {

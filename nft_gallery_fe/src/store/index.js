@@ -12,7 +12,9 @@ export default createStore({
     changed_txs: [],
     error: undefined,
     myItems: [],
-    in_tx: true,
+    in_tx: 'in process',
+    popup_tx: false,
+    action_tx:'',
     shader: [],
     balance: undefined,
   },
@@ -35,6 +37,15 @@ export default createStore({
     P_KEY: (state) => {
       return state.p_key;
     },
+    IN_TX: (state) => {
+      return state.in_tx;
+    },
+    POPUP_TX: (state) => {
+      return state.popup_tx;
+    },
+    ACTION_TX: (state) => {
+      return state.action_tx;
+    },
   },
   mutations: {
     SET_SHADER: (state, payload) => {
@@ -53,10 +64,18 @@ export default createStore({
     SET_P_KEY: (state, payload) => {
       state.p_key = payload;
     },
+    SET_IN_TX: (state, payload) => {
+      state.in_tx = payload;
+    },
+    SET_POPUP_TX: (state, payload) => {
+      state.popup_tx = payload;
+    },
+    SET_ACTION_TX: (state, payload) => {
+      state.action_tx = payload;
+    },
   },
   actions: {
-    GET_SHADER: (context, payload) => {
-    },
+    GET_SHADER: (context, payload) => {},
     GET_ITEMS: (context, payload) => {
       context.commit('SET_ITEMS', payload);
     },
@@ -70,11 +89,22 @@ export default createStore({
     GET_P_KEY: (context, payload) => {
       context.commit('SET_P_KEY', payload);
     },
+    GET_IN_TX: (context, payload) => {
+      context.commit('SET_IN_TX', payload);
+    },
+
+    GET_POPUP_TX: (context, payload) => {
+      context.commit('SET_POPUP_TX', payload);
+    },
+    GET_ACTION_TX: (context, payload) => {
+      context.commit('SET_ACTION_TX', payload);
+    },
+
     GET_APIRESULT: (store, err, res, full) => {
       console.log(res, full, err);
       if (err) {
         console.log(err.error);
-        return store.dispatch("GET_ERR", err.error);
+        return store.dispatch('GET_ERR', err.error);
       }
 
       // if (full.id == 'ev_txs_changed') {

@@ -25,7 +25,7 @@ import store from '../store';
 import { Beam } from '../utils/beamApi/beamAPI';
 // import { Beam } from '../utils/beamApi/beamAPI';
 import { parseToBeam } from '../utils/string-handlers';
-import Popup from './popup/popup.vue';
+import Popup from './popup/Popup.vue';
 export default {
   name: 'balance',
   data() {

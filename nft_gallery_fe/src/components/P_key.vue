@@ -12,7 +12,7 @@
 
 <script>
 import store from '../store';
-import Popup from './popup/popup.vue';
+import Popup from './popup/Popup.vue';
 
 export default {
   name: 'p_key',

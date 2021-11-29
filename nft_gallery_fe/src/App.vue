@@ -18,7 +18,11 @@
       </div>
     </div>
   </div>
-  <router-view />
+  <notification
+  v-if="isNotification"
+  />
+  <router-view>
+  </router-view>
 </template>
 
 <script>
@@ -27,6 +31,8 @@ import Loading from '@/components/loading.vue';
 import ErrView from '@/components/Error.vue';
 import Balance from '@/components/Balance.vue';
 import Pkey from '@/components/P_key.vue';
+import Notification from "@/components/popup/Notification";
+import store from "@/store";
 
 export default {
   computed: {
@@ -36,6 +42,15 @@ export default {
     error() {
       return this.$store.state.error;
     },
+    isNotification() {
+      return store.getters.POPUP_TX;
+    },
+    tx_title() {
+      return store.getters.IN_TX;
+    },
+    tx_action() {
+      return store.getters.ACTION_TX;
+    },
   },
 
   components: {
@@ -44,6 +59,7 @@ export default {
     error: ErrView,
     balance: Balance,
     pkey: Pkey,
+    notification: Notification
   },
 };
 </script>
@@ -61,8 +77,7 @@ body {
   margin: 0;
   color: white;
 }
-na
-.error {
+na .error {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -117,13 +132,13 @@ pre {
   color: green;
   align-items: center;
 }
-.userInfo{
+.userInfo {
   display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    align-content: center;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
 }
-.withdraw{
+.withdraw {
   margin-right: 10px;
 }
 .generate {
