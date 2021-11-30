@@ -3,10 +3,10 @@
     <div class="notification_content" :class="notification_title === 'completed' ? 'green' : '' ">
       <div class="notification_content-header">
         <div class="title">{{ notification_title }}</div>
-        <i class="material-icons">close</i>
+        <i class="material-icons" @click="closePopup">close</i>
       </div>
       <div class="notification_content-info">
-          <loader-transactions></loader-transactions>
+        <loader-transactions></loader-transactions>
         <div class="notification_info">
           {{ notification_info }}
         </div>
@@ -32,7 +32,7 @@ export default {
     //   default: 'notification_action'
     // }
   },
-  components: { LoaderTransactions },
+  components: {LoaderTransactions},
   computed: {
     notification_title() {
       return store.getters.IN_TX;
@@ -40,8 +40,8 @@ export default {
     notification_info() {
       return store.getters.ACTION_TX;
     }
-  }
-};
+  },
+}
 </script>
 
 <style scoped lang="scss">

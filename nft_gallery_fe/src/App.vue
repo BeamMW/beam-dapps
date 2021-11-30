@@ -18,11 +18,8 @@
       </div>
     </div>
   </div>
-  <notification
-  v-if="isNotification"
-  />
-  <router-view>
-  </router-view>
+  <notification v-if="isNotification" @click="closePopup" />
+  <router-view> </router-view>
 </template>
 
 <script>
@@ -45,12 +42,6 @@ export default {
     isNotification() {
       return store.getters.POPUP_TX;
     },
-    tx_title() {
-      return store.getters.IN_TX;
-    },
-    tx_action() {
-      return store.getters.ACTION_TX;
-    },
   },
 
   components: {
@@ -61,6 +52,11 @@ export default {
     pkey: Pkey,
     notification: Notification
   },
+  methods: {
+    closePopup() {
+     store.dispatch('GET_POPUP_TX', false);
+    }
+  }
 };
 </script>
 
