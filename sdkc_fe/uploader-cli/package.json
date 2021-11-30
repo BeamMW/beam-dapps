@@ -1,0 +1,18 @@
+{
+  "name": "beam-dogs-uploader",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "dog pattern uploader",
+  "main": "./src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "non-http-start": "node src/test.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^8.3.0",
+    "request": "^2.88.2"
+  }
+}

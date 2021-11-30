@@ -8,7 +8,7 @@ import MomentTimezoneDataPlugin from 'moment-timezone-data-webpack-plugin';
 import * as webpack from 'webpack';
 
 export default {
-  devtool: 'source-map',
+  devtool: 'eval-source-map',
   entry: './src/index.tsx',
   output: {
     path: path.join(__dirname, 'build'),
