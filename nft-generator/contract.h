@@ -28,12 +28,6 @@ namespace NFTGenerator {
         Price price;
     };
 
-    struct SaveNewSeed {
-        static constexpr uint64_t s_iMethod = 2;
-
-        NFT nft;
-    };
-
     struct Payout {
         struct Key {
             PubKey user;
@@ -44,13 +38,13 @@ namespace NFTGenerator {
     };
 
     struct SetPrice {
-        static const uint32_t s_iMethod = 3;
+        static const uint32_t s_iMethod = 2;
 
         NFT updated_nft;
     };
 
     struct Buy {
-        static const uint32_t s_iMethod = 4;
+        static const uint32_t s_iMethod = 3;
 
         uint64_t seed;
         PubKey buyer;
@@ -58,14 +52,14 @@ namespace NFTGenerator {
     };
 
     struct Withdraw {
-        static const uint32_t s_iMethod = 5;
+        static const uint32_t s_iMethod = 4;
 
         Payout::Key key;
         Amount value;
     };
 
     struct RequestNewSeed {
-        static const uint32_t s_iMethod = 6;
+        static const uint32_t s_iMethod = 5;
 
         ContractID oracle_cid;
         PubKey user;
@@ -77,7 +71,7 @@ namespace NFTGenerator {
     };
 
     struct TryGetSeed {
-        static const uint32_t s_iMethod = 7;
+        static const uint32_t s_iMethod = 6;
 
         ContractID oracle_cid;
         RequestID request_id;

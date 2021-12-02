@@ -13,12 +13,6 @@ BEAM_EXPORT void Method_0() {
         {
             Env::DocGroup role("user");
             {
-                Env::DocGroup action("generate");
-                Env::DocAddText("cid", "ContractID");
-                Env::DocAddText("aid", "AssetID");
-                Env::DocAddText("seed", "Seed");
-            }
-            {
                 Env::DocGroup action("set_price");
                 Env::DocAddText("cid", "ContractID");
                 Env::DocAddText("aid", "AssetID");
@@ -53,7 +47,7 @@ BEAM_EXPORT void Method_0() {
                 Env::DocAddText("aid", "AssetID");
             }
             {
-                Env::DocGroup action("generate_oracle");
+                Env::DocGroup action("generate");
                 Env::DocAddText("cid", "ContractID");
                 Env::DocAddText("oracle_cid", "ContractID");
             }
@@ -189,20 +183,6 @@ void GetUserSeeds(const ContractID &cid) {
     }
 }
 
-uint64_t GenerateSeed(const ContractID &cid, uint64_t seed) {
-    NFTGenerator::SaveNewSeed request;
-
-// TODO: Contract-based seed generation
-
-    request.nft.seed = seed;
-    request.nft.holder = GetKey(cid);
-    _POD_(request.nft.price).SetZero();
-    Env::GenerateKernel(&cid, NFTGenerator::SaveNewSeed::s_iMethod,
-                        &request, sizeof(request), nullptr, 0,
-                        nullptr, 0, "set new seed to nft-generator", 0);
-    return seed;
-}
-
 void SetSeedPrice(const ContractID &cid, uint64_t seed, NFTGenerator::Price price) {
     PubKey holder = GetKey(cid);
     NFTGenerator::SetPrice args;
@@ -330,13 +310,7 @@ BEAM_EXPORT void Method_1() {
             Env::DocAddText("error", "Invalid action");
         }
     } else if (Env::Strcmp(role, "user") == 0) {
-        if (Env::Strcmp(action, "generate") == 0) {
-            ContractID cid;
-            uint64_t seed;
-            Env::DocGet("cid", cid);
-            Env::DocGet("seed", seed);
-            Env::DocAddNum("New seed: ", GenerateSeed(cid, seed));
-        } else if (Env::Strcmp(action, "set_price") == 0) {
+        if (Env::Strcmp(action, "set_price") == 0) {
             ContractID gallery_CID;
             uint64_t seed;
             AssetID aid;
@@ -387,7 +361,7 @@ BEAM_EXPORT void Method_1() {
             Env::DocGet("cid", cid);
             Env::DocGet("aid", aid);
             Env::DocAddNum("balance", GetBalance(cid, aid));
-        } else if (Env::Strcmp(action, "generate_oracle") == 0) {
+        } else if (Env::Strcmp(action, "generate") == 0) {
             ContractID cid;
             ContractID oracle_cid;
             Env::DocGet("cid", cid);

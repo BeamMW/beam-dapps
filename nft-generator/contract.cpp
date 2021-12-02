@@ -10,11 +10,7 @@ BEAM_EXPORT void Dtor(void *) {
 
 }
 
-BEAM_EXPORT void Method_2(const NFTGenerator::SaveNewSeed &request) {
-    Env::SaveVar_T(request.nft.seed, request.nft);
-}
-
-BEAM_EXPORT void Method_3(const NFTGenerator::SetPrice &r) {
+BEAM_EXPORT void Method_2(const NFTGenerator::SetPrice &r) {
     NFTGenerator::NFT m;
     Env::Halt_if(!Env::LoadVar_T(r.updated_nft.seed, m));
     Env::Halt_if(!(r.updated_nft.holder == m.holder));
@@ -51,7 +47,7 @@ void PayoutMove(const NFTGenerator::Payout::Key &key, Amount val, bool bAdd) {
 }
 
 
-BEAM_EXPORT void Method_4(const NFTGenerator::Buy &r) {
+BEAM_EXPORT void Method_3(const NFTGenerator::Buy &r) {
     NFTGenerator::NFT m;
     Env::Halt_if(!Env::LoadVar_T(r.seed, m));
 
@@ -73,13 +69,13 @@ BEAM_EXPORT void Method_4(const NFTGenerator::Buy &r) {
     Env::SaveVar_T(r.seed, m);
 }
 
-BEAM_EXPORT void Method_5(const NFTGenerator::Withdraw &r) {
+BEAM_EXPORT void Method_4(const NFTGenerator::Withdraw &r) {
     PayoutMove(r.key, r.value, false);
     Env::FundsUnlock(r.key.asset_id, r.value);
     Env::AddSig(r.key.user);
 }
 
-BEAM_EXPORT void Method_6(const NFTGenerator::RequestNewSeed &r) {
+BEAM_EXPORT void Method_5(const NFTGenerator::RequestNewSeed &r) {
     NFTGenerator::Request get;
     get.request_id.requester_key = r.user;
 
@@ -90,7 +86,7 @@ BEAM_EXPORT void Method_6(const NFTGenerator::RequestNewSeed &r) {
     Env::SaveVar_T(r.user, get.request_id.id_in_requester);
 }
 
-BEAM_EXPORT void Method_7(const NFTGenerator::TryGetSeed &r) {
+BEAM_EXPORT void Method_6(const NFTGenerator::TryGetSeed &r) {
     uint32_t id;
     Env::Halt_if(!Env::LoadVar_T(r.request_id.requester_key, id));
 

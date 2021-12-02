@@ -34,11 +34,7 @@ BEAM_EXPORT void Method_2(randomoracle::Request &request) { // Aka Request
 }
 
 BEAM_EXPORT void Method_3(const randomoracle::SaveValue &request) {
-    randomoracle::InternalKey key;
-    key.key_type = randomoracle::KeyType::VALUE;
-    _POD_(key.request_id) = request.request_id;
-
-    Env::SaveVar_T(key, request.value);
+    Env::SaveVar_T(request.key, request.value);
 }
 
 BEAM_EXPORT void Method_4(randomoracle::TryGetValue &request) {
@@ -54,8 +50,4 @@ BEAM_EXPORT void Method_4(randomoracle::TryGetValue &request) {
     // delete request
     key.key_type = randomoracle::KeyType::REQUEST;
     Env::DelVar_T(key);
-}
-
-BEAM_EXPORT void Method_5(const randomoracle::SaveValueButCooler &request) {
-    Env::SaveVar_T(request.key, request.value);
 }

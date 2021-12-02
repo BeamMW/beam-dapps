@@ -35,7 +35,7 @@ namespace randomoracle {
     struct SaveValue {
         static constexpr uint32_t s_iMethod = 3;
 
-        RequestID request_id;
+        InternalKey key;
         uint64_t value;
     };
 
@@ -43,13 +43,6 @@ namespace randomoracle {
         static constexpr uint32_t s_iMethod = 4;
 
         RequestID request_id;
-        uint64_t value;
-    };
-
-    struct SaveValueButCooler {
-        static constexpr uint32_t s_iMethod = 5;
-
-        InternalKey key;
         uint64_t value;
     };
 

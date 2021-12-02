@@ -101,34 +101,17 @@ void On_action_save_value(const ContractID &cid) {
     PubKey key;
     uint32_t id;
     Env::DocGet("value", value);
-    Env::DocGet("key", key);
-    Env::DocGet("id", id);
-
-    request.value = value;
-    request.request_id.id_in_requester = id;
-    request.request_id.requester_key = key;
-    Env::GenerateKernel(&cid, randomoracle::SaveValue::s_iMethod,
-                        &request, sizeof(request), nullptr, 0,
-                        nullptr, 0, "save new value for request id", 3'100'000);
-}
-
-void On_action_save_value_but_cooler(const ContractID &cid) {
-    randomoracle::SaveValueButCooler request;
-
-    uint64_t value;
-    PubKey key;
-    uint32_t id;
-    Env::DocGet("value", value);
     Env::DocGetBlob("key", &key, sizeof(key));
     Env::DocGet("id", id);
 
     request.value = value;
+    request.key.key_type = randomoracle::KeyType::VALUE;
     request.key.request_id.id_in_requester = id;
     request.key.request_id.requester_key = key;
 
-    Env::GenerateKernel(&cid, randomoracle::SaveValueButCooler::s_iMethod,
+    Env::GenerateKernel(&cid, randomoracle::SaveValue::s_iMethod,
                         &request, sizeof(request), nullptr, 0,
-                        nullptr, 0, "save new value for request id but cooler", 3'100'000);
+                        nullptr, 0, "save new value for request id", 3'100'000);
 }
 
 BEAM_EXPORT void Method_0() {
@@ -165,13 +148,6 @@ BEAM_EXPORT void Method_0() {
                 Env::DocAddText("key", "key");
                 Env::DocAddText("id", "request id");
             }
-            {
-                Env::DocGroup grMethod("save_value_but_cooler");
-                Env::DocAddText("cid", "ContractID");
-                Env::DocAddText("value", "data");
-                Env::DocAddText("key", "key");
-                Env::DocAddText("id", "request id");
-            }
         }
     }
 }
@@ -180,7 +156,6 @@ BEAM_EXPORT void Method_1() {
     const Actions_map_t VALID_USER_ACTIONS = {
             {"get_oracle_requests",   On_action_get_oracle_requests},
             {"save_value",            On_action_save_value},
-            {"save_value_but_cooler", On_action_save_value_but_cooler},
     };
 
     const Actions_map_t VALID_MANAGER_ACTIONS = {
