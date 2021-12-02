@@ -1,11 +1,9 @@
 #include "contract.h"
 
-#include "../app_common_impl.h"
+#include "Shaders/app_common_impl.h"
 
 namespace NFTGenerator {
-    static const ShaderID s_SID = {0x0f, 0xb7, 0x45, 0xde, 0x2f, 0x7a, 0x27, 0xc0, 0xed, 0x98, 0x65, 0x61, 0x80, 0x8c,
-                                   0x19, 0x11, 0x2e, 0x75, 0x97, 0x4a, 0x75, 0xc3, 0x6b, 0xa5, 0x95, 0xe3, 0x36, 0xda,
-                                   0x13, 0x20, 0x74, 0x5b};
+#include "contract_sid.i"
 }
 
 BEAM_EXPORT void Method_0() {
@@ -284,18 +282,18 @@ void RequestNewSeed(const ContractID &cid, const ContractID &oracle_cid) {
     request.user = GetKey(cid);
 
     Env::GenerateKernel(&cid, NFTGenerator::RequestNewSeed::s_iMethod, &request, sizeof(request),
-                        nullptr, 0, nullptr, 0, "Request new seed", 0);
+                        nullptr, 0, nullptr, 0, "Request new seed", 3'100'000);
 }
 
 void TryGetSeed(const ContractID &cid, const ContractID &oracle_cid, const PubKey &requester_key,
-                 uint32_t id_in_requester) {
+                uint32_t id_in_requester) {
     NFTGenerator::TryGetSeed request;
     request.oracle_cid = oracle_cid;
     request.request_id.requester_key = GetKey(cid);
     request.request_id.id_in_requester = id_in_requester;
 
     Env::GenerateKernel(&cid, NFTGenerator::TryGetSeed::s_iMethod, &request, sizeof(request),
-                        nullptr, 0, nullptr, 0, "Request new seed", 0);
+                        nullptr, 0, nullptr, 0, "Request new seed", 3'100'000);
 }
 
 BEAM_EXPORT void Method_1() {

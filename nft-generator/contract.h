@@ -1,8 +1,7 @@
 #ifndef BEAM_CONTRACT_H
 #define BEAM_CONTRACT_H
 
-#include "../common.h"
-#include "../random-oracle/contract.h"
+#include "Shaders/common.h"
 
 namespace NFTGenerator {
 
@@ -72,12 +71,33 @@ namespace NFTGenerator {
         PubKey user;
     };
 
+    struct RequestID {
+        PubKey requester_key;
+        uint32_t id_in_requester;
+    };
+
     struct TryGetSeed {
         static const uint32_t s_iMethod = 7;
 
         ContractID oracle_cid;
-        oracle::RequestID request_id;
-        oracle::OracleValue value;
+        RequestID request_id;
+        int64_t value;
+    };
+
+    // some structs for gallery to ask seed from oracle
+    struct Request {
+        static constexpr uint32_t s_iMethod = 2;
+
+        uint32_t value_type;
+        char value_details[1024];
+        RequestID request_id;
+    };
+
+    struct TryGetValue {
+        static constexpr uint32_t s_iMethod = 4;
+
+        RequestID request_id;
+        uint64_t value;
     };
 
 #pragma pack (pop)

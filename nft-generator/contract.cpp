@@ -1,7 +1,6 @@
 #include "contract.h"
-#include "../common.h"
-#include "../Math.h"
-#include "../random-oracle/contract.h"
+#include "Shaders/common.h"
+#include "Shaders/Math.h"
 
 BEAM_EXPORT void Ctor(void *) {
 
@@ -81,22 +80,30 @@ BEAM_EXPORT void Method_5(const NFTGenerator::Withdraw &r) {
 }
 
 BEAM_EXPORT void Method_6(const NFTGenerator::RequestNewSeed &r) {
-    oracle::Request get{
-            .value_type = 0,
-            .value_details = ""
-    };
-    _POD_(get.request_id.requester_key) = r.user;
+    NFTGenerator::Request get;
+    get.request_id.requester_key = r.user;
 
     Env::Halt_if(!Env::RefAdd(r.oracle_cid));
     Env::CallFar_T(r.oracle_cid, get);
     Env::Halt_if(!Env::RefRelease(r.oracle_cid));
+
+    Env::SaveVar_T(r.user, get.request_id.id_in_requester);
 }
 
 BEAM_EXPORT void Method_7(const NFTGenerator::TryGetSeed &r) {
-    oracle::TryGetValue try_get;
-    _POD_(try_get.request_id) = r.request_id;
+    uint32_t id;
+    Env::Halt_if(!Env::LoadVar_T(r.request_id.requester_key, id));
+
+    NFTGenerator::TryGetValue try_get;
+    try_get.request_id.requester_key = r.request_id.requester_key;
+    try_get.request_id.id_in_requester = id;
 
     Env::Halt_if(!Env::RefAdd(r.oracle_cid));
     Env::CallFar_T(r.oracle_cid, try_get);
     Env::Halt_if(!Env::RefRelease(r.oracle_cid));
+
+    NFTGenerator::NFT nft;
+    nft.seed = try_get.value;
+    nft.holder = r.request_id.requester_key;
+    Env::SaveVar_T(try_get.value, nft);
 }

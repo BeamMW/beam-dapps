@@ -1,128 +1,226 @@
+#include "Shaders/common.h"
+#include "Shaders/app_common_impl.h"
 #include "contract.h"
 
-#include "../app_common_impl.h"
+#include <algorithm>
+#include <vector>
+#include <utility>
+#include <string_view>
 
-namespace NFTGenerator {
-    static const ShaderID s_SID = {0xc4, 0x9b, 0xd7, 0xc8, 0x36, 0x47, 0xa0, 0x84, 0x59, 0x32, 0x87, 0x79, 0x1f, 0x39,
-                                   0x49, 0xa1, 0xd8, 0x84, 0xfa, 0x77, 0x34, 0x84, 0x26, 0xc1, 0xc0, 0x96, 0x25, 0xb8,
-                                   0x6e, 0x53, 0x6f, 0xeb};
+namespace randomoracle {
+
+#include "contract_sid.i"
+
+}
+
+using Action_func_t = void (*)(const ContractID &);
+using Actions_map_t = std::vector <std::pair<std::string_view, Action_func_t>>;
+using Roles_map_t = std::vector<std::pair<std::string_view, const Actions_map_t &>>;
+
+constexpr size_t
+ACTION_BUF_SIZE = 32;
+constexpr size_t
+ROLE_BUF_SIZE = 16;
+
+void On_error(const char *msg) {
+    Env::DocGroup root("");
+    {
+        Env::DocAddText("error", msg);
+    }
+}
+
+template<typename T>
+auto find_if_contains(const std::string_view str, const std::vector <std::pair<std::string_view, T>> &v) {
+    return std::find_if(v.begin(), v.end(), [&str](const auto &p) {
+        return str == p.first;
+    });
+}
+
+void On_action_create_contract(const ContractID &unused) {
+    randomoracle::InitialParams params;
+
+    Env::GenerateKernel(nullptr, randomoracle::InitialParams::METHOD, &params, sizeof(params), nullptr, 0, nullptr, 0,
+                        "Create randomoracle contract", 0);
+}
+
+void On_action_destroy_contract(const ContractID &cid) {
+    Env::GenerateKernel(&cid, 1, nullptr, 0, nullptr, 0, nullptr, 0, "Destroy randomoracle contract", 0);
+}
+
+void On_action_view_contracts(const ContractID &unused) {
+    EnumAndDumpContracts(randomoracle::s_SID);
+}
+
+void On_action_view_contract_params(const ContractID &cid) {
+    Env::Key_T<int> k;
+    k.m_Prefix.m_Cid = cid;
+    k.m_KeyInContract = 0;
+
+    randomoracle::InitialParams params;
+    if (!Env::VarReader::Read_T(k, params))
+        return On_error("Failed to read contract's initial params");
+
+    Env::DocGroup gr("params");
+}
+
+void On_action_get_oracle_requests(const ContractID &cid) {
+    Env::Key_T <randomoracle::InternalKey> start_key, end_key;
+    start_key.m_Prefix.m_Cid = cid;
+    start_key.m_KeyInContract.key_type = randomoracle::KeyType::REQUEST;
+    _POD_(start_key.m_KeyInContract.request_id.requester_key).SetZero();
+    start_key.m_KeyInContract.request_id.id_in_requester = 0;
+
+    end_key = start_key;
+    end_key.m_KeyInContract.key_type = randomoracle::KeyType::REQUEST;
+    _POD_(end_key.m_KeyInContract.request_id.requester_key).SetObject(0xff);
+    end_key.m_KeyInContract.request_id.id_in_requester = static_cast<uint32_t>(-1);
+
+    Env::Key_T <randomoracle::InternalKey> key;
+    key.m_Prefix.m_Cid = cid;
+    Env::DocArray gr("values");
+    randomoracle::Request value;
+    for (Env::VarReader reader(start_key, end_key); reader.MoveNext_T(key, value);) {
+        Env::DocArray gr1("");
+        Env::DocGroup val1("Key Info");
+        Env::DocAddNum("key_type", static_cast<uint32_t>(key.m_KeyInContract.key_type));
+        Env::DocAddBlob_T("request_id.requester_key", key.m_KeyInContract.request_id.requester_key);
+        Env::DocAddBlob_T("request_id.id_in_requester", key.m_KeyInContract.request_id.id_in_requester);
+
+        Env::DocGroup val2("Value Info");
+        Env::DocAddNum("value.value_type", value.value_type);
+        Env::DocAddNum("value.request_id.id_in_requester", value.request_id.id_in_requester);
+        Env::DocAddBlob_T("value.request_id.requester_key", value.request_id.requester_key);
+        Env::DocAddBlob_T("value.value_details", value.value_details);
+    }
+}
+
+void On_action_save_value(const ContractID &cid) {
+    randomoracle::SaveValue request;
+
+    uint64_t value;
+    PubKey key;
+    uint32_t id;
+    Env::DocGet("value", value);
+    Env::DocGet("key", key);
+    Env::DocGet("id", id);
+
+    request.value = value;
+    request.request_id.id_in_requester = id;
+    request.request_id.requester_key = key;
+    Env::GenerateKernel(&cid, randomoracle::SaveValue::s_iMethod,
+                        &request, sizeof(request), nullptr, 0,
+                        nullptr, 0, "save new value for request id", 3'100'000);
+}
+
+void On_action_save_value_but_cooler(const ContractID &cid) {
+    randomoracle::SaveValueButCooler request;
+
+    uint64_t value;
+    PubKey key;
+    uint32_t id;
+    Env::DocGet("value", value);
+    Env::DocGetBlob("key", &key, sizeof(key));
+    Env::DocGet("id", id);
+
+    request.value = value;
+    request.key.request_id.id_in_requester = id;
+    request.key.request_id.requester_key = key;
+
+    Env::GenerateKernel(&cid, randomoracle::SaveValueButCooler::s_iMethod,
+                        &request, sizeof(request), nullptr, 0,
+                        nullptr, 0, "save new value for request id but cooler", 3'100'000);
 }
 
 BEAM_EXPORT void Method_0() {
     Env::DocGroup root("");
     {
-        Env::DocGroup roles("roles");
+        Env::DocGroup gr("roles");
         {
-            Env::DocGroup role("user");
+            Env::DocGroup grRole("manager");
             {
-                Env::DocGroup action("get_requests");
+                Env::DocGroup grMethod("create_contract");
+            }
+            {
+                Env::DocGroup grMethod("destroy_contract");
                 Env::DocAddText("cid", "ContractID");
             }
             {
-                Env::DocGroup action("save_value");
+                Env::DocGroup grMethod("view_contracts");
+            }
+            {
+                Env::DocGroup grMethod("view_contract_params");
                 Env::DocAddText("cid", "ContractID");
-                Env::DocAddText("value", "Requested value");
-                Env::DocAddText("key", "User key");
-                Env::DocAddText("id", "Request id");
             }
         }
         {
-            Env::DocGroup role("manager");
+            Env::DocGroup grRole("user");
             {
-                Env::DocGroup action("create");
-            }
-            {
-                Env::DocGroup action("destroy");
+                Env::DocGroup grMethod("get_oracle_requests");
                 Env::DocAddText("cid", "ContractID");
             }
             {
-                Env::DocGroup action("view");
+                Env::DocGroup grMethod("save_value");
+                Env::DocAddText("cid", "ContractID");
+                Env::DocAddText("value", "data");
+                Env::DocAddText("key", "key");
+                Env::DocAddText("id", "request id");
+            }
+            {
+                Env::DocGroup grMethod("save_value_but_cooler");
+                Env::DocAddText("cid", "ContractID");
+                Env::DocAddText("value", "data");
+                Env::DocAddText("key", "key");
+                Env::DocAddText("id", "request id");
             }
         }
     }
-}
-
-void GetRequests(const ContractID &cid) {
-    Env::Key_T <oracle::InternalKey> start_key, end_key;
-    _POD_(start_key.m_Prefix.m_Cid) = cid;
-    start_key.m_KeyInContract.key_type = oracle::KeyType::REQUEST;
-    start_key.m_KeyInContract.request_id.id_in_requester = 0;
-    _POD_(start_key.m_KeyInContract.request_id.requester_key).SetZero();
-
-    _POD_(end_key) = start_key;
-    end_key.m_KeyInContract.key_type = oracle::KeyType::VALUE;
-    end_key.m_KeyInContract.request_id.id_in_requester = static_cast<uint32_t>(-1);
-    _POD_(end_key.m_KeyInContract.request_id.requester_key).SetObject(0xff);
-
-    Env::Key_T <oracle::InternalKey> key;
-    oracle::OracleValue value;
-    Env::DocArray gr("values");
-    for (Env::VarReader reader(start_key, end_key); reader.MoveNext_T(key, value);) {
-        Env::DocGroup val("");
-        Env::DocAddBlob_T("internal_key", key.m_KeyInContract);
-        Env::DocAddBlob_T("value", value);
-    }
-}
-
-void SaveValue(const ContractID &cid, const oracle::OracleValue &value, const PubKey &key, uint32_t id) {
-    oracle::SaveValue request;
-
-    request.value = value;
-    request.request_id.id_in_requester = id;
-    request.request_id.requester_key = key;
-    Env::GenerateKernel(&cid, oracle::SaveValue::s_iMethod,
-                        &request, sizeof(request), nullptr, 0,
-                        nullptr, 0, "save new value for request id", 0);
 }
 
 BEAM_EXPORT void Method_1() {
-    Env::DocGroup root("");
+    const Actions_map_t VALID_USER_ACTIONS = {
+            {"get_oracle_requests",   On_action_get_oracle_requests},
+            {"save_value",            On_action_save_value},
+            {"save_value_but_cooler", On_action_save_value_but_cooler},
+    };
 
-    char role[0x10], action[0x10];
+    const Actions_map_t VALID_MANAGER_ACTIONS = {
+            {"create_contract",      On_action_create_contract},
+            {"destroy_contract",     On_action_destroy_contract},
+            {"view_contracts",       On_action_view_contracts},
+            {"view_contract_params", On_action_view_contract_params},
+    };
+
+    /* Add your new role's actions here */
+
+    const Roles_map_t VALID_ROLES = {
+            {"user",    VALID_USER_ACTIONS},
+            {"manager", VALID_MANAGER_ACTIONS},
+            /* Add your new role here */
+    };
+
+    char action[ACTION_BUF_SIZE], role[ROLE_BUF_SIZE];
 
     if (!Env::DocGetText("role", role, sizeof(role))) {
-        Env::DocAddText("error", "Not providing role");
-        return;
+        return On_error("Role not specified");
+    }
+
+    auto it_role = find_if_contains(role, VALID_ROLES);
+
+    if (it_role == VALID_ROLES.end()) {
+        return On_error("Invalid role");
     }
 
     if (!Env::DocGetText("action", action, sizeof(action))) {
-        Env::DocAddText("error", "Not providing action");
-        return;
+        return On_error("Action not specified");
     }
 
-    if (Env::Strcmp(role, "manager") == 0) {
-        if (Env::Strcmp(action, "create") == 0) {
-            Env::GenerateKernel(nullptr, 0, nullptr, 0, nullptr, 0,
-                                nullptr, 0, "create random-oracle", 0);
-        } else if (Env::Strcmp(action, "destroy") == 0) {
-            ContractID cid;
-            Env::DocGet("cid", cid);
-            Env::GenerateKernel(&cid, 1, nullptr, 0, nullptr, 0, nullptr, 0,
-                                "destroy random-oracle", 0);
-        } else if (Env::Strcmp(action, "view") == 0) {
-            EnumAndDumpContracts(NFTGenerator::s_SID);
-        } else {
-            Env::DocAddText("error", "Invalid action");
-        }
-    } else if (Env::Strcmp(role, "user") == 0) {
-        if (Env::Strcmp(action, "get_requests") == 0) {
-            ContractID cid;
-            Env::DocGet("cid", cid);
-            GetRequests(cid);
-        } else if (Env::Strcmp(action, "save_value") == 0) {
-            ContractID cid;
-            oracle::OracleValue value;
-            PubKey key;
-            uint32_t id;
-            Env::DocGet("cid", cid);
-            Env::DocGet("value", value);
-            Env::DocGet("key", key);
-            Env::DocGet("id", id);
-            SaveValue(cid, value, key, id);
-        } else {
-            Env::DocAddText("error", "Invalid action");
-        }
+    auto it_action = find_if_contains(action, it_role->second);
+
+    if (it_action != it_role->second.end()) {
+        ContractID cid;
+        Env::DocGet("cid", cid);
+        it_action->second(cid);
     } else {
-        Env::DocAddText("error", "Invalid role");
+        On_error("Invalid action");
     }
 }

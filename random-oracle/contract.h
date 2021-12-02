@@ -1,41 +1,17 @@
 #pragma once
 
-#include "../common.h"
+#include <cstddef>
 
-namespace oracle {
-
-    constexpr uint32_t
-            kFeeInGroth = 0; // TODO: set real fee
-
+namespace randomoracle {
 #pragma pack(push, 1)
 
+    struct InitialParams {
+        static const uint32_t METHOD = 0;
+    };
+
     struct RequestID {
-        PubKey requester_key; // Some unique identifier of user. Sets by user of request.
-        uint32_t id_in_requester; // Request id of given user
-    };
-
-    using OracleValue = uint64_t; // Always returns 8-byte number. If need more, send multiple requests
-
-    struct Request {
-        static constexpr uint32_t s_iMethod = 2;
-
-        uint32_t value_type; // see mapping
-        char value_details[1024]; // Maybe some details about value we need to send to oracle. 1 Kb
-        RequestID request_id; // ID of given request. Needed further for request of value. Returned from contract
-    };
-
-    struct TryGetValue { // Will be halted, if value for request_id does not exists
-        static constexpr uint32_t s_iMethod = 3;
-
-        RequestID request_id;
-        OracleValue value;
-    };
-
-    struct SaveValue {
-        static constexpr uint32_t s_iMethod = 4;
-
-        RequestID request_id;
-        OracleValue value;
+        PubKey requester_key;
+        uint32_t id_in_requester;
     };
 
     enum class KeyType {
@@ -45,7 +21,36 @@ namespace oracle {
 
     struct InternalKey {
         KeyType key_type;
-        oracle::RequestID request_id;
+        RequestID request_id;
+    };
+
+    struct Request {
+        static constexpr uint32_t s_iMethod = 2;
+
+        uint32_t value_type;
+        char value_details[1024];
+        RequestID request_id;
+    };
+
+    struct SaveValue {
+        static constexpr uint32_t s_iMethod = 3;
+
+        RequestID request_id;
+        uint64_t value;
+    };
+
+    struct TryGetValue {
+        static constexpr uint32_t s_iMethod = 4;
+
+        RequestID request_id;
+        uint64_t value;
+    };
+
+    struct SaveValueButCooler {
+        static constexpr uint32_t s_iMethod = 5;
+
+        InternalKey key;
+        uint64_t value;
     };
 
 #pragma pack(pop)
