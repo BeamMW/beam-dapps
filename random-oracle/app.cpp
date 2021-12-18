@@ -108,10 +108,15 @@ void On_action_save_value(const ContractID &cid) {
     request.key.key_type = randomoracle::KeyType::VALUE;
     request.key.request_id.id_in_requester = id;
     request.key.request_id.requester_key = key;
+    Env::DerivePk(request.oracle_user_proof, &cid, sizeof(cid));
+
+    SigRequest sig;
+    sig.m_pID = &cid;
+    sig.m_nID = sizeof(cid);
 
     Env::GenerateKernel(&cid, randomoracle::SaveValue::s_iMethod,
                         &request, sizeof(request), nullptr, 0,
-                        nullptr, 0, "save new value for request id", 3'100'000);
+                        &sig, 1, "save new value for request id", 3'100'000);
 }
 
 BEAM_EXPORT void Method_0() {
@@ -154,8 +159,8 @@ BEAM_EXPORT void Method_0() {
 
 BEAM_EXPORT void Method_1() {
     const Actions_map_t VALID_USER_ACTIONS = {
-            {"get_oracle_requests",   On_action_get_oracle_requests},
-            {"save_value",            On_action_save_value},
+            {"get_oracle_requests", On_action_get_oracle_requests},
+            {"save_value",          On_action_save_value},
     };
 
     const Actions_map_t VALID_MANAGER_ACTIONS = {

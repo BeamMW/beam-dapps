@@ -34,6 +34,7 @@ BEAM_EXPORT void Method_2(randomoracle::Request &request) { // Aka Request
 }
 
 BEAM_EXPORT void Method_3(const randomoracle::SaveValue &request) {
+    Env::AddSig(request.oracle_user_proof);
     Env::SaveVar_T(request.key, request.value);
 }
 

@@ -37,6 +37,7 @@ namespace randomoracle {
 
         InternalKey key;
         uint64_t value;
+        PubKey oracle_user_proof;
     };
 
     struct TryGetValue {
