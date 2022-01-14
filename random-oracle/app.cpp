@@ -38,6 +38,7 @@ auto find_if_contains(const std::string_view str, const std::vector <std::pair<s
 
 void On_action_create_contract(const ContractID &unused) {
     randomoracle::InitialParams params;
+    Env::DerivePk(params.owner_key, &randomoracle::owner_public_key, sizeof(randomoracle::owner_public_key));
 
     Env::GenerateKernel(nullptr, randomoracle::InitialParams::METHOD, &params, sizeof(params), nullptr, 0, nullptr, 0,
                         "Create randomoracle contract", 0);
@@ -80,13 +81,9 @@ void On_action_get_oracle_requests(const ContractID &cid) {
     Env::DocArray gr("values");
     randomoracle::Request value;
     for (Env::VarReader reader(start_key, end_key); reader.MoveNext_T(key, value);) {
-        Env::DocArray gr1("");
-        Env::DocGroup val1("Key Info");
-        Env::DocAddNum("key_type", static_cast<uint32_t>(key.m_KeyInContract.key_type));
-        Env::DocAddBlob_T("request_id.requester_key", key.m_KeyInContract.request_id.requester_key);
-        Env::DocAddBlob_T("request_id.id_in_requester", key.m_KeyInContract.request_id.id_in_requester);
+        Env::DocGroup val("");
 
-        Env::DocGroup val2("Value Info");
+        Env::DocGroup value_info("Value Info");
         Env::DocAddNum("value.value_type", value.value_type);
         Env::DocAddNum("value.request_id.id_in_requester", value.request_id.id_in_requester);
         Env::DocAddBlob_T("value.request_id.requester_key", value.request_id.requester_key);
@@ -111,8 +108,8 @@ void On_action_save_value(const ContractID &cid) {
     Env::DerivePk(request.oracle_user_proof, &cid, sizeof(cid));
 
     SigRequest sig;
-    sig.m_pID = &cid;
-    sig.m_nID = sizeof(cid);
+    sig.m_pID = &randomoracle::owner_public_key;
+    sig.m_nID = sizeof(randomoracle::owner_public_key);
 
     Env::GenerateKernel(&cid, randomoracle::SaveValue::s_iMethod,
                         &request, sizeof(request), nullptr, 0,

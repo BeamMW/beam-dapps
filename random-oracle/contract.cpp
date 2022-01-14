@@ -6,7 +6,7 @@
 
 using namespace randomoracle;
 
-BEAM_EXPORT void Ctor(InitialParams &params) {
+BEAM_EXPORT void Ctor(randomoracle::InitialParams &params) {
     Env::SaveVar_T(0, params);
 }
 
@@ -34,7 +34,10 @@ BEAM_EXPORT void Method_2(randomoracle::Request &request) { // Aka Request
 }
 
 BEAM_EXPORT void Method_3(const randomoracle::SaveValue &request) {
-    Env::AddSig(request.oracle_user_proof);
+    randomoracle::InitialParams params;
+    Env::LoadVar_T(0, params);
+    Env::AddSig(params.owner_key);
+
     Env::SaveVar_T(request.key, request.value);
 }
 

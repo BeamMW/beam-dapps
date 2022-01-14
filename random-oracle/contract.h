@@ -5,8 +5,12 @@
 namespace randomoracle {
 #pragma pack(push, 1)
 
+    const char owner_public_key[] = "owner_public_key";
+
     struct InitialParams {
         static const uint32_t METHOD = 0;
+
+        PubKey owner_key;
     };
 
     struct RequestID {
